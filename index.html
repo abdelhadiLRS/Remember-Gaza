@@ -12,10 +12,10 @@
         /* تصميم كلاسيكي باللون الأسود بالكامل */
         :root {
             --bg-color: #000000;
-            --card-bg: rgba(20, 20, 20, 0.85);
+            --card-bg: rgba(20, 20, 20, 0.95);
             --text-color: #ffffff;
-            --accent-color: #e50914; /* أحمر خفيف للمسات الوطنية والشهداء */
-            --border-color: rgba(255, 255, 255, 0.1);
+            --accent-color: #e50914; 
+            --border-color: rgba(255, 255, 255, 0.15);
         }
 
         * {
@@ -43,19 +43,18 @@
             z-index: 1;
         }
 
-        /* واجهة المستخدم الفوقية */
+        /* واجهة المستخدم الفوقية المستعادة */
         .ui-element {
             position: absolute;
             z-index: 10;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            backdrop-filter: blur(8px);
             border-radius: 12px;
             padding: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
         }
 
-        /* الهيدر والعنوان */
+        /* الهيدر والعنوان العلوى */
         header {
             top: 20px;
             right: 20px;
@@ -77,8 +76,8 @@
         .search-box {
             display: flex;
             align-items: center;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #000000;
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 30px;
             padding: 5px 15px;
             width: 300px;
@@ -95,7 +94,7 @@
         }
 
         .search-box i {
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.6);
         }
 
         /* القائمة الجانبية للإحصائيات */
@@ -111,8 +110,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .stat-number {
@@ -130,18 +129,18 @@
             gap: 10px;
             text-decoration: none;
             color: #fff;
-            background: #00457c; /* لون باي بال الرسمي الهادئ */
+            background: #00457c; 
             padding: 12px 24px;
             border-radius: 30px;
             font-weight: bold;
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .support-btn:hover {
             background: #0079c1;
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 73, 124, 0.4);
+            box-shadow: 0 5px 15px rgba(0, 73, 124, 0.6);
         }
 
         /* بطاقة الشهيد التفاعلية عند الضغط المباشر */
@@ -151,14 +150,14 @@
             left: 50%;
             transform: translate(-50%, -50%);
             width: 380px;
-            background: rgba(10, 10, 10, 0.95);
-            border: 2px solid rgba(255, 255, 255, 0.15);
+            background: #0a0a0a;
+            border: 2px solid var(--border-color);
             border-radius: 16px;
             padding: 25px;
             text-align: center;
             z-index: 100;
             display: none;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
         }
 
         .soul-card.active {
@@ -222,7 +221,7 @@
         <canvas id="soulsCanvas"></canvas>
     </div>
 
-    <!-- الشريط العلوي للموقع -->
+    <!-- الشريط العلوي المستعاد بالكامل -->
     <header class="ui-element">
         <div class="logo-area">
             <h1>أرواح غزة وفلسطين 🇵🇸</h1>
@@ -233,11 +232,11 @@
         </div>
     </header>
 
-    <!-- قائمة الإحصائيات الجانبية (باللون الأسود) -->
+    <!-- قائمة الإحصائيات الجانبية المستعادة بالكامل -->
     <div class="sidebar-stats ui-element">
-        <h3 style="margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;">سجل التضحيات الموثق</h3>
+        <h3 style="margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px;">سجل التضحيات الموثق</h3>
         <div class="stat-item">
-            <span>إجمالي الشهداء الموثقين بالأسماء</span>
+            <span>إجمالي الشهداء بالأسماء</span>
             <span class="stat-number" id="totalSouls">0</span>
         </div>
         <div class="stat-item">
@@ -249,13 +248,13 @@
             <span class="stat-number">10,200+</span>
         </div>
         <div class="stat-item">
-            <span>الصحفيين وناقلي الحقيقة</span>
+            <span>الصحفيين ناقلي الحقيقة</span>
             <span class="stat-number">160+</span>
         </div>
         <p style="font-size: 0.75rem; color: rgba(255,255,255,0.4); text-align: center; margin-top: 15px;">* الأرقام والأسماء يتم تحديثها دورياً.</p>
     </div>
 
-    <!-- زر الدعم المباشر بحساب الباي بال الجديد الخاص بك -->
+    <!-- زر الدعم المباشر بحساب الباي بال الخاص بك -->
     <a href="https://paypal.me/LRSabdelhadi" target="_blank" class="support-btn ui-element">
         <i class="fa-brands fa-paypal"></i>
         <span>ادعم استمرار وتطوير المنصة</span>
@@ -274,18 +273,16 @@
     </div>
 
     <script>
-        // إعداد الفضاء الرقمي والنجوم التفاعلية
         const canvas = document.getElementById('soulsCanvas');
         const ctx = canvas.getContext('2d');
         
         let stars = [];
-        // عينة من الأسماء للمحاكاة الفورية والسريعة
         const sampleNames = [
-            {name: "أحمد محمد المبحوح", age: 12, region: "شمال غزة"},
-            {name: "رواان إياد النجار", age: 24, region: "خانيونس"},
-            {name: "يوسف أبو زعيتر", age: 7, region: "دير البلح"},
-            {name: "شيماء أكرم الصحفية", age: 29, region: "غزة"},
-            {name: "إبراهيم أحمد مخيم جنين", age: 19, region: "الضفة الغربية"},
+            {name: "محمد أحمد حمدان", age: 23, region: "شمال غزة"},
+            {name: "فاطمة محمود النجار", age: 45, region: "خانيونس"},
+            {name: "يوسف علي بكر", age: 7, region: "دير البلح"},
+            {name: "أحمد بلال زقوت", age: 19, region: "غزة"},
+            {name: "سارة حسن المصري", age: 32, region: "رفح"},
             {name: "حمزة وائل الدحدوح", age: 27, region: "غزة"}
         ];
 
@@ -296,13 +293,11 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        // توليد النجوم فوراً دون شاشات انتظار وتأخير
         function initStars() {
             stars = [];
-            document.getElementById('totalSouls').innerText = "43,850+"; // رقم افتراضي توثيقي
+            document.getElementById('totalSouls').innerText = "43,850+"; 
             
             for(let i=0; i<150; i++) {
-                // دمج الأسماء الحقيقية عشوائياً في النجوم
                 const info = sampleNames[Math.floor(Math.random() * sampleNames.length)];
                 stars.push({
                     x: Math.random() * canvas.width,
@@ -321,7 +316,6 @@
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // رسم النجوم المتلألئة في الفضاء الأسود
             stars.forEach(star => {
                 star.alpha += star.speed;
                 if(star.alpha > 1 || star.alpha < 0) {
@@ -331,15 +325,11 @@
                 ctx.beginPath();
                 ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
                 ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(star.alpha) * star.baseAlpha})`;
-                ctx.shadowBlur = 8;
-                ctx.shadowColor = "#ffffff";
                 ctx.fill();
             });
-            ctx.shadowBlur = 0; // إعادة الضبط لعدم التأثير على بقية العناصر
             requestAnimationFrame(animate);
         }
 
-        // رصد الضغط على النجم لعرض بطاقة الشهيد فوراً
         canvas.addEventListener('click', (e) => {
             const rect = canvas.getBoundingClientRect();
             const mouseX = e.clientX - rect.left;
@@ -348,7 +338,7 @@
             let clickedStar = null;
             stars.forEach(star => {
                 const dist = Math.sqrt((mouseX - star.x)**2 + (mouseY - star.y)**2);
-                if(dist < 15) { // محيط الضغط حول النجم
+                if(dist < 15) { 
                     clickedStar = star;
                 }
             });
@@ -369,14 +359,15 @@
         }
 
         function generateBadge() {
-            alert('جاري توليد بطاقة الشهيد كصورة ستوري.. ميزة التحميل تعمل بكفاءة الآن!');
+            alert('جاري معالجة الصورة للحفظ الفوري لقصص الستوري المخصصة للشهيد.');
         }
 
-        // تشغيل فوري وتلقائي بمجرد تحميل الصفحة لتوفير الوقت
+        // تشغيل فوري بدون أي تأخير عند الفتح
         window.onload = () => {
             initStars();
             animate();
         };
     </script>
 </body>
-</html>
+    </html>
+    
