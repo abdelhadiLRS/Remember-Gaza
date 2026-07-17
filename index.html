@@ -59,14 +59,13 @@
         #counter-container { position: fixed; bottom: 30px; right: 30px; text-align: right; }
         #number { font-size: 3.5rem; font-weight: 700; line-height: 1; color: #fff; }
         
-        /* تعديل مكان الآية وإنزالها قليلاً لأسفل اليسار */
         #dev-credits { 
             position: fixed; bottom: 35px; left: 30px; text-align: left; 
             max-width: 400px; border-left: 3px solid var(--primary-red); padding-left: 15px;
         }
         .quran-verse { font-family: 'Amiri', serif; font-size: 1rem; color: #ccc; margin-bottom: 5px; }
         
-        /* نقل الحسابات الخاصة إلى الأسفل في الوسط تماماً */
+        /* الحسابات الخاصة في الأسفل وسط الشاشة */
         #bottom-center-links {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
             display: flex; gap: 12px; align-items: center; justify-content: center;
@@ -103,7 +102,6 @@
     <div id="header">
         <input type="text" id="search-input" class="interactive" placeholder="بحث عن اسم...">
         
-        <!-- أزرار الأقسام الذكية للتبديل السلس على الهواتف -->
         <div class="tabs-container interactive">
             <button class="tab-btn active" onclick="switchCategory('gaza')">غزة</button>
             <button class="tab-btn" onclick="switchCategory('press')">الصحفيين</button>
@@ -121,13 +119,11 @@
         <p id="notice-text" style="margin: 0; font-size: 0.95rem; color: #ccc;"></p>
     </div>
 
-    <!-- قسم الآية القرآنية المنزلة للأسفل اليسار -->
     <div id="dev-credits" class="interactive">
         <div class="quran-verse" id="verse">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</div>
         <div class="mourning" id="mourning-text" style="color: #888; font-size: 0.75rem;">إنا لله وإنا إليه راجعون</div>
     </div>
 
-    <!-- الحسابات الخاصة مجمعة في الأسفل وسط الشاشة تماماً -->
     <div id="bottom-center-links" class="interactive">
         <span class="dev-tag-style">تطوير: عبد الهادي</span>
         <div class="social-links">
@@ -147,7 +143,7 @@
 
 <script>
     let app, mainContainer, points = [], currentLang = 'ar', isPlaying = false;
-    let currentCategory = 'gaza';
+    let currentCategory = 'gaza', tooltipTimeout = null;
 
     const baseGazaData = [
         { name_ar: "محمد أحمد حمدان", age: 23, gender: "M" },
@@ -217,6 +213,24 @@
         }
     }
 
+    // خوارزمية ذكية لفحص إذا كانت النقطة تقع ضمن النطاق المحجوز للخانات والكتابات لمنع التداخل
+    function isInForbiddenZone(x, y) {
+        // المنطقة العلوية (الهيدر والأزرار)
+        if (y < 95) return true;
+        
+        // المنطقة السفلية اليسرى (الآية القرآنية)
+        if (y > app.screen.height - 120 && x < 420) return true;
+        
+        // المنطقة السفلية اليمنى (العداد والرقم)
+        if (y > app.screen.height - 120 && x > app.screen.width - 250) return true;
+        
+        // المنطقة السفلية الوسطى (روابط الحسابات)
+        const centerX = app.screen.width / 2;
+        if (y > app.screen.height - 80 && x > centerX - 180 && x < centerX + 180) return true;
+
+        return false;
+    }
+
     function renderWorld() {
         points.forEach(p => p.destroy());
         points = [];
@@ -243,17 +257,22 @@
         const tex = app.renderer.generateTexture(g);
 
         const dotsToRender = currentList.length === 0 ? 0 : Math.min(2500, currentList.length + 150);
-        
-        // تعديل الحدود البرمجية الآمنة لتبتعد النقاط تماماً عن الأزرار العلوية والسفلية
-        const safeTopBorder = 100;
-        const safeBottomBorder = app.screen.height - 140;
 
         for(let i=0; i < dotsToRender; i++) { 
             if(currentList.length === 0) break;
             
             const dot = new PIXI.Sprite(tex);
-            dot.x = Math.random() * (app.screen.width - 40) + 20;
-            dot.y = Math.random() * (safeBottomBorder - safeTopBorder) + safeTopBorder;
+            
+            // توليد إحداثيات عشوائية واختبارها لمنع التداخل مع مساحات الخانات
+            let posX, posY, attempts = 0;
+            do {
+                posX = Math.random() * (app.screen.width - 20) + 10;
+                posY = Math.random() * (app.screen.height - 20) + 10;
+                attempts++;
+            } while (isInForbiddenZone(posX, posY) && attempts < 10);
+
+            dot.x = posX;
+            dot.y = posY;
             dot.anchor.set(0.5);
             dot.alpha = Math.random() * 0.4 + 0.2; 
             
@@ -267,7 +286,7 @@
             
             dot.on('pointerdown', (e) => { e.stopPropagation(); showTooltip(e, dot); });
             dot.on('pointerover', (e) => showTooltip(e, dot));
-            dot.on('pointerout', () => hideTooltip(dot));
+            dot.on('pointerout', () => startHideTimer(dot));
 
             mainContainer.addChild(dot);
             points.push(dot);
@@ -279,6 +298,9 @@
     const tooltip = document.getElementById('tooltip');
 
     function showTooltip(event, sprite) {
+        // إلغاء أي مؤقت إخفاء نشط حالياً للحفاظ على ثبات البيانات أثناء المشاهدة
+        if (tooltipTimeout) { clearTimeout(tooltipTimeout); tooltipTimeout = null; }
+
         points.forEach(p => { if(p !== sprite) { p.alpha = 0.3; p.scale.set(1); p.tint = 0xffffff; } });
 
         const d = sprite.userData;
@@ -307,7 +329,17 @@
         sprite.tint = 0xff3333; 
     }
 
-    function hideTooltip(sprite) {
+    // دالة بدء مؤقت العد التنازلي لإخفاء البطاقة بعد ثانيتين بالضبط من الابتعاد
+    function startHideTimer(sprite) {
+        if (tooltipTimeout) clearTimeout(tooltipTimeout);
+        
+        tooltipTimeout = setTimeout(() => {
+            tooltip.style.display = 'none';
+            resetSpriteAppearance(sprite);
+        }, 2000); // 2000 مللي ثانية = ثانيتين
+    }
+
+    function resetSpriteAppearance(sprite) {
         sprite.alpha = 0.4;
         sprite.scale.set(1);
         sprite.tint = 0xffffff;
@@ -358,19 +390,28 @@
 
         app.stage.on('pointerdown', () => {
             tooltip.style.display = 'none';
-            points.forEach(p => hideTooltip(p));
+            points.forEach(p => resetSpriteAppearance(p));
         });
 
+        // محرك الحركة الدائم للنقاط مع فحص مستمر لمنع دخول المناطق المحجوزة
         app.ticker.add(() => {
-            const safeTopBorder = 100;
-            const safeBottomBorder = app.screen.height - 140;
             for(let i=0; i < points.length; i++) {
                 const p = points[i];
                 p.x += p.speedX; p.y += p.speedY;
+                
+                // إذا خرجت النقطة عن حدود الشاشة تعود من الطرف الآخر
                 if (p.x < 0) p.x = app.screen.width;
                 if (p.x > app.screen.width) p.x = 0;
-                if (p.y < safeTopBorder) p.y = safeBottomBorder;
-                if (p.y > safeBottomBorder) p.y = safeTopBorder;
+                if (p.y < 0) p.y = app.screen.height;
+                if (p.y > app.screen.height) p.y = 0;
+
+                // إذا دخلت النقطة العائمة في منطقة محجوزة أثناء حركتها، يتم دفعها برفق وتغيير مسارها تلقائياً
+                if (isInForbiddenZone(p.x, p.y)) {
+                    p.speedX *= -1;
+                    p.speedY *= -1;
+                    p.x += p.speedX * 2;
+                    p.y += p.speedY * 2;
+                }
             }
         });
     }
