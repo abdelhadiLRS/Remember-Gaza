@@ -19,7 +19,7 @@
         /* تأثير الخلفية السديمية المتحركة */
         .nebula-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;
-            background: radial-gradient(circle at 30% 20%, rgba(204, 0, 0, 0.08) 0%, transparent 40%),
+            background: radial-gradient(circle at 30% 40%, rgba(204, 0, 0, 0.08) 0%, transparent 40%),
                         radial-gradient(circle at 70% 80%, rgba(27, 94, 32, 0.06) 0%, transparent 45%);
             animation: nebulaPulse 12s ease-in-out infinite alternate;
         }
@@ -39,11 +39,11 @@
         #ui-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
         .interactive { pointer-events: auto; }
 
-        /* شريط علوي زجاجي يمر الضوء خلفه بنعومة */
+        /* شريط علوي زجاجي نقي ومحمي من النقاط */
         #header { 
             display: flex; justify-content: space-between; align-items: center; 
-            padding: 15px 25px; background: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0)); 
-            gap: 15px; flex-wrap: wrap; backdrop-filter: blur(4px);
+            padding: 15px 25px; background: linear-gradient(to bottom, rgba(0,0,0,0.95), rgba(0,0,0,0)); 
+            gap: 15px; flex-wrap: wrap; z-index: 20; position: relative;
         }
 
         #search-input {
@@ -66,9 +66,9 @@
         button.active { background: var(--primary-red); border-color: #ff4d4d; }
 
         #donate-box { background: rgba(204, 0, 0, 0.25); border: 1px solid rgba(204, 0, 0, 0.4); animation: pulse-border 2s infinite; }
-        @keyframes pulse-border { 0%, 100% { box-shadow: 0 0 0px transparent; } 50% { box-shadow: 0 0 12px rgba(204, 0, 0, 0.45); } }
+        @keyframes pulse-border { 0%, 100% { box-shadow: 0 0px 0px transparent; } 50% { box-shadow: 0 0 12px rgba(204, 0, 0, 0.45); } }
 
-        /* العداد وقسم المطور والآية بخلفيات زجاجية ذكية */
+        /* العداد وقسم المطور والآية */
         #counter-container { position: fixed; bottom: 30px; right: 30px; text-align: right; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 12px; backdrop-filter: blur(4px); }
         #number { font-size: 3.5rem; font-weight: 700; line-height: 1; color: #fff; }
         
@@ -104,14 +104,13 @@
         .female-duaa { color: #880e4f; }
         .press-tag { color: #0d47a1; font-weight: bold; font-size: 0.85rem; }
         
-        /* زر تحميل البطاقة المدمج */
         .download-btn {
             margin-top: 10px; background: #222; color: #fff; border: none; padding: 5px 12px;
             border-radius: 15px; font-size: 0.75rem; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: 0.2s;
         }
         .download-btn:hover { background: var(--primary-red); }
 
-        /* قالب البطاقة المخفي المخصص للتصدير كصورة جودة عالية */
+        /* قالب البطاقة المخفي المخصص للتصدير كصورة */
         #share-card-template {
             position: fixed; top: -9999px; left: -9999px; width: 400px; height: 400px;
             background: #000; color: #fff; display: flex; flex-direction: column;
@@ -124,10 +123,8 @@
 </head>
 <body>
 
-<!-- تأثير السديم الخلفي المريح -->
 <div class="nebula-bg"></div>
 
-<!-- شاشة التحميل المسبق الذكية للملفات الكبيرة -->
 <div id="preloader">
     <div class="loader-pulse"></div>
     <div id="loader-text" style="font-size: 1rem; font-weight: 300; letter-spacing: 1px; color: #ccc;">جاري استدعاء سجلات الخلود...</div>
@@ -174,10 +171,8 @@
     </div>
 </div>
 
-<!-- صندوق عرض البيانات التفاعلي -->
 <div id="tooltip" class="interactive"></div>
 
-<!-- القالب السري لإنتاج وتوليد بطاقة المشاركة الذكية للشهيد -->
 <div id="share-card-template">
     <div style="font-family: 'Amiri', serif; font-size: 1.1rem; color: #cc0000; margin-bottom: 15px;">قوافل الشهداء البررة</div>
     <h2 id="card-name" style="margin: 10px 0; font-size: 1.8rem;"></h2>
@@ -223,7 +218,6 @@
         await loadExternalFiles();
         renderWorld();
         
-        // إخفاء شاشة التحميل بنعومة بالغة بعد بناء كامل عالم الشهداء
         const loader = document.getElementById('preloader');
         loader.style.opacity = '0';
         setTimeout(() => loader.style.display = 'none', 800);
@@ -263,6 +257,24 @@
         }
     }
 
+    // خوارزمية فحص النطاق المحجوز المحدثة (تمنع الطفو خلف الهيدر العلوي تماماً لعدم التشويش)
+    function isInForbiddenZone(x, y) {
+        // حماية الواجهة العلوية بالكامل (أول 110 بكسل من الأعلى لمنع الطفو تحت الخانات نهائياً)
+        if (y < 110) return true;
+        
+        // حماية المنطقة السفلية اليسرى (الآية القرآنية)
+        if (y > app.screen.height - 120 && x < 420) return true;
+        
+        // حماية المنطقة السفلية اليمنى (العداد الإحصائي)
+        if (y > app.screen.height - 120 && x > app.screen.width - 250) return true;
+        
+        // حماية المنطقة السفلية الوسطى (روابط الحسابات والملفات الشخصية)
+        const centerX = app.screen.width / 2;
+        if (y > app.screen.height - 80 && x > centerX - 180 && x < centerX + 180) return true;
+
+        return false;
+    }
+
     function renderWorld() {
         points.forEach(p => p.destroy());
         points = [];
@@ -295,9 +307,16 @@
             
             const dot = new PIXI.Sprite(tex);
             
-            // عودة النقاط لتغطي كامل الصفحة من الحافة للحافة لجمالية المشهد
-            dot.x = Math.random() * (app.screen.width - 20) + 10;
-            dot.y = Math.random() * (app.screen.height - 20) + 10;
+            let posX, posY, attempts = 0;
+            do {
+                posX = Math.random() * (app.screen.width - 20) + 10;
+                // توليد عشوائي للشاشة بالكامل مع مراعاة الفحص الذكي للحدود
+                posY = Math.random() * (app.screen.height - 20) + 10;
+                attempts++;
+            } while (isInForbiddenZone(posX, posY) && attempts < 20);
+
+            dot.x = posX;
+            dot.y = posY;
             dot.anchor.set(0.5);
             dot.alpha = Math.random() * 0.4 + 0.2; 
             
@@ -361,7 +380,6 @@
         sprite.tint = 0xff3333; 
     }
 
-    // السماح للماوس بدخول الـ Tooltip دون اختفائه، وتفعيل مؤقت الـ 2 ثانية عند المغادرة الكاملة
     tooltip.addEventListener('mouseenter', () => { if (tooltipTimeout) clearTimeout(tooltipTimeout); });
     tooltip.addEventListener('mouseleave', () => { startHideTimer(); });
 
@@ -380,7 +398,6 @@
         sprite.tint = 0xffffff;
     }
 
-    // خوارزمية ذكية مدمجة لالتقاط وتصميم صورة فورية للشهيد لوسائل التواصل
     window.downloadShareCard = function(name, age, duaa) {
         document.getElementById('card-name').innerText = name;
         document.getElementById('card-age').innerText = currentLang === 'ar' ? `العمر: ${age} سنة` : `Age: ${age} years`;
@@ -452,6 +469,14 @@
                 if (p.x > app.screen.width) p.x = 0;
                 if (p.y < 0) p.y = app.screen.height;
                 if (p.y > app.screen.height) p.y = 0;
+
+                // ارتداد ذكي وتغيير مسار دائم إذا حاولت النجم العائم اختراق المناطق المحظورة لحماية القوائم
+                if (isInForbiddenZone(p.x, p.y)) {
+                    p.speedX *= -1;
+                    p.speedY *= -1;
+                    p.x += p.speedX * 2;
+                    p.y += p.speedY * 2;
+                }
             }
         });
     }
@@ -462,7 +487,7 @@
         document.getElementById('verse').innerText = isAr ? '"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"' : '"Think not of those who are slain in Allah\'s way as dead. Nay, they live with their Lord"';
         document.getElementById('donate-text').innerText = isAr ? "تبرع الآن" : "Donate";
         document.getElementById('label').innerText = isAr ? "شهيداً وثّقت أسماؤهم" : "Documented Souls Lost";
-        document.getElementById('loader-text').innerText = isAr ? "جاري استدعاء سجلات الخلود..." : "Summoning eternity registries...";
+        document.getElementById('loader-text').innerText = isAr ? "جاري استدعاء سجلات الشهداء..." : "Summoning eternity registries...";
     }
 
     function animateCounter(target) {
