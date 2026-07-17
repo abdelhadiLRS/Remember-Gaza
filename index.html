@@ -2,7 +2,6 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <!-- منع الزووم التلقائي في الهواتف وتخريب أبعاد الخانات -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>أرواح غزة وفلسطين | Palestinian Souls</title>
     
@@ -28,7 +27,6 @@
         #ui-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; display: flex; flex-direction: column; justify-content: space-between; }
         .interactive { pointer-events: auto; }
 
-        /* الهيدر العلوي: متجاوب ومناسب للهواتف */
         #header { 
             display: flex; justify-content: space-between; align-items: center; 
             padding: 12px 20px; background: rgba(10, 10, 10, 0.95); 
@@ -48,7 +46,7 @@
         .tab-btn { background: transparent; border: none; padding: 6px 12px; border-radius: 20px; color: #aaa; cursor: pointer; font-size: 0.8rem; font-family: 'Cairo'; transition: 0.2s; white-space: nowrap; }
         .tab-btn.active { background: var(--primary-red); color: white; font-weight: bold; }
 
-        .top-btns { display: flex; gap: 6px; align-items: center; }
+        .top-btns { display: flex; gap: 6px; align-items: center; position: relative; }
         button, .btn-style {
             background: #111111; color: white; border: 1px solid var(--border-glass);
             padding: 8px 12px; border-radius: 20px; cursor: pointer; font-family: 'Cairo'; transition: 0.2s;
@@ -58,13 +56,36 @@
         button:hover, .btn-style:hover { background: #222222; }
         button.active { background: var(--primary-red); border-color: #ff4d4d; }
 
+        /* تصميم القائمة الانسيابية المنسدلة للغات */
+        .lang-dropdown { position: relative; display: inline-block; }
+        .dropdown-content {
+            display: none; position: absolute; background-color: #0a0a0a;
+            min-width: 110px; box-shadow: 0px 8px 24px rgba(0,0,0,0.8);
+            border: 1px solid var(--border-glass); border-radius: 10px;
+            z-index: 200; overflow: hidden; margin-top: 5px;
+        }
+        /* ضبط التموضع التلقائي للقائمة بناءً على اتجاه الموقع */
+        [dir="rtl"] .dropdown-content { left: 0; right: auto; }
+        [dir="ltr"] .dropdown-content { right: 0; left: auto; }
+
+        .dropdown-content a {
+            color: #ccc; padding: 10px 14px; text-decoration: none;
+            display: block; font-size: 0.85rem; font-family: 'Cairo';
+            transition: 0.2s; text-align: center; cursor: pointer;
+        }
+        .dropdown-content a:hover { background-color: var(--primary-red); color: white; }
+        .lang-dropdown:hover .dropdown-content { display: block; animation: fadeInMenu 0.2s ease-out; }
+
+        @keyframes fadeInMenu {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         #donate-box { background: var(--blood-dark); border: 1px solid var(--primary-red); animation: pulse-border 2s infinite; }
         @keyframes pulse-border { 0%, 100% { box-shadow: 0 0px 0px transparent; } 50% { box-shadow: 0 0 10px var(--primary-red); } }
 
-        /* منطقة وسطى ومرنة لحملة الهواتف لمنع تراكم المحتوى فوق النجوم */
         #middle-layer { flex-grow: 1; position: relative; width: 100%; pointer-events: none; }
 
-        /* الكتل السفلية: تنظيم ذكي لا يغلق الشاشة */
         #bottom-layer {
             display: flex; justify-content: space-between; align-items: flex-end;
             padding: 20px; gap: 15px; width: 100%; z-index: 20; pointer-events: none;
@@ -74,12 +95,12 @@
         #number { font-size: 2.2rem; font-weight: 700; line-height: 1.1; color: #fff; }
         
         #dev-credits { 
-            max-width: 320px; background: rgba(10, 10, 10, 0.9); padding: 10px 12px; 
+            max-width: 320px; background: rgba(10, 10, 10, 0.9); padding: 12px; 
             border-radius: 12px; border: 1px solid var(--border-glass); border-left: 3px solid var(--primary-red);
             text-align: initial;
         }
         [dir="ltr"] #dev-credits { border-left: none; border-right: 3px solid var(--primary-red); text-align: initial; }
-        .quran-verse { font-family: 'Amiri', serif; font-size: 0.9rem; color: #ccc; margin-bottom: 4px; line-height: 1.4; }
+        .quran-verse { font-family: 'Amiri', serif; font-size: 0.95rem; color: #ccc; line-height: 1.4; text-align: center; }
         
         #bottom-center-links {
             background: rgba(10, 10, 10, 0.9); padding: 8px 14px; border-radius: 25px; 
@@ -93,7 +114,6 @@
         }
         .social-links a:hover { background: var(--primary-red); }
 
-        /* التولتيب المحدث ليكون نافذة منبثقة ممتازة على الهواتف */
         #tooltip {
             position: fixed; background: rgba(255, 255, 255, 0.98); color: black; padding: 16px;
             border-radius: 16px; display: none; pointer-events: auto;
@@ -131,7 +151,6 @@
         .stat-bar-fill { background: var(--primary-red); height: 100%; width: 0%; transition: width 1.5s ease-out; }
         .close-modal { position: absolute; top: 12px; right: 15px; background: none; border: none; color: #666; font-size: 1.6rem; cursor: pointer; }
 
-        /* Responsive Media Queries لدعم حامل الهاتف بامتياز وبشكل ديناميكي */
         @media (max-width: 768px) {
             #header { padding: 10px; justify-content: center; }
             .tabs-container { width: 100%; justify-content: center; order: 3; margin-top: 4px; }
@@ -152,7 +171,6 @@
 <body>
 
 <div id="ui-layer">
-    <!-- القسم العلوي المتجاوب -->
     <div id="header" class="interactive">
         <input type="text" id="search-input" placeholder="بحث عن اسم...">
         
@@ -166,18 +184,25 @@
             <button id="stats-btn" onclick="toggleAnalytics(true)">📊 إحصائيات</button>
             <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-box" class="btn-style">❤️ <span id="donate-text">تبرع الآن</span></a>
             <button id="music-btn">🎵 صوت</button>
-            <button id="lang-btn" onclick="rotateLanguage()">🌐 AR</button>
+            
+            <!-- إضافة القائمة الانسيابية المنبثقة هنا -->
+            <div class="lang-dropdown">
+                <button id="lang-btn">🌐 AR</button>
+                <div class="dropdown-content">
+                    <a onclick="selectLanguage('ar')">العربية</a>
+                    <a onclick="selectLanguage('en')">English</a>
+                    <a onclick="selectLanguage('fr')">Français</a>
+                    <a onclick="selectLanguage('es')">Español</a>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- فضاء أوسط فارغ للنجوم -->
     <div id="middle-layer"></div>
 
-    <!-- القسم السفلي المعاد تنظيمه للهواتف -->
     <div id="bottom-layer">
         <div id="dev-credits" class="interactive">
             <div class="quran-verse" id="verse">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</div>
-            <div class="mourning" id="mourning-text" style="color: #888; font-size: 0.75rem;">إنا لله وإنا إليه راجعون</div>
         </div>
 
         <div id="bottom-center-links" class="interactive">
@@ -200,7 +225,6 @@
     <p id="notice-text" style="margin: 0; font-size: 0.95rem; color: #ccc;"></p>
 </div>
 
-<!-- لوحة الإحصائيات -->
 <div id="analytics-modal" class="interactive">
     <button class="close-modal" onclick="toggleAnalytics(false)">×</button>
     <h3 style="margin-top:0; border-bottom: 1px solid #222; padding-bottom: 10px;" id="modal-title">سجل التوثيق الإحصائي</h3>
@@ -237,13 +261,12 @@
     let pressSouls = [];
     let westbankSouls = [];
 
-    // قاموس الترجمات الشامل لـ 4 لغات كبرى للتعميم العالمي
     const translations = {
         ar: {
             dir: "rtl", search: "بحث عن اسم...", gaza: "غزة", press: "الصحفيين", westbank: "الضفة الغربية",
             stats: "📊 إحصائيات", donate: "تبرع الآن", music_on: "🔇 كتم", music_off: "🎵 صوت",
             verse: '"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"',
-            mourning: "إنا لله وإنا إليه راجعون", dev: "تطوير: عبد الهادي", label: "شهيداً وثّقت أسماؤهم",
+            dev: "تطوير: عبد الهادي", label: "شهيداً وثّقت أسماؤهم",
             title: "سجل التوثيق الإحصائي", child: "الأطفال والأجنة", women: "النساء والأمهات", elder: "الشيوخ وكبار السن",
             download: "📥 حفظ البطاقة", age_text: "العمر: {age} سنة", unknown_age: "غير معروف", unknown_name: "غير مدرج",
             notice_wb: "جاري توثيق وتحديث أسماء شهداء الضفة الغربية...", alert_gen: "جاري معالجة الصورة للحفظ الفوري...",
@@ -253,7 +276,7 @@
             dir: "ltr", search: "Search name...", gaza: "Gaza", press: "Journalists", westbank: "West Bank",
             stats: "📊 Stats", donate: "Donate", music_on: "🔇 Mute", music_off: "🎵 Audio",
             verse: '"Think not of those who are slain in Allah\'s way as dead. Nay, they live with their Lord"',
-            mourning: "To Allah we belong and to Him we shall return", dev: "Dev: Abdelhadi", label: "Documented Martyred Souls",
+            dev: "Dev: Abdelhadi", label: "Documented Martyred Souls",
             title: "Statistical Records", child: "Children & Infants", women: "Women & Mothers", elder: "Elders & Seniors",
             download: "📥 Download Card", age_text: "Age: {age} years old", unknown_age: "Unknown", unknown_name: "Not listed",
             notice_wb: "Documenting and updating West Bank martyrs registries...", alert_gen: "Processing card image generation...",
@@ -263,7 +286,7 @@
             dir: "ltr", search: "Chercher...", gaza: "Gaza", press: "Journalistes", westbank: "Cisjordanie",
             stats: "📊 Stats", donate: "Faire un don", music_on: "🔇 Sourdine", music_off: "🎵 Audio",
             verse: '"Ne pense pas que ceux qui ont été tués dans le sentier d\'Allah soient morts. Au contraire, ils sont vivants"',
-            mourning: "Nous sommes à Allah, et c'est à Lui que nous retournerons", dev: "Dev: Abdelhadi", label: "Âmes Martyrisées Documentées",
+            dev: "Dev: Abdelhadi", label: "Âmes Martyrisées Documentées",
             title: "Registres Statistiques", child: "Enfants et Nourrissons", women: "Femmes et Mères", elder: "Aînés et Personnes Âgées",
             download: "📥 Télécharger la Carte", age_text: "Âge: {age} ans", unknown_age: "Inconnu", unknown_name: "Non répertorié",
             notice_wb: "Mise à jour des registres des martyrs de Cisjordanie...", alert_gen: "Génération de l'image de la carte...",
@@ -273,15 +296,13 @@
             dir: "ltr", search: "Buscar...", gaza: "Gaza", press: "Periodistas", westbank: "Cisjordania",
             stats: "📊 Estadísticas", donate: "Donar", music_on: "🔇 Silenciar", music_off: "🎵 Audio",
             verse: '"Y no pienses que los que han sido muertos en el camino de Alá están muertos. Al contrario, están vivos"',
-            mourning: "Ciertamente somos de Alá y a Él volveremos", dev: "Dev: Abdelhadi", label: "Almas Mártires Documentadas",
+            dev: "Dev: Abdelhadi", label: "Almas Mártires Documentadas",
             title: "Registros Estadísticos", child: "Niños e Infantes", women: "Mujeres y Madres", elder: "Ancianos y Mayores",
             download: "📥 Descargar Tarjeta", age_text: "Edad: {age} años", unknown_age: "Desconocida", unknown_name: "No listado",
             notice_wb: "Documentando y actualizando registros de Cisjordania...", alert_gen: "Procesando generación de imagen...",
             card_top: "Los Nobles Mártires de Palestina", duaa_m: "Que Alá tenga piedad de él", duaa_f: "Que Alá tenga piedad de ella", press_tag: "Mártir de la Prensa"
         }
     };
-
-    const langOrder = ['ar', 'en', 'fr', 'es'];
 
     const sound = new Howl({ src: ['ambient.mp3'], loop: true, volume: 0.4, html5: false });
     const clickSound = new Howl({ src: ['click.mp3'], volume: 0.5 });
@@ -320,25 +341,22 @@
                 }
             }
         } catch(e) { 
-            console.log("خطأ في الاتصال بالملف المحدث، جاري تشغيل النسخة الاحتياطية سريعة التحميل.", e);
+            console.log("خطأ في قراءة ملف out_killed-in-gaza.csv", e);
             gazaSouls = [{ name_ar: "محمد أحمد حمدان", age: 23, gender: "M" }];
         }
         pressSouls = [{ name_ar: "حمزة وائل الدحدوح", age: 27, gender: "M", isPress: true }];
     }
 
-    // فحص ذكي للمناطق المحظورة لحماية الخانات من التداخل على الهواتف والكمبيوتر
     function isInForbiddenZone(x, y) {
         const headerEl = document.getElementById('header');
         const headerHeight = headerEl ? headerEl.offsetHeight + 15 : 130;
         if (y < headerHeight) return true;
         
         if (window.innerWidth <= 768) {
-            // على الهواتف، الحسابات متراصة بالأسفل عمودياً بالكامل
             const bottomEl = document.getElementById('bottom-layer');
             const bottomHeight = bottomEl ? bottomEl.offsetHeight + 15 : 180;
             if (y > app.screen.height - bottomHeight) return true;
         } else {
-            // على الكمبيوتر، العزل يتم في الزوايا الأصلية لمنع التشويش
             if (y > app.screen.height - 145 && x < 440) return true;
             if (y > app.screen.height - 145 && x > app.screen.width - 270) return true;
             const centerX = app.screen.width / 2;
@@ -426,7 +444,6 @@
         const d = sprite.userData;
         tooltip.style.display = 'block';
         
-        // تعديل تموضع التولتيب تلقائياً ليناسب نقرات شاشة الهاتف في السنتر تماماً
         if(window.innerWidth > 768) {
             tooltip.style.left = event.global.x + 'px';
             tooltip.style.top = event.global.y + 'px';
@@ -467,7 +484,7 @@
             tooltip.style.display = 'none';
             if (activeSprite) { resetSpriteAppearance(activeSprite); activeSprite = null; }
             points.forEach(p => resetSpriteAppearance(p));
-        }, 3500); // إعطاء حامل الهاتف فرصة مريحة للقراءة قبل الاختفاء تلقائياً
+        }, 3500); 
     }
 
     function resetSpriteAppearance(sprite) {
@@ -495,13 +512,7 @@
     }
 
     window.downloadShareCard = function(name, ageStr, duaa) {
-        const t = translations[currentLang];
-        document.getElementById('card-name').innerText = name;
-        document.getElementById('card-age').innerText = ageStr;
-        document.getElementById('card-duaa').innerText = `﴿ ${duaa} ﴾`;
-
-        const target = document.getElementById('share-card-template');
-        html2canvas(target, { backgroundColor: '#000000', scale: 2 }).then(canvas => {
+        html2canvas(document.getElementById('share-card-template'), { backgroundColor: '#000000', scale: 2 }).then(canvas => {
             const link = document.createElement('a');
             link.download = `Palestine_Soul - ${name}.png`;
             link.href = canvas.toDataURL();
@@ -517,24 +528,19 @@
         renderWorld();
     };
 
-    // تدوير واختيار اللغات الأربعة الكبرى ديناميكياً
-    window.rotateLanguage = function() {
-        let idx = langOrder.indexOf(currentLang);
-        idx = (idx + 1) % langOrder.length;
-        currentLang = langOrder[idx];
-        
-        document.getElementById('lang-btn').innerText = `🌐 ${currentLang.toUpperCase()}`;
+    // دالة اختيار واختصار اللغة الجديدة عبر القائمة المنسدلة
+    window.selectLanguage = function(langCode) {
+        currentLang = langCode;
+        document.getElementById('lang-btn').innerText = `🌐 ${langCode.toUpperCase()}`;
         updateUIAllLanguages();
     };
 
     function updateUIAllLanguages() {
         const t = translations[currentLang];
         
-        // تطبيق اتجاه المستند واللغة لتهيئة الهاتف
         document.documentElement.lang = currentLang;
         document.documentElement.dir = t.dir;
         
-        // ترجمة الخانات والأزرار والقوائم
         document.getElementById('search-input').placeholder = t.search;
         document.getElementById('tab-gaza').innerText = t.gaza;
         document.getElementById('tab-press').innerText = t.press;
@@ -545,7 +551,6 @@
         document.getElementById('music-btn').innerText = isPlaying ? t.music_on : t.music_off;
         
         document.getElementById('verse').innerText = t.verse;
-        document.getElementById('mourning-text').innerText = t.mourning;
         document.getElementById('dev-tag').innerText = t.dev;
         document.getElementById('label').innerText = t.label;
         
