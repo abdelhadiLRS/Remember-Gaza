@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أرواح غزة | Gaza Souls</title>
+    
+    <script src="https://pixijs.download/release/pixi.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&family=Amiri:ital@1&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --primary-red: #cc0000; --glass: rgba(255, 255, 255, 0.1); }
+        body { margin: 0; padding: 0; background-color: #000; overflow: hidden; font-family: 'Cairo', sans-serif; color: white; }
+        canvas { display: block; }
+
+        /* واجهة المستخدم */
+        #ui-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+        .interactive { pointer-events: auto; }
+
+        #header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 25px; background: linear-gradient(to bottom, rgba(0,0,0,1), transparent); 
+        }
+
+        #search-input {
+            background: var(--glass); border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white; padding: 12px 25px; border-radius: 30px; width: 220px;
+            outline: none; transition: 0.4s; font-family: 'Cairo';
+        }
+        #search-input:focus { width: 300px; border-color: var(--primary-red); }
+
+        .top-btns { display: flex; gap: 10px; }
+        button {
+            background: var(--glass); color: white; border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 18px; border-radius: 5px; cursor: pointer; font-family: 'Cairo'; transition: 0.3s;
+        }
+        button.active { background: var(--primary-red); border-color: #ff4d4d; }
+
+        /* نافذة التبرع النابضة */
+        #donate-box {
+            position: fixed; top: 100px; left: 25px; background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px); border: 1px solid rgba(255, 0, 0, 0.3);
+            padding: 20px; border-radius: 15px; width: 200px; text-align: center;
+            animation: pulse-border 2s infinite; z-index: 1000;
+        }
+        @keyframes pulse-border {
+            0%, 100% { border-color: rgba(204, 0, 0, 0.3); box-shadow: 0 0 0px transparent; }
+            50% { border-color: rgba(255, 0, 0, 0.8); box-shadow: 0 0 15px rgba(204, 0, 0, 0.4); }
+        }
+        .heart { font-size: 1.8rem; display: block; margin-bottom: 8px; animation: heartbeat 1.5s infinite; }
+        @keyframes heartbeat { 0%, 30%, 100% { transform: scale(1); } 15% { transform: scale(1.2); } }
+        #donate-link {
+            background: var(--primary-red); color: white; text-decoration: none;
+            padding: 8px 20px; border-radius: 20px; display: inline-block; font-size: 0.9rem; font-weight: bold;
+        }
+        #close-donate { position: absolute; top: 5px; right: 5px; background: none; border: none; color: #666; cursor: pointer; }
+
+        /* العداد والمطور */
+        #counter-container { position: fixed; bottom: 40px; right: 40px; text-align: right; }
+        #number { font-size: 5rem; font-weight: 700; line-height: 1; letter-spacing: -2px; }
+        
+        #dev-credits { 
+            position: fixed; bottom: 40px; left: 40px; text-align: left; 
+            max-width: 450px; border-left: 3px solid var(--primary-red); padding-left: 20px;
+        }
+        .quran-verse { font-family: 'Amiri', serif; font-size: 1.1rem; color: #ccc; margin-bottom: 5px; }
+        .social-links a { color: var(--primary-red); text-decoration: none; margin-right: 15px; font-size: 0.8rem; font-weight: bold; }
+
+        /* بطاقة المعلومات */
+        #tooltip {
+            position: fixed; background: white; color: black; padding: 12px;
+            border-radius: 4px; display: none; pointer-events: none;
+            transform: translate(-50%, -130%); z-index: 100;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8); min-width: 180px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="ui-layer">
+    <div id="header">
+        <input type="text" id="search-input" class="interactive" placeholder="بحث عن اسم...">
+        <div class="top-btns">
+            <button id="music-btn" class="interactive">🎵 صوت</button>
+            <button id="lang-btn" class="interactive">EN</button>
+        </div>
+    </div>
+
+    <div id="donate-box" class="interactive">
+        <button id="close-donate">×</button>
+        <span class="heart">❤️</span>
+        <p id="donate-text" style="font-size: 0.85rem; margin-bottom: 12px;">دعمك يضمن استمرار الأثر</p>
+        <a href="رابط_التبرع_هنا" target="_blank" id="donate-link">تبرع الآن</a>
+    </div>
+
+    <div id="dev-credits" class="interactive">
+        <div class="quran-verse" id="verse">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</div>
+        <div class="mourning" id="mourning-text" style="color: #888; font-size: 0.8rem;">إنا لله وإنا إليه راجعون</div>
+        <div class="dev-info" style="margin-top: 10px; font-size: 0.9rem;">
+            <span id="dev-tag">تطوير: **عبد الهادي**</span>
+            <div class="social-links">
+                <a href="رابط_فيسبوك" target="_blank">Facebook</a>
+                <a href="رابط_تويتر" target="_blank">X (Twitter)</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="counter-container">
+        <div id="number">0</div>
+        <div id="label" style="opacity: 0.6;">شهيداً وثّقت أسماؤهم</div>
+    </div>
+</div>
+
+<div id="tooltip"></div>
+
+<script>
+    let app, points = [], data = [], currentLang = 'ar', isPlaying = false;
+
+    // 1. نظام الصوت المحلي
+    const sound = new Howl({
+        src: ['ambient.mp3'], // تأكد من وجود الملف في مجلد المشروع
+        loop: true, volume: 0.4, html5: true
+    });
+
+    // 2. تهيئة المحرك الرسومي (PixiJS)
+    async function init() {
+        app = new PIXI.Application();
+        await app.init({ resizeTo: window, backgroundColor: 0x000000, antialias: true });
+        document.body.appendChild(app.canvas);
+
+        try {
+            // تحميل البيانات
+            const res = await fetch('data.json'); 
+            data = await res.json();
+            renderWorld();
+        } catch (e) {
+            console.log("جارٍ تحميل بيانات تجريبية...");
+            data = Array.from({length: 40000}, (_, i) => ({ name_ar: "شهيد فلسطيني "+i, name_en: "Martyr "+i, age: Math.floor(Math.random()*80) }));
+            renderWorld();
+        }
+    }
+
+    function renderWorld() {
+        const container = new PIXI.ParticleContainer(data.length, { scale: true, position: true, alpha: true, tint: true });
+        app.stage.addChild(container);
+
+        const g = new PIXI.Graphics().circle(0,0,1.2).fill(0xffffff);
+        const tex = app.renderer.generateTexture(g);
+
+        data.forEach(p => {
+            const dot = new PIXI.Sprite(tex);
+            dot.x = Math.random() * app.screen.width;
+            dot.y = Math.random() * app.screen.height;
+            dot.anchor.set(0.5);
+            dot.alpha = 0.3;
+            dot.userData = p;
+            dot.eventMode = 'static';
+            container.addChild(dot);
+            points.push(dot);
+        });
+
+        setupInteraction();
+        animateCounter(data.length);
+    }
+
+    function setupInteraction() {
+        const tooltip = document.getElementById('tooltip');
+        
+        app.stage.eventMode = 'static';
+        app.stage.on('pointermove', (e) => {
+            const hit = app.renderer.events.hitTest(e.global);
+            if (hit && hit.userData) {
+                tooltip.style.display = 'block';
+                tooltip.style.left = e.global.x + 'px';
+                tooltip.style.top = e.global.y + 'px';
+                const d = hit.userData;
+                tooltip.innerHTML = currentLang === 'ar' ? `<b>${d.name_ar}</b> العمر: ${d.age || '؟'}` : `<b>${d.name_en || 'Unknown'}</b> Age: ${d.age || '?'}`;
+                hit.alpha = 1; hit.scale.set(3);
+            } else {
+                tooltip.style.display = 'none';
+                points.filter(p => p.alpha > 0.4).forEach(p => { p.alpha = 0.3; p.scale.set(1); });
+            }
+        });
+
+        // البحث
+        document.getElementById('search-input').oninput = (e) => {
+            const val = e.target.value.toLowerCase();
+            points.forEach(p => {
+                const match = p.userData.name_ar.includes(val) || (p.userData.name_en && p.userData.name_en.toLowerCase().includes(val));
+                if(val === "") { p.alpha = 0.3; p.tint = 0xffffff; }
+                else { p.alpha = match ? 1 : 0.05; p.tint = match ? 0xff0000 : 0xffffff; }
+            });
+        };
+
+        // الأزرار
+        document.getElementById('music-btn').onclick = function() {
+            if(!isPlaying) { sound.play(); this.classList.add('active'); } 
+            else { sound.pause(); this.classList.remove('active'); }
+            isPlaying = !isPlaying;
+        };
+
+        document.getElementById('close-donate').onclick = () => document.getElementById('donate-box').style.display = 'none';
+
+        document.getElementById('lang-btn').onclick = function() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            this.innerText = currentLang === 'ar' ? 'EN' : 'AR';
+            updateUI();
+        };
+    }
+
+    function updateUI() {
+        const isAr = currentLang === 'ar';
+        document.getElementById('label').innerText = isAr ? "شهيداً وثّقت أسماؤهم" : "Documented Souls Lost";
+        document.getElementById('search-input').placeholder = isAr ? "بحث عن اسم..." : "Search name...";
+        document.getElementById('verse').innerText = isAr ? '"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"' : '"Think not of those who are slain in Allah\'s way as dead. Nay, they live with their Lord"';
+        document.getElementById('donate-text').innerText = isAr ? "دعمك يضمن استمرار الأثر" : "Your support keeps the legacy alive";
+        document.getElementById('donate-link').innerText = isAr ? "تبرع الآن" : "Donate Now";
+        document.getElementById('dev-tag').innerText = isAr ? "تطوير: **عبد الهادي**" : "Dev: **Abdelhadi**";
+    }
+
+    function animateCounter(target) {
+        let cur = 0;
+        const step = Math.ceil(target / 100);
+        const timer = setInterval(() => {
+            cur += step;
+            if(cur >= target) { cur = target; clearInterval(timer); }
+            document.getElementById('number').innerText = cur.toLocaleString();
+        }, 20);
+    }
+
+    init();
+</script>
+</body>
+</html>
