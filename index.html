@@ -5,98 +5,133 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>أرواح غزة وفلسطين | Palestinian Souls</title>
     
-    <!-- مكتبات الرسوميات والصوت المستقرة والمحدثة -->
+    <!-- مكتبات الرسوميات والصوت والمشاركة المستقرة والمحدثة -->
     <script src="https://pixijs.download/release/pixi.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&family=Amiri:ital@1&display=swap" rel="stylesheet">
     
     <style>
-        :root { --primary-red: #cc0000; --glass: rgba(255, 255, 255, 0.1); }
-        body { margin: 0; padding: 0; background-color: #000; overflow: hidden; font-family: 'Cairo', sans-serif; color: white; }
+        :root { --primary-red: #cc0000; --glass: rgba(15, 15, 15, 0.65); --border-glass: rgba(255, 255, 255, 0.12); }
+        body { margin: 0; padding: 0; background-color: #030303; overflow: hidden; font-family: 'Cairo', sans-serif; color: white; }
+        
+        /* تأثير الخلفية السديمية المتحركة */
+        .nebula-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;
+            background: radial-gradient(circle at 30% 20%, rgba(204, 0, 0, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 70% 80%, rgba(27, 94, 32, 0.06) 0%, transparent 45%);
+            animation: nebulaPulse 12s ease-in-out infinite alternate;
+        }
+        @keyframes nebulaPulse { 0% { opacity: 0.7; } 100% { opacity: 1; } }
+
         canvas { display: block; position: absolute; top: 0; left: 0; z-index: 1; }
+
+        /* شاشة التحميل الذكية */
+        #preloader {
+            position: fixed; top:0; left:0; width:100%; height:100%; background:#050505;
+            z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.8s ease;
+        }
+        .loader-pulse { width: 60px; height: 60px; border: 3px solid var(--primary-red); border-radius: 50%; animation: ping 1.5s infinite; margin-bottom: 20px; }
+        @keyframes ping { 0% { transform: scale(0.6); opacity: 1; } 100% { transform: scale(1.3); opacity: 0; } }
 
         #ui-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
         .interactive { pointer-events: auto; }
 
-        /* شريط علوي موحد ومصغر لجميع الأزرار */
+        /* شريط علوي زجاجي يمر الضوء خلفه بنعومة */
         #header { 
             display: flex; justify-content: space-between; align-items: center; 
-            padding: 15px 25px; background: linear-gradient(to bottom, rgba(0,0,0,1), transparent); 
-            gap: 15px; flex-wrap: wrap;
+            padding: 15px 25px; background: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0)); 
+            gap: 15px; flex-wrap: wrap; backdrop-filter: blur(4px);
         }
 
         #search-input {
-            background: var(--glass); border: 1px solid rgba(255, 255, 255, 0.2);
+            background: var(--glass); border: 1px solid var(--border-glass);
             color: white; padding: 10px 20px; border-radius: 30px; width: 150px;
             outline: none; transition: 0.4s; font-family: 'Cairo'; font-size: 0.85rem;
         }
-        #search-input:focus { width: 200px; border-color: var(--primary-red); }
+        #search-input:focus { width: 200px; border-color: var(--primary-red); background: rgba(0,0,0,0.8); }
 
-        /* شريط التبديل بين الأقسام (غزة - الصحفيين - الضفة) */
-        .tabs-container { display: flex; gap: 5px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); }
+        .tabs-container { display: flex; gap: 5px; background: var(--glass); padding: 4px; border-radius: 25px; border: 1px solid var(--border-glass); }
         .tab-btn { background: transparent; border: none; padding: 6px 14px; border-radius: 20px; color: #aaa; cursor: pointer; font-size: 0.8rem; font-family: 'Cairo'; transition: 0.3s; }
         .tab-btn.active { background: var(--primary-red); color: white; font-weight: bold; }
 
         .top-btns { display: flex; gap: 8px; align-items: center; }
         button, .btn-style {
-            background: var(--glass); color: white; border: 1px solid rgba(255, 255, 255, 0.2);
+            background: var(--glass); color: white; border: 1px solid var(--border-glass);
             padding: 8px 14px; border-radius: 20px; cursor: pointer; font-family: 'Cairo'; transition: 0.3s;
             font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; text-decoration: none;
         }
         button.active { background: var(--primary-red); border-color: #ff4d4d; }
 
-        #donate-box {
-            background: rgba(204, 0, 0, 0.2); border: 1px solid rgba(255, 0, 0, 0.4);
-            animation: pulse-border 2s infinite;
-        }
-        @keyframes pulse-border {
-            0%, 100% { box-shadow: 0 0 0px transparent; }
-            50% { box-shadow: 0 0 10px rgba(204, 0, 0, 0.5); }
-        }
+        #donate-box { background: rgba(204, 0, 0, 0.25); border: 1px solid rgba(204, 0, 0, 0.4); animation: pulse-border 2s infinite; }
+        @keyframes pulse-border { 0%, 100% { box-shadow: 0 0 0px transparent; } 50% { box-shadow: 0 0 12px rgba(204, 0, 0, 0.45); } }
 
-        /* العداد وقسم المطور والآية */
-        #counter-container { position: fixed; bottom: 30px; right: 30px; text-align: right; }
+        /* العداد وقسم المطور والآية بخلفيات زجاجية ذكية */
+        #counter-container { position: fixed; bottom: 30px; right: 30px; text-align: right; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 12px; backdrop-filter: blur(4px); }
         #number { font-size: 3.5rem; font-weight: 700; line-height: 1; color: #fff; }
         
         #dev-credits { 
             position: fixed; bottom: 35px; left: 30px; text-align: left; 
             max-width: 400px; border-left: 3px solid var(--primary-red); padding-left: 15px;
+            background: rgba(0,0,0,0.4); padding: 8px 15px; border-radius: 0 12px 12px 0; backdrop-filter: blur(4px);
         }
         .quran-verse { font-family: 'Amiri', serif; font-size: 1rem; color: #ccc; margin-bottom: 5px; }
         
-        /* الحسابات الخاصة في الأسفل وسط الشاشة */
         #bottom-center-links {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
             display: flex; gap: 12px; align-items: center; justify-content: center;
-            z-index: 100; text-align: center; width: auto;
+            z-index: 100; text-align: center; width: auto; background: rgba(0,0,0,0.4); padding: 8px 16px; border-radius: 25px; backdrop-filter: blur(4px); border: 1px solid var(--border-glass);
         }
         .dev-tag-style { font-size: 0.85rem; color: #aaa; margin-left: 5px; font-weight: bold; }
         .social-links a { 
-            color: #fff; background: var(--glass); text-decoration: none; 
-            padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; 
-            border: 1px solid rgba(255,255,255,0.1); transition: 0.3s;
+            color: #fff; background: rgba(255,255,255,0.08); text-decoration: none; 
+            padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; transition: 0.3s;
         }
-        .social-links a:hover { background: var(--primary-red); border-color: #ff3333; }
+        .social-links a:hover { background: var(--primary-red); }
 
         /* بطاقة معلومات الشهيد الفخمة المزينة */
         #tooltip {
-            position: fixed; background: rgba(255, 255, 255, 0.95); color: black; padding: 12px;
-            border-radius: 12px; display: none; pointer-events: none;
+            position: fixed; background: rgba(255, 255, 255, 0.96); color: black; padding: 15px;
+            border-radius: 14px; display: none; pointer-events: auto;
             transform: translate(-50%, -120%); z-index: 100;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5); min-width: 180px;
-            font-family: 'Cairo', sans-serif; text-align: center;
-            border: 2px solid #cc0000;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6); min-width: 200px;
+            font-family: 'Cairo', sans-serif; text-align: center; border: 2px solid #cc0000;
         }
-        .duaa-style { font-family: 'Amiri', serif; font-size: 1.15rem; font-weight: bold; margin-top: 5px; display: block; }
+        .duaa-style { font-family: 'Amiri', serif; font-size: 1.25rem; font-weight: bold; margin-top: 6px; display: block; }
         .male-duaa { color: #1b5e20; }
         .female-duaa { color: #880e4f; }
         .press-tag { color: #0d47a1; font-weight: bold; font-size: 0.85rem; }
         
-        #empty-notice { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); padding: 20px; border-radius: 10px; border: 1px dashed #555; text-align: center; display: none; z-index: 5; }
+        /* زر تحميل البطاقة المدمج */
+        .download-btn {
+            margin-top: 10px; background: #222; color: #fff; border: none; padding: 5px 12px;
+            border-radius: 15px; font-size: 0.75rem; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: 0.2s;
+        }
+        .download-btn:hover { background: var(--primary-red); }
+
+        /* قالب البطاقة المخفي المخصص للتصدير كصورة جودة عالية */
+        #share-card-template {
+            position: fixed; top: -9999px; left: -9999px; width: 400px; height: 400px;
+            background: #000; color: #fff; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center; padding: 30px;
+            box-sizing: border-box; border: 6px double #cc0000; font-family: 'Cairo', sans-serif;
+        }
+        
+        #empty-notice { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.85); padding: 20px; border-radius: 10px; border: 1px dashed #555; text-align: center; display: none; z-index: 5; }
     </style>
 </head>
 <body>
+
+<!-- تأثير السديم الخلفي المريح -->
+<div class="nebula-bg"></div>
+
+<!-- شاشة التحميل المسبق الذكية للملفات الكبيرة -->
+<div id="preloader">
+    <div class="loader-pulse"></div>
+    <div id="loader-text" style="font-size: 1rem; font-weight: 300; letter-spacing: 1px; color: #ccc;">جاري استدعاء سجلات الخلود...</div>
+</div>
 
 <div id="ui-layer">
     <div id="header">
@@ -139,11 +174,21 @@
     </div>
 </div>
 
-<div id="tooltip"></div>
+<!-- صندوق عرض البيانات التفاعلي -->
+<div id="tooltip" class="interactive"></div>
+
+<!-- القالب السري لإنتاج وتوليد بطاقة المشاركة الذكية للشهيد -->
+<div id="share-card-template">
+    <div style="font-family: 'Amiri', serif; font-size: 1.1rem; color: #cc0000; margin-bottom: 15px;">قوافل الشهداء البررة</div>
+    <h2 id="card-name" style="margin: 10px 0; font-size: 1.8rem;"></h2>
+    <p id="card-age" style="font-size: 1.1rem; color: #aaa; margin: 5px 0;"></p>
+    <div id="card-duaa" style="font-family: 'Amiri', serif; font-size: 1.6rem; margin-top: 15px; color: #fff;"></div>
+    <div style="margin-top: 40px; font-size: 0.75rem; color: #555; border-top: 1px solid #222; width: 100%; padding-top: 10px;">أرواح غزة وفلسطين | Palestinian Souls</div>
+</div>
 
 <script>
     let app, mainContainer, points = [], currentLang = 'ar', isPlaying = false;
-    let currentCategory = 'gaza', tooltipTimeout = null;
+    let currentCategory = 'gaza', tooltipTimeout = null, activeSprite = null;
 
     const baseGazaData = [
         { name_ar: "محمد أحمد حمدان", age: 23, gender: "M" },
@@ -168,7 +213,7 @@
 
     async function init() {
         app = new PIXI.Application();
-        await app.init({ resizeTo: window, backgroundColor: 0x000000, antialias: false });
+        await app.init({ resizeTo: window, backgroundColor: 0x030303, antialias: false, backgroundAlpha: 0 });
         document.body.appendChild(app.canvas);
 
         mainContainer = new PIXI.Container();
@@ -177,6 +222,11 @@
 
         await loadExternalFiles();
         renderWorld();
+        
+        // إخفاء شاشة التحميل بنعومة بالغة بعد بناء كامل عالم الشهداء
+        const loader = document.getElementById('preloader');
+        loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 800);
     }
 
     async function loadExternalFiles() {
@@ -213,24 +263,6 @@
         }
     }
 
-    // فحص ذكي لمنع النقاط من المرور فوق الواجهات العلوية والسفلية والكتابات الكلية
-    function isInForbiddenZone(x, y) {
-        // حماية المنطقة العلوية بالكامل (أزرار التحكم وخانة البحث) حتى 100 بكسل لأسفل الشاشة
-        if (y < 100) return true;
-        
-        // حماية المنطقة السفلية اليسرى (الآية القرآنية الكريمة)
-        if (y > app.screen.height - 120 && x < 420) return true;
-        
-        // حماية المنطقة السفلية اليمنى (العداد والرقم الإحصائي)
-        if (y > app.screen.height - 120 && x > app.screen.width - 250) return true;
-        
-        // حماية المنطقة السفلية الوسطى (روابط الحسابات والملفات الشخصية)
-        const centerX = app.screen.width / 2;
-        if (y > app.screen.height - 80 && x > centerX - 180 && x < centerX + 180) return true;
-
-        return false;
-    }
-
     function renderWorld() {
         points.forEach(p => p.destroy());
         points = [];
@@ -263,15 +295,9 @@
             
             const dot = new PIXI.Sprite(tex);
             
-            let posX, posY, attempts = 0;
-            do {
-                posX = Math.random() * (app.screen.width - 20) + 10;
-                posY = Math.random() * (app.screen.height - 20) + 10;
-                attempts++;
-            } while (isInForbiddenZone(posX, posY) && attempts < 15);
-
-            dot.x = posX;
-            dot.y = posY;
+            // عودة النقاط لتغطي كامل الصفحة من الحافة للحافة لجمالية المشهد
+            dot.x = Math.random() * (app.screen.width - 20) + 10;
+            dot.y = Math.random() * (app.screen.height - 20) + 10;
             dot.anchor.set(0.5);
             dot.alpha = Math.random() * 0.4 + 0.2; 
             
@@ -285,7 +311,7 @@
             
             dot.on('pointerdown', (e) => { e.stopPropagation(); showTooltip(e, dot); });
             dot.on('pointerover', (e) => showTooltip(e, dot));
-            dot.on('pointerout', () => startHideTimer(dot));
+            dot.on('pointerout', () => startHideTimer());
 
             mainContainer.addChild(dot);
             points.push(dot);
@@ -298,8 +324,9 @@
 
     function showTooltip(event, sprite) {
         if (tooltipTimeout) { clearTimeout(tooltipTimeout); tooltipTimeout = null; }
+        activeSprite = sprite;
 
-        points.forEach(p => { if(p !== sprite) { p.alpha = 0.3; p.scale.set(1); p.tint = 0xffffff; } });
+        points.forEach(p => { if(p !== sprite) { p.alpha = 0.2; p.scale.set(1); p.tint = 0xffffff; } });
 
         const d = sprite.userData;
         tooltip.style.display = 'block';
@@ -309,38 +336,64 @@
         const name = d.name_ar || "غير مدرج";
         const age = d.age;
         
-        let duaaText = "";
+        let duaaText = "", plainDuaa = "";
         if (d.isPress) {
+            plainDuaa = "رحمه الله";
             duaaText = `<span class="press-tag">شَهيدُ الصَّحافة</span> <br><span class="duaa-style male-duaa">﴿ رَحِمَهُۥٓ ٱللَّهُ ﴾</span>`;
         } else if (d.gender === "F") {
+            plainDuaa = "رحمها الله";
             duaaText = `<span class="duaa-style female-duaa">﴿ رَحِمَهَا ٱللَّهُ ﴾</span>`;
         } else {
+            plainDuaa = "رحمه الله";
             duaaText = `<span class="duaa-style male-duaa">﴿ رَحِمَهُۥٓ ٱللَّهُ ﴾</span>`;
         }
 
+        const btnLabel = currentLang === 'ar' ? '📥 حفظ البطاقة' : '📥 Download Card';
+
         tooltip.innerHTML = currentLang === 'ar' ? 
-            `<b>${name}</b> <br>العمر: ${age} سنة <br>${duaaText}` : 
-            `<b>${name}</b> <br>Age: ${age} years <br>${duaaText}`;
+            `<b>${name}</b> <br>العمر: ${age} سنة <br>${duaaText}
+             <button class="download-btn" onclick="downloadShareCard('${name}', '${age}', '${plainDuaa}')">${btnLabel}</button>` : 
+            `<b>${name}</b> <br>Age: ${age} years <br>${duaaText}
+             <button class="download-btn" onclick="downloadShareCard('${name}', '${age}', '${plainDuaa}')">${btnLabel}</button>`;
         
         sprite.alpha = 1;
         sprite.scale.set(3);
         sprite.tint = 0xff3333; 
     }
 
-    function startHideTimer(sprite) {
+    // السماح للماوس بدخول الـ Tooltip دون اختفائه، وتفعيل مؤقت الـ 2 ثانية عند المغادرة الكاملة
+    tooltip.addEventListener('mouseenter', () => { if (tooltipTimeout) clearTimeout(tooltipTimeout); });
+    tooltip.addEventListener('mouseleave', () => { startHideTimer(); });
+
+    function startHideTimer() {
         if (tooltipTimeout) clearTimeout(tooltipTimeout);
-        
         tooltipTimeout = setTimeout(() => {
             tooltip.style.display = 'none';
-            resetSpriteAppearance(sprite);
+            if (activeSprite) { resetSpriteAppearance(activeSprite); activeSprite = null; }
+            points.forEach(p => resetSpriteAppearance(p));
         }, 2000); 
     }
 
     function resetSpriteAppearance(sprite) {
-        sprite.alpha = 0.4;
+        sprite.alpha = Math.random() * 0.4 + 0.2;
         sprite.scale.set(1);
         sprite.tint = 0xffffff;
     }
+
+    // خوارزمية ذكية مدمجة لالتقاط وتصميم صورة فورية للشهيد لوسائل التواصل
+    window.downloadShareCard = function(name, age, duaa) {
+        document.getElementById('card-name').innerText = name;
+        document.getElementById('card-age').innerText = currentLang === 'ar' ? `العمر: ${age} سنة` : `Age: ${age} years`;
+        document.getElementById('card-duaa').innerText = `﴿ ${duaa} ﴾`;
+
+        const target = document.getElementById('share-card-template');
+        html2canvas(target, { backgroundColor: '#000000', scale: 2 }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `شهيد - ${name}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+    };
 
     window.switchCategory = function(category) {
         currentCategory = category;
@@ -399,13 +452,6 @@
                 if (p.x > app.screen.width) p.x = 0;
                 if (p.y < 0) p.y = app.screen.height;
                 if (p.y > app.screen.height) p.y = 0;
-
-                if (isInForbiddenZone(p.x, p.y)) {
-                    p.speedX *= -1;
-                    p.speedY *= -1;
-                    p.x += p.speedX * 2;
-                    p.y += p.speedY * 2;
-                }
             }
         });
     }
@@ -416,6 +462,7 @@
         document.getElementById('verse').innerText = isAr ? '"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"' : '"Think not of those who are slain in Allah\'s way as dead. Nay, they live with their Lord"';
         document.getElementById('donate-text').innerText = isAr ? "تبرع الآن" : "Donate";
         document.getElementById('label').innerText = isAr ? "شهيداً وثّقت أسماؤهم" : "Documented Souls Lost";
+        document.getElementById('loader-text').innerText = isAr ? "جاري استدعاء سجلات الخلود..." : "Summoning eternity registries...";
     }
 
     function animateCounter(target) {
