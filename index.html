@@ -13,7 +13,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&family=Amiri:ital@1&display=swap" rel="stylesheet">
     
     <style>
-        :root { --primary-red: #cc0000; --glass: rgba(15, 15, 15, 0.75); --border-glass: rgba(255, 255, 255, 0.12); }
+        /* الاعتماد على لون الدم الداكن المعتم بالكامل #800000 أو #660000 */
+        :root { 
+            --primary-red: #cc0000; 
+            --blood-dark: #500000; 
+            --blood-pure: #660000; 
+            --border-glass: rgba(255, 255, 255, 0.15); 
+        }
+        
         body { margin: 0; padding: 0; background-color: #030303; overflow: hidden; font-family: 'Cairo', sans-serif; color: white; }
         
         .nebula-bg {
@@ -37,53 +44,68 @@
         #ui-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
         .interactive { pointer-events: auto; }
 
+        /* شريط علوي معتم بلون الدم يمنع رؤية ما خلفه */
         #header { 
             display: flex; justify-content: space-between; align-items: center; 
-            padding: 15px 25px; background: linear-gradient(to bottom, rgba(0,0,0,0.95), rgba(0,0,0,0)); 
+            padding: 15px 25px; background: var(--blood-dark); 
+            border-bottom: 2px solid var(--primary-red);
             gap: 15px; flex-wrap: wrap; z-index: 20; position: relative;
         }
 
         #search-input {
-            background: var(--glass); border: 1px solid var(--border-glass);
+            background: #300000; border: 1px solid var(--primary-red);
             color: white; padding: 10px 20px; border-radius: 30px; width: 150px;
             outline: none; transition: 0.4s; font-family: 'Cairo'; font-size: 0.85rem;
         }
-        #search-input:focus { width: 200px; border-color: var(--primary-red); background: rgba(0,0,0,0.8); }
+        #search-input:focus { width: 200px; border-color: #ff3333; background: #200000; }
 
-        .tabs-container { display: flex; gap: 5px; background: var(--glass); padding: 4px; border-radius: 25px; border: 1px solid var(--border-glass); }
-        .tab-btn { background: transparent; border: none; padding: 6px 14px; border-radius: 20px; color: #aaa; cursor: pointer; font-size: 0.8rem; font-family: 'Cairo'; transition: 0.3s; }
+        .tabs-container { display: flex; gap: 5px; background: #350000; padding: 4px; border-radius: 25px; border: 1px solid var(--primary-red); }
+        .tab-btn { background: transparent; border: none; padding: 6px 14px; border-radius: 20px; color: #ccc; cursor: pointer; font-size: 0.8rem; font-family: 'Cairo'; transition: 0.3s; }
         .tab-btn.active { background: var(--primary-red); color: white; font-weight: bold; }
 
         .top-btns { display: flex; gap: 8px; align-items: center; }
         button, .btn-style {
-            background: var(--glass); color: white; border: 1px solid var(--border-glass);
+            background: #400000; color: white; border: 1px solid var(--primary-red);
             padding: 8px 14px; border-radius: 20px; cursor: pointer; font-family: 'Cairo'; transition: 0.3s;
             font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; text-decoration: none;
         }
+        button:hover, .btn-style:hover { background: var(--primary-red); }
         button.active { background: var(--primary-red); border-color: #ff4d4d; }
 
-        #donate-box { background: rgba(204, 0, 0, 0.25); border: 1px solid rgba(204, 0, 0, 0.4); animation: pulse-border 2s infinite; }
-        @keyframes pulse-border { 0%, 100% { box-shadow: 0 0px 0px transparent; } 50% { box-shadow: 0 0 12px rgba(204, 0, 0, 0.45); } }
+        #donate-box { background: var(--primary-red); border: 1px solid #ff3333; animation: pulse-border 2s infinite; }
+        @keyframes pulse-border { 0%, 100% { box-shadow: 0 0px 0px transparent; } 50% { box-shadow: 0 0 12px #ff0000; } }
 
-        #counter-container { position: fixed; bottom: 30px; right: 30px; text-align: right; background: rgba(0,0,0,0.6); padding: 10px 15px; border-radius: 12px; border: 1px solid var(--border-glass); }
+        /* العداد معتم بالكامل بلون الدم */
+        #counter-container { 
+            position: fixed; bottom: 30px; right: 30px; text-align: right; 
+            background: var(--blood-dark); padding: 10px 15px; border-radius: 12px; 
+            border: 1px solid var(--primary-red); box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
         #number { font-size: 3.5rem; font-weight: 700; line-height: 1; color: #fff; }
         
+        /* قسم المطور معتم بالكامل بلون الدم */
         #dev-credits { 
             position: fixed; bottom: 35px; left: 30px; text-align: left; 
-            max-width: 400px; border-left: 3px solid var(--primary-red); padding-left: 15px;
-            background: rgba(0,0,0,0.6); padding: 10px 15px; border-radius: 0 12px 12px 0; border: 1px solid var(--border-glass); border-left: 3px solid var(--primary-red);
+            max-width: 400px; padding-left: 15px;
+            background: var(--blood-dark); padding: 10px 15px; border-radius: 0 12px 12px 0; 
+            border: 1px solid var(--primary-red); border-left: 5px solid var(--primary-red);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
-        .quran-verse { font-family: 'Amiri', serif; font-size: 1rem; color: #ccc; margin-bottom: 5px; }
+        .quran-verse { font-family: 'Amiri', serif; font-size: 1rem; color: #fff; margin-bottom: 5px; }
         
+        /* روابط الحسابات معتمة بالكامل بلون الدم وسط أسفل الشاشة */
         #bottom-center-links {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
             display: flex; gap: 12px; align-items: center; justify-content: center;
-            z-index: 100; text-align: center; width: auto; background: rgba(0,0,0,0.6); padding: 8px 16px; border-radius: 25px; border: 1px solid var(--border-glass);
+            z-index: 100; text-align: center; width: auto; background: var(--blood-dark); 
+            padding: 8px 16px; border-radius: 25px; border: 1px solid var(--primary-red);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
-        .dev-tag-style { font-size: 0.85rem; color: #aaa; margin-left: 5px; font-weight: bold; }
+        .dev-tag-style { font-size: 0.85rem; color: #fff; margin-left: 5px; font-weight: bold; }
         .social-links a { 
-            color: #fff; background: rgba(255,255,255,0.08); text-decoration: none; 
-            padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; transition: 0.3s;
+            color: #fff; background: #300000; text-decoration: none; 
+            padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; 
+            border: 1px solid var(--primary-red); transition: 0.3s;
         }
         .social-links a:hover { background: var(--primary-red); }
 
@@ -92,7 +114,7 @@
             border-radius: 14px; display: none; pointer-events: auto;
             transform: translate(-50%, -120%); z-index: 100;
             box-shadow: 0 20px 40px rgba(0,0,0,0.6); min-width: 200px;
-            font-family: 'Cairo', sans-serif; text-align: center; border: 2px solid #cc0000;
+            font-family: 'Cairo', sans-serif; text-align: center; border: 2px solid var(--primary-red);
         }
         .duaa-style { font-family: 'Amiri', serif; font-size: 1.25rem; font-weight: bold; margin-top: 6px; display: block; }
         .male-duaa { color: #1b5e20; }
@@ -109,22 +131,22 @@
             position: fixed; top: -9999px; left: -9999px; width: 400px; height: 400px;
             background: #000; color: #fff; display: flex; flex-direction: column;
             justify-content: center; align-items: center; text-align: center; padding: 30px;
-            box-sizing: border-box; border: 6px double #cc0000; font-family: 'Cairo', sans-serif;
+            box-sizing: border-box; border: 6px double var(--primary-red); font-family: 'Cairo', sans-serif;
         }
         
-        #empty-notice { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.85); padding: 20px; border-radius: 10px; border: 1px dashed #555; text-align: center; display: none; z-index: 5; }
+        #empty-notice { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.9); padding: 20px; border-radius: 10px; border: 1px dashed #555; text-align: center; display: none; z-index: 5; }
 
-        /* نافذة الإحصائيات الزجاجية الجديدة */
+        /* نافذة الإحصائيات معتمة تماماً بلون الدم الملكي */
         #analytics-modal {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(15px);
-            border: 1px solid var(--border-glass); padding: 25px; border-radius: 20px;
-            width: 85%; max-width: 450px; z-index: 500; display: none; box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            background: var(--blood-dark); border: 2px solid var(--primary-red); 
+            padding: 25px; border-radius: 20px; width: 85%; max-width: 450px; z-index: 500; 
+            display: none; box-shadow: 0 30px 60px rgba(0,0,0,0.9);
         }
         .stat-row { margin: 15px 0; }
-        .stat-bar-bg { background: rgba(255,255,255,0.05); height: 8px; border-radius: 5px; overflow: hidden; margin-top: 5px; }
+        .stat-bar-bg { background: rgba(0,0,0,0.4); height: 8px; border-radius: 5px; overflow: hidden; margin-top: 5px; border: 1px solid rgba(255,255,255,0.1); }
         .stat-bar-fill { background: var(--primary-red); height: 100%; width: 0%; transition: width 1.5s cubic-bezier(0.1, 1, 0.1, 1); }
-        .close-modal { position: absolute; top: 15px; right: 15px; background: none; border: none; color: #666; font-size: 1.5rem; cursor: pointer; }
+        .close-modal { position: absolute; top: 15px; right: 15px; background: none; border: none; color: #aaa; font-size: 1.5rem; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -147,7 +169,6 @@
         </div>
 
         <div class="top-btns">
-            <!-- زر فتح لوحة البيانات الإحصائية المقترحة -->
             <button id="stats-btn" class="interactive" onclick="toggleAnalytics(true)">📊 إحصائيات</button>
             <a href="#" target="_blank" id="donate-box" class="btn-style interactive">❤️ <span id="donate-text">تبرع الآن</span></a>
             <button id="music-btn" class="interactive">🎵 صوت</button>
@@ -161,7 +182,7 @@
 
     <div id="dev-credits" class="interactive">
         <div class="quran-verse" id="verse">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</div>
-        <div class="mourning" id="mourning-text" style="color: #888; font-size: 0.75rem;">إنا لله وإنا إليه راجعون</div>
+        <div class="mourning" id="mourning-text" style="color: #bbb; font-size: 0.75rem;">إنا لله وإنا إليه راجعون</div>
     </div>
 
     <div id="bottom-center-links" class="interactive">
@@ -175,24 +196,23 @@
 
     <div id="counter-container">
         <div id="number">0</div>
-        <div id="label" style="opacity: 0.6; font-size: 0.85rem;">شهيداً وثّقت أسماؤهم</div>
+        <div id="label" style="opacity: 0.8; font-size: 0.85rem; color: #ddd;">شهيداً وثّقت أسماؤهم</div>
     </div>
 </div>
 
-<!-- لوحة الإحصائيات الزجاجية المضافة كمقترح جودة أعلى -->
 <div id="analytics-modal" class="interactive">
     <button class="close-modal" onclick="toggleAnalytics(false)">×</button>
-    <h3 style="margin-top:0; border-bottom: 1px solid #222; padding-bottom: 10px;" id="modal-title">سجل التوثيق الإحصائي</h3>
+    <h3 style="margin-top:0; border-bottom: 1px solid var(--primary-red); padding-bottom: 10px;" id="modal-title">سجل التوثيق الإحصائي</h3>
     <div class="stat-row">
-        <div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span>الأطفال والأجنة</span><span style="color:var(--primary-red)">42%</span></div>
+        <div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span>الأطفال والأجنة</span><span style="color:#ff6666; font-weight:bold;">42%</span></div>
         <div class="stat-bar-bg"><div class="stat-bar-fill" id="bar-children"></div></div>
     </div>
     <div class="stat-row">
-        <div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span>النساء والأمهات</span><span style="color:var(--primary-red)">31%</span></div>
+        <div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span>النساء والأمهات</span><span style="color:#ff6666; font-weight:bold;">31%</span></div>
         <div class="stat-bar-bg"><div class="stat-bar-fill" id="bar-women"></div></div>
     </div>
     <div class="stat-row">
-        <div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span>الشيوخ وكبار السن</span><span style="color:var(--primary-red)">18%</span></div>
+        <div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span>الشيوخ وكبار السن</span><span style="color:#ff6666; font-weight:bold;">18%</span></div>
         <div class="stat-bar-bg"><div class="stat-bar-fill" id="bar-elders"></div></div>
     </div>
 </div>
@@ -200,7 +220,7 @@
 <div id="tooltip" class="interactive"></div>
 
 <div id="share-card-template">
-    <div style="font-family: 'Amiri', serif; font-size: 1.1rem; color: #cc0000; margin-bottom: 15px;">قوافل الشهداء البررة</div>
+    <div style="font-family: 'Amiri', serif; font-size: 1.1rem; color: var(--primary-red); margin-bottom: 15px;">قوافل الشهداء البررة</div>
     <h2 id="card-name" style="margin: 10px 0; font-size: 1.8rem;"></h2>
     <p id="card-age" style="font-size: 1.1rem; color: #aaa; margin: 5px 0;"></p>
     <div id="card-duaa" style="font-family: 'Amiri', serif; font-size: 1.6rem; margin-top: 15px; color: #fff;"></div>
@@ -210,6 +230,7 @@
 <script>
     let app, mainContainer, points = [], currentLang = 'ar', isPlaying = false;
     let currentCategory = 'gaza', tooltipTimeout = null, activeSprite = null;
+    let analyticsTimeout = null; // مؤقت التحكم في إغلاق الإحصائيات
 
     const baseGazaData = [
         { name_ar: "محمد أحمد حمدان", age: 23, gender: "M" },
@@ -225,7 +246,6 @@
     let pressSouls = [];
     let westbankSouls = [];
 
-    // إعداد الأصوات (البيئة + صوت النبضة التفاعلية عند النقر)
     const sound = new Howl({ src: ['ambient.mp3'], loop: true, volume: 0.4, html5: false });
     const clickSound = new Howl({ src: ['click.mp3'], volume: 0.5 });
 
@@ -280,18 +300,17 @@
         }
     }
 
-    // خوارزمية محسنة 100% لإبعاد النقاط تماماً عن كافة الواجهات والخانات العلوية والسفلية
     function isInForbiddenZone(x, y) {
-        // 1. إبعاد تام عن الهيدر العلوي بأكمله (أول 125 بكسل) لمنع الوميض تحت الأزرار
+        // إبعاد كامل عن النطاق العلوي المعتم (أول 125 بكسل)
         if (y < 125) return true;
         
-        // 2. إبعاد عن الركن السفلي الأيسر (الآية القرآنية الكريمة ومربعات التوثيق)
+        // إبعاد عن الركن السفلي الأيسر (الآية الكريمة)
         if (y > app.screen.height - 145 && x < 440) return true;
         
-        // 3. إبعاد عن الركن السفلي الأيمن (عداد الأرقام الإحصائي)
+        // إبعاد عن الركن السفلي الأيمن (العداد)
         if (y > app.screen.height - 145 && x > app.screen.width - 270) return true;
         
-        // 4. إبعاد عن السنتر السفلي الأوسط (روابط المطور والشبكات الاجتماعية)
+        // إبعاد عن السنتر السفلي (حسابات المطور)
         const centerX = app.screen.width / 2;
         if (y > app.screen.height - 100 && x > centerX - 200 && x < centerX + 200) return true;
 
@@ -367,7 +386,6 @@
         if (tooltipTimeout) { clearTimeout(tooltipTimeout); tooltipTimeout = null; }
         activeSprite = sprite;
 
-        // إطلاق النبضة الصوتية التفاعلية الهادئة عند اللمس أو تصفح الاسم
         try { clickSound.play(); } catch(e){}
 
         points.forEach(p => { if(p !== sprite) { p.alpha = 0.2; p.scale.set(1); p.tint = 0xffffff; } });
@@ -423,16 +441,24 @@
         sprite.tint = 0xffffff;
     }
 
-    // فتح وإغلاق لوحة التحليلات البيانية المقترحة تضامنياً
+    // تفعيل لوحة الإحصائيات مع الإغلاق الذكي الإجباري بعد ثانيتين كاملتين (2000ms)
     window.toggleAnalytics = function(show) {
         const modal = document.getElementById('analytics-modal');
+        if (analyticsTimeout) clearTimeout(analyticsTimeout);
+
         modal.style.display = show ? 'block' : 'none';
+        
         if(show) {
             setTimeout(() => {
                 document.getElementById('bar-children').style.width = '42%';
                 document.getElementById('bar-women').style.width = '31%';
                 document.getElementById('bar-elders').style.width = '18%';
             }, 100);
+
+            // تفعيل الاختفاء التلقائي الفوري بعد ثانيتين
+            analyticsTimeout = setTimeout(() => {
+                window.toggleAnalytics(false);
+            }, 2000);
         } else {
             document.getElementById('bar-children').style.width = '0%';
             document.getElementById('bar-women').style.width = '0%';
@@ -512,7 +538,6 @@
                 if (p.y < 0) p.y = app.screen.height;
                 if (p.y > app.screen.height) p.y = 0;
 
-                // نظام الارتداد المحسن عند الاقتراب من الخانات لضمان المسافة الآمنة
                 if (isInForbiddenZone(p.x, p.y)) {
                     p.speedX *= -1;
                     p.speedY *= -1;
