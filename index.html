@@ -71,6 +71,7 @@
             border-radius: 4px; display: none; pointer-events: none;
             transform: translate(-50%, -130%); z-index: 100;
             box-shadow: 0 15px 35px rgba(0,0,0,0.8); min-width: 180px;
+            font-family: 'Cairo', sans-serif; text-align: center;
         }
     </style>
 </head>
@@ -115,7 +116,7 @@
 <script>
     let app, points = [], currentLang = 'ar', isPlaying = false;
 
-    // البيانات مدمجة بطريقة خفيفة ومستقرة
+    // عينات الأسماء المدمجة بشكل مضغوط وسريع
     const rawData = "محمد أحمد حمدان,23;فاطمة محمود النجار,45;يوسف علي بكر,7;أحمد بلال زقوت,19;سارة حسن المصري,32;نور الدين العطار,12;جنى رامي فياض,3;عبد الرحمن خالد قاسم,56;ريم وليد شبير,28;محمود سعيد طه,64"; 
 
     const gazaData = rawData.split(';').map(item => {
@@ -123,12 +124,11 @@
         return { name_ar: parts[0], age: parts[1] || "غير معروف" };
     });
 
-    // تحسين إعدادات الصوت لمنع استهلاك الذاكرة (HTML5 Pool Exhausted Fixed)
     const sound = new Howl({
         src: ['ambient.mp3'], 
         loop: true, 
         volume: 0.4, 
-        html5: false // تغييرها إلى false يحل مشكلة الـ HTML5 Audio pool بالكامل
+        html5: false
     });
 
     async function init() {
@@ -141,61 +141,78 @@
     function renderWorld() {
         const totalSouls = 75123; 
         
-        // استخدام حاوية عادية Container بدلاً من ParticleContainer لتفادي مشاكل توافقية التحديث الجديد في إصدارات PixiJS
         const container = new PIXI.Container();
+        // تفعيل وضع التفاعل والتصادم للحاوية ككل بشكل صريح لإصلاح توافقية التحديث الجديد
+        container.eventMode = 'static';
         app.stage.addChild(container);
 
-        const g = new PIXI.Graphics().circle(0,0,1.5).fill(0xffffff);
+        // تعديل حجم ومساحة التصادم الفعلي للنقاط المضيئة (لتسهيل لمسها بالهاتف)
+        const g = new PIXI.Graphics().circle(0, 0, 4).fill({ color: 0xffffff, alpha: 0.8 });
         const tex = app.renderer.generateTexture(g);
 
-        for(let i=0; i < 200; i++) { // رسم عدد كافٍ من النقاط المضيئة بطريقة آمنة
+        for(let i=0; i < 200; i++) { 
             const dot = new PIXI.Sprite(tex);
             dot.x = Math.random() * app.screen.width;
             dot.y = Math.random() * app.screen.height;
             dot.anchor.set(0.5);
-            dot.alpha = 0.3;
+            dot.alpha = 0.4;
             dot.userData = gazaData[i % gazaData.length];
-            dot.eventMode = 'static';
             
-            // استخدام الطريقة الأكثر استقراراً ودعماً في محرك الرسوميات الحالي
+            // ربط الأحداث مباشرة بكل نقطة (Sprite-level events) لضمان التقاط البيانات فوراً
+            dot.eventMode = 'static';
+            dot.cursor = 'pointer';
+            
+            // أحداث حركية مصلحة عند تمرير الماوس أو اللمس بالأصبع
+            dot.on('pointerover', (e) => showTooltip(e, dot));
+            dot.on('pointerout', () => hideTooltip(dot));
+
             container.addChild(dot);
             points.push(dot);
         }
 
-        setupInteraction();
+        setupUIEvents();
         animateCounter(totalSouls);
     }
 
-    function setupInteraction() {
-        const tooltip = document.getElementById('tooltip');
+    const tooltip = document.getElementById('tooltip');
+
+    function showTooltip(event, sprite) {
+        const d = sprite.userData;
+        tooltip.style.display = 'block';
+        // تعديل تموضع النافذة المنبثقة بشكل صحيح فوق النقطة مباشرة
+        tooltip.style.left = event.global.x + 'px';
+        tooltip.style.top = event.global.y + 'px';
         
-        app.stage.eventMode = 'static';
-        app.stage.on('pointermove', (e) => {
-            const hit = app.renderer.events.hitTest(e.global);
-            if (hit && hit.userData) {
-                tooltip.style.display = 'block';
-                tooltip.style.left = e.global.x + 'px';
-                tooltip.style.top = e.global.y + 'px';
-                const d = hit.userData;
-                
-                const name = d.name_ar || "غير مدرج";
-                const age = d.age;
+        const name = d.name_ar || "غير مدرج";
+        const age = d.age;
 
-                tooltip.innerHTML = currentLang === 'ar' ? `<b>${name}</b> <br>العمر: ${age}` : `<b>Soul</b> <br>Age: ${age}`;
-                hit.alpha = 1; hit.scale.set(3);
-            } else {
-                tooltip.style.display = 'none';
-                points.filter(p => p.alpha > 0.4).forEach(p => { p.alpha = 0.3; p.scale.set(1); });
-            }
-        });
+        tooltip.innerHTML = currentLang === 'ar' ? `<b>${name}</b> <br>العمر: ${age} سنة` : `<b>${name}</b> <br>Age: ${age} years`;
+        
+        // إعطاء تأثير مضيء ومكبر للنقطة التي يقف عليها الزائر حالياً
+        sprite.alpha = 1;
+        sprite.scale.set(2.5);
+        sprite.tint = 0xff3333; // تحويل النقطة المحددة للون الأحمر لتمييزها
+    }
 
+    function hideTooltip(sprite) {
+        tooltip.style.display = 'none';
+        sprite.alpha = 0.4;
+        sprite.scale.set(1);
+        sprite.tint = 0xffffff;
+    }
+
+    function setupUIEvents() {
         document.getElementById('search-input').oninput = (e) => {
             const val = e.target.value.trim().toLowerCase();
             points.forEach(p => {
                 const nameField = p.userData.name_ar || "";
                 const match = nameField.toLowerCase().includes(val);
-                if(val === "") { p.alpha = 0.3; p.tint = 0xffffff; }
-                else { p.alpha = match ? 1 : 0.05; p.tint = match ? 0xff0000 : 0xffffff; }
+                if(val === "") { p.alpha = 0.4; p.tint = 0xffffff; p.scale.set(1); }
+                else { 
+                    p.alpha = match ? 1 : 0.05; 
+                    p.tint = match ? 0xff0000 : 0xffffff;
+                    if (match) p.scale.set(1.8); else p.scale.set(0.8);
+                }
             });
         };
 
