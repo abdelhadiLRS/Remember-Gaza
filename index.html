@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>أرواح غزة | Gaza Souls</title>
     
-    <!-- المكتبات الخارجية عبر الروابط العالمية السريعة (CDN) -->
+    <!-- المكتبات الخارجية عبر روابط CDN سريعة ومستقرة -->
     <script src="https://pixijs.download/release/pixi.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
-    <!-- مكتبة PapaParse لمعالجة ملف الـ CSV مباشرة على المتصفح -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    
+    <!-- استدعاء ملف البيانات المطور مباشرة ليتعرف عليه المتصفح فوراً وبدون حظر أمني -->
+    <script src="data.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&family=Amiri:ital@1&display=swap" rel="stylesheet">
     
     <style>
@@ -101,7 +103,7 @@
         <div class="quran-verse" id="verse">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</div>
         <div class="mourning" id="mourning-text" style="color: #888; font-size: 0.8rem;">إنا لله وإنا إليه راجعون</div>
         <div class="dev-info" style="margin-top: 10px; font-size: 0.9rem;">
-            <span id="dev-tag">تطوير: **عبد الهادي**</span>
+            <span id="dev-tag">تطوير: عبد الهادي</span>
             <div class="social-links">
                 <a href="رابط_فيسبوك" target="_blank">Facebook</a>
                 <a href="رابط_تويتر" target="_blank">X (Twitter)</a>
@@ -118,45 +120,36 @@
 <div id="tooltip"></div>
 
 <script>
-    let app, points = [], data = [], currentLang = 'ar', isPlaying = false;
+    let app, points = [], currentLang = 'ar', isPlaying = false;
 
-    // إعداد النظام الصوتي بملف محلي
+    // تهيئة النظام الصوتي مع دعم تخطي قيود الحظر الأمني للمتصفحات الحديثة
     const sound = new Howl({
         src: ['ambient.mp3'], 
         loop: true, volume: 0.4, html5: true
     });
 
-    // تهيئة محرك الرسوميات فائق الأداء لـ 70 ألف نقطة
     async function init() {
         app = new PIXI.Application();
         await app.init({ resizeTo: window, backgroundColor: 0x000000, antialias: true });
         document.body.appendChild(app.canvas);
 
-        // قراءة ومعالجة ملف الـ CSV الأصلي مباشرة عبر السيرفر
-        Papa.parse('out_killed-in-gaza.csv', {
-            download: true,
-            header: true, // لقراءة الصف الأول كأعمدة هيدر مستقلة
-            skipEmptyLines: true,
-            complete: function(results) {
-                data = results.data;
-                renderWorld();
-            },
-            error: function(err) {
-                console.error("خطأ في قراءة ملف out_killed-in-gaza.csv:", err);
-            }
-        });
+        // التحقق من تحميل البيانات المدمجة من ملف data.js بنجاح
+        if (window.gazaData && window.gazaData.length > 0) {
+            renderWorld();
+        } else {
+            console.error("لم يتم العثور على مصفوفة الأسماء في ملف data.js");
+        }
     }
 
     function renderWorld() {
-        if(data.length === 0) return;
-        
-        const container = new PIXI.ParticleContainer(data.length, { scale: true, position: true, alpha: true, tint: true });
+        const totalSouls = window.gazaData.length;
+        const container = new PIXI.ParticleContainer(totalSouls, { scale: true, position: true, alpha: true, tint: true });
         app.stage.addChild(container);
 
         const g = new PIXI.Graphics().circle(0,0,1.2).fill(0xffffff);
         const tex = app.renderer.generateTexture(g);
 
-        data.forEach(p => {
+        window.gazaData.forEach(p => {
             const dot = new PIXI.Sprite(tex);
             dot.x = Math.random() * app.screen.width;
             dot.y = Math.random() * app.screen.height;
@@ -169,7 +162,7 @@
         });
 
         setupInteraction();
-        animateCounter(data.length);
+        animateCounter(totalSouls);
     }
 
     function setupInteraction() {
@@ -184,9 +177,8 @@
                 tooltip.style.top = e.global.y + 'px';
                 const d = hit.userData;
                 
-                // مطابقة وقراءة حقول الملف بدقة (name لاسم الشهيد، و age لعمره)
-                const name = d.name || d.name_ar || "غير مدرج";
-                const age = d.age !== undefined ? d.age : "غير معروف";
+                const name = d.name_ar || "غير مدرج";
+                const age = d.age !== undefined && d.age !== null ? d.age : "غير معروف";
 
                 tooltip.innerHTML = currentLang === 'ar' ? `<b>${name}</b> العمر: ${age}` : `<b>Soul</b> Age: ${age}`;
                 hit.alpha = 1; hit.scale.set(3);
@@ -196,21 +188,32 @@
             }
         });
 
-        // البحث الذكي والفوري
+        // نظام البحث الفوري والذكي السريع جداً
         document.getElementById('search-input').oninput = (e) => {
             const val = e.target.value.trim().toLowerCase();
             points.forEach(p => {
-                const nameField = p.userData.name || p.userData.name_ar || "";
+                const nameField = p.userData.name_ar || "";
                 const match = nameField.toLowerCase().includes(val);
                 if(val === "") { p.alpha = 0.3; p.tint = 0xffffff; }
                 else { p.alpha = match ? 1 : 0.05; p.tint = match ? 0xff0000 : 0xffffff; }
             });
         };
 
-        // التحكم بالصوت
+        // نظام الصوت المطور لتجاوز حظر المتصفحات
         document.getElementById('music-btn').onclick = function() {
-            if(!isPlaying) { sound.play(); this.classList.add('active'); } 
-            else { sound.pause(); this.classList.remove('active'); }
+            if (Howler.ctx && Howler.ctx.state === 'suspended') {
+                Howler.ctx.resume();
+            }
+
+            if (!isPlaying) {
+                sound.play(); 
+                this.classList.add('active');
+                this.innerText = "🔇 كتم";
+            } else {
+                sound.pause(); 
+                this.classList.remove('active');
+                this.innerText = "🎵 صوت";
+            }
             isPlaying = !isPlaying;
         };
 
@@ -230,7 +233,6 @@
         document.getElementById('verse').innerText = isAr ? '"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"' : '"Think not of those who are slain in Allah\'s way as dead. Nay, they live with their Lord"';
         document.getElementById('donate-text').innerText = isAr ? "دعمك يضمن استمرار الأثر" : "Your support keeps the legacy alive";
         document.getElementById('donate-link').innerText = isAr ? "تبرع الآن" : "Donate Now";
-        document.getElementById('dev-tag').innerText = isAr ? "تطوير: **عبد الهادي**" : "Dev: **Abdelhadi**";
     }
 
     function animateCounter(target) {
