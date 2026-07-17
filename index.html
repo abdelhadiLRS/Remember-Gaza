@@ -116,8 +116,8 @@
 <script>
     let app, points = [], currentLang = 'ar', isPlaying = false;
 
-    // عينات الأسماء المدمجة بشكل مضغوط وسريع
-    const rawData = "محمد أحمد حمدان,23;فاطمة محمود النجار,45;يوسف علي بكر,7;أحمد بلال زقوت,19;سارة حسن المصري,32;نور الدين العطار,12;جنى رامي فياض,3;عبد الرحمن خالد قاسم,56;ريم وليد شبير,28;محمود سعيد طه,64"; 
+    // قاعدة بيانات مدمجة خفيفة وموسعة للأسماء
+    const rawData = "محمد أحمد حمدان,23;فاطمة محمود النجار,45;يوسف علي بكر,7;أحمد بلال زقوت,19;سارة حسن المصري,32;نور الدين العطار,12;جنى رامي فياض,3;عبد الرحمن خالد قاسم,56;ريم وليد شبير,28;محمود سعيد طه,64;إبراهيم خليل الحايك,35;آية مصطفى رضوان,22;بلال أمجد كحيل,17;حسناء رأفت اللوح,50;خليل إسماعيل فروانة,41;ديما منير الغصين,9;رائد جهاد طعيمة;زينب زكي المدهون,73"; 
 
     const gazaData = rawData.split(';').map(item => {
         const parts = item.split(',');
@@ -133,36 +133,45 @@
 
     async function init() {
         app = new PIXI.Application();
-        await app.init({ resizeTo: window, backgroundColor: 0x000000, antialias: true });
+        await app.init({ resizeTo: window, backgroundColor: 0x000000, antialias: false });
         document.body.appendChild(app.canvas);
         renderWorld();
     }
 
     function renderWorld() {
+        // نحدد العدد الإجمالي الفعلي لتوليده في فضاء الموقع بالكامل
         const totalSouls = 75123; 
         
+        // استخدام حاوية محسنة للأداء العالي جداً لكي تتحمل الهواتف آلاف النقاط
         const container = new PIXI.Container();
-        // تفعيل وضع التفاعل والتصادم للحاوية ككل بشكل صريح لإصلاح توافقية التحديث الجديد
         container.eventMode = 'static';
         app.stage.addChild(container);
 
-        // تعديل حجم ومساحة التصادم الفعلي للنقاط المضيئة (لتسهيل لمسها بالهاتف)
-        const g = new PIXI.Graphics().circle(0, 0, 4).fill({ color: 0xffffff, alpha: 0.8 });
+        // إنشاء شكل النقطة المضيئة وحفظه ليتكرر بسرعة وسلاسة
+        const g = new PIXI.Graphics().circle(0, 0, 2).fill({ color: 0xffffff, alpha: 0.8 });
         const tex = app.renderer.generateTexture(g);
 
-        for(let i=0; i < 200; i++) { 
+        // نقوم هنا بحقن آلاف النقاط برمجياً وحسابياً (مثلاً 2500 نقطة متحركة تملأ الهاتف بشكل مهيب ومستقر)
+        const visibleDotsCount = Math.min(2500, totalSouls);
+
+        for(let i=0; i < visibleDotsCount; i++) { 
             const dot = new PIXI.Sprite(tex);
+            // توزيع عشوائي مريح للعين في كافة أنحاء الشاشة
             dot.x = Math.random() * app.screen.width;
             dot.y = Math.random() * app.screen.height;
             dot.anchor.set(0.5);
-            dot.alpha = 0.4;
+            dot.alpha = Math.random() * 0.4 + 0.2; // تفاوت البريق ليعطي إحساس السديم والنجم اللامع
+            
+            // توزيع ذكي للأسماء على النقاط المتولدة
             dot.userData = gazaData[i % gazaData.length];
             
-            // ربط الأحداث مباشرة بكل نقطة (Sprite-level events) لضمان التقاط البيانات فوراً
+            // إضافة سرعة حركة عشوائية وبطيئة جداً لجعل النقاط تطفو وتتحرك كالأرواح
+            dot.speedX = (Math.random() - 0.5) * 0.2;
+            dot.speedY = (Math.random() - 0.5) * 0.2;
+
             dot.eventMode = 'static';
             dot.cursor = 'pointer';
             
-            // أحداث حركية مصلحة عند تمرير الماوس أو اللمس بالأصبع
             dot.on('pointerover', (e) => showTooltip(e, dot));
             dot.on('pointerout', () => hideTooltip(dot));
 
@@ -172,6 +181,21 @@
 
         setupUIEvents();
         animateCounter(totalSouls);
+
+        // تفعيل محرك الحركة للنقاط المضيئة
+        app.ticker.add(() => {
+            for(let i=0; i < points.length; i++) {
+                const p = points[i];
+                p.x += p.speedX;
+                p.y += p.speedY;
+
+                // إعادة النقطة من الطرف الآخر إذا خرجت عن حدود شاشة الهاتف لضمان استمرار الحركة الدائمة
+                if (p.x < 0) p.x = app.screen.width;
+                if (p.x > app.screen.width) p.x = 0;
+                if (p.y < 0) p.y = app.screen.height;
+                if (p.y > app.screen.height) p.y = 0;
+            }
+        });
     }
 
     const tooltip = document.getElementById('tooltip');
@@ -179,7 +203,6 @@
     function showTooltip(event, sprite) {
         const d = sprite.userData;
         tooltip.style.display = 'block';
-        // تعديل تموضع النافذة المنبثقة بشكل صحيح فوق النقطة مباشرة
         tooltip.style.left = event.global.x + 'px';
         tooltip.style.top = event.global.y + 'px';
         
@@ -188,10 +211,9 @@
 
         tooltip.innerHTML = currentLang === 'ar' ? `<b>${name}</b> <br>العمر: ${age} سنة` : `<b>${name}</b> <br>Age: ${age} years`;
         
-        // إعطاء تأثير مضيء ومكبر للنقطة التي يقف عليها الزائر حالياً
         sprite.alpha = 1;
-        sprite.scale.set(2.5);
-        sprite.tint = 0xff3333; // تحويل النقطة المحددة للون الأحمر لتمييزها
+        sprite.scale.set(3);
+        sprite.tint = 0xff3333; 
     }
 
     function hideTooltip(sprite) {
@@ -209,9 +231,9 @@
                 const match = nameField.toLowerCase().includes(val);
                 if(val === "") { p.alpha = 0.4; p.tint = 0xffffff; p.scale.set(1); }
                 else { 
-                    p.alpha = match ? 1 : 0.05; 
+                    p.alpha = match ? 1 : 0.03; 
                     p.tint = match ? 0xff0000 : 0xffffff;
-                    if (match) p.scale.set(1.8); else p.scale.set(0.8);
+                    if (match) p.scale.set(2.5); else p.scale.set(0.7);
                 }
             });
         };
