@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أرواح غزة | Gaza Souls</title>
+    <title>أرواح غزة وفلسطين | Palestinian Souls</title>
     
     <!-- مكتبات الرسوميات والصوت المستقرة والمحدثة -->
     <script src="https://pixijs.download/release/pixi.min.js"></script>
@@ -19,71 +19,74 @@
         #ui-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
         .interactive { pointer-events: auto; }
 
+        /* شريط علوي موحد ومصغر لجميع الأزرار */
         #header { 
             display: flex; justify-content: space-between; align-items: center; 
-            padding: 25px; background: linear-gradient(to bottom, rgba(0,0,0,1), transparent); 
+            padding: 15px 25px; background: linear-gradient(to bottom, rgba(0,0,0,1), transparent); 
+            gap: 15px; flex-wrap: wrap;
         }
 
         #search-input {
             background: var(--glass); border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white; padding: 12px 25px; border-radius: 30px; width: 220px;
-            outline: none; transition: 0.4s; font-family: 'Cairo';
+            color: white; padding: 10px 20px; border-radius: 30px; width: 150px;
+            outline: none; transition: 0.4s; font-family: 'Cairo'; font-size: 0.85rem;
         }
-        #search-input:focus { width: 300px; border-color: var(--primary-red); }
+        #search-input:focus { width: 200px; border-color: var(--primary-red); }
 
-        .top-btns { display: flex; gap: 10px; }
-        button {
+        /* شريط التبديل بين الأقسام (غزة - الصحفيين - الضفة) */
+        .tabs-container { display: flex; gap: 5px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); }
+        .tab-btn { background: transparent; border: none; padding: 6px 14px; border-radius: 20px; color: #aaa; cursor: pointer; font-size: 0.8rem; font-family: 'Cairo'; transition: 0.3s; }
+        .tab-btn.active { background: var(--primary-red); color: white; font-weight: bold; }
+
+        .top-btns { display: flex; gap: 8px; align-items: center; }
+        button, .btn-style {
             background: var(--glass); color: white; border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 8px 18px; border-radius: 5px; cursor: pointer; font-family: 'Cairo'; transition: 0.3s;
+            padding: 8px 14px; border-radius: 20px; cursor: pointer; font-family: 'Cairo'; transition: 0.3s;
+            font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; text-decoration: none;
         }
         button.active { background: var(--primary-red); border-color: #ff4d4d; }
 
         #donate-box {
-            position: fixed; top: 100px; left: 25px; background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px); border: 1px solid rgba(255, 0, 0, 0.3);
-            padding: 20px; border-radius: 15px; width: 200px; text-align: center;
-            animation: pulse-border 2s infinite; z-index: 1000;
+            background: rgba(204, 0, 0, 0.2); border: 1px solid rgba(255, 0, 0, 0.4);
+            animation: pulse-border 2s infinite;
         }
         @keyframes pulse-border {
-            0%, 100% { border-color: rgba(204, 0, 0, 0.3); box-shadow: 0 0 0px transparent; }
-            50% { border-color: rgba(255, 0, 0, 0.8); box-shadow: 0 0 15px rgba(204, 0, 0, 0.4); }
+            0%, 100% { box-shadow: 0 0 0px transparent; }
+            50% { box-shadow: 0 0 10px rgba(204, 0, 0, 0.5); }
         }
-        .heart { font-size: 1.8rem; display: block; margin-bottom: 8px; animation: heartbeat 1.5s infinite; }
-        @keyframes heartbeat { 0%, 30%, 100% { transform: scale(1); } 15% { transform: scale(1.2); } }
-        #donate-link {
-            background: var(--primary-red); color: white; text-decoration: none;
-            padding: 8px 20px; border-radius: 20px; display: inline-block; font-size: 0.9rem; font-weight: bold;
-        }
-        #close-donate { position: absolute; top: 5px; right: 5px; background: none; border: none; color: #666; cursor: pointer; }
 
-        #counter-container { position: fixed; bottom: 40px; right: 40px; text-align: right; }
-        #number { font-size: 5rem; font-weight: 700; line-height: 1; letter-spacing: -2px; }
+        /* العداد وقسم المطور */
+        #counter-container { position: fixed; bottom: 30px; right: 30px; text-align: right; }
+        #number { font-size: 3.5rem; font-weight: 700; line-height: 1; color: #fff; }
         
         #dev-credits { 
-            position: fixed; bottom: 40px; left: 40px; text-align: left; 
-            max-width: 450px; border-left: 3px solid var(--primary-red); padding-left: 20px;
+            position: fixed; bottom: 30px; left: 30px; text-align: left; 
+            max-width: 400px; border-left: 3px solid var(--primary-red); padding-left: 15px;
         }
-        .quran-verse { font-family: 'Amiri', serif; font-size: 1.1rem; color: #ccc; margin-bottom: 5px; }
-        .social-links { margin-top: 8px; display: flex; gap: 12px; }
+        .quran-verse { font-family: 'Amiri', serif; font-size: 1rem; color: #ccc; margin-bottom: 3px; }
+        .social-links { margin-top: 5px; display: flex; gap: 10px; }
         .social-links a { 
             color: #fff; background: var(--glass); text-decoration: none; 
-            padding: 4px 10px; border-radius: 5px; font-size: 0.75rem; font-weight: bold; 
+            padding: 3px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: bold; 
             border: 1px solid rgba(255,255,255,0.1); transition: 0.3s;
         }
         .social-links a:hover { background: var(--primary-red); border-color: #ff3333; }
 
         /* بطاقة معلومات الشهيد الفخمة المزينة */
         #tooltip {
-            position: fixed; background: rgba(255, 255, 255, 0.95); color: black; padding: 15px;
+            position: fixed; background: rgba(255, 255, 255, 0.95); color: black; padding: 12px;
             border-radius: 12px; display: none; pointer-events: none;
             transform: translate(-50%, -120%); z-index: 100;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5); min-width: 200px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5); min-width: 180px;
             font-family: 'Cairo', sans-serif; text-align: center;
-            border: 2px solid #cc0000; transition: transform 0.1s ease;
+            border: 2px solid #cc0000;
         }
-        .duaa-style { font-family: 'Amiri', serif; font-size: 1.2rem; font-weight: bold; margin-top: 6px; display: block; }
+        .duaa-style { font-family: 'Amiri', serif; font-size: 1.15rem; font-weight: bold; margin-top: 5px; display: block; }
         .male-duaa { color: #1b5e20; }
         .female-duaa { color: #880e4f; }
+        .press-tag { color: #0d47a1; font-weight: bold; font-size: 0.85rem; }
+        
+        #empty-notice { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); padding: 20px; border-radius: 10px; border: 1px dashed #555; text-align: center; display: none; z-index: 5; }
     </style>
 </head>
 <body>
@@ -91,50 +94,64 @@
 <div id="ui-layer">
     <div id="header">
         <input type="text" id="search-input" class="interactive" placeholder="بحث عن اسم...">
+        
+        <!-- أزرار الأقسام الذكية للتبديل السلس على الهواتف -->
+        <div class="tabs-container interactive">
+            <button class="tab-btn active" onclick="switchCategory('gaza')">غزة</button>
+            <button class="tab-btn" onclick="switchCategory('press')">الصحفيين</button>
+            <button class="tab-btn" onclick="switchCategory('westbank')">الضفة الغربية</button>
+        </div>
+
         <div class="top-btns">
+            <a href="#" target="_blank" id="donate-box" class="btn-style interactive">❤️ <span id="donate-text">تبرع الآن</span></a>
             <button id="music-btn" class="interactive">🎵 صوت</button>
             <button id="lang-btn" class="interactive">EN</button>
         </div>
     </div>
 
-    <div id="donate-box" class="interactive">
-        <button id="close-donate">×</button>
-        <span class="heart">❤️</span>
-        <p id="donate-text" style="font-size: 0.85rem; margin-bottom: 12px;">دعمك يضمن استمرار الأثر</p>
-        <a href="#" target="_blank" id="donate-link">تبرع الآن</a>
+    <div id="empty-notice">
+        <p id="notice-text" style="margin: 0; font-size: 0.95rem; color: #ccc;"></p>
     </div>
 
     <div id="dev-credits" class="interactive">
         <div class="quran-verse" id="verse">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</div>
-        <div class="mourning" id="mourning-text" style="color: #888; font-size: 0.8rem;">إنا لله وإنا إليه راجعون</div>
-        <div class="dev-info" style="margin-top: 10px; font-size: 0.9rem;">
+        <div class="mourning" id="mourning-text" style="color: #888; font-size: 0.75rem;">إنا لله وإنا إليه راجعون</div>
+        <div class="dev-info" style="margin-top: 5px; font-size: 0.85rem;">
             <span id="dev-tag">تطوير: عبد الهادي</span>
             <div class="social-links">
                 <a href="https://www.facebook.com/abdelhadilrs" target="_blank">Facebook</a>
                 <a href="https://www.instagram.com/abdelhadilrs" target="_blank">Instagram</a>
-                <a href="https://x.com/larrasabdelhadi" target="_blank">X (Twitter)</a>
+                <a href="https://x.com/larrasabdelhadi" target="_blank">X</a>
             </div>
         </div>
     </div>
 
     <div id="counter-container">
         <div id="number">0</div>
-        <div id="label" style="opacity: 0.6;">شهيداً وثّقت أسماؤهم</div>
+        <div id="label" style="opacity: 0.6; font-size: 0.85rem;">شهيداً وثّقت أسماؤهم</div>
     </div>
 </div>
 
 <div id="tooltip"></div>
 
 <script>
-    let app, points = [], currentLang = 'ar', isPlaying = false;
+    let app, mainContainer, points = [], currentLang = 'ar', isPlaying = false;
+    let currentCategory = 'gaza';
 
-    // قاعدة بيانات مدمجة موسعة تحتوي على أسماء ذكور وإناث للتجربة الذكية
-    const rawData = "محمد أحمد حمدان,23,M;فاطمة محمود النجار,45,F;يوسف علي بكر,7,M;أحمد بلال زقوت,19,M;سارة حسن المصري,32,F;نور الدين العطار,12,M;جنى رامي فياض,3,F;عبد الرحمن خالد قاسم,56,M;ريم وليد شبير,28,F;محمود سعيد طه,64,M;إبراهيم خليل الحايك,35,M;آية مصطفى رضوان,22,F;بلال أمجد كحيل,17,M;حسناء رأفت اللوح,50,F;خليل إسماعيل فروانة,41,M;ديما منير الغصين,9,F;رائد جهاد طعيمة,30,M;زينب زكي المدهون,73,F"; 
+    // القائمة المدمجة المبدئية
+    const baseGazaData = [
+        { name_ar: "محمد أحمد حمدان", age: 23, gender: "M" },
+        { name_ar: "فاطمة محمود النجار", age: 45, gender: "F" },
+        { name_ar: "يوسف علي بكر", age: 7, gender: "M" },
+        { name_ar: "أحمد بلال زقوت", age: 19, gender: "M" },
+        { name_ar: "سارة حسن المصري", age: 32, gender: "F" },
+        { name_ar: "نور الدين العطار", age: 12, gender: "M" },
+        { name_ar: "جنى رامي فياض", age: 3, gender: "F" }
+    ];
 
-    const gazaData = rawData.split(';').map(item => {
-        const parts = item.split(',');
-        return { name_ar: parts[0], age: parts[1] || "غير معروف", gender: parts[2] || "M" };
-    });
+    let gazaSouls = [...baseGazaData];
+    let pressSouls = [];
+    let westbankSouls = []; // فارغة حالياً كما طلبت
 
     const sound = new Howl({
         src: ['ambient.mp3'], 
@@ -147,77 +164,117 @@
         app = new PIXI.Application();
         await app.init({ resizeTo: window, backgroundColor: 0x000000, antialias: false });
         document.body.appendChild(app.canvas);
+
+        mainContainer = new PIXI.Container();
+        mainContainer.eventMode = 'static';
+        app.stage.addChild(mainContainer);
+
+        // تحميل الملفات الخارجية برمجياً بشكل متوازٍ وسريع
+        await loadExternalFiles();
+        
+        // عرض القسم الافتراضي (غزة)
         renderWorld();
     }
 
-    function renderWorld() {
-        const totalSouls = 75123; 
-        
-        const container = new PIXI.Container();
-        container.eventMode = 'static';
-        app.stage.addChild(container);
+    async function loadExternalFiles() {
+        // 1. جلب ودمج بيانات killed-in-gaza.json (منع التكرار)
+        try {
+            const resGaza = await fetch('killed-in-gaza.json');
+            if (resGaza.ok) {
+                const extraData = await resGaza.json();
+                extraData.forEach(item => {
+                    const exists = gazaSouls.some(b => b.name_ar === item.name_ar || b.name === item.name);
+                    if (!exists) {
+                        gazaSouls.push({
+                            name_ar: item.name_ar || item.name || "غير مدرج",
+                            age: item.age !== undefined ? item.age : "غير معروف",
+                            gender: item.gender || "M"
+                        });
+                    }
+                });
+            }
+        } catch(e) { console.log("ملف قتلوا في غزة غير موجود بعد، يعتمد على القائمة الأساسية."); }
 
-        // جعل حجم النقاط مناسباً ومريحاً للمس على الهواتف بشكل مباشر
+        // 2. جلب ملف الصحفيين press_killed_in_gaza.json
+        try {
+            const resPress = await fetch('press_killed_in_gaza.json');
+            if (resPress.ok) {
+                const pressData = await resPress.json();
+                pressSouls = pressData.map(item => ({
+                    name_ar: item.name_ar || item.name || "صحفي غير مدرج",
+                    age: item.age || "غير معروف",
+                    gender: item.gender || "M",
+                    isPress: true
+                }));
+            }
+        } catch(e) { 
+            // عينة احتياطية للصحفيين في حال تأخر رفع الملف
+            pressSouls = [{ name_ar: "حمزة وائل الدحدوح", age: 27, gender: "M", isPress: true }];
+        }
+    }
+
+    function renderWorld() {
+        // تنظيف الفضاء الرسومي قبل رسم القسم الجديد
+        points.forEach(p => p.destroy());
+        points = [];
+        mainContainer.removeChildren();
+
+        let currentList = [];
+        let totalCount = 75123; // الرقم الافتراضي التكريمي لشهداء غزة الإجمالي
+
+        if (currentCategory === 'gaza') {
+            currentList = gazaSouls;
+            document.getElementById('empty-notice').style.display = 'none';
+        } else if (currentCategory === 'press') {
+            currentList = pressSouls;
+            totalCount = Math.max(currentList.length, 175); // العداد الإجمالي التقريبي للصحفيين الشهداء
+            document.getElementById('empty-notice').style.display = 'none';
+        } else if (currentCategory === 'westbank') {
+            currentList = westbankSouls;
+            totalCount = 0;
+            document.getElementById('notice-text').innerText = "جاري توثيق وتحديث أسماء شهداء الضفة الغربية...";
+            document.getElementById('empty-notice').style.display = 'block';
+        }
+
         const g = new PIXI.Graphics().circle(0, 0, 3.5).fill({ color: 0xffffff, alpha: 0.8 });
         const tex = app.renderer.generateTexture(g);
 
-        const visibleDotsCount = Math.min(2500, totalSouls);
+        // عدد النقاط الظاهرة تفاعلياً بناءً على حجم القائمة المتاحة
+        const dotsToRender = currentList.length === 0 ? 0 : Math.min(2500, currentList.length + 150);
+        const safeTopBorder = 90;
+        const safeBottomBorder = app.screen.height - 130;
 
-        for(let i=0; i < visibleDotsCount; i++) { 
+        for(let i=0; i < dotsToRender; i++) { 
+            if(currentList.length === 0) break;
+            
             const dot = new PIXI.Sprite(tex);
-            dot.x = Math.random() * app.screen.width;
-            dot.y = Math.random() * app.screen.height;
+            dot.x = Math.random() * (app.screen.width - 40) + 20;
+            dot.y = Math.random() * (safeBottomBorder - safeTopBorder) + safeTopBorder;
             dot.anchor.set(0.5);
             dot.alpha = Math.random() * 0.4 + 0.2; 
             
-            dot.userData = gazaData[i % gazaData.length];
+            dot.userData = currentList[i % currentList.length];
             
-            dot.speedX = (Math.random() - 0.5) * 0.15;
-            dot.speedY = (Math.random() - 0.5) * 0.15;
+            dot.speedX = (Math.random() - 0.5) * 0.12;
+            dot.speedY = (Math.random() - 0.5) * 0.12;
 
-            // تفعيل الأحداث المناسبة للهواتف الذكية (pointerdown و pointerover)
             dot.eventMode = 'static';
             dot.cursor = 'pointer';
             
-            // دعم النقر المباشر باللمس على الهاتف لإظهار البيانات فوراً وبسهولة
-            dot.on('pointerdown', (e) => {
-                e.stopPropagation();
-                showTooltip(e, dot);
-            });
+            dot.on('pointerdown', (e) => { e.stopPropagation(); showTooltip(e, dot); });
             dot.on('pointerover', (e) => showTooltip(e, dot));
             dot.on('pointerout', () => hideTooltip(dot));
 
-            container.addChild(dot);
+            mainContainer.addChild(dot);
             points.push(dot);
         }
 
-        // نقرة على الشاشة في أي مكان فارغ تقوم بإخفاء بطاقة الاسم على الهاتف
-        app.stage.on('pointerdown', () => {
-            tooltip.style.display = 'none';
-            points.forEach(p => hideTooltip(p));
-        });
-
-        setupUIEvents();
-        animateCounter(totalSouls);
-
-        app.ticker.add(() => {
-            for(let i=0; i < points.length; i++) {
-                const p = points[i];
-                p.x += p.speedX;
-                p.y += p.speedY;
-
-                if (p.x < 0) p.x = app.screen.width;
-                if (p.x > app.screen.width) p.x = 0;
-                if (p.y < 0) p.y = app.screen.height;
-                if (p.y > app.screen.height) p.y = 0;
-            }
-        });
+        animateCounter(totalCount);
     }
 
     const tooltip = document.getElementById('tooltip');
 
     function showTooltip(event, sprite) {
-        // إعادة تعيين النقاط الأخرى لحفظ مظهر الهاتف
         points.forEach(p => { if(p !== sprite) { p.alpha = 0.3; p.scale.set(1); p.tint = 0xffffff; } });
 
         const d = sprite.userData;
@@ -228,9 +285,10 @@
         const name = d.name_ar || "غير مدرج";
         const age = d.age;
         
-        // التحقق الذكي من الجنس لطباعة الدعاء المزخرف الصحيح
         let duaaText = "";
-        if (d.gender === "F") {
+        if (d.isPress) {
+            duaaText = `<span class="press-tag">شَهيدُ الصَّحافة</span> <br><span class="duaa-style male-duaa">﴿ رَحِمَهُۥٓ ٱللَّهُ ﴾</span>`;
+        } else if (d.gender === "F") {
             duaaText = `<span class="duaa-style female-duaa">﴿ رَحِمَهَا ٱللَّهُ ﴾</span>`;
         } else {
             duaaText = `<span class="duaa-style male-duaa">﴿ رَحِمَهُۥٓ ٱللَّهُ ﴾</span>`;
@@ -251,6 +309,18 @@
         sprite.tint = 0xffffff;
     }
 
+    // التبديل البرمجي الذكي بين فئات الشهداء
+    window.switchCategory = function(category) {
+        currentCategory = category;
+        
+        // تحديث المظهر النشط للأزرار التفاعلية
+        const buttons = document.querySelectorAll('.tab-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        renderWorld();
+    };
+
     function setupUIEvents() {
         document.getElementById('search-input').oninput = (e) => {
             const val = e.target.value.trim().toLowerCase();
@@ -267,9 +337,7 @@
         };
 
         document.getElementById('music-btn').onclick = function() {
-            if (Howler.ctx && Howler.ctx.state === 'suspended') {
-                Howler.ctx.resume();
-            }
+            if (Howler.ctx && Howler.ctx.state === 'suspended') Howler.ctx.resume();
             if (!isPlaying) {
                 sound.play(); 
                 this.classList.add('active');
@@ -282,35 +350,51 @@
             isPlaying = !isPlaying;
         };
 
-        document.getElementById('close-donate').onclick = () => document.getElementById('donate-box').style.display = 'none';
-
         document.getElementById('lang-btn').onclick = function() {
             currentLang = currentLang === 'ar' ? 'en' : 'ar';
             this.innerText = currentLang === 'ar' ? 'EN' : 'AR';
             updateUI();
         };
+
+        app.stage.on('pointerdown', () => {
+            tooltip.style.display = 'none';
+            points.forEach(p => hideTooltip(p));
+        });
+
+        app.ticker.add(() => {
+            const safeTopBorder = 90;
+            const safeBottomBorder = app.screen.height - 130;
+            for(let i=0; i < points.length; i++) {
+                const p = points[i];
+                p.x += p.speedX; p.y += p.speedY;
+                if (p.x < 0) p.x = app.screen.width;
+                if (p.x > app.screen.width) p.x = 0;
+                if (p.y < safeTopBorder) p.y = safeBottomBorder;
+                if (p.y > safeBottomBorder) p.y = safeTopBorder;
+            }
+        });
     }
 
     function updateUI() {
         const isAr = currentLang === 'ar';
-        document.getElementById('label').innerText = isAr ? "شهيداً وثّقت أسماؤهم" : "Documented Souls Lost";
-        document.getElementById('search-input').placeholder = isAr ? "بحث عن اسم..." : "Search name...";
+        document.getElementById('search-input').placeholder = isAr ? "بحث عن اسم..." : "Search...";
         document.getElementById('verse').innerText = isAr ? '"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"' : '"Think not of those who are slain in Allah\'s way as dead. Nay, they live with their Lord"';
-        document.getElementById('donate-text').innerText = isAr ? "دعمك يضمن استمرار الأثر" : "Your support keeps the legacy alive";
-        document.getElementById('donate-link').innerText = isAr ? "تبرع الآن" : "Donate Now";
+        document.getElementById('donate-text').innerText = isAr ? "تبرع الآن" : "Donate";
+        document.getElementById('label').innerText = isAr ? "شهيداً وثّقت أسماؤهم" : "Documented Souls Lost";
     }
 
     function animateCounter(target) {
         let cur = 0;
-        const step = Math.ceil(target / 100);
+        const step = Math.ceil(target / 80) || 1;
+        document.getElementById('number').innerText = "0";
         const timer = setInterval(() => {
             cur += step;
             if(cur >= target) { cur = target; clearInterval(timer); }
             document.getElementById('number').innerText = cur.toLocaleString();
-        }, 20);
+        }, 15);
     }
 
-    init();
+    init().then(() => setupUIEvents());
 </script>
 </body>
 </html>
