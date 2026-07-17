@@ -13,7 +13,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&family=Amiri:ital@1&display=swap" rel="stylesheet">
     
     <style>
-        /* الاعتماد على لون الدم الداكن المعتم بالكامل #800000 أو #660000 */
         :root { 
             --primary-red: #cc0000; 
             --blood-dark: #500000; 
@@ -21,16 +20,9 @@
             --border-glass: rgba(255, 255, 255, 0.15); 
         }
         
+        /* اعتماد خلفية سوداء خالصة بالكامل وعميقة */
         body { margin: 0; padding: 0; background-color: #030303; overflow: hidden; font-family: 'Cairo', sans-serif; color: white; }
         
-        .nebula-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;
-            background: radial-gradient(circle at 30% 40%, rgba(204, 0, 0, 0.08) 0%, transparent 40%),
-                        radial-gradient(circle at 70% 80%, rgba(27, 94, 32, 0.06) 0%, transparent 45%);
-            animation: nebulaPulse 12s ease-in-out infinite alternate;
-        }
-        @keyframes nebulaPulse { 0% { opacity: 0.7; } 100% { opacity: 1; } }
-
         canvas { display: block; position: absolute; top: 0; left: 0; z-index: 1; }
 
         #preloader {
@@ -151,8 +143,6 @@
 </head>
 <body>
 
-<div class="nebula-bg"></div>
-
 <div id="preloader">
     <div class="loader-pulse"></div>
     <div id="loader-text" style="font-size: 1rem; font-weight: 300; letter-spacing: 1px; color: #ccc;">جاري استدعاء سجلات الخلود...</div>
@@ -230,7 +220,7 @@
 <script>
     let app, mainContainer, points = [], currentLang = 'ar', isPlaying = false;
     let currentCategory = 'gaza', tooltipTimeout = null, activeSprite = null;
-    let analyticsTimeout = null; // مؤقت التحكم في إغلاق الإحصائيات
+    let analyticsTimeout = null;
 
     const baseGazaData = [
         { name_ar: "محمد أحمد حمدان", age: 23, gender: "M" },
@@ -301,19 +291,11 @@
     }
 
     function isInForbiddenZone(x, y) {
-        // إبعاد كامل عن النطاق العلوي المعتم (أول 125 بكسل)
         if (y < 125) return true;
-        
-        // إبعاد عن الركن السفلي الأيسر (الآية الكريمة)
         if (y > app.screen.height - 145 && x < 440) return true;
-        
-        // إبعاد عن الركن السفلي الأيمن (العداد)
         if (y > app.screen.height - 145 && x > app.screen.width - 270) return true;
-        
-        // إبعاد عن السنتر السفلي (حسابات المطور)
         const centerX = app.screen.width / 2;
         if (y > app.screen.height - 100 && x > centerX - 200 && x < centerX + 200) return true;
-
         return false;
     }
 
@@ -441,7 +423,6 @@
         sprite.tint = 0xffffff;
     }
 
-    // تفعيل لوحة الإحصائيات مع الإغلاق الذكي الإجباري بعد ثانيتين كاملتين (2000ms)
     window.toggleAnalytics = function(show) {
         const modal = document.getElementById('analytics-modal');
         if (analyticsTimeout) clearTimeout(analyticsTimeout);
@@ -455,7 +436,6 @@
                 document.getElementById('bar-elders').style.width = '18%';
             }, 100);
 
-            // تفعيل الاختفاء التلقائي الفوري بعد ثانيتين
             analyticsTimeout = setTimeout(() => {
                 window.toggleAnalytics(false);
             }, 2000);
@@ -574,3 +554,5 @@
 </script>
 </body>
 </html>
+
+     
