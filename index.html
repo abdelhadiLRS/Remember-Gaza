@@ -64,7 +64,6 @@
             border: 1px solid var(--border-glass); border-radius: 10px;
             z-index: 200; overflow: hidden; margin-top: 5px;
         }
-        /* ضبط التموضع التلقائي للقائمة بناءً على اتجاه الموقع */
         [dir="rtl"] .dropdown-content { left: 0; right: auto; }
         [dir="ltr"] .dropdown-content { right: 0; left: auto; }
 
@@ -185,7 +184,6 @@
             <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-box" class="btn-style">❤️ <span id="donate-text">تبرع الآن</span></a>
             <button id="music-btn">🎵 صوت</button>
             
-            <!-- إضافة القائمة الانسيابية المنبثقة هنا -->
             <div class="lang-dropdown">
                 <button id="lang-btn">🌐 AR</button>
                 <div class="dropdown-content">
@@ -327,24 +325,81 @@
                 const csvText = await resGaza.text();
                 const lines = csvText.split('\n');
                 
-                for (let i = 1; i < lines.length; i++) {
-                    if (!lines[i].trim()) continue;
-                    const columns = lines[i].split(',');
+                if (lines.length > 0) {
+                    // دالة تحليل ذكية وآمنة لسطور الـ CSV لمنع التداخل
+                    const parseCSVLine = (text) => {
+                        let ret = [], cur = '', inQuotes = false;
+                        for (let char of text) {
+                            if (char === '"') inQuotes = !inQuotes;
+                            else if (char === ',' && !inQuotes) { ret.push(cur.trim()); cur = ''; }
+                            else cur += char;
+                        }
+                        ret.push(cur.trim());
+                        return ret;
+                    };
+
+                    const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase());
                     
-                    if (columns.length >= 1) {
-                        gazaSouls.push({
-                            name_ar: columns[0]?.replace(/"/g, '').trim() || "غير مدرج",
-                            age: columns[1] ? columns[1].trim() : "غير معروف",
-                            gender: columns[2] ? columns[2].trim().toUpperCase() : "M"
+                    let nameArIdx = headers.indexOf('name');
+                    if (nameArIdx === -1) nameArIdx = headers.indexOf('name_ar');
+                    
+                    let nameEnIdx = headers.indexOf('en_name');
+                    if (nameEnIdx === -1) nameEnIdx = headers.indexOf('name_en');
+                    
+                    let ageIdx = headers.indexOf('age');
+                    if (ageIdx === -1) ageIdx = headers.indexOf('dob');
+                    
+                    let genderIdx = headers.indexOf('sex');
+                    if (genderIdx === -1) genderIdx = headers.indexOf('gender');
+
+                    // فحص السطر الأول من البيانات لإيجاد الأعمدة العربية والأرقام تلقائياً
+                    if (lines.length > 1 && (nameArIdx === -1 || ageIdx === -1)) {
+                        const firstData = parseCSVLine(lines[1]);
+                        for(let c=0; c<firstData.length; c++) {
+                            const val = firstData[c];
+                            if (/[\u0600-\u06FF]/.test(val)) nameArIdx = c;
+                            else if (!isNaN(val) && val !== "" && parseInt(val) < 130) ageIdx = c;
+                            else if (/^[a-zA-Z\s\-]+$/.test(val) && nameEnIdx === -1) nameEnIdx = c;
+                        }
+                    }
+
+                    if (nameArIdx === -1) nameArIdx = 0;
+                    if (ageIdx === -1) ageIdx = 2; // افتراضي في أسوأ الحالات
+
+                    for (let i = 1; i < lines.length; i++) {
+                        if (!lines[i].trim()) continue;
+                        const cols = parseCSVLine(lines[i]);
+                        
+                        let name_ar = cols[nameArIdx] || "غير مدرج";
+                        let name_en = nameEnIdx > -1 ? cols[nameEnIdx] : "";
+                        let age = cols[ageIdx] || "غير معروف";
+                        let gender = genderIdx > -1 ? cols[genderIdx].toUpperCase() : "M";
+
+                        // تصفية العمر في حال دخلت فيه نصوص إنجليزية بالخطأ
+                        if (age !== "غير معروف" && isNaN(parseInt(age))) {
+                            age = "غير معروف";
+                        }
+
+                        // تبديل تلقائي لو اكتشف النظام أن الاسم العربي مكتوب بحروف إنجليزية والعكس
+                        if (!/[\u0600-\u06FF]/.test(name_ar) && /[\u0600-\u06FF]/.test(name_en)) {
+                            let temp = name_ar; 
+                            name_ar = name_en; 
+                            name_en = temp;
+                        }
+
+                        gazaSouls.push({ 
+                            name_ar: name_ar, 
+                            name_en: name_en !== "" ? name_en : name_ar, 
+                            age: age, 
+                            gender: gender 
                         });
                     }
                 }
             }
         } catch(e) { 
-            console.log("خطأ في قراءة ملف out_killed-in-gaza.csv", e);
-            gazaSouls = [{ name_ar: "محمد أحمد حمدان", age: 23, gender: "M" }];
+            console.log("خطأ في قراءة ملف CSV", e);
         }
-        pressSouls = [{ name_ar: "حمزة وائل الدحدوح", age: 27, gender: "M", isPress: true }];
+        pressSouls = [{ name_ar: "حمزة وائل الدحدوح", name_en: "Hamza Wael Al-Dahdouh", age: 27, gender: "M", isPress: true }];
     }
 
     function isInForbiddenZone(x, y) {
@@ -451,7 +506,11 @@
 
         const t = translations[currentLang];
         
-        const name = d.name_ar || t.unknown_name;
+        // عرض الاسم المناسب حسب اللغة المختارة
+        const display_name = (currentLang === 'ar') ? d.name_ar : (d.name_en || d.name_ar);
+        const final_name = display_name || t.unknown_name;
+        const safe_name_param = final_name.replace(/'/g, "\\'"); // لتأمين زر الحفظ
+        
         const age = d.age === "غير معروف" || d.age === "Unknown" ? t.unknown_age : d.age;
         const processedAge = t.age_text.replace("{age}", age);
         
@@ -467,8 +526,8 @@
             duaaText = `<span class="duaa-style male-duaa">﴿ ${t.duaa_m} ﴾</span>`;
         }
 
-        tooltip.innerHTML = `<b>${name}</b> <br>${processedAge} <br>${duaaText}
-             <button class="download-btn" onclick="downloadShareCard('${name}', '${processedAge}', '${plainDuaa}')">${t.download}</button>`;
+        tooltip.innerHTML = `<b>${final_name}</b> <br>${processedAge} <br>${duaaText}
+             <button class="download-btn" onclick="downloadShareCard('${safe_name_param}', '${processedAge}', '${plainDuaa}')">${t.download}</button>`;
         
         sprite.alpha = 1;
         sprite.scale.set(3);
@@ -512,6 +571,10 @@
     }
 
     window.downloadShareCard = function(name, ageStr, duaa) {
+        document.getElementById('card-name').innerText = name;
+        document.getElementById('card-age').innerText = ageStr;
+        document.getElementById('card-duaa').innerText = `﴿ ${duaa} ﴾`;
+
         html2canvas(document.getElementById('share-card-template'), { backgroundColor: '#000000', scale: 2 }).then(canvas => {
             const link = document.createElement('a');
             link.download = `Palestine_Soul - ${name}.png`;
@@ -528,7 +591,6 @@
         renderWorld();
     };
 
-    // دالة اختيار واختصار اللغة الجديدة عبر القائمة المنسدلة
     window.selectLanguage = function(langCode) {
         currentLang = langCode;
         document.getElementById('lang-btn').innerText = `🌐 ${langCode.toUpperCase()}`;
@@ -567,8 +629,9 @@
         document.getElementById('search-input').oninput = (e) => {
             const val = e.target.value.trim().toLowerCase();
             points.forEach(p => {
-                const nameField = p.userData?.name_ar || "";
-                const match = nameField.toLowerCase().includes(val);
+                const nameFieldAr = p.userData?.name_ar || "";
+                const nameFieldEn = p.userData?.name_en || "";
+                const match = nameFieldAr.toLowerCase().includes(val) || nameFieldEn.toLowerCase().includes(val);
                 if(val === "") { p.alpha = 0.4; p.tint = 0xffffff; p.scale.set(1); }
                 else { 
                     p.alpha = match ? 1 : 0.03; 
@@ -638,3 +701,4 @@
 </script>
 </body>
 </html>
+
