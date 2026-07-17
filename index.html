@@ -213,18 +213,18 @@
         }
     }
 
-    // خوارزمية ذكية لفحص إذا كانت النقطة تقع ضمن النطاق المحجوز للخانات والكتابات لمنع التداخل
+    // فحص ذكي لمنع النقاط من المرور فوق الواجهات العلوية والسفلية والكتابات الكلية
     function isInForbiddenZone(x, y) {
-        // المنطقة العلوية (الهيدر والأزرار)
-        if (y < 95) return true;
+        // حماية المنطقة العلوية بالكامل (أزرار التحكم وخانة البحث) حتى 100 بكسل لأسفل الشاشة
+        if (y < 100) return true;
         
-        // المنطقة السفلية اليسرى (الآية القرآنية)
+        // حماية المنطقة السفلية اليسرى (الآية القرآنية الكريمة)
         if (y > app.screen.height - 120 && x < 420) return true;
         
-        // المنطقة السفلية اليمنى (العداد والرقم)
+        // حماية المنطقة السفلية اليمنى (العداد والرقم الإحصائي)
         if (y > app.screen.height - 120 && x > app.screen.width - 250) return true;
         
-        // المنطقة السفلية الوسطى (روابط الحسابات)
+        // حماية المنطقة السفلية الوسطى (روابط الحسابات والملفات الشخصية)
         const centerX = app.screen.width / 2;
         if (y > app.screen.height - 80 && x > centerX - 180 && x < centerX + 180) return true;
 
@@ -263,13 +263,12 @@
             
             const dot = new PIXI.Sprite(tex);
             
-            // توليد إحداثيات عشوائية واختبارها لمنع التداخل مع مساحات الخانات
             let posX, posY, attempts = 0;
             do {
                 posX = Math.random() * (app.screen.width - 20) + 10;
                 posY = Math.random() * (app.screen.height - 20) + 10;
                 attempts++;
-            } while (isInForbiddenZone(posX, posY) && attempts < 10);
+            } while (isInForbiddenZone(posX, posY) && attempts < 15);
 
             dot.x = posX;
             dot.y = posY;
@@ -298,7 +297,6 @@
     const tooltip = document.getElementById('tooltip');
 
     function showTooltip(event, sprite) {
-        // إلغاء أي مؤقت إخفاء نشط حالياً للحفاظ على ثبات البيانات أثناء المشاهدة
         if (tooltipTimeout) { clearTimeout(tooltipTimeout); tooltipTimeout = null; }
 
         points.forEach(p => { if(p !== sprite) { p.alpha = 0.3; p.scale.set(1); p.tint = 0xffffff; } });
@@ -329,14 +327,13 @@
         sprite.tint = 0xff3333; 
     }
 
-    // دالة بدء مؤقت العد التنازلي لإخفاء البطاقة بعد ثانيتين بالضبط من الابتعاد
     function startHideTimer(sprite) {
         if (tooltipTimeout) clearTimeout(tooltipTimeout);
         
         tooltipTimeout = setTimeout(() => {
             tooltip.style.display = 'none';
             resetSpriteAppearance(sprite);
-        }, 2000); // 2000 مللي ثانية = ثانيتين
+        }, 2000); 
     }
 
     function resetSpriteAppearance(sprite) {
@@ -393,19 +390,16 @@
             points.forEach(p => resetSpriteAppearance(p));
         });
 
-        // محرك الحركة الدائم للنقاط مع فحص مستمر لمنع دخول المناطق المحجوزة
         app.ticker.add(() => {
             for(let i=0; i < points.length; i++) {
                 const p = points[i];
                 p.x += p.speedX; p.y += p.speedY;
                 
-                // إذا خرجت النقطة عن حدود الشاشة تعود من الطرف الآخر
                 if (p.x < 0) p.x = app.screen.width;
                 if (p.x > app.screen.width) p.x = 0;
                 if (p.y < 0) p.y = app.screen.height;
                 if (p.y > app.screen.height) p.y = 0;
 
-                // إذا دخلت النقطة العائمة في منطقة محجوزة أثناء حركتها، يتم دفعها برفق وتغيير مسارها تلقائياً
                 if (isInForbiddenZone(p.x, p.y)) {
                     p.speedX *= -1;
                     p.speedY *= -1;
