@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>أرواح غزة | Gaza Souls</title>
     
-    <!-- المكتبات الخارجية عبر روابط سريعة وعالمية (CDN) -->
+    <!-- المكتبات الخارجية عبر الروابط العالمية السريعة (CDN) -->
     <script src="https://pixijs.download/release/pixi.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <!-- مكتبة PapaParse لمعالجة ملف الـ CSV مباشرة على المتصفح -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&family=Amiri:ital@1&display=swap" rel="stylesheet">
     
     <style>
@@ -118,7 +120,7 @@
 <script>
     let app, points = [], data = [], currentLang = 'ar', isPlaying = false;
 
-    // إعداد النظام الصوتي بملف محلي لضمان الاستقرار
+    // إعداد النظام الصوتي بملف محلي
     const sound = new Howl({
         src: ['ambient.mp3'], 
         loop: true, volume: 0.4, html5: true
@@ -130,17 +132,24 @@
         await app.init({ resizeTo: window, backgroundColor: 0x000000, antialias: true });
         document.body.appendChild(app.canvas);
 
-        try {
-            // جلب البيانات المحلية التي تم توليدها
-            const res = await fetch('data.json'); 
-            data = await res.json();
-            renderWorld();
-        } catch (e) {
-            console.error("خطأ في جلب ملف data.json المحدث:", e);
-        }
+        // قراءة ومعالجة ملف الـ CSV الأصلي مباشرة عبر السيرفر
+        Papa.parse('out_killed-in-gaza.csv', {
+            download: true,
+            header: true, // لقراءة الصف الأول كأعمدة هيدر مستقلة
+            skipEmptyLines: true,
+            complete: function(results) {
+                data = results.data;
+                renderWorld();
+            },
+            error: function(err) {
+                console.error("خطأ في قراءة ملف out_killed-in-gaza.csv:", err);
+            }
+        });
     }
 
     function renderWorld() {
+        if(data.length === 0) return;
+        
         const container = new PIXI.ParticleContainer(data.length, { scale: true, position: true, alpha: true, tint: true });
         app.stage.addChild(container);
 
@@ -174,8 +183,12 @@
                 tooltip.style.left = e.global.x + 'px';
                 tooltip.style.top = e.global.y + 'px';
                 const d = hit.userData;
-                // قراءة الحقول البرمجية بدقة من الملف المحدث
-                tooltip.innerHTML = currentLang === 'ar' ? `<b>${d.name_ar}</b> العمر: ${d.age !== null ? d.age : 'غير معروف'}` : `<b>Soul</b> Age: ${d.age !== null ? d.age : 'N/A'}`;
+                
+                // مطابقة وقراءة حقول الملف بدقة (name لاسم الشهيد، و age لعمره)
+                const name = d.name || d.name_ar || "غير مدرج";
+                const age = d.age !== undefined ? d.age : "غير معروف";
+
+                tooltip.innerHTML = currentLang === 'ar' ? `<b>${name}</b> العمر: ${age}` : `<b>Soul</b> Age: ${age}`;
                 hit.alpha = 1; hit.scale.set(3);
             } else {
                 tooltip.style.display = 'none';
@@ -187,7 +200,8 @@
         document.getElementById('search-input').oninput = (e) => {
             const val = e.target.value.trim().toLowerCase();
             points.forEach(p => {
-                const match = p.userData.name_ar && p.userData.name_ar.toLowerCase().includes(val);
+                const nameField = p.userData.name || p.userData.name_ar || "";
+                const match = nameField.toLowerCase().includes(val);
                 if(val === "") { p.alpha = 0.3; p.tint = 0xffffff; }
                 else { p.alpha = match ? 1 : 0.05; p.tint = match ? 0xff0000 : 0xffffff; }
             });
@@ -216,6 +230,7 @@
         document.getElementById('verse').innerText = isAr ? '"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"' : '"Think not of those who are slain in Allah\'s way as dead. Nay, they live with their Lord"';
         document.getElementById('donate-text').innerText = isAr ? "دعمك يضمن استمرار الأثر" : "Your support keeps the legacy alive";
         document.getElementById('donate-link').innerText = isAr ? "تبرع الآن" : "Donate Now";
+        document.getElementById('dev-tag').innerText = isAr ? "تطوير: **عبد الهادي**" : "Dev: **Abdelhadi**";
     }
 
     function animateCounter(target) {
