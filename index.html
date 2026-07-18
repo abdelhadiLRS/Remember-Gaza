@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- إضافة أيقونة الموقع -->
     <link rel="icon" type="image/png" href="favicon.png">
     <title>أرواح فلسطين | Palestinian Souls</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
+    <!-- مكتبات الرسوميات والصوت والمشاركة المستقرة والمحدثة -->
     <script src="https://pixijs.download/release/pixi.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -292,7 +294,7 @@
     let pressSouls = [];
     let westbankSouls = [];
 
-    // مسارات الفيديوهات المحلية على السيرفر الخاص بك
+    // مصفوفة الفيديوهات: استخدم مسارات الملفات المحلية (مثل مجلد videos الموجود على سيرفرك)
     const locationVideoMap = {
         "غزة": "videos/gaza_status.mp4",
         "شمال غزة": "videos/north_gaza.mp4",
@@ -380,6 +382,7 @@
                     };
 
                     const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase());
+                    
                     let nameArIdx = headers.indexOf('name');
                     if (nameArIdx === -1) nameArIdx = headers.indexOf('name_ar');
                     let nameEnIdx = headers.indexOf('en_name');
@@ -429,6 +432,24 @@
         pressSouls = [{ name_ar: "حمزة وائل الدحدوح", name_en: "Hamza Wael Al-Dahdouh", age: 27, gender: "M", isPress: true }];
     }
 
+    function isInForbiddenZone(x, y) {
+        const headerEl = document.getElementById('header');
+        const headerHeight = headerEl ? headerEl.offsetHeight + 15 : 130;
+        if (y < headerHeight) return true;
+        
+        if (window.innerWidth <= 768) {
+            const bottomEl = document.getElementById('bottom-layer');
+            const bottomHeight = bottomEl ? bottomEl.offsetHeight + 15 : 180;
+            if (y > app.screen.height - bottomHeight) return true;
+        } else {
+            if (y > app.screen.height - 145 && x < 440) return true;
+            if (y > app.screen.height - 145 && x > app.screen.width - 270) return true;
+            const centerX = app.screen.width / 2;
+            if (y > app.screen.height - 100 && x > centerX - 200 && x < centerX + 200) return true;
+        }
+        return false;
+    }
+
     function renderWorld() {
         points.forEach(p => p.destroy());
         points = [];
@@ -457,31 +478,27 @@
 
         const g = new PIXI.Graphics().circle(0, 0, 3.5).fill({ color: 0xffffff, alpha: 0.8 });
         const tex = app.renderer.generateTexture(g);
-        
-        // تعديل محوري: إزالة الحد الأقصى لعرض كافة السجلات الموجودة في المصفوفة
-        const dotsToRender = currentList.length;
+        const dotsToRender = currentList.length === 0 ? 0 : Math.min(1800, currentList.length);
 
         for(let i=0; i < dotsToRender; i++) { 
             const dot = new PIXI.Sprite(tex);
-            
-            // التوزيع العشوائي الخفيف لتقليل الضغط عند الإنشاء
-            dot.x = Math.random() * app.screen.width; 
-            dot.y = Math.random() * app.screen.height; 
-            dot.anchor.set(0.5); 
-            dot.alpha = Math.random() * 0.4 + 0.2; 
+            let posX, posY, attempts = 0;
+            do {
+                posX = Math.random() * (app.screen.width - 30) + 15;
+                posY = Math.random() * (app.screen.height - 30) + 15;
+                attempts++;
+            } while (isInForbiddenZone(posX, posY) && attempts < 25);
+
+            dot.x = posX; dot.y = posY; dot.anchor.set(0.5); dot.alpha = Math.random() * 0.4 + 0.2; 
             dot.userData = currentList[i];
-            dot.speedX = (Math.random() - 0.5) * 0.12; 
-            dot.speedY = (Math.random() - 0.5) * 0.12;
-            
-            dot.eventMode = 'static'; 
-            dot.cursor = 'pointer';
+            dot.speedX = (Math.random() - 0.5) * 0.12; dot.speedY = (Math.random() - 0.5) * 0.12;
+            dot.eventMode = 'static'; dot.cursor = 'pointer';
             
             dot.on('pointerdown', (e) => { e.stopPropagation(); showTooltip(e, dot); });
             dot.on('pointerover', (e) => { if(window.innerWidth > 768) showTooltip(e, dot); });
             dot.on('pointerout', () => startHideTimer());
 
-            mainContainer.addChild(dot); 
-            points.push(dot);
+            mainContainer.addChild(dot); points.push(dot);
         }
         animateCounter(totalCount);
     }
@@ -566,6 +583,7 @@
         });
     };
 
+    // التبديل بين الخريطة والشهداء (تم إزالة تبويب الفيديو)
     window.switchCategory = function(category) {
         currentCategory = category;
         document.getElementById('map-container').style.display = (category === 'map') ? 'block' : 'none';
@@ -579,22 +597,24 @@
         if (category !== 'map') renderWorld();
     };
 
+    // --- دوال التحكم في تشغيل وإغلاق الفيديو المحلي ---
     window.openLocalVideo = function(videoSrc) {
         const modal = document.getElementById('video-modal');
         const player = document.getElementById('local-video-player');
-        player.src = videoSrc; 
+        player.src = videoSrc; // تمرير مسار الملف
         modal.style.display = 'flex';
-        player.play(); 
+        player.play(); // تشغيل تلقائي عند الفتح
     };
 
     window.closeVideoModal = function() {
         const modal = document.getElementById('video-modal');
         const player = document.getElementById('local-video-player');
-        player.pause(); 
-        player.src = ""; 
+        player.pause(); // إيقاف الفيديو
+        player.src = ""; // إفراغ المصدر لضمان توقف الصوت
         modal.style.display = 'none';
     };
 
+    // الخريطة مع استدعاء الفيديو المحلي
     async function initMap() {
         map = L.map('map-container').setView([31.3547, 34.3088], 11); 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -613,6 +633,7 @@
                 if (areaName) {
                     let content = `<b>${areaName}</b>`;
                     if (videoLocalPath) {
+                        // استدعاء دالة openLocalVideo بدلاً من التبديل لتبويب آخر
                         content += `<br><button onclick="openLocalVideo('${videoLocalPath}')" style="background:var(--primary-red); color:white; border:none; padding:5px; margin-top:5px; cursor:pointer; border-radius:5px; width:100%; font-family:'Cairo';">شاهد فيديو من ${areaName}</button>`;
                     }
                     layer.bindPopup(content);
@@ -672,19 +693,12 @@
 
         app.stage.on('pointerdown', () => { tooltip.style.display = 'none'; points.forEach(p => resetSpriteAppearance(p)); });
 
-        // تعديل محوري: تبسيط دورة التحريك (Ticker) لمنع انهيار الأداء مع 40 ألف نقطة
         app.ticker.add(() => {
             for(let i=0; i < points.length; i++) {
-                const p = points[i]; 
-                p.x += p.speedX; 
-                p.y += p.speedY;
-                
-                // التفاف بسيط حول الشاشة بدلاً من المعالجة المعقدة للحدود
-                if (p.x < 0) p.x = app.screen.width; 
-                else if (p.x > app.screen.width) p.x = 0;
-                
-                if (p.y < 0) p.y = app.screen.height; 
-                else if (p.y > app.screen.height) p.y = 0;
+                const p = points[i]; p.x += p.speedX; p.y += p.speedY;
+                if (p.x < 0) p.x = app.screen.width; if (p.x > app.screen.width) p.x = 0;
+                if (p.y < 0) p.y = app.screen.height; if (p.y > app.screen.height) p.y = 0;
+                if (isInForbiddenZone(p.x, p.y)) { p.speedX *= -1; p.speedY *= -1; p.x += p.speedX * 2.5; p.y += p.speedY * 2.5; }
             }
         });
         
