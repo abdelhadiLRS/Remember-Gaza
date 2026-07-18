@@ -7,6 +7,9 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <title>أرواح فلسطين | Palestinian Souls</title>
     
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
     <!-- مكتبات الرسوميات والصوت والمشاركة المستقرة والمحدثة -->
     <script src="https://pixijs.download/release/pixi.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
@@ -179,6 +182,7 @@
             <button class="tab-btn active" id="tab-gaza" onclick="switchCategory('gaza')">غزة</button>
             <button class="tab-btn" id="tab-press" onclick="switchCategory('press')">الصحفيين</button>
             <button class="tab-btn" id="tab-westbank" onclick="switchCategory('westbank')">الضفة الغربية</button>
+            <button class="tab-btn" id="tab-map" onclick="switchCategory('map')">خريطة غزة</button>
         </div>
 
         <div class="top-btns">
@@ -700,6 +704,49 @@
     }
 
     init().then(() => setupUIEvents());
+
+    let map = null;
+
+async function initMap() {
+    map = L.map('map-container').setView([31.3547, 34.3088], 11); // إحداثيات غزة
+    
+    // استخدام خريطة داكنة لتناسب تصميم موقعك
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    const response = await fetch('gaza.geo.json');
+    const geoData = await response.json();
+
+    L.geoJSON(geoData, {
+        style: {
+            color: "#cc0000",
+            weight: 2,
+            fillOpacity: 0.4
+        },
+        onEachFeature: (feature, layer) => {
+            layer.bindPopup("منطقة: " + (feature.properties.name || "غير محددة"));
+            layer.on('mouseover', function() { this.setStyle({fillOpacity: 0.7}); });
+            layer.on('mouseout', function() { this.setStyle({fillOpacity: 0.4}); });
+        }
+    }).addTo(map);
+}
+
+// دالة التبديل المطورة
+window.switchCategory = function(category) {
+    currentCategory = category;
+    document.getElementById('map-container').style.display = (category === 'map') ? 'block' : 'none';
+    mainContainer.visible = (category !== 'map');
+
+    if (category === 'map' && !map) initMap();
+
+    const buttons = document.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    document.getElementById(`tab-${category}`).classList.add('active');
+    
+    if (category !== 'map') renderWorld();
+};
 </script>
+    <div id="map-container" style="display:none; position:fixed; top:80px; left:0; width:100%; height:calc(100% - 80px); z-index:5;"></div>
 </body>
 </html>
