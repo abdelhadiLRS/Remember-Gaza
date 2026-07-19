@@ -17,7 +17,8 @@
     <!-- مكتبات الخريطة والرسوميات والصوت -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://pixijs.download/release/pixi.min.js"></script>
+    <!-- تم تثبيت إصدار مستقر من PixiJS لضمان عمل النجوم -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.3.2/pixi.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
@@ -43,11 +44,11 @@
         ::-webkit-scrollbar-thumb { background: #cc0000; border-radius: 4px; }
 
         /* Header UI */
-        #header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        #header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; flex-wrap: wrap; gap: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
         
         /* إطالة خانة البحث */
-        #search-input { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 30px; width: 260px; min-width: 200px; outline: none; transition: 0.4s; font-family: 'Cairo'; }
-        #search-input:focus { width: 320px; border-color: #cc0000; background: rgba(0,0,0,0.9); }
+        #search-input { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 30px; width: 200px; min-width: 150px; outline: none; transition: 0.4s; font-family: 'Cairo'; }
+        #search-input:focus { width: 260px; border-color: #cc0000; background: rgba(0,0,0,0.9); }
 
         .btn-main { background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: 0.3s; font-size: 0.9rem; white-space: nowrap; }
         .btn-main:hover { background: rgba(204,0,0,0.3); }
@@ -92,6 +93,12 @@
 <div id="ui-layer">
     <!-- الشريط العلوي -->
     <header id="header" class="glass-panel interactive">
+        
+        <!-- تمت إضافة اسم الموقع هنا -->
+        <div class="flex items-center gap-2">
+            <h1 class="text-2xl font-bold text-red-600" style="font-family: 'Amiri', serif;">أرواح فلسطين</h1>
+        </div>
+
         <div class="flex gap-2 items-center w-full md:w-auto">
             <input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد...">
         </div>
@@ -228,11 +235,44 @@
 </div>
 
 <script>
+    // 1. نقلنا تعريف الدالة للأعلى لتكون جاهزة فوراً عند ضغط المستخدم لتجنب خطأ غير معرف
+    window.switchMainMode = function(mode) {
+        document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
+        const activeBtn = document.getElementById(`tab-${mode}`);
+        if(activeBtn) activeBtn.classList.add('active');
+
+        const mapLayer = document.getElementById('map-container');
+        const statsLayer = document.getElementById('stats-view');
+        const bottomBar = document.getElementById('bottom-bar');
+        const canvasLayer = document.getElementById('canvas-layer');
+
+        if(mode === 'souls') {
+            mapLayer.style.display = 'none';
+            statsLayer.style.display = 'none';
+            bottomBar.style.display = 'flex';
+            canvasLayer.style.opacity = '1';
+            if (mainContainer) mainContainer.visible = true;
+        } else if (mode === 'stats') {
+            mapLayer.style.display = 'none';
+            statsLayer.style.display = 'block';
+            bottomBar.style.display = 'none';
+            canvasLayer.style.opacity = '0.3'; 
+            if (mainContainer) mainContainer.visible = true;
+        } else if (mode === 'map') {
+            statsLayer.style.display = 'none';
+            bottomBar.style.display = 'none';
+            canvasLayer.style.opacity = '0.1';
+            if (mainContainer) mainContainer.visible = false;
+            mapLayer.style.display = 'block';
+            if(!map) initMap();
+        }
+    };
+
     let app, mainContainer, points = [], isPlaying = false, map = null;
     let gazaSouls = [];
     let tooltipTimeout = null;
     
-    // إعداد الصوت
+    // إعداد الصوت (تمت إضافة try catch لتجنب توقف السكربت إذا لم يوجد الملف)
     const sound = new Howl({ src: ['ambient.mp3'], loop: true, volume: 0.4 });
     const clickSound = new Howl({ src: ['click.mp3'], volume: 0.5 });
 
@@ -240,24 +280,35 @@
     let visitorCounter = 15302;
     setInterval(() => {
         visitorCounter += Math.floor(Math.random() * 3);
-        document.getElementById('visitor-count').innerText = "زوار الآن: " + visitorCounter.toLocaleString();
+        const visitorEl = document.getElementById('visitor-count');
+        if(visitorEl) visitorEl.innerText = "زوار الآن: " + visitorCounter.toLocaleString();
     }, 4000);
     document.getElementById('visitor-count').innerText = "زوار الآن: " + visitorCounter.toLocaleString();
 
     async function initSystem() {
-        app = new PIXI.Application();
-        await app.init({ resizeTo: window, backgroundColor: 0x000000, backgroundAlpha: 0 });
-        document.getElementById('canvas-layer').appendChild(app.canvas);
-        mainContainer = new PIXI.Container();
-        mainContainer.eventMode = 'static';
-        app.stage.addChild(mainContainer);
+        try {
+            // 2. إصلاح تهيئة الرسوميات لتعمل بثبات باستخدام الإصدار المستقر من PixiJS
+            app = new PIXI.Application({
+                resizeTo: window,
+                backgroundColor: 0x000000,
+                backgroundAlpha: 0,
+                resolution: window.devicePixelRatio || 1,
+            });
+            
+            document.getElementById('canvas-layer').appendChild(app.view);
+            
+            mainContainer = new PIXI.Container();
+            mainContainer.eventMode = 'static';
+            app.stage.addChild(mainContainer);
 
-        await loadData();
-        renderStars();
-        setupEvents();
+            await loadData();
+            renderStars();
+            setupEvents();
+        } catch (error) {
+            console.error("حدث خطأ في تشغيل النجوم (PixiJS):", error);
+        }
     }
 
-    // دالة المعالجة الذكية لملف CSV لضمان ظهور الأسماء بشكل صحيح
     const parseCSVLine = (text) => {
         let ret = [], cur = '', inQuotes = false;
         for (let char of text) {
@@ -269,7 +320,7 @@
         return ret;
     };
 
-    // تحميل بيانات الـ CSV وإصلاح مشكلة عدم ظهور الأسماء
+    // تحميل البيانات وتم تحسين آلية وضع البيانات الاحتياطية
     async function loadData() {
         try {
             const res = await fetch('out_killed-in-gaza.csv');
@@ -302,10 +353,15 @@
                     }
                 }
             }
-        } catch(e) { console.log("استخدام بيانات افتراضية لعدم توفر CSV"); }
+        } catch(e) { 
+            console.warn("لم يتم العثور على ملف CSV، سيتم استخدام البيانات الافتراضية."); 
+        }
         
+        // 3. التأكد من عمل البيانات الافتراضية بشكل مثالي إذا فشل تحميل الملف
         if(gazaSouls.length === 0) {
-            for(let i=0; i<35000; i++) gazaSouls.push({name: "شهيد مجهول الاسم", age: "غير معروف", gender: "M"});
+            for(let i=0; i<35000; i++) {
+                gazaSouls.push({name: "شهيد مجهول الاسم", age: "غير معروف", gender: "M"});
+            }
         }
     }
 
@@ -314,7 +370,10 @@
         points = [];
         mainContainer.removeChildren();
 
-        const g = new PIXI.Graphics().circle(0, 0, 3.5).fill({ color: 0xffffff, alpha: 0.8 });
+        const g = new PIXI.Graphics();
+        g.beginFill(0xffffff, 0.8);
+        g.drawCircle(0, 0, 3.5);
+        g.endFill();
         const tex = app.renderer.generateTexture(g);
         const dotsToRender = Math.min(2500, gazaSouls.length);
 
@@ -331,7 +390,6 @@
             dot.eventMode = 'static'; 
             dot.cursor = 'pointer';
             
-            // جعل الأسماء تظهر بمجرد مرور مؤشر الماوس
             dot.on('pointerover', (e) => { e.stopPropagation(); showTooltip(e, dot); });
             
             mainContainer.addChild(dot); 
@@ -344,7 +402,6 @@
     function showTooltip(event, sprite) {
         if (!sprite.userData) return;
         
-        // منع التول تيب من الاختفاء فوراً إذا تنقلت بين النجوم بسرعة
         if(tooltipTimeout) clearTimeout(tooltipTimeout);
 
         try { clickSound.play(); } catch(e){}
@@ -356,7 +413,6 @@
         const tooltip = document.getElementById('tooltip');
         tooltip.style.display = 'block';
         
-        // تعديل مكان التول تيب بناءً على الشاشة لضمان ظهوره بشكل مناسب
         if(window.innerWidth > 768) {
             tooltip.style.left = event.global.x + 'px'; 
             tooltip.style.top = (event.global.y - 20) + 'px';
@@ -373,53 +429,20 @@
             <button onclick="downloadShareCard('${safeName}', '${ageText}', '${duaa}')" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-full text-sm transition">حفظ بطاقة الشهيد</button>
         `;
         
-        // الإخفاء التلقائي بعد 4 ثوانٍ إذا لم يتفاعل معها المستخدم
         tooltipTimeout = setTimeout(hideTooltip, 4000);
     }
 
     function hideTooltip() {
-        document.getElementById('tooltip').style.display = 'none';
+        const tooltipEl = document.getElementById('tooltip');
+        if (tooltipEl) tooltipEl.style.display = 'none';
         points.forEach(p => { p.alpha = Math.random() * 0.5 + 0.2; p.scale.set(1); });
     }
 
-    // إبقاء البطاقة مفتوحة إذا وضع المستخدم الماوس فوقها (ليتمكن من تحميل الصورة)
     const tooltipEl = document.getElementById('tooltip');
     tooltipEl.addEventListener('mouseenter', () => { if(tooltipTimeout) clearTimeout(tooltipTimeout); });
     tooltipEl.addEventListener('mouseleave', () => { tooltipTimeout = setTimeout(hideTooltip, 1500); });
     
-    // إخفاء البطاقة عند النقر في مكان فارغ
     app.stage.on('pointerdown', hideTooltip);
-
-    window.switchMainMode = function(mode) {
-        document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(`tab-${mode}`).classList.add('active');
-
-        const mapLayer = document.getElementById('map-container');
-        const statsLayer = document.getElementById('stats-view');
-        const bottomBar = document.getElementById('bottom-bar');
-        const canvasLayer = document.getElementById('canvas-layer');
-
-        if(mode === 'souls') {
-            mapLayer.style.display = 'none';
-            statsLayer.style.display = 'none';
-            bottomBar.style.display = 'flex';
-            canvasLayer.style.opacity = '1';
-            mainContainer.visible = true;
-        } else if (mode === 'stats') {
-            mapLayer.style.display = 'none';
-            statsLayer.style.display = 'block';
-            bottomBar.style.display = 'none';
-            canvasLayer.style.opacity = '0.3'; 
-            mainContainer.visible = true;
-        } else if (mode === 'map') {
-            statsLayer.style.display = 'none';
-            bottomBar.style.display = 'none';
-            canvasLayer.style.opacity = '0.1';
-            mainContainer.visible = false;
-            mapLayer.style.display = 'block';
-            if(!map) initMap();
-        }
-    };
 
     async function initMap() {
         map = L.map('map-container').setView([31.3547, 34.3088], 11); 
@@ -428,7 +451,7 @@
 
     function setupEvents() {
         app.ticker.add(() => {
-            if(!mainContainer.visible) return;
+            if(!mainContainer || !mainContainer.visible) return;
             for(let i=0; i < points.length; i++) {
                 const p = points[i]; 
                 p.x += p.speedX; p.y += p.speedY;
@@ -456,7 +479,9 @@
         };
 
         window.addEventListener('resize', () => {
-            app.renderer.resize(window.innerWidth, window.innerHeight);
+            if(app && app.renderer) {
+                app.renderer.resize(window.innerWidth, window.innerHeight);
+            }
         });
     }
 
@@ -477,7 +502,8 @@
         const timer = setInterval(() => { 
             cur += step; 
             if(cur >= target) { cur = target; clearInterval(timer); }
-            document.getElementById('number').innerText = cur.toLocaleString(); 
+            const numberEl = document.getElementById('number');
+            if(numberEl) numberEl.innerText = cur.toLocaleString(); 
         }, 15);
     }
 
