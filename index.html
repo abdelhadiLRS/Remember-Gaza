@@ -87,7 +87,7 @@
 <div id="canvas-layer"><canvas id="stars-canvas" class="w-full h-full block"></canvas></div>
 <div id="map-container"></div>
 
-<!-- الإحصائيات الفيديوهات (كما هي في الكود الأصلي) -->
+<!-- نافذة الإحصائيات -->
 <main id="stats-view" class="text-white">
     <div class="w-full max-w-7xl mx-auto px-4 md:px-8">
         <div class="mb-12 text-center">
@@ -101,16 +101,47 @@
                 <p class="text-2xl md:text-4xl font-black text-white group-hover:text-red-400 transition-colors">~50,000</p>
                 <div class="mt-2 h-1 w-12 bg-red-600 mx-auto rounded-full"></div>
             </div>
-            <!-- تم اختصار باقي كروت الإحصائيات للحفاظ على نظافة الكود (يمكنك إعادة إضافتها) -->
+            <div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 md:p-6 rounded-2xl text-center shadow-lg hover:border-red-500/50 transition-all duration-500 group">
+                <div class="absolute -top-10 -left-10 w-24 h-24 bg-red-600/10 blur-2xl rounded-full group-hover:bg-red-600/20 transition-all"></div>
+                <h3 class="text-xs md:text-sm text-gray-400 mb-2 font-bold">الأطفال والنساء</h3>
+                <p class="text-2xl md:text-4xl font-black text-white group-hover:text-red-400 transition-colors">68%</p>
+                <div class="mt-2 h-1 w-12 bg-red-600 mx-auto rounded-full"></div>
+            </div>
             <div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 md:p-6 rounded-2xl text-center shadow-lg hover:border-red-500/50 transition-all duration-500 group">
                 <h3 class="text-xs md:text-sm text-gray-400 mb-2 font-bold stat-card-2">النازحون قسراً</h3>
                 <p class="text-2xl md:text-4xl font-black text-white group-hover:text-red-400 transition-colors">2M+</p>
                 <div class="mt-2 h-1 w-12 bg-red-600 mx-auto rounded-full"></div>
             </div>
+            <div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 md:p-6 rounded-2xl text-center shadow-lg hover:border-red-500/50 transition-all duration-500 group">
+                <h3 class="text-xs md:text-sm text-gray-400 mb-2 font-bold">الجرحى والمصابون</h3>
+                <p class="text-2xl md:text-4xl font-black text-white group-hover:text-red-400 transition-colors">85,000+</p>
+                <div class="mt-2 h-1 w-12 bg-red-600 mx-auto rounded-full"></div>
+            </div>
+            <div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 md:p-6 rounded-2xl text-center shadow-lg hover:border-red-500/50 transition-all duration-500 group">
+                <h3 class="text-xs md:text-sm text-gray-400 mb-2 font-bold">الكوادر الطبية</h3>
+                <p class="text-2xl md:text-4xl font-black text-white group-hover:text-red-400 transition-colors">1,000+</p>
+                <div class="mt-2 h-1 w-12 bg-gray-500 mx-auto rounded-full group-hover:bg-red-500 transition-colors"></div>
+            </div>
+            <div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 md:p-6 rounded-2xl text-center shadow-lg hover:border-red-500/50 transition-all duration-500 group">
+                <h3 class="text-xs md:text-sm text-gray-400 mb-2 font-bold">الصحفيون</h3>
+                <p class="text-2xl md:text-4xl font-black text-white group-hover:text-red-400 transition-colors">160+</p>
+                <div class="mt-2 h-1 w-12 bg-gray-500 mx-auto rounded-full group-hover:bg-red-500 transition-colors"></div>
+            </div>
+            <div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 md:p-6 rounded-2xl text-center shadow-lg hover:border-red-500/50 transition-all duration-500 group">
+                <h3 class="text-xs md:text-sm text-gray-400 mb-2 font-bold">المباني المدمرة</h3>
+                <p class="text-2xl md:text-4xl font-black text-white group-hover:text-red-400 transition-colors">70%</p>
+                <div class="mt-2 h-1 w-12 bg-gray-500 mx-auto rounded-full group-hover:bg-red-500 transition-colors"></div>
+            </div>
+            <div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 md:p-6 rounded-2xl text-center shadow-lg hover:border-red-500/50 transition-all duration-500 group">
+                <h3 class="text-xs md:text-sm text-gray-400 mb-2 font-bold">حالات الاعتقال</h3>
+                <p class="text-2xl md:text-4xl font-black text-white group-hover:text-red-400 transition-colors">10,000+</p>
+                <div class="mt-2 h-1 w-12 bg-gray-500 mx-auto rounded-full group-hover:bg-red-500 transition-colors"></div>
+            </div>
         </div>
     </div>
 </main>
 
+<!-- نافذة التوثيق المرئي -->
 <main id="videos-view" class="text-white">
     <div class="w-full max-w-7xl mx-auto px-4 md:px-8">
         <div class="mb-10 text-center">
@@ -132,7 +163,6 @@
             <div class="bg-red-900/40 border border-red-500/50 px-3 py-1.5 rounded-full flex items-center gap-2 md:hidden">
                 <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
                 <a href="https://www.hitwebcounter.com" target="_blank">
-                    <!-- استبدل الرابط أدناه بكود حسابك في HitWebCounter إذا لزم الأمر -->
                     <img src="https://hitwebcounter.com/counter/counter.php?page=17088909&style=0006&nbdigits=5&type=page&initCount=214589" title="HitWebCounter" Alt="Visit counter For Websites" border="0" class="h-4 opacity-80" />
                 </a>
             </div>
@@ -192,8 +222,8 @@
 </div>
 
 <div id="tooltip" class="interactive"></div>
+
 <div id="share-card-template">
-    <!-- محتوى البطاقة بقي كما هو -->
     <div style="font-family: 'Amiri', serif; font-size: 1.2rem; color: #cc0000; margin-bottom: 5px;">قوافل الشهداء البررة</div>
     <h2 id="card-name-primary" style="margin: 10px 0 0 0; font-size: 2.2rem; color: #ffffff;"></h2>
     <h3 id="card-name-secondary" style="margin: 5px 0 10px 0; font-size: 1.2rem; color: #a1a1aa; font-weight: normal; display: none;"></h3>
@@ -223,7 +253,7 @@
             devText: "تطوير: عبد الهادي",
             shareBtn: "مشاركة",
             martyrsLabel: "شهيداً وثّقت أسماؤهم",
-            catchphrase: "شارك المنصة لتوثيق الحقيقة ونقل صوتهم وتخليد ذكراهم للعالم أجمع.", // جملة إثارة الاهتمام
+            catchphrase: "شارك المنصة لتوثيق الحقيقة ونقل صوتهم وتخليد ذكراهم للعالم أجمع.",
             copyAlert: "تم نسخ الرابط بنجاح، شكراً لدعمك!",
             dir: "rtl"
         },
@@ -298,11 +328,9 @@
 
         const t = translations[currentLang];
         
-        // تعديل اتجاه وسم الـ HTML
         document.getElementById('html-root').lang = currentLang;
         document.getElementById('html-root').dir = t.dir;
 
-        // تعديل النصوص
         document.getElementById('page-title').innerText = t.title;
         document.getElementById('logo-text').innerText = t.logoText;
         document.getElementById('search-input').placeholder = t.searchPlaceholder;
@@ -313,7 +341,6 @@
         document.getElementById('donate-desktop').innerText = t.donate;
         if(document.getElementById('donate-mobile')) document.getElementById('donate-mobile').innerText = t.donate;
         
-        // تحديث زر الصوت بحسب الحالة الحالية
         const musicStateText = isPlaying ? t.musicOff : t.musicOn;
         document.getElementById('music-btn').innerText = musicStateText;
         if(document.getElementById('music-btn-mobile')) document.getElementById('music-btn-mobile').innerText = musicStateText;
@@ -324,7 +351,7 @@
         document.getElementById('martyrs-label').innerText = t.martyrsLabel;
     }
 
-    // --- 3. دالة المشاركة الذكية (Web Share API) ---
+    // --- 3. دالة المشاركة الذكية ---
     window.shareSite = function() {
         const t = translations[currentLang];
         const shareData = {
@@ -336,23 +363,34 @@
         if (navigator.share) {
             navigator.share(shareData).catch((error) => console.log('خطأ في المشاركة:', error));
         } else {
-            // بديل للحواسيب (نسخ الرابط)
             navigator.clipboard.writeText(window.location.href).then(() => {
                 alert(t.copyAlert);
             }).catch(err => console.error(err));
         }
     };
 
-    // تشغيل كشف اللغة فوراً
     detectAndSetLanguage();
 
-    // --------------------------------------------------------
-    // بقية أكوادك السابقة (رسم النجوم، جلب البيانات، الخريطة)
-    // --------------------------------------------------------
-
+    // --- 4. بيانات الفيديوهات ---
     const videosData = [
-        { url: "https://t.me/gazaalannet/81461?embed=1", title: "قصف واستهداف أحياء سكنية", date: "توثيق ميداني", desc: "مشاهد تظهر حجم الدمار..." },
-        { url: "https://t.me/gazaalannet/81560?embed=1", title: "عمليات الإنقاذ والدفاع المدني", date: "توثيق ميداني", desc: "جهود المواطنين وطواقم الإنقاذ..." }
+        {
+            url: "https://t.me/gazaalannet/81461?embed=1",
+            title: "قصف واستهداف أحياء سكنية",
+            date: "توثيق ميداني",
+            desc: "مشاهد تظهر حجم الدمار الذي لحق بالمباني السكنية والبنية التحتية."
+        },
+        {
+            url: "https://t.me/gazaalannet/81560?embed=1",
+            title: "عمليات الإنقاذ والدفاع المدني",
+            date: "توثيق ميداني",
+            desc: "جهود المواطنين وطواقم الإنقاذ في محاولة البحث بين الأنقاض والركام."
+        },
+        {
+            url: "https://t.me/gazaalannet/81611?embed=1",
+            title: "معاناة النزوح المستمر",
+            date: "توثيق ميداني",
+            desc: "حركة العائلات الفلسطينية ومحاولات النزوح القسري بحثاً عن أماكن آمنة."
+        }
     ];
 
     function renderVideos() {
@@ -362,6 +400,7 @@
                 <div class="mb-4 border-b border-white/10 pb-4">
                     <h3 class="text-xl font-bold text-red-500">${v.title}</h3>
                     <div class="text-xs text-gray-400 mt-1.5 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-gray-400 rounded-full"></span> ${v.date}</div>
+                    <p class="text-sm text-gray-300 mt-3 leading-relaxed">${v.desc}</p>
                 </div>
                 <div class="h-[420px] w-full rounded-xl overflow-hidden relative bg-black/80 border border-white/5">
                     <iframe src="${v.url}" class="absolute top-0 left-0 w-full h-full" frameborder="0" scrolling="yes" allow="autoplay; fullscreen"></iframe>
@@ -371,6 +410,7 @@
     }
     renderVideos();
 
+    // --- 5. منطق النوافذ ---
     window.switchMainMode = function(mode) {
         document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
         const activeBtn = document.getElementById(`tab-${mode}`);
@@ -382,18 +422,25 @@
         const bottomBar = document.getElementById('bottom-bar');
         const canvasLayer = document.getElementById('canvas-layer');
 
-        mapLayer.style.display = 'none'; statsLayer.style.display = 'none';
-        videosLayer.style.display = 'none'; bottomBar.style.display = 'none';
+        mapLayer.style.display = 'none'; 
+        statsLayer.style.display = 'none';
+        videosLayer.style.display = 'none'; 
+        bottomBar.style.display = 'none';
 
         if(mode === 'souls') {
             bottomBar.style.display = 'flex';
-            canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';
+            canvasLayer.style.opacity = '1';
+            canvasLayer.style.pointerEvents = 'auto';
         } else {
-            canvasLayer.style.opacity = '0'; canvasLayer.style.pointerEvents = 'none';
+            canvasLayer.style.opacity = '0';
+            canvasLayer.style.pointerEvents = 'none';
             hideTooltip();
-            if (mode === 'stats') statsLayer.style.display = 'block'; 
-            else if (mode === 'videos') videosLayer.style.display = 'block'; 
-            else if (mode === 'map') {
+            
+            if (mode === 'stats') {
+                statsLayer.style.display = 'block'; 
+            } else if (mode === 'videos') {
+                videosLayer.style.display = 'block'; 
+            } else if (mode === 'map') {
                 mapLayer.style.display = 'block';
                 if(!map) initMap();
             }
@@ -414,12 +461,88 @@
     }
     window.addEventListener('resize', resize); resize();
 
+    // --- 6. دالة قراءة ملف CSV ---
+    const parseCSVLine = (text) => {
+        let ret = [], cur = '', inQuotes = false;
+        for (let char of text) {
+            if (char === '"') inQuotes = !inQuotes;
+            else if (char === ',' && !inQuotes) { ret.push(cur.trim()); cur = ''; }
+            else cur += char;
+        }
+        ret.push(cur.trim()); return ret;
+    };
+
+    // --- 7. دالة جلب البيانات وتهيئتها ---
     async function loadDataAndInit() {
-        // تم اختصار دالة جلب البيانات لتناسب حجم الكود، ولكن المنطق موجود
-        for(let i=0; i<15000; i++) gazaSouls.push({name_ar: "شهيد مجهول الاسم", name_en: "Unknown Martyr", id: "", dob: "", age: "غير معروف", gender: "M"});
+        try {
+            const res = await fetch('out_killed-in-gaza.csv');
+            if (res.ok) {
+                const text = await res.text();
+                if (text.trim().startsWith('<!DOCTYPE') || text.includes('<html')) throw new Error("ملف غير صالح");
+                const lines = text.split('\n');
+                if (lines.length > 1) {
+                    const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
+                    let nameArIdx = -1, nameEnIdx = -1, ageIdx = -1, genderIdx = -1, idIdx = -1, dobIdx = -1;
+
+                    for (let i = 0; i < headers.length; i++) {
+                        const h = headers[i];
+                        if (h.includes('name_ar') || h.includes('اسم') || h === 'ar') nameArIdx = i;
+                        else if ((h.includes('name_en') || h.includes('english')) && nameEnIdx === -1) nameEnIdx = i;
+                        else if (h === 'name' || h === 'fullname') { if (nameArIdx === -1) nameArIdx = i; }
+                        
+                        if ((h.includes('id') || h.includes('هوية') || h === 'id_number') && idIdx === -1) idIdx = i;
+                        if ((h.includes('dob') || h.includes('مواليد') || h.includes('تاريخ')) && dobIdx === -1) dobIdx = i;
+                        if ((h === 'age' || h.includes('عمر')) && ageIdx === -1) ageIdx = i;
+                        if ((h.includes('sex') || h.includes('gender') || h.includes('جنس')) && genderIdx === -1) genderIdx = i;
+                    }
+
+                    for (let i = 1; i < lines.length; i++) {
+                        if (!lines[i].trim()) continue;
+                        try {
+                            const cols = parseCSVLine(lines[i]);
+                            if (cols.length === 0) continue;
+                            let name_ar = nameArIdx > -1 && cols[nameArIdx] ? cols[nameArIdx].trim() : "";
+                            let name_en = nameEnIdx > -1 && cols[nameEnIdx] ? cols[nameEnIdx].trim() : "";
+                            let id_val = (idIdx > -1 && cols[idIdx]) ? cols[idIdx].trim() : "";
+                            let dob_val = (dobIdx > -1 && cols[dobIdx]) ? cols[dobIdx].trim() : "";
+                            let age_val = (ageIdx > -1 && cols[ageIdx]) ? cols[ageIdx].trim() : "";
+                            let gender_val = (genderIdx > -1 && cols[genderIdx]) ? cols[genderIdx].trim().toUpperCase() : "M";
+
+                            if (name_ar && /[a-zA-Z]/.test(name_ar) && !/[\u0600-\u06FF]/.test(name_ar)) {
+                                if(!name_en) name_en = name_ar; name_ar = "";
+                            }
+                            for (let c = 0; c < cols.length; c++) {
+                                let val = cols[c].trim();
+                                if (!val) continue;
+                                if (/[\u0600-\u06FF]/.test(val) && val.length > 3 && !val.includes('-') && !val.includes('/')) {
+                                    if (!name_ar) name_ar = val;
+                                } else if (/[a-zA-Z]/.test(val) && val.length > 3 && c !== genderIdx && !val.includes('-') && !val.includes('/')) {
+                                    if (!name_en) name_en = val;
+                                } else if (/^\d{8,10}$/.test(val) && c !== ageIdx && !id_val) {
+                                    id_val = val;
+                                } else if (/^\d{1,3}$/.test(val) && !age_val) {
+                                    age_val = val;
+                                }
+                            }
+                            if (!name_ar && name_en) name_ar = name_en;
+                            if (!name_ar) name_ar = "شهيد مجهول الاسم";
+                            if (!age_val || isNaN(parseInt(age_val))) age_val = "غير معروف";
+
+                            gazaSouls.push({ name_ar: name_ar, name_en: name_en, id: id_val, dob: dob_val, age: age_val, gender: gender_val });
+                        } catch(lineError) { continue; }
+                    }
+                }
+            }
+        } catch(e) { console.log("استخدام البيانات الافتراضية"); }
+        
+        if(gazaSouls.length === 0) {
+            for(let i=0; i<35000; i++) gazaSouls.push({name_ar: "شهيد مجهول الاسم", name_en: "", id: "", dob: "", age: "غير معروف", gender: "M"});
+        }
+        
         resize(); renderStars(); requestAnimationFrame(gameLoop); switchMainMode('souls');
     }
 
+    // --- 8. رسم النجوم والحركة ---
     function renderStars() {
         points = []; const dotsToRender = Math.min(2500, gazaSouls.length);
         for(let i=0; i < dotsToRender; i++) { 
@@ -431,7 +554,7 @@
                 color: '#ffffff', userData: gazaSouls[i]
             });
         }
-        animateCounter(40000); // رقم العداد
+        animateCounter(gazaSouls.length > 0 ? gazaSouls.length : 40000);
     }
 
     function gameLoop() {
@@ -442,24 +565,84 @@
             if (p.x < 0) p.x = width; else if (p.x > width) p.x = 0;
             if (p.y < 0) p.y = height; else if (p.y > height) p.y = 0;
             p.alpha += (p.targetAlpha - p.alpha) * 0.1; p.scale += (p.targetScale - p.scale) * 0.1;
+
             ctx.beginPath(); ctx.arc(p.x, p.y, 1.8 * p.scale, 0, Math.PI * 2);
             ctx.fillStyle = p.color; ctx.globalAlpha = p.alpha; ctx.fill();
         }
         ctx.globalAlpha = 1; requestAnimationFrame(gameLoop);
     }
 
+    // --- 9. التفاعل مع الماوس (Hover) ---
     window.addEventListener('mousemove', (e) => { 
         if(document.getElementById('canvas-layer').style.pointerEvents === 'none') return;
         mouseX = e.clientX; mouseY = e.clientY; checkHover(e); 
     });
 
-    function checkHover(e) { /* منطق تحويم الماوس الموجود مسبقاً */ }
-    function showTooltip(event, point) { /* إظهار نافذة بيانات الشهيد */ }
-    function hideTooltip() { 
-        const tooltipEl = document.getElementById('tooltip');
-        if (tooltipEl) tooltipEl.style.display = 'none';
+    function checkHover(e) {
+        if(isSearching) return;
+        let hovered = null;
+        for(let i=0; i<points.length; i++) {
+            const dx = points[i].x - mouseX, dy = points[i].y - mouseY;
+            if(dx*dx + dy*dy < 120) { hovered = points[i]; break; }
+        }
+
+        if(hovered) {
+            points.forEach(p => { p.targetAlpha = 0.2; p.targetScale = 1; p.color = '#ffffff'; });
+            hovered.targetAlpha = 1; hovered.targetScale = 3.5; hovered.color = '#ff3333';
+            showTooltip(e, hovered);
+        } else { hideTooltip(); }
     }
 
+    // --- 10. نافذة بيانات الشهيد (Tooltip) ---
+    function showTooltip(event, point) {
+        if (!point.userData) return;
+        if(tooltipTimeout) clearTimeout(tooltipTimeout);
+        try { clickSound.play(); } catch(e){}
+        
+        const d = point.userData;
+        const tooltip = document.getElementById('tooltip');
+        tooltip.style.display = 'block';
+        
+        if(window.innerWidth > 768) { tooltip.style.left = event.clientX + 'px'; tooltip.style.top = (event.clientY - 30) + 'px'; }
+
+        let primaryName = d.name_ar;
+        let secondaryName = (d.name_en && d.name_en !== d.name_ar) ? d.name_en : '';
+        const safePrimary = primaryName.replace(/'/g, "\\'");
+        const safeSecondary = secondaryName ? secondaryName.replace(/'/g, "\\'") : '';
+        const ageText = d.age === "غير معروف" ? "غير معروف" : `${d.age} سنة`;
+        const duaa = d.gender === "F" ? "رحمها الله" : "رحمه الله";
+        
+        let detailsHtml = '';
+        if (d.id) detailsHtml += `<div class="text-sm text-gray-300 mb-1">رقم الهوية: <span class="font-bold text-white">${d.id}</span></div>`;
+        if (d.dob) detailsHtml += `<div class="text-sm text-gray-300 mb-1">تاريخ الميلاد: <span class="font-bold text-white">${d.dob}</span></div>`;
+        detailsHtml += `<div class="text-sm text-gray-300 mb-3">العمر: <span class="font-bold text-white">${ageText}</span></div>`;
+
+        let namesHtml = `<div class="text-xl md:text-2xl font-black text-white leading-tight">${primaryName}</div>`;
+        if (secondaryName) namesHtml += `<div class="text-sm text-gray-400 mt-1">${secondaryName}</div>`;
+        namesHtml += `<div class="border-b border-red-500/30 pb-2 mb-3 mt-2"></div>`;
+
+        tooltip.innerHTML = `
+            ${namesHtml}
+            <div class="text-right bg-white/5 p-3 rounded-xl border border-white/10 mb-3 shadow-inner">
+                ${detailsHtml}
+            </div>
+            <span class="duaa-style mb-4 text-center">﴿ ${duaa} ﴾</span>
+            <button onclick="downloadShareCard('${safePrimary}', '${safeSecondary}', '${d.id || ''}', '${d.dob || ''}', '${ageText}', '${duaa}')" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl text-sm transition shadow-lg">تحميل البطاقة للمشاركة</button>
+        `;
+        
+        tooltipTimeout = setTimeout(hideTooltip, 5000);
+    }
+
+    function hideTooltip() {
+        const tooltipEl = document.getElementById('tooltip');
+        if (tooltipEl) tooltipEl.style.display = 'none';
+        if(!isSearching) points.forEach(p => { p.targetAlpha = p.baseAlpha; p.targetScale = 1; p.color = '#ffffff'; });
+    }
+
+    document.getElementById('tooltip').addEventListener('mouseenter', () => { if(tooltipTimeout) clearTimeout(tooltipTimeout); });
+    document.getElementById('tooltip').addEventListener('mouseleave', () => { tooltipTimeout = setTimeout(hideTooltip, 1000); });
+    
+    // --- 11. وظيفة البحث ---
     document.getElementById('search-input').oninput = (e) => {
         if(document.getElementById('stats-view').style.display === 'block' || document.getElementById('videos-view').style.display === 'block') switchMainMode('souls');
         const val = e.target.value.trim().toLowerCase();
@@ -468,11 +651,13 @@
             const nameAr = (p.userData.name_ar || "").toLowerCase();
             const nameEn = (p.userData.name_en || "").toLowerCase();
             const match = nameAr.includes(val) || nameEn.includes(val);
+            
             if(val === "") { p.targetAlpha = p.baseAlpha; p.color = '#ffffff'; p.targetScale = 1; }
             else { p.targetAlpha = match ? 1 : 0.03; p.color = match ? '#ff0000' : '#ffffff'; p.targetScale = match ? 3 : 0.5; }
         });
     };
 
+    // --- 12. الخريطة والصوت ---
     async function initMap() {
         map = L.map('map-container').setView([31.3547, 34.3088], 11); 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
@@ -495,6 +680,34 @@
     document.getElementById('music-btn').onclick = toggleMusic;
     if(document.getElementById('music-btn-mobile')) document.getElementById('music-btn-mobile').onclick = toggleMusic;
 
+    // --- 13. تحميل البطاقة كصورة ---
+    window.downloadShareCard = function(primaryName, secondaryName, idStr, dobStr, ageStr, duaa) {
+        document.getElementById('card-name-primary').innerText = primaryName;
+        
+        const secNameEl = document.getElementById('card-name-secondary');
+        if(secondaryName) { secNameEl.innerText = secondaryName; secNameEl.style.display = 'block'; } 
+        else { secNameEl.style.display = 'none'; }
+        
+        const idEl = document.getElementById('card-id');
+        if(idStr) { idEl.innerText = `رقم الهوية: ${idStr}`; idEl.style.display = 'block'; } 
+        else { idEl.style.display = 'none'; }
+        
+        const dobEl = document.getElementById('card-dob');
+        if(dobStr) { dobEl.innerText = `تاريخ الميلاد: ${dobStr}`; dobEl.style.display = 'block'; } 
+        else { dobEl.style.display = 'none'; }
+        
+        document.getElementById('card-age').innerText = `العمر: ${ageStr}`;
+        document.getElementById('card-duaa').innerText = `﴿ ${duaa} ﴾`;
+
+        html2canvas(document.getElementById('share-card-template'), { backgroundColor: '#000000', scale: 2 }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `Palestine_Soul - ${primaryName}.png`; 
+            link.href = canvas.toDataURL(); 
+            link.click();
+        });
+    };
+
+    // --- 14. عداد الأرواح أسفل الشاشة ---
     function animateCounter(target) {
         let cur = 0; const step = Math.ceil(target / 120); 
         const timer = setInterval(() => { 
@@ -505,6 +718,7 @@
         }, 15);
     }
 
+    // --- تشغيل البرنامج ---
     loadDataAndInit();
 </script>
 </body>
