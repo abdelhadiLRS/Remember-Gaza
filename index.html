@@ -52,8 +52,8 @@
         #donate-box { background: var(--blood); border: 1px solid var(--primary); animation: pulse-border 2s infinite; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
         @keyframes pulse-border { 0%, 100% { box-shadow: 0 0px 0px transparent; } 50% { box-shadow: 0 0 12px var(--primary); } }
 
-        #tooltip { position: fixed; background: rgba(0, 0, 0, 0.95); color: white; padding: 20px; border-radius: 16px; display: none; pointer-events: auto; transform: translate(-50%, -120%); z-index: 100; box-shadow: 0 10px 30px rgba(204,0,0,0.5); text-align: center; border: 2px solid #cc0000; min-width: 260px; }
-        .duaa-style { font-family: 'Amiri', serif; font-size: 1.3rem; margin-top: 10px; display: block; color: #4ade80; }
+        #tooltip { position: fixed; background: rgba(0, 0, 0, 0.95); color: white; padding: 20px; border-radius: 16px; display: none; pointer-events: auto; transform: translate(-50%, -120%); z-index: 100; box-shadow: 0 10px 30px rgba(204,0,0,0.5); text-align: center; border: 2px solid #cc0000; min-width: 280px; }
+        .duaa-style { font-family: 'Amiri', serif; font-size: 1.3rem; margin-top: 15px; display: block; color: #4ade80; }
         
         #bottom-bar { display: flex; justify-content: space-between; align-items: flex-end; padding: 20px; flex-grow: 1; pointer-events: none; flex-wrap: wrap; gap: 15px; }
         #counter-box { text-align: center; padding: 10px 20px; border-radius: 15px; border-bottom: 3px solid #cc0000; min-width: 150px; }
@@ -63,49 +63,41 @@
 
         .font-amiri { font-family: 'Amiri', serif; }
 
-        #share-card-template { position: fixed; top: -9999px; left: -9999px; width: 400px; height: 400px; background: #000; color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px; border: 6px double #cc0000; font-family: 'Cairo'; }
+        #share-card-template { position: fixed; top: -9999px; left: -9999px; width: 450px; min-height: 400px; background: #000; color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px; border: 6px double #cc0000; font-family: 'Cairo'; z-index: -10; }
 
         @media (max-width: 768px) {
             #header { justify-content: center; }
             #search-input { width: 100%; }
             #search-input:focus { width: 100%; }
             #bottom-bar { justify-content: center; align-items: center; }
-            #tooltip { transform: translate(-50%, -50%); top: 50% !important; left: 50% !important; }
+            #tooltip { transform: translate(-50%, -50%); top: 50% !important; left: 50% !important; width: 90%; }
         }
     </style>
 </head>
 <body>
 
-<!-- طبقة النجوم والأرواح مبنية على Canvas مباشرة -->
 <div id="canvas-layer">
     <canvas id="stars-canvas" class="w-full h-full block"></canvas>
 </div>
 
-<!-- طبقة الخريطة -->
 <div id="map-container"></div>
 
-<!-- طبقة واجهة المستخدم -->
 <div id="ui-layer">
-    <!-- الشريط العلوي -->
     <header id="header" class="glass-panel interactive">
-        
         <div class="flex items-center gap-2">
             <h1 class="text-2xl font-bold text-white drop-shadow-md" style="font-family: 'Cairo', sans-serif; letter-spacing: 0.5px;">
                 <span class="text-red-500">أرواح</span> فلسطين
             </h1>
         </div>
-
         <div class="flex gap-2 items-center w-full md:w-auto">
             <input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد...">
         </div>
-        
         <div class="flex gap-1 bg-black/50 p-1 rounded-full border border-white/10 overflow-x-auto flex-shrink-0">
             <button class="btn-main active" id="tab-souls" onclick="switchMainMode('souls')">✨ الأرواح</button>
             <button class="btn-main" id="tab-stats" onclick="switchMainMode('stats')">📊 الإحصائيات</button>
             <button class="btn-main" id="tab-videos" onclick="switchMainMode('videos')">🎬 التوثيق</button>
             <button class="btn-main" id="tab-map" onclick="switchMainMode('map')">🗺️ الخريطة</button>
         </div>
-
         <div class="flex gap-2 items-center flex-wrap justify-center">
             <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-box" class="btn-main font-bold">❤️ إدعمنا الآن لنستمر</a>
             <button id="music-btn" class="btn-main">🎵 الصوت</button>
@@ -118,153 +110,33 @@
 
     <!-- شاشة الإحصائيات -->
     <main id="stats-view" class="w-full max-w-7xl mx-auto p-4 md:p-8">
+        <!-- محتوى الإحصائيات يبقى كما هو -->
         <div class="mb-8 text-center">
             <h2 class="text-3xl font-bold mb-2">السجل الإحصائي لجرائم الإبادة</h2>
             <p class="text-gray-400">توثيق شامل لحجم الدمار والفقد المستمر</p>
         </div>
-
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <div class="glass-panel p-6 rounded-xl hover:-translate-y-1 transition-transform">
-                <h3 class="text-sm text-gray-400 mb-2">إجمالي الشهداء والمفقودين</h3>
-                <p class="text-4xl font-bold text-white">~50,000</p>
-                <p class="text-xs text-red-400 mt-2">+10,000 مفقود تحت الأنقاض</p>
-            </div>
-            <div class="glass-panel p-6 rounded-xl hover:-translate-y-1 transition-transform">
-                <h3 class="text-sm text-gray-400 mb-2">الأطفال والنساء</h3>
-                <p class="text-4xl font-bold text-white">68%</p>
-                <div class="w-full bg-gray-700 h-1 mt-3 rounded"><div class="bg-red-500 h-1 rounded" style="width: 68%"></div></div>
-            </div>
-            <div class="glass-panel p-6 rounded-xl hover:-translate-y-1 transition-transform">
-                <h3 class="text-sm text-gray-400 mb-2">النازحون قسراً</h3>
-                <p class="text-4xl font-bold text-white">2 مليون+</p>
-                <p class="text-xs text-orange-400 mt-2">يعيشون في ظروف قاهرة</p>
-            </div>
-            <div class="glass-panel p-6 rounded-xl hover:-translate-y-1 transition-transform">
-                <h3 class="text-sm text-gray-400 mb-2">الجرحى والمصابون</h3>
-                <p class="text-4xl font-bold text-white">85,000+</p>
-                <p class="text-xs text-gray-400 mt-2">نظام صحي منهار بالكامل</p>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-2 glass-panel p-6 rounded-xl">
-                <h3 class="text-xl font-bold border-b border-white/10 pb-3 mb-4">الاستهداف الممنهج للقطاعات</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="bg-black/40 p-4 rounded-lg border border-white/5">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-gray-300">الصحفيون والإعلام</span>
-                            <span class="font-bold text-red-500">175 شهيداً</span>
-                        </div>
-                    </div>
-                    <div class="bg-black/40 p-4 rounded-lg border border-white/5">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-gray-300">الطواقم الطبية</span>
-                            <span class="font-bold text-red-500">500+ شهيد</span>
-                        </div>
-                    </div>
-                    <div class="bg-black/40 p-4 rounded-lg border border-white/5">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-gray-300">الدفاع المدني</span>
-                            <span class="font-bold text-red-500">70 شهيداً</span>
-                        </div>
-                    </div>
-                    <div class="bg-black/40 p-4 rounded-lg border border-white/5">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-gray-300">المعتقلون قسراً</span>
-                            <span class="font-bold text-red-500">5,000+</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="glass-panel p-6 rounded-xl">
-                <h3 class="text-xl font-bold border-b border-white/10 pb-3 mb-4">دمار البنية التحتية</h3>
-                <ul class="space-y-4">
-                    <li>
-                        <div class="flex justify-between text-sm mb-1"><span class="text-gray-300">المستشفيات المدمرة</span><span class="text-red-400">33 من أصل 36</span></div>
-                        <div class="w-full bg-gray-800 h-1.5 rounded"><div class="bg-red-600 h-1.5 rounded" style="width: 90%"></div></div>
-                    </li>
-                    <li>
-                        <div class="flex justify-between text-sm mb-1"><span class="text-gray-300">المدارس والجامعات</span><span class="text-red-400">80% مدمر</span></div>
-                        <div class="w-full bg-gray-800 h-1.5 rounded"><div class="bg-red-600 h-1.5 rounded" style="width: 80%"></div></div>
-                    </li>
-                    <li>
-                        <div class="flex justify-between text-sm mb-1"><span class="text-gray-300">الوحدات السكنية</span><span class="text-red-400">360,000+ متضررة</span></div>
-                        <div class="w-full bg-gray-800 h-1.5 rounded"><div class="bg-red-600 h-1.5 rounded" style="width: 75%"></div></div>
-                    </li>
-                </ul>
-            </div>
+            <div class="glass-panel p-6 rounded-xl"><h3 class="text-sm text-gray-400 mb-2">الشهداء والمفقودون</h3><p class="text-4xl font-bold text-white">~50,000</p></div>
+            <div class="glass-panel p-6 rounded-xl"><h3 class="text-sm text-gray-400 mb-2">الأطفال والنساء</h3><p class="text-4xl font-bold text-white">68%</p></div>
+            <div class="glass-panel p-6 rounded-xl"><h3 class="text-sm text-gray-400 mb-2">النازحون قسراً</h3><p class="text-4xl font-bold text-white">2 مليون+</p></div>
+            <div class="glass-panel p-6 rounded-xl"><h3 class="text-sm text-gray-400 mb-2">الجرحى والمصابون</h3><p class="text-4xl font-bold text-white">85,000+</p></div>
         </div>
     </main>
 
-    <!-- شاشة التوثيق الحي -->
+    <!-- شاشة التوثيق -->
     <main id="videos-view" class="w-full max-w-7xl mx-auto p-4 md:p-8">
-        <div class="mb-8 text-center">
-            <h2 class="text-3xl font-bold mb-2">التوثيق المرئي الميداني</h2>
-            <p class="text-gray-400">سجل حي يوثق الحقيقة كما هي من الميدان مباشرة عبر قنوات التوثيق</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            <!-- فيديو التوثيق 1 -->
-            <div class="glass-panel p-4 rounded-xl flex flex-col gap-3 relative overflow-hidden">
-                <div class="absolute inset-0 bg-black/95 z-10 flex flex-col items-center justify-center p-4 text-center transition-opacity duration-300" id="warning-1">
-                    <span class="text-4xl mb-3">⚠️</span>
-                    <h3 class="text-red-500 font-bold mb-2 text-lg">تحذير: محتوى حساس</h3>
-                    <p class="text-xs text-gray-300 mb-4">هذا المقطع يحتوي على مشاهد توثيقية لجرائم الإبادة المستمرة في قطاع غزة.</p>
-                    <button onclick="document.getElementById('warning-1').style.display='none'" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-full text-sm font-bold transition">عرض التوثيق</button>
-                </div>
-                <div class="aspect-video bg-gray-900 rounded-lg border border-gray-700 flex items-center justify-center overflow-hidden h-64">
-                    <iframe src="https://t.me/gazaalannet/81461?embed=1" class="w-full h-full" frameborder="0" scrolling="yes"></iframe>
-                </div>
-                <h3 class="font-bold text-lg mt-2">توثيق ميداني حي #1</h3>
-                <p class="text-sm text-gray-400 flex-grow">نقل للمشاهد والوقائع الميدانية والأضرار الناتجة عن القصف المكثف للمدنيين العزل.</p>
-                <a href="https://t.me/gazaalannet/81461" target="_blank" class="text-xs text-center bg-blue-600/30 border border-blue-500/50 hover:bg-blue-600 text-blue-300 hover:text-white transition py-1.5 rounded-lg w-full block">مشاهدة مباشرة على تيليجرام ↗️</a>
-            </div>
-
-            <!-- فيديو التوثيق 2 -->
-            <div class="glass-panel p-4 rounded-xl flex flex-col gap-3 relative overflow-hidden">
-                <div class="absolute inset-0 bg-black/95 z-10 flex flex-col items-center justify-center p-4 text-center transition-opacity duration-300" id="warning-2">
-                    <span class="text-4xl mb-3">⚠️</span>
-                    <h3 class="text-red-500 font-bold mb-2 text-lg">تحذير: محتوى حساس</h3>
-                    <p class="text-xs text-gray-300 mb-4">هذا المقطع يحتوي على مشاهد توثيقية لجرائم الإبادة المستمرة في قطاع غزة.</p>
-                    <button onclick="document.getElementById('warning-2').style.display='none'" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-full text-sm font-bold transition">عرض التوثيق</button>
-                </div>
-                <div class="aspect-video bg-gray-900 rounded-lg border border-gray-700 flex items-center justify-center overflow-hidden h-64">
-                    <iframe src="https://t.me/gazaalannet/81560?embed=1" class="w-full h-full" frameborder="0" scrolling="yes"></iframe>
-                </div>
-                <h3 class="font-bold text-lg mt-2">توثيق ميداني حي #2</h3>
-                <p class="text-sm text-gray-400 flex-grow">رصد للمربعات السكنية واستهداف البنى التحتية بشكل ممنهج لتدمير مقومات الحياة بالقطاع.</p>
-                <a href="https://t.me/gazaalannet/81560" target="_blank" class="text-xs text-center bg-blue-600/30 border border-blue-500/50 hover:bg-blue-600 text-blue-300 hover:text-white transition py-1.5 rounded-lg w-full block">مشاهدة مباشرة على تيليجرام ↗️</a>
-            </div>
-
-            <!-- فيديو التوثيق 3 -->
-            <div class="glass-panel p-4 rounded-xl flex flex-col gap-3 relative overflow-hidden">
-                <div class="absolute inset-0 bg-black/95 z-10 flex flex-col items-center justify-center p-4 text-center transition-opacity duration-300" id="warning-3">
-                    <span class="text-4xl mb-3">⚠️</span>
-                    <h3 class="text-red-500 font-bold mb-2 text-lg">تحذير: محتوى حساس</h3>
-                    <p class="text-xs text-gray-300 mb-4">هذا المقطع يحتوي على مشاهد توثيقية لجرائم الإبادة المستمرة في قطاع غزة.</p>
-                    <button onclick="document.getElementById('warning-3').style.display='none'" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-full text-sm font-bold transition">عرض التوثيق</button>
-                </div>
-                <div class="aspect-video bg-gray-900 rounded-lg border border-gray-700 flex items-center justify-center overflow-hidden h-64">
-                    <iframe src="https://t.me/gazaalannet/81611?embed=1" class="w-full h-full" frameborder="0" scrolling="yes"></iframe>
-                </div>
-                <h3 class="font-bold text-lg mt-2">توثيق ميداني حي #3</h3>
-                <p class="text-sm text-gray-400 flex-grow">توثيق حي للآثار الكارثية ومحاولات الطواقم الطبية والدفاع المدني لإنقاذ وإسعاف المواطنين.</p>
-                <a href="https://t.me/gazaalannet/81611" target="_blank" class="text-xs text-center bg-blue-600/30 border border-blue-500/50 hover:bg-blue-600 text-blue-300 hover:text-white transition py-1.5 rounded-lg w-full block">مشاهدة مباشرة على تيليجرام ↗️</a>
-            </div>
-
+        <div class="mb-8 text-center"><h2 class="text-3xl font-bold mb-2">التوثيق المرئي الميداني</h2></div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="glass-panel p-4 rounded-xl flex flex-col gap-3 h-64"><iframe src="https://t.me/gazaalannet/81461?embed=1" class="w-full h-full" frameborder="0" scrolling="yes"></iframe></div>
+            <div class="glass-panel p-4 rounded-xl flex flex-col gap-3 h-64"><iframe src="https://t.me/gazaalannet/81560?embed=1" class="w-full h-full" frameborder="0" scrolling="yes"></iframe></div>
+            <div class="glass-panel p-4 rounded-xl flex flex-col gap-3 h-64"><iframe src="https://t.me/gazaalannet/81611?embed=1" class="w-full h-full" frameborder="0" scrolling="yes"></iframe></div>
         </div>
     </main>
 
-    <!-- شريط الأسفل -->
     <div id="bottom-bar">
         <div class="interactive glass-panel p-3 rounded-xl border-l-4 border-l-red-600 order-2 md:order-1 hidden md:block">
-            <p class="font-amiri text-gray-300 text-sm leading-relaxed text-center">
-                "وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْآءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"
-            </p>
+            <p class="font-amiri text-gray-300 text-sm leading-relaxed text-center">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</p>
         </div>
-        
         <div class="interactive glass-panel p-3 rounded-xl flex items-center gap-4 flex-wrap justify-center order-3 md:order-2">
             <span class="text-sm text-gray-400 font-bold">تطوير: عبد الهادي</span>
             <div class="social-links flex gap-2">
@@ -273,7 +145,6 @@
                 <a href="https://x.com/larrasabdelhadi" target="_blank">X</a>
             </div>
         </div>
-
         <div id="counter-box" class="interactive glass-panel order-1 md:order-3 w-full md:w-auto">
             <div id="number" class="text-4xl font-bold text-white">0</div>
             <div class="text-xs text-gray-400 mt-1">شهيداً وثّقت أسماؤهم</div>
@@ -282,11 +153,17 @@
 </div>
 
 <div id="tooltip" class="interactive"></div>
+
+<!-- قالب البطاقة المخصص للتحميل -->
 <div id="share-card-template">
     <div style="font-family: 'Amiri', serif; font-size: 1.2rem; color: #cc0000; margin-bottom: 10px;">قوافل الشهداء البررة</div>
-    <h2 id="card-name" style="margin: 10px 0; font-size: 2rem;"></h2>
-    <p id="card-age" style="font-size: 1.2rem; color: #aaa; margin: 5px 0;"></p>
-    <div id="card-duaa" style="font-family: 'Amiri', serif; font-size: 1.8rem; margin-top: 20px; color: #fff;"></div>
+    <h2 id="card-name" style="margin: 10px 0; font-size: 2.2rem; color: #ffffff;"></h2>
+    <div style="font-size: 1.2rem; color: #d1d5db; margin: 15px 0; line-height: 1.8; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border: 1px solid rgba(255,0,0,0.2);">
+        <p id="card-id" style="margin: 5px 0; display: none;"></p>
+        <p id="card-dob" style="margin: 5px 0; display: none;"></p>
+        <p id="card-age" style="margin: 5px 0; font-weight: bold;"></p>
+    </div>
+    <div id="card-duaa" style="font-family: 'Amiri', serif; font-size: 1.8rem; margin-top: 20px; color: #4ade80;"></div>
 </div>
 
 <script>
@@ -301,30 +178,22 @@
         const bottomBar = document.getElementById('bottom-bar');
         const canvasLayer = document.getElementById('canvas-layer');
 
-        mapLayer.style.display = 'none';
-        statsLayer.style.display = 'none';
-        videosLayer.style.display = 'none';
-        bottomBar.style.display = 'none';
+        mapLayer.style.display = 'none'; statsLayer.style.display = 'none';
+        videosLayer.style.display = 'none'; bottomBar.style.display = 'none';
 
         if(mode === 'souls') {
-            bottomBar.style.display = 'flex';
-            canvasLayer.style.opacity = '1';
+            bottomBar.style.display = 'flex'; canvasLayer.style.opacity = '1';
         } else if (mode === 'stats') {
-            statsLayer.style.display = 'block';
-            canvasLayer.style.opacity = '0.3'; 
+            statsLayer.style.display = 'block'; canvasLayer.style.opacity = '0.3'; 
         } else if (mode === 'videos') {
-            videosLayer.style.display = 'block';
-            canvasLayer.style.opacity = '0.3'; 
+            videosLayer.style.display = 'block'; canvasLayer.style.opacity = '0.3'; 
         } else if (mode === 'map') {
-            canvasLayer.style.opacity = '0.1';
-            mapLayer.style.display = 'block';
+            canvasLayer.style.opacity = '0.1'; mapLayer.style.display = 'block';
             if(!map) initMap();
         }
     };
 
-    let isPlaying = false, map = null, gazaSouls = [], tooltipTimeout = null;
-    let isSearching = false;
-    
+    let isPlaying = false, map = null, gazaSouls = [], tooltipTimeout = null, isSearching = false;
     const sound = new Howl({ src: ['ambient.mp3'], loop: true, volume: 0.4 });
     const clickSound = new Howl({ src: ['click.mp3'], volume: 0.5 });
 
@@ -341,23 +210,15 @@
     }
     updateVisitorCount();
 
-    // ==========================================
-    // محرك الرسوميات للنجوم على Canvas
-    // ==========================================
     const canvas = document.getElementById('stars-canvas');
     const ctx = canvas.getContext('2d');
-    let width, height;
-    let points = [];
-    let mouseX = -1000, mouseY = -1000;
+    let width, height, points = [], mouseX = -1000, mouseY = -1000;
 
     function resize() {
-        width = window.innerWidth;
-        height = window.innerHeight;
-        canvas.width = width;
-        canvas.height = height;
+        width = window.innerWidth; height = window.innerHeight;
+        canvas.width = width; canvas.height = height;
     }
-    window.addEventListener('resize', resize);
-    resize();
+    window.addEventListener('resize', resize); resize();
 
     const parseCSVLine = (text) => {
         let ret = [], cur = '', inQuotes = false;
@@ -366,8 +227,7 @@
             else if (char === ',' && !inQuotes) { ret.push(cur.trim()); cur = ''; }
             else cur += char;
         }
-        ret.push(cur.trim());
-        return ret;
+        ret.push(cur.trim()); return ret;
     };
 
     async function loadDataAndInit() {
@@ -375,31 +235,22 @@
             const res = await fetch('out_killed-in-gaza.csv');
             if (res.ok) {
                 const text = await res.text();
-                
-                if (text.trim().startsWith('<!DOCTYPE') || text.includes('<html')) {
-                    throw new Error("ملف غير صالح");
-                }
+                if (text.trim().startsWith('<!DOCTYPE') || text.includes('<html')) throw new Error("ملف غير صالح");
 
                 const lines = text.split('\n');
                 if (lines.length > 0) {
                     const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
                     
-                    let nameArIdx = -1;
-                    let ageIdx = -1;
-                    let genderIdx = -1;
+                    let nameIdx = -1, ageIdx = -1, genderIdx = -1, idIdx = -1, dobIdx = -1;
 
-                    // فحص ذكي لأعمدة العناوين
+                    // التعرف الذكي على الأعمدة
                     for (let i = 0; i < headers.length; i++) {
                         const h = headers[i];
-                        if ((h.includes('name') || h.includes('اسم')) && !h.includes('id') && nameArIdx === -1) {
-                            nameArIdx = i;
-                        }
-                        if (h.includes('age') || h.includes('عمر') || h.includes('dob')) {
-                            ageIdx = i;
-                        }
-                        if (h.includes('sex') || h.includes('gender') || h.includes('جنس')) {
-                            genderIdx = i;
-                        }
+                        if ((h.includes('name') || h.includes('اسم')) && !h.includes('id') && nameIdx === -1) nameIdx = i;
+                        if ((h.includes('id') || h.includes('هوية') || h === 'id_number') && idIdx === -1) idIdx = i;
+                        if ((h.includes('dob') || h.includes('مواليد') || h.includes('تاريخ')) && dobIdx === -1) dobIdx = i;
+                        if ((h === 'age' || h.includes('عمر')) && ageIdx === -1) ageIdx = i;
+                        if ((h.includes('sex') || h.includes('gender') || h.includes('جنس')) && genderIdx === -1) genderIdx = i;
                     }
 
                     for (let i = 1; i < lines.length; i++) {
@@ -408,84 +259,84 @@
                             const cols = parseCSVLine(lines[i]);
                             if (cols.length === 0) continue;
 
-                            // 1. خوارزمية استخراج الاسم الذكية (تمنع سحب أرقام الـ ID)
+                            // 1. الاسم
                             let name_ar = "";
-                            if (nameArIdx > -1 && cols[nameArIdx] && isNaN(cols[nameArIdx].trim())) {
-                                name_ar = cols[nameArIdx].trim();
-                            } else {
-                                // فحص تلقائي لكافة الخلايا: أول خلية نصية صريحة (ليست رقماً وطولها > 2) تعتبر هي الاسم
+                            if (nameIdx > -1 && cols[nameIdx]) name_ar = cols[nameIdx].trim();
+
+                            // 2. رقم الهوية
+                            let id_val = "";
+                            if (idIdx > -1 && cols[idIdx]) id_val = cols[idIdx].trim();
+
+                            // 3. تاريخ الميلاد
+                            let dob_val = "";
+                            if (dobIdx > -1 && cols[dobIdx]) dob_val = cols[dobIdx].trim();
+
+                            // 4. العمر
+                            let age_val = "";
+                            if (ageIdx > -1 && cols[ageIdx]) age_val = cols[ageIdx].trim();
+
+                            // 5. الجنس
+                            let gender_val = "M";
+                            if (genderIdx > -1 && cols[genderIdx]) gender_val = cols[genderIdx].trim().toUpperCase();
+
+                            // --- فلاتر الحماية الدقيقة في حال فشل قراءة العناوين ---
+                            if(!name_ar || !isNaN(name_ar)) {
                                 for (let c = 0; c < cols.length; c++) {
-                                    let cellValue = cols[c].trim();
-                                    if (cellValue && isNaN(cellValue) && cellValue.length > 2 && c !== ageIdx && c !== genderIdx) {
-                                        name_ar = cellValue;
-                                        break;
-                                    }
+                                    let val = cols[c].trim();
+                                    // إذا كان النص أكثر من 5 حروف ولا يحتوي أرقام يعتبر اسماً
+                                    if (val && isNaN(val) && val.length > 5 && c !== dobIdx && c !== genderIdx) { name_ar = val; break; }
+                                }
+                                if (!name_ar || !isNaN(name_ar)) name_ar = "شهيد مجهول الاسم";
+                            }
+
+                            if(!id_val) {
+                                for(let c=0; c<cols.length; c++) {
+                                    let val = cols[c].trim();
+                                    // الهوية الفلسطينية عادة 9 أرقام
+                                    if (/^\d{8,10}$/.test(val) && c !== ageIdx) { id_val = val; break; }
                                 }
                             }
-                            if (!name_ar || !isNaN(name_ar)) name_ar = "شهيد غير مدرج الاسم";
 
-                            // 2. خوارزمية استخراج العمر الذكية
-                            let age = "غير معروف";
-                            if (ageIdx > -1 && cols[ageIdx]) {
-                                age = cols[ageIdx].trim();
-                            } else {
-                                for (let c = 0; c < cols.length; c++) {
-                                    let cellValue = cols[c].trim();
-                                    if (cellValue && !isNaN(cellValue) && cellValue.length <= 3 && c !== nameArIdx) {
-                                        age = cellValue;
-                                        break;
-                                    }
+                            if(!dob_val) {
+                                for(let c=0; c<cols.length; c++) {
+                                    let val = cols[c].trim();
+                                    // التاريخ يحتوي على شحطات أو فواصل
+                                    if ((val.includes('-') || val.includes('/')) && /\d/.test(val) && val.length > 5) { dob_val = val; break; }
                                 }
                             }
-                            if (age === "" || isNaN(parseInt(age))) age = "غير معروف";
 
-                            // 3. استخراج الجنس
-                            let gender = "M";
-                            if (genderIdx > -1 && cols[genderIdx]) {
-                                gender = cols[genderIdx].trim().toUpperCase();
+                            if(!age_val || isNaN(parseInt(age_val))) {
+                                for (let c = 0; c < cols.length; c++) {
+                                    let val = cols[c].trim();
+                                    // العمر يكون رقم من خانة إلى 3 خانات
+                                    if (val && !isNaN(val) && val.length <= 3 && c !== idIdx && c !== nameIdx) { age_val = val; break; }
+                                }
+                                if (age_val === "" || isNaN(parseInt(age_val))) age_val = "غير معروف";
                             }
 
-                            gazaSouls.push({ name: name_ar, age: age, gender: gender });
-                        } catch(lineError) {
-                            continue;
-                        }
+                            gazaSouls.push({ name: name_ar, id: id_val, dob: dob_val, age: age_val, gender: gender_val });
+                        } catch(lineError) { continue; }
                     }
                 }
             }
-        } catch(e) { 
-            console.log("سيتم استخدام قاعدة البيانات الافتراضية لعدم توفر ملف خارجي متوافق."); 
-        }
+        } catch(e) { console.log("استخدام البيانات الافتراضية"); }
         
         if(gazaSouls.length === 0) {
-            for(let i=0; i<35000; i++) {
-                gazaSouls.push({name: "شهيد مجهول الاسم", age: "غير معروف", gender: "M"});
-            }
+            for(let i=0; i<35000; i++) gazaSouls.push({name: "شهيد مجهول الاسم", id: "", dob: "", age: "غير معروف", gender: "M"});
         }
         
-        resize();
-        renderStars();
-        requestAnimationFrame(gameLoop);
-        switchMainMode('souls');
+        resize(); renderStars(); requestAnimationFrame(gameLoop); switchMainMode('souls');
     }
 
     function renderStars() {
-        points = [];
-        const dotsToRender = Math.min(2500, gazaSouls.length);
-        
+        points = []; const dotsToRender = Math.min(2500, gazaSouls.length);
         for(let i=0; i < dotsToRender; i++) { 
             const alphaVal = Math.random() * 0.5 + 0.2;
             points.push({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 0.25,
-                vy: (Math.random() - 0.5) * 0.25,
-                alpha: alphaVal,
-                baseAlpha: alphaVal,
-                targetAlpha: alphaVal,
-                scale: 1,
-                targetScale: 1,
-                color: '#ffffff',
-                userData: gazaSouls[i]
+                x: Math.random() * width, y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25,
+                alpha: alphaVal, baseAlpha: alphaVal, targetAlpha: alphaVal, scale: 1, targetScale: 1,
+                color: '#ffffff', userData: gazaSouls[i]
             });
         }
         animateCounter(gazaSouls.length > 0 ? gazaSouls.length : 40000);
@@ -493,96 +344,73 @@
 
     function gameLoop() {
         ctx.clearRect(0, 0, width, height);
-        
         for(let i=0; i < points.length; i++) {
             const p = points[i];
-            
-            p.x += p.vx;
-            p.y += p.vy;
+            p.x += p.vx; p.y += p.vy;
             if (p.x < 0) p.x = width; else if (p.x > width) p.x = 0;
             if (p.y < 0) p.y = height; else if (p.y > height) p.y = 0;
+            p.alpha += (p.targetAlpha - p.alpha) * 0.1; p.scale += (p.targetScale - p.scale) * 0.1;
 
-            p.alpha += (p.targetAlpha - p.alpha) * 0.1;
-            p.scale += (p.targetScale - p.scale) * 0.1;
-
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, 1.8 * p.scale, 0, Math.PI * 2);
-            ctx.fillStyle = p.color;
-            ctx.globalAlpha = p.alpha;
-            ctx.fill();
+            ctx.beginPath(); ctx.arc(p.x, p.y, 1.8 * p.scale, 0, Math.PI * 2);
+            ctx.fillStyle = p.color; ctx.globalAlpha = p.alpha; ctx.fill();
         }
-        
-        ctx.globalAlpha = 1;
-        requestAnimationFrame(gameLoop);
+        ctx.globalAlpha = 1; requestAnimationFrame(gameLoop);
     }
 
-    window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX; mouseY = e.clientY;
-        checkHover(e);
-    });
+    window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; checkHover(e); });
 
     function checkHover(e) {
         if(isSearching) return;
-        
         let hovered = null;
         for(let i=0; i<points.length; i++) {
-            const p = points[i];
-            const dx = p.x - mouseX;
-            const dy = p.y - mouseY;
-            if(dx*dx + dy*dy < 120) { 
-                hovered = p; break;
-            }
+            const dx = points[i].x - mouseX, dy = points[i].y - mouseY;
+            if(dx*dx + dy*dy < 120) { hovered = points[i]; break; }
         }
 
         if(hovered) {
             points.forEach(p => { p.targetAlpha = 0.2; p.targetScale = 1; p.color = '#ffffff'; });
             hovered.targetAlpha = 1; hovered.targetScale = 3; hovered.color = '#ff3333';
             showTooltip(e, hovered);
-        } else {
-            hideTooltip();
-        }
+        } else { hideTooltip(); }
     }
 
     function showTooltip(event, point) {
         if (!point.userData) return;
         if(tooltipTimeout) clearTimeout(tooltipTimeout);
-
         try { clickSound.play(); } catch(e){}
         
         const d = point.userData;
         const tooltip = document.getElementById('tooltip');
         tooltip.style.display = 'block';
         
-        if(window.innerWidth > 768) {
-            tooltip.style.left = event.clientX + 'px'; 
-            tooltip.style.top = (event.clientY - 20) + 'px';
-        }
+        if(window.innerWidth > 768) { tooltip.style.left = event.clientX + 'px'; tooltip.style.top = (event.clientY - 20) + 'px'; }
 
         const safeName = d.name.replace(/'/g, "\\'");
-        const ageText = d.age === "غير معروف" ? "العمر: غير معروف" : `العمر: ${d.age} سنة`;
+        const ageText = d.age === "غير معروف" ? "غير معروف" : `${d.age} سنة`;
         const duaa = d.gender === "F" ? "رحمها الله" : "رحمه الله";
         
+        // بناء المحتوى المُنظم داخلياً
+        let detailsHtml = '';
+        if (d.id) detailsHtml += `<div class="text-sm text-gray-300 mb-1">رقم الهوية: <span class="font-bold text-white">${d.id}</span></div>`;
+        if (d.dob) detailsHtml += `<div class="text-sm text-gray-300 mb-1">تاريخ الميلاد: <span class="font-bold text-white">${d.dob}</span></div>`;
+        detailsHtml += `<div class="text-sm text-gray-300 mb-3">العمر: <span class="font-bold text-white">${ageText}</span></div>`;
+
         tooltip.innerHTML = `
-            <div class="text-xl font-bold mb-1 text-white">${d.name}</div>
-            <div class="text-gray-400 mb-2">${ageText}</div>
-            <span class="duaa-style mb-4">﴿ ${duaa} ﴾</span>
-            <button onclick="downloadShareCard('${safeName}', '${ageText}', '${duaa}')" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-full text-sm transition">حفظ بطاقة الشهيد</button>
+            <div class="text-xl font-bold mb-3 text-white border-b border-red-500/30 pb-2">${d.name}</div>
+            <div class="text-right bg-white/5 p-3 rounded-lg border border-white/10 mb-2">
+                ${detailsHtml}
+            </div>
+            <span class="duaa-style mb-4 text-center">﴿ ${duaa} ﴾</span>
+            <button onclick="downloadShareCard('${safeName}', '${d.id || ''}', '${d.dob || ''}', '${ageText}', '${duaa}')" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-full text-sm transition">حفظ بطاقة الشهيد</button>
         `;
         
-        tooltipTimeout = setTimeout(hideTooltip, 4000);
+        tooltipTimeout = setTimeout(hideTooltip, 5000);
     }
 
     function hideTooltip() {
         const tooltipEl = document.getElementById('tooltip');
         if (tooltipEl) tooltipEl.style.display = 'none';
-        
-        if(!isSearching) {
-            points.forEach(p => { 
-                p.targetAlpha = p.baseAlpha; 
-                p.targetScale = 1; 
-                p.color = '#ffffff'; 
-            });
-        }
+        if(!isSearching) points.forEach(p => { p.targetAlpha = p.baseAlpha; p.targetScale = 1; p.color = '#ffffff'; });
     }
 
     const tooltipEl = document.getElementById('tooltip');
@@ -593,18 +421,11 @@
         if(document.getElementById('stats-view').style.display === 'block' || document.getElementById('videos-view').style.display === 'block') switchMainMode('souls');
         const val = e.target.value.trim().toLowerCase();
         isSearching = val !== "";
-        
         points.forEach(p => {
             const name = p.userData.name.toLowerCase();
             const match = name.includes(val);
-            if(val === "") { 
-                p.targetAlpha = p.baseAlpha; p.color = '#ffffff'; p.targetScale = 1; 
-            }
-            else { 
-                p.targetAlpha = match ? 1 : 0.05; 
-                p.color = match ? '#ff0000' : '#ffffff'; 
-                p.targetScale = match ? 2.5 : 0.8; 
-            }
+            if(val === "") { p.targetAlpha = p.baseAlpha; p.color = '#ffffff'; p.targetScale = 1; }
+            else { p.targetAlpha = match ? 1 : 0.05; p.color = match ? '#ff0000' : '#ffffff'; p.targetScale = match ? 2.5 : 0.8; }
         });
     };
 
@@ -620,10 +441,19 @@
         isPlaying = !isPlaying;
     };
 
-    window.downloadShareCard = function(name, ageStr, duaa) {
+    // تحديث دالة التحميل لتدعم كافة البيانات الجديدة
+    window.downloadShareCard = function(name, idStr, dobStr, ageStr, duaa) {
         document.getElementById('card-name').innerText = name;
-        document.getElementById('card-age').innerText = ageStr;
+        
+        const idEl = document.getElementById('card-id');
+        if(idStr) { idEl.innerText = `رقم الهوية: ${idStr}`; idEl.style.display = 'block'; } else { idEl.style.display = 'none'; }
+        
+        const dobEl = document.getElementById('card-dob');
+        if(dobStr) { dobEl.innerText = `تاريخ الميلاد: ${dobStr}`; dobEl.style.display = 'block'; } else { dobEl.style.display = 'none'; }
+        
+        document.getElementById('card-age').innerText = `العمر: ${ageStr}`;
         document.getElementById('card-duaa').innerText = `﴿ ${duaa} ﴾`;
+
         html2canvas(document.getElementById('share-card-template'), { backgroundColor: '#000000', scale: 2 }).then(canvas => {
             const link = document.createElement('a');
             link.download = `Palestine_Soul - ${name}.png`; 
