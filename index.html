@@ -6,11 +6,11 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <title>أرواح فلسطين | Palestinian Souls v3.0</title>
     
-    <!-- Tailwind CSS للتصميم العصري للإحصائيات -->
+    <!-- Tailwind CSS للتصميم العصري -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            theme: { extend: { colors: { primary: '#cc0000', blood: '#220000', glass: 'rgba(15, 15, 15, 0.75)' } } }
+            theme: { extend: { colors: { primary: '#cc0000', blood: '#220000', glass: 'rgba(15, 15, 15, 0.8)' } } }
         }
     </script>
 
@@ -44,22 +44,40 @@
 
         /* Header UI */
         #header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        #search-input { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 30px; width: 150px; outline: none; transition: 0.3s; font-family: 'Cairo'; }
-        #search-input:focus { width: 200px; border-color: #cc0000; }
+        
+        /* إطالة خانة البحث */
+        #search-input { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 30px; width: 260px; min-width: 200px; outline: none; transition: 0.4s; font-family: 'Cairo'; }
+        #search-input:focus { width: 320px; border-color: #cc0000; background: rgba(0,0,0,0.9); }
 
-        .btn-main { background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: 0.3s; font-size: 0.9rem; }
+        .btn-main { background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: 0.3s; font-size: 0.9rem; white-space: nowrap; }
         .btn-main:hover { background: rgba(204,0,0,0.3); }
         .btn-main.active { background: #cc0000; border-color: #ff4d4d; font-weight: bold; }
 
+        /* زر التبرع النابض */
+        #donate-box { background: var(--blood); border: 1px solid var(--primary); animation: pulse-border 2s infinite; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+        @keyframes pulse-border { 0%, 100% { box-shadow: 0 0px 0px transparent; } 50% { box-shadow: 0 0 12px var(--primary); } }
+
         /* Tooltip and Cards */
-        #tooltip { position: fixed; background: rgba(0, 0, 0, 0.95); color: white; padding: 20px; border-radius: 16px; display: none; pointer-events: auto; transform: translate(-50%, -120%); z-index: 100; box-shadow: 0 10px 30px rgba(204,0,0,0.4); text-align: center; border: 2px solid #cc0000; min-width: 250px; }
+        #tooltip { position: fixed; background: rgba(0, 0, 0, 0.95); color: white; padding: 20px; border-radius: 16px; display: none; pointer-events: auto; transform: translate(-50%, -120%); z-index: 100; box-shadow: 0 10px 30px rgba(204,0,0,0.5); text-align: center; border: 2px solid #cc0000; min-width: 260px; }
         .duaa-style { font-family: 'Amiri', serif; font-size: 1.3rem; margin-top: 10px; display: block; color: #4ade80; }
         
-        #bottom-bar { display: flex; justify-content: space-between; align-items: flex-end; padding: 20px; flex-grow: 1; pointer-events: none; }
-        #counter-box { text-align: center; padding: 10px 20px; border-radius: 15px; border-bottom: 3px solid #cc0000; }
+        /* Bottom Bar & Socials */
+        #bottom-bar { display: flex; justify-content: space-between; align-items: flex-end; padding: 20px; flex-grow: 1; pointer-events: none; flex-wrap: wrap; gap: 15px; }
+        #counter-box { text-align: center; padding: 10px 20px; border-radius: 15px; border-bottom: 3px solid #cc0000; min-width: 150px; }
         
+        .social-links a { color: #fff; background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; text-decoration: none; transition: 0.2s; white-space: nowrap; }
+        .social-links a:hover { background: #cc0000; }
+
         /* Share Card (Hidden) */
         #share-card-template { position: fixed; top: -9999px; left: -9999px; width: 400px; height: 400px; background: #000; color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px; border: 6px double #cc0000; font-family: 'Cairo'; }
+
+        @media (max-width: 768px) {
+            #header { justify-content: center; }
+            #search-input { width: 100%; }
+            #search-input:focus { width: 100%; }
+            #bottom-bar { justify-content: center; align-items: center; }
+            #tooltip { transform: translate(-50%, -50%); top: 50% !important; left: 50% !important; }
+        }
     </style>
 </head>
 <body>
@@ -74,35 +92,33 @@
 <div id="ui-layer">
     <!-- الشريط العلوي -->
     <header id="header" class="glass-panel interactive">
-        <div class="flex gap-2 items-center">
-            <h1 class="text-xl font-bold hidden md:block text-red-500">أرواح فلسطين</h1>
+        <div class="flex gap-2 items-center w-full md:w-auto">
             <input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد...">
         </div>
         
-        <!-- نظام التبويبات الجديد للتبديل بين الأرواح والإحصائيات -->
-        <div class="flex gap-2 bg-black/50 p-1 rounded-full border border-white/10">
+        <div class="flex gap-2 bg-black/50 p-1 rounded-full border border-white/10 overflow-x-auto">
             <button class="btn-main active" id="tab-souls" onclick="switchMainMode('souls')">✨ فضاء الأرواح</button>
             <button class="btn-main" id="tab-stats" onclick="switchMainMode('stats')">📊 سجل الإحصائيات</button>
             <button class="btn-main" id="tab-map" onclick="switchMainMode('map')">🗺️ الخريطة</button>
         </div>
 
-        <div class="flex gap-2">
+        <div class="flex gap-2 items-center flex-wrap justify-center">
+            <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-box" class="btn-main font-bold">❤️ إدعمنا الآن لنستمر</a>
             <button id="music-btn" class="btn-main">🎵 الصوت</button>
-            <div class="bg-red-900/50 border border-red-500 px-3 py-1 rounded-full flex items-center gap-2">
+            <div class="bg-red-900/50 border border-red-500 px-3 py-1.5 rounded-full flex items-center gap-2">
                 <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                <span class="text-xs" id="visitor-count">زوار الآن: 0</span>
+                <span class="text-xs font-bold" id="visitor-count">زوار الآن: 0</span>
             </div>
         </div>
     </header>
 
-    <!-- شاشة الإحصائيات (تظهر عند النقر على "سجل الإحصائيات") -->
+    <!-- شاشة الإحصائيات -->
     <main id="stats-view" class="w-full max-w-7xl mx-auto p-4 md:p-8">
         <div class="mb-8 text-center">
             <h2 class="text-3xl font-bold mb-2">السجل الإحصائي لجرائم الإبادة</h2>
             <p class="text-gray-400">توثيق شامل لحجم الدمار والفقد المستمر</p>
         </div>
 
-        <!-- الأرقام الكبرى -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <div class="glass-panel p-6 rounded-xl hover:-translate-y-1 transition-transform">
                 <h3 class="text-sm text-gray-400 mb-2">إجمالي الشهداء والمفقودين</h3>
@@ -126,9 +142,7 @@
             </div>
         </div>
 
-        <!-- التفاصيل (المستشفيات، المنازل، الصحافة) -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- الاستهداف الممنهج -->
             <div class="lg:col-span-2 glass-panel p-6 rounded-xl">
                 <h3 class="text-xl font-bold border-b border-white/10 pb-3 mb-4">الاستهداف الممنهج للقطاعات</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -159,7 +173,6 @@
                 </div>
             </div>
 
-            <!-- البنية التحتية -->
             <div class="glass-panel p-6 rounded-xl">
                 <h3 class="text-xl font-bold border-b border-white/10 pb-3 mb-4">دمار البنية التحتية</h3>
                 <ul class="space-y-4">
@@ -180,16 +193,27 @@
         </div>
     </main>
 
-    <!-- شريط الأسفل (يظهر فقط في شاشة الأرواح) -->
+    <!-- شريط الأسفل -->
     <div id="bottom-bar">
-        <div class="interactive glass-panel p-3 rounded-xl border-l-4 border-l-red-600 max-w-sm">
+        <div class="interactive glass-panel p-3 rounded-xl border-l-4 border-l-red-600 order-2 md:order-1 hidden md:block">
             <p class="font-family-amiri text-gray-300 text-sm leading-relaxed text-center">
                 "وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"
             </p>
         </div>
-        <div id="counter-box" class="interactive glass-panel">
+        
+        <!-- الحسابات وروابط التواصل الخاصة بالمطور -->
+        <div class="interactive glass-panel p-3 rounded-xl flex items-center gap-4 flex-wrap justify-center order-3 md:order-2">
+            <span class="text-sm text-gray-400 font-bold">تطوير: عبد الهادي</span>
+            <div class="social-links flex gap-2">
+                <a href="https://www.facebook.com/abdelhadilrs" target="_blank">Facebook</a>
+                <a href="https://www.instagram.com/abdelhadilrs" target="_blank">Instagram</a>
+                <a href="https://x.com/larrasabdelhadi" target="_blank">X</a>
+            </div>
+        </div>
+
+        <div id="counter-box" class="interactive glass-panel order-1 md:order-3 w-full md:w-auto">
             <div id="number" class="text-4xl font-bold text-white">0</div>
-            <div class="text-xs text-gray-400 mt-1">شهيداً وثّقت أسماؤهم (قابلة للتحديث)</div>
+            <div class="text-xs text-gray-400 mt-1">شهيداً وثّقت أسماؤهم</div>
         </div>
     </div>
 </div>
@@ -206,12 +230,13 @@
 <script>
     let app, mainContainer, points = [], isPlaying = false, map = null;
     let gazaSouls = [];
+    let tooltipTimeout = null;
     
-    // إعداد الصوت[cite: 1]
+    // إعداد الصوت
     const sound = new Howl({ src: ['ambient.mp3'], loop: true, volume: 0.4 });
     const clickSound = new Howl({ src: ['click.mp3'], volume: 0.5 });
 
-    // العداد الحي للزوار[cite: 1]
+    // العداد الحي للزوار
     let visitorCounter = 15302;
     setInterval(() => {
         visitorCounter += Math.floor(Math.random() * 3);
@@ -220,11 +245,11 @@
     document.getElementById('visitor-count').innerText = "زوار الآن: " + visitorCounter.toLocaleString();
 
     async function initSystem() {
-        // إعداد PixiJS (طبقة النجوم)[cite: 1]
         app = new PIXI.Application();
         await app.init({ resizeTo: window, backgroundColor: 0x000000, backgroundAlpha: 0 });
         document.getElementById('canvas-layer').appendChild(app.canvas);
         mainContainer = new PIXI.Container();
+        mainContainer.eventMode = 'static';
         app.stage.addChild(mainContainer);
 
         await loadData();
@@ -232,31 +257,58 @@
         setupEvents();
     }
 
-    // تحميل بيانات الـ CSV[cite: 1]
+    // دالة المعالجة الذكية لملف CSV لضمان ظهور الأسماء بشكل صحيح
+    const parseCSVLine = (text) => {
+        let ret = [], cur = '', inQuotes = false;
+        for (let char of text) {
+            if (char === '"') inQuotes = !inQuotes;
+            else if (char === ',' && !inQuotes) { ret.push(cur.trim()); cur = ''; }
+            else cur += char;
+        }
+        ret.push(cur.trim());
+        return ret;
+    };
+
+    // تحميل بيانات الـ CSV وإصلاح مشكلة عدم ظهور الأسماء
     async function loadData() {
         try {
             const res = await fetch('out_killed-in-gaza.csv');
             if (res.ok) {
                 const text = await res.text();
                 const lines = text.split('\n');
-                for (let i = 1; i < lines.length; i++) {
-                    const cols = lines[i].split(',');
-                    if (cols.length > 2) {
-                        let age = cols[2] ? cols[2].trim() : "غير معروف";
-                        if (isNaN(parseInt(age))) age = "غير معروف";
-                        gazaSouls.push({ name: cols[0] || "غير مدرج", age: age, gender: cols[3] || "M" });
+                
+                if (lines.length > 0) {
+                    const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase());
+                    let nameArIdx = headers.indexOf('name');
+                    if (nameArIdx === -1) nameArIdx = headers.indexOf('name_ar');
+                    let ageIdx = headers.indexOf('age');
+                    if (ageIdx === -1) ageIdx = headers.indexOf('dob');
+                    let genderIdx = headers.indexOf('sex');
+                    if (genderIdx === -1) genderIdx = headers.indexOf('gender');
+
+                    if (nameArIdx === -1) nameArIdx = 0;
+                    if (ageIdx === -1) ageIdx = 2;
+
+                    for (let i = 1; i < lines.length; i++) {
+                        if (!lines[i].trim()) continue;
+                        const cols = parseCSVLine(lines[i]);
+                        
+                        let name_ar = cols[nameArIdx] || "غير مدرج";
+                        let age = cols[ageIdx] ? cols[ageIdx].trim() : "غير معروف";
+                        if (age === "" || isNaN(parseInt(age))) age = "غير معروف";
+                        let gender = genderIdx > -1 ? cols[genderIdx].toUpperCase() : "M";
+
+                        gazaSouls.push({ name: name_ar, age: age, gender: gender });
                     }
                 }
             }
         } catch(e) { console.log("استخدام بيانات افتراضية لعدم توفر CSV"); }
         
-        // إذا لم يكن هناك بيانات، اصنع بيانات تجريبية
         if(gazaSouls.length === 0) {
             for(let i=0; i<35000; i++) gazaSouls.push({name: "شهيد مجهول الاسم", age: "غير معروف", gender: "M"});
         }
     }
 
-    // رسم النجوم[cite: 1]
     function renderStars() {
         points.forEach(p => p.destroy());
         points = [];
@@ -264,7 +316,7 @@
 
         const g = new PIXI.Graphics().circle(0, 0, 3.5).fill({ color: 0xffffff, alpha: 0.8 });
         const tex = app.renderer.generateTexture(g);
-        const dotsToRender = Math.min(2500, gazaSouls.length); // تحديد سقف بصري للحفاظ على الأداء[cite: 1]
+        const dotsToRender = Math.min(2500, gazaSouls.length);
 
         for(let i=0; i < dotsToRender; i++) { 
             const dot = new PIXI.Sprite(tex);
@@ -278,19 +330,23 @@
             
             dot.eventMode = 'static'; 
             dot.cursor = 'pointer';
-            dot.on('pointerdown', (e) => { e.stopPropagation(); showTooltip(e, dot); });
+            
+            // جعل الأسماء تظهر بمجرد مرور مؤشر الماوس
+            dot.on('pointerover', (e) => { e.stopPropagation(); showTooltip(e, dot); });
             
             mainContainer.addChild(dot); 
             points.push(dot);
         }
         
-        // تحريك العداد الكلي بناءً على العدد الفعلي للبيانات
         animateCounter(gazaSouls.length > 0 ? gazaSouls.length : 40000);
     }
 
-    // عرض التول تيب والبيانات الخاصة بالشهيد[cite: 1]
     function showTooltip(event, sprite) {
         if (!sprite.userData) return;
+        
+        // منع التول تيب من الاختفاء فوراً إذا تنقلت بين النجوم بسرعة
+        if(tooltipTimeout) clearTimeout(tooltipTimeout);
+
         try { clickSound.play(); } catch(e){}
         
         points.forEach(p => { p.alpha = 0.2; p.tint = 0xffffff; p.scale.set(1); });
@@ -299,27 +355,42 @@
         const d = sprite.userData;
         const tooltip = document.getElementById('tooltip');
         tooltip.style.display = 'block';
-        tooltip.style.left = event.global.x + 'px'; 
-        tooltip.style.top = (event.global.y - 20) + 'px';
+        
+        // تعديل مكان التول تيب بناءً على الشاشة لضمان ظهوره بشكل مناسب
+        if(window.innerWidth > 768) {
+            tooltip.style.left = event.global.x + 'px'; 
+            tooltip.style.top = (event.global.y - 20) + 'px';
+        }
 
+        const safeName = d.name.replace(/'/g, "\\'");
         const ageText = d.age === "غير معروف" ? "العمر: غير معروف" : `العمر: ${d.age} سنة`;
         const duaa = d.gender === "F" ? "رحمها الله" : "رحمه الله";
         
-        // زر تحميل البطاقة[cite: 1]
         tooltip.innerHTML = `
             <div class="text-xl font-bold mb-1">${d.name}</div>
             <div class="text-gray-400 mb-2">${ageText}</div>
             <span class="duaa-style mb-4">﴿ ${duaa} ﴾</span>
-            <button onclick="downloadShareCard('${d.name}', '${ageText}', '${duaa}')" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-full text-sm transition">حفظ بطاقة الشهيد</button>
+            <button onclick="downloadShareCard('${safeName}', '${ageText}', '${duaa}')" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-full text-sm transition">حفظ بطاقة الشهيد</button>
         `;
         
-        // إخفاء تلقائي
-        setTimeout(() => { tooltip.style.display = 'none'; points.forEach(p => { p.alpha = Math.random()*0.5+0.2; p.scale.set(1); }); }, 4000);
+        // الإخفاء التلقائي بعد 4 ثوانٍ إذا لم يتفاعل معها المستخدم
+        tooltipTimeout = setTimeout(hideTooltip, 4000);
     }
 
-    // دالة تبديل واجهات العرض (الدمج الجوهري بين 1 و 2)
+    function hideTooltip() {
+        document.getElementById('tooltip').style.display = 'none';
+        points.forEach(p => { p.alpha = Math.random() * 0.5 + 0.2; p.scale.set(1); });
+    }
+
+    // إبقاء البطاقة مفتوحة إذا وضع المستخدم الماوس فوقها (ليتمكن من تحميل الصورة)
+    const tooltipEl = document.getElementById('tooltip');
+    tooltipEl.addEventListener('mouseenter', () => { if(tooltipTimeout) clearTimeout(tooltipTimeout); });
+    tooltipEl.addEventListener('mouseleave', () => { tooltipTimeout = setTimeout(hideTooltip, 1500); });
+    
+    // إخفاء البطاقة عند النقر في مكان فارغ
+    app.stage.on('pointerdown', hideTooltip);
+
     window.switchMainMode = function(mode) {
-        // تحديث أزرار التبويب
         document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
         document.getElementById(`tab-${mode}`).classList.add('active');
 
@@ -329,22 +400,18 @@
         const canvasLayer = document.getElementById('canvas-layer');
 
         if(mode === 'souls') {
-            // وضع الأرواح[cite: 1]
             mapLayer.style.display = 'none';
             statsLayer.style.display = 'none';
             bottomBar.style.display = 'flex';
             canvasLayer.style.opacity = '1';
             mainContainer.visible = true;
         } else if (mode === 'stats') {
-            // وضع لوحة الإحصائيات
             mapLayer.style.display = 'none';
             statsLayer.style.display = 'block';
             bottomBar.style.display = 'none';
-            // جعل النجوم شفافة قليلاً في الخلفية دون إيقافها
             canvasLayer.style.opacity = '0.3'; 
             mainContainer.visible = true;
         } else if (mode === 'map') {
-            // وضع الخريطة[cite: 1]
             statsLayer.style.display = 'none';
             bottomBar.style.display = 'none';
             canvasLayer.style.opacity = '0.1';
@@ -354,15 +421,12 @@
         }
     };
 
-    // إعداد الخريطة[cite: 1]
     async function initMap() {
         map = L.map('map-container').setView([31.3547, 34.3088], 11); 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
     }
 
-    // محرك الرسوميات (Ticker) والأحداث
     function setupEvents() {
-        // تحريك النجوم باستمرار[cite: 1]
         app.ticker.add(() => {
             if(!mainContainer.visible) return;
             for(let i=0; i < points.length; i++) {
@@ -373,7 +437,6 @@
             }
         });
 
-        // البحث
         document.getElementById('search-input').oninput = (e) => {
             if(document.getElementById('stats-view').style.display === 'block') switchMainMode('souls');
             const val = e.target.value.trim().toLowerCase();
@@ -385,7 +448,6 @@
             });
         };
 
-        // زر الصوت
         document.getElementById('music-btn').onclick = function() {
             if (Howler.ctx && Howler.ctx.state === 'suspended') Howler.ctx.resume();
             if (!isPlaying) { sound.play(); this.classList.add('active'); this.innerText = "🔇 كتم الصوت"; } 
@@ -393,10 +455,11 @@
             isPlaying = !isPlaying;
         };
 
-        window.addEventListener('resize', () => app.renderer.resize(window.innerWidth, window.innerHeight));
+        window.addEventListener('resize', () => {
+            app.renderer.resize(window.innerWidth, window.innerHeight);
+        });
     }
 
-    // تصدير الصورة (البطاقة)[cite: 1]
     window.downloadShareCard = function(name, ageStr, duaa) {
         document.getElementById('card-name').innerText = name;
         document.getElementById('card-age').innerText = ageStr;
@@ -409,7 +472,6 @@
         });
     };
 
-    // حركة العداد السفلي[cite: 1]
     function animateCounter(target) {
         let cur = 0; const step = Math.ceil(target / 100); 
         const timer = setInterval(() => { 
@@ -419,7 +481,6 @@
         }, 15);
     }
 
-    // تشغيل النظام
     initSystem();
 </script>
 </body>
