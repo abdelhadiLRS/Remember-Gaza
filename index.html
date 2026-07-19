@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="icon" type="image/png" href="favicon.png">
-    <title>أرواح فلسطين | Palestinian Souls</title>
+    <title>أرواح فلسطين | Palestinian Souls </title>
     
     <!-- المكتبات الخارجية -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -34,25 +34,7 @@
         canvas { display: block; position: absolute; top: 0; left: 0; z-index: 1; }
 
         /* =========================================
-           2. شاشة التحميل (Loading Screen)
-           ========================================= */
-        #loading-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000000; z-index: 9999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 0.6s ease-out;
-        }
-        .spinner {
-            width: 60px; height: 60px; border: 4px solid var(--border-glass);
-            border-top: 4px solid var(--primary-red); border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 20px;
-        }
-        .loading-text { font-family: 'Amiri', serif; font-size: 1.5rem; color: var(--primary-red); animation: pulse 1.5s infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-        /* =========================================
-           3. واجهة المستخدم (UI Layer)
+           2. واجهة المستخدم (UI Layer)
            ========================================= */
         #ui-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; display: flex; flex-direction: column; justify-content: space-between; }
         .interactive { pointer-events: auto; }
@@ -107,7 +89,7 @@
         @keyframes pulse-border { 0%, 100% { box-shadow: 0 0 5px transparent; } 50% { box-shadow: 0 0 15px var(--primary-red); } }
 
         /* =========================================
-           4. الطبقة السفلية (العداد والحقوق)
+           3. الطبقة السفلية (العداد والحقوق)
            ========================================= */
         #bottom-layer { display: flex; justify-content: space-between; align-items: flex-end; padding: 20px; gap: 15px; width: 100%; z-index: 20; pointer-events: none; }
         
@@ -125,7 +107,7 @@
         .social-links a:hover { background: var(--primary-red); transform: translateY(-2px); }
 
         /* =========================================
-           5. النوافذ المنبثقة والبطاقات
+           4. النوافذ المنبثقة والبطاقات
            ========================================= */
         #tooltip {
             position: fixed; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); color: black; padding: 20px;
@@ -144,7 +126,7 @@
         #share-card-template { position: fixed; top: -9999px; left: -9999px; width: 500px; height: 500px; background: #000; color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px; box-sizing: border-box; border: 8px double var(--primary-red); font-family: 'Cairo', sans-serif; background-image: radial-gradient(circle, #220000 0%, #000000 100%); }
 
         /* =========================================
-           6. الإحصائيات والخريطة والفيديو
+           5. الإحصائيات والخريطة والفيديو
            ========================================= */
         #analytics-modal {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
@@ -168,7 +150,7 @@
         #empty-notice { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(10,10,10,0.9); padding: 25px; border-radius: 16px; border: 1px dashed #555; text-align: center; display: none; z-index: 5; backdrop-filter: blur(5px); }
 
         /* =========================================
-           7. التوافق مع الهواتف (Responsive)
+           6. التوافق مع الهواتف (Responsive)
            ========================================= */
         @media (max-width: 768px) {
             #header { padding: 10px; justify-content: center; gap: 8px; }
@@ -190,12 +172,6 @@
     </style>
 </head>
 <body>
-
-<!-- شاشة التحميل (ميزة جديدة) -->
-<div id="loading-screen">
-    <div class="spinner"></div>
-    <div class="loading-text">جاري التهيئة...</div>
-</div>
 
 <div id="ui-layer">
     <!-- الهيدر -->
@@ -340,7 +316,7 @@
     const sound = new Howl({ src: ['ambient.mp3'], loop: true, volume: 0.4, html5: false });
     const clickSound = new Howl({ src: ['click.mp3'], volume: 0.5 });
 
-    // دالة التهيئة الرئيسية (تم إضافة معالجة شاشة التحميل)
+    // دالة التهيئة الرئيسية (دخول مباشر)
     async function init() {
         app = new PIXI.Application();
         await app.init({ resizeTo: window, backgroundColor: 0x000000, antialias: true, backgroundAlpha: 0, resolution: window.devicePixelRatio || 1 });[cite: 1]
@@ -353,13 +329,6 @@
         await loadExternalCSV();
         renderWorld();
         setupUIEvents();
-
-        // إخفاء شاشة التحميل بنعومة بعد انتهاء التهيئة
-        setTimeout(() => {
-            const loader = document.getElementById('loading-screen');
-            loader.style.opacity = '0';
-            setTimeout(() => loader.style.display = 'none', 600);
-        }, 800);
     }
 
     async function loadExternalCSV() {
@@ -460,7 +429,7 @@
 
         const g = new PIXI.Graphics().circle(0, 0, 3.5).fill({ color: 0xffffff, alpha: 0.9 });
         const tex = app.renderer.generateTexture(g);
-        const dotsToRender = currentList.length === 0 ? 0 : Math.min(2000, currentList.length); // زيادة طفيفة للرسوميات
+        const dotsToRender = currentList.length === 0 ? 0 : Math.min(2000, currentList.length);
 
         for(let i=0; i < dotsToRender; i++) { 
             const dot = new PIXI.Sprite(tex);
@@ -474,7 +443,6 @@
             dot.x = posX; dot.y = posY; dot.anchor.set(0.5); dot.alpha = Math.random() * 0.5 + 0.2; 
             dot.userData = currentList[i];
             
-            // تحسين حركة النقاط الفيزيائية
             const baseSpeed = 0.15;
             dot.speedX = (Math.random() - 0.5) * baseSpeed; 
             dot.speedY = (Math.random() - 0.5) * baseSpeed;
@@ -649,7 +617,6 @@
     }
 
     function setupUIEvents() {
-        // تحسين دالة البحث 
         document.getElementById('search-input').oninput = (e) => {
             const val = e.target.value.trim().toLowerCase();
             points.forEach(p => {
@@ -671,19 +638,16 @@
 
         app.stage.on('pointerdown', () => { tooltip.style.display = 'none'; points.forEach(p => resetSpriteAppearance(p)); });
 
-        // فيزياء الحركة المحسنة (Part 1 & 3)
         app.ticker.add(() => {
             for(let i=0; i < points.length; i++) {
                 const p = points[i]; 
                 p.x += p.speedX; p.y += p.speedY;
                 
-                // ارتداد سلس عند حواف الشاشة
                 if (p.x < 5 || p.x > app.screen.width - 5) p.speedX *= -1;
                 if (p.y < 5 || p.y > app.screen.height - 5) p.speedY *= -1;
                 
-                // الارتداد عن مناطق الواجهة (Forbidden Zones)
                 if (isInForbiddenZone(p.x, p.y)) { 
-                    p.speedX *= -1.05; p.speedY *= -1.05; // تسارع خفيف عند الاصطدام
+                    p.speedX *= -1.05; p.speedY *= -1.05; 
                     p.x += p.speedX * 3; p.y += p.speedY * 3; 
                 }
             }
@@ -692,10 +656,9 @@
         window.addEventListener('resize', () => { app.renderer.resize(window.innerWidth, window.innerHeight); renderWorld(); });
     }
 
-    // جعل العداد انسيابياً ويعتمد على البيانات الفعلية
     function animateCounter(target) {
         let cur = 0; 
-        const duration = 2000; // 2 seconds
+        const duration = 2000; 
         const stepTime = 20;
         const steps = duration / stepTime;
         const increment = Math.ceil(target / steps) || 1;
@@ -708,7 +671,6 @@
         }, stepTime);
     }
 
-    // بدء التشغيل
     window.onload = () => {
         init();
     };
