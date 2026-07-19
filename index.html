@@ -236,7 +236,13 @@
 </div>
 
 <script>
-    // --- 1. قاموس اللغات والنصوص المتعددة ---
+    // --- 1. تعريف جميع المتغيرات العامة في البداية لتجنب الأخطاء ---
+    let currentLang = 'ar';
+    let isPlaying = false, map = null, gazaSouls = [], tooltipTimeout = null, isSearching = false;
+    let width, height, points = [], mouseX = -1000, mouseY = -1000;
+    let sound, clickSound;
+
+    // --- 2. قاموس اللغات والنصوص المتعددة ---
     const translations = {
         ar: {
             title: "أرواح فلسطين | Palestinian Souls v3.6",
@@ -316,8 +322,13 @@
         }
     };
 
-    let currentLang = 'ar';
+    // --- 3. تهيئة مكتبة الصوت ---
+    try {
+        sound = new Howl({ src: ['ambient.mp3'], loop: true, volume: 0.4 });
+        clickSound = new Howl({ src: ['click.mp3'], volume: 0.5 });
+    } catch(e) { console.warn("مكتبة الصوت غير متوفرة حالياً"); }
 
+    // --- 4. وظائف الكشف عن اللغة وضبطها ---
     function detectAndSetLanguage() {
         const browserLang = navigator.language || navigator.userLanguage;
         if (browserLang.startsWith('en')) currentLang = 'en';
@@ -350,6 +361,9 @@
         document.getElementById('martyrs-label').innerText = t.martyrsLabel;
     }
 
+    // الآن يمكننا استدعاء الدالة بأمان لأن isPlaying معرفة مسبقاً
+    detectAndSetLanguage();
+
     window.shareSite = function() {
         const t = translations[currentLang];
         const shareData = {
@@ -367,8 +381,7 @@
         }
     };
 
-    detectAndSetLanguage();
-
+    // --- 5. بيانات ووظائف الفيديوهات ---
     const videosData = [
         {
             url: "https://t.me/gazaalannet/81461?embed=1",
@@ -408,6 +421,7 @@
     }
     renderVideos();
 
+    // --- 6. التبديل بين النوافذ والتابات ---
     window.switchMainMode = function(mode) {
         document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
         const activeBtn = document.getElementById(`tab-${mode}`);
@@ -448,16 +462,7 @@
         }
     };
 
-    let isPlaying = false, map = null, gazaSouls = [], tooltipTimeout = null, isSearching = false;
-    let width, height, points = [], mouseX = -1000, mouseY = -1000;
-    
-    // التحقق من أن المكتبات الصوتية تعمل
-    let sound, clickSound;
-    try {
-        sound = new Howl({ src: ['ambient.mp3'], loop: true, volume: 0.4 });
-        clickSound = new Howl({ src: ['click.mp3'], volume: 0.5 });
-    } catch(e) { console.warn("مكتبة الصوت غير متوفرة حالياً"); }
-
+    // --- 7. الكانفاس والرسوميات ---
     const canvas = document.getElementById('stars-canvas');
     const ctx = canvas ? canvas.getContext('2d') : null;
 
@@ -469,28 +474,15 @@
     window.addEventListener('resize', resize); 
     resize();
 
-    const parseCSVLine = (text) => {
-        if (!text) return [];
-        let ret = [], cur = '', inQuotes = false;
-        for (let char of text) {
-            if (char === '"') inQuotes = !inQuotes;
-            else if (char === ',' && !inQuotes) { ret.push(cur.trim()); cur = ''; }
-            else cur += char;
-        }
-        ret.push(cur.trim()); return ret;
-    };
-
+    // --- 8. جلب البيانات من الـ JSON وإنشاء النجوم ---
     async function loadDataAndInit() {
         gazaSouls = []; 
 
         try {
-            // جلب ملف الـ JSON
             const res = await fetch('./killed-in-gaza.json', { cache: 'no-cache' });
             
             if (res.ok) {
                 const data = await res.json();
-                
-                // التأكد من أن البيانات مصفوفة
                 const list = Array.isArray(data) ? data : (data.data || []);
                 
                 gazaSouls = list.map(item => ({
@@ -506,7 +498,7 @@
             console.warn("تعذر تحميل ملف JSON، سيتم تفعيل النمط الافتراضي.");
         }
 
-        // الخطة البديلة: إذا كان الملف فارغاً، نولد 35 ألف نجمة
+        // الخطة البديلة: توليد نجوم افتراضية إذا كان الملف فارغاً
         if(gazaSouls.length === 0) {
             for(let i=0; i<35000; i++) {
                 gazaSouls.push({ name_ar: "شهيد مجهول الاسم", name_en: "", id: "", dob: "", age: "غير معروف", gender: "M" });
@@ -555,6 +547,7 @@
         requestAnimationFrame(gameLoop);
     }
 
+    // --- 9. التفاعل مع الماوس والتلميحات (Tooltip) ---
     window.addEventListener('mousemove', (e) => { 
         const canvasLayer = document.getElementById('canvas-layer');
         if(canvasLayer && canvasLayer.style.pointerEvents === 'none') return;
@@ -629,6 +622,7 @@
         tooltipElement.addEventListener('mouseleave', () => { tooltipTimeout = setTimeout(hideTooltip, 1000); });
     }
     
+    // --- 10. نظام البحث ---
     const searchInput = document.getElementById('search-input');
     if(searchInput) {
         searchInput.oninput = (e) => {
@@ -652,6 +646,7 @@
         };
     }
 
+    // --- 11. الخريطة ---
     async function initMap() {
         if(typeof L !== 'undefined') {
             map = L.map('map-container').setView([31.3547, 34.3088], 11); 
@@ -659,6 +654,7 @@
         }
     }
 
+    // --- 12. نظام الصوت للأزرار ---
     function toggleMusic() {
         const t = translations[currentLang];
         if (typeof Howler !== 'undefined' && Howler.ctx && Howler.ctx.state === 'suspended') Howler.ctx.resume();
@@ -678,6 +674,7 @@
     if(musicBtnDesktop) musicBtnDesktop.onclick = toggleMusic;
     if(musicBtnMobile) musicBtnMobile.onclick = toggleMusic;
 
+    // --- 13. وظيفة إنشاء وتحميل بطاقة المشاركة ---
     window.downloadShareCard = function(primaryName, secondaryName, idStr, dobStr, ageStr, duaa) {
         document.getElementById('card-name-primary').innerText = primaryName;
         
@@ -716,7 +713,7 @@
         }, 15);
     }
 
-    // الانتظار حتى تحميل كامل عناصر الواجهة لتجنب انهيار الرسوميات
+    // --- 14. بدء التشغيل بمجرد تحميل الصفحة ---
     window.addEventListener('DOMContentLoaded', loadDataAndInit);
 </script>
 </body>
