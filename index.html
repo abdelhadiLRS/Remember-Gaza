@@ -480,75 +480,49 @@
         ret.push(cur.trim()); return ret;
     };
 
-    // النظام الجديد والمحمي كلياً لجلب البيانات
-    async function loadDataAndInit() {
-        gazaSouls = []; // إفراغ البيانات بالكامل
+        async function loadDataAndInit() {
+        gazaSouls = []; 
 
         try {
-            // استخدام cache: 'no-cache' لكسر التخزين المؤقت في Vercel/Github
-            const res = await fetch('./out_killed-in-gaza.csv', { cache: 'no-cache' });
+            // جلب ملف الـ JSON
+            const res = await fetch('./killed-in-gaza.json', { cache: 'no-cache' });
             
             if (res.ok) {
-                const text = await res.text();
-                // حماية ضد صفحات HTML التي ترسلها الخوادم عند حدوث خطأ 404
-                if (text && !text.trim().startsWith('<')) {
-                    const lines = text.split('\n');
-                    if (lines.length > 1) {
-                        const headers = parseCSVLine(lines[0]).map(h => h ? h.toLowerCase().trim() : "");
-                        
-                        // البحث المرن عن الأعمدة
-                        let nameArIdx = headers.findIndex(h => h.includes('name_ar') || h.includes('اسم') || h === 'ar' || h === 'name');
-                        let nameEnIdx = headers.findIndex(h => h.includes('name_en') || h.includes('english'));
-                        let idIdx = headers.findIndex(h => h.includes('id') || h.includes('هوية'));
-                        let dobIdx = headers.findIndex(h => h.includes('dob') || h.includes('مواليد') || h.includes('تاريخ'));
-                        let ageIdx = headers.findIndex(h => h === 'age' || h.includes('عمر'));
-                        let genderIdx = headers.findIndex(h => h.includes('sex') || h.includes('gender') || h.includes('جنس'));
-
-                        for (let i = 1; i < lines.length; i++) {
-                            const line = lines[i];
-                            if (!line || !line.trim()) continue;
-                            
-                            try {
-                                const cols = parseCSVLine(line);
-                                if (cols.length === 0) continue;
-
-                                let name_ar = nameArIdx > -1 && cols[nameArIdx] ? cols[nameArIdx].trim() : "";
-                                let name_en = nameEnIdx > -1 && cols[nameEnIdx] ? cols[nameEnIdx].trim() : "";
-                                let id_val = idIdx > -1 && cols[idIdx] ? cols[idIdx].trim() : "";
-                                let dob_val = dobIdx > -1 && cols[dobIdx] ? cols[dobIdx].trim() : "";
-                                let age_val = ageIdx > -1 && cols[ageIdx] ? cols[ageIdx].trim() : "";
-                                let gender_val = genderIdx > -1 && cols[genderIdx] ? cols[genderIdx].trim().toUpperCase() : "M";
-
-                                if (!name_ar && name_en) name_ar = name_en;
-                                if (!name_ar) name_ar = "شهيد مجهول الاسم";
-                                if (!age_val || isNaN(parseInt(age_val))) age_val = "غير معروف";
-
-                                gazaSouls.push({ name_ar, name_en, id: id_val, dob: dob_val, age: age_val, gender: gender_val });
-                            } catch(lineErr) { 
-                                // تجاهل السطر المعطوب وإكمال القراءة
-                                continue; 
-                            }
-                        }
-                    }
-                }
+                const data = await res.json();
+                
+                // التأكد من أن البيانات مصفوفة
+                const list = Array.isArray(data) ? data : (data.data || []);
+                
+                gazaSouls = list.map(item => ({
+                    name_ar: item.name_ar || item.name || "شهيد مجهول الاسم",
+                    name_en: item.name_en || "",
+                    id: item.id || "",
+                    dob: item.dob || "",
+                    age: item.age || "غير معروف",
+                    gender: item.gender || "M"
+                }));
             }
         } catch(fetchError) {
-            console.warn("تنبيه: لم يتم العثور على ملف البيانات أو تعذرت قراءته، سيتم تشغيل النمط الافتراضي.");
+            console.warn("تعذر تحميل ملف JSON، سيتم تفعيل النمط الافتراضي.");
         }
 
-        // الخطة البديلة الآمنة: إذا فشل كل شيء، قم بإنشاء 35 ألف نجمة لضمان استمرار عمل الواجهة
+        // الخطة البديلة: إذا كان الملف فارغاً، نولد 35 ألف نجمة
         if(gazaSouls.length === 0) {
             for(let i=0; i<35000; i++) {
-                gazaSouls.push({
-                    name_ar: "شهيد مجهول الاسم", 
-                    name_en: "", 
-                    id: "", 
-                    dob: "", 
-                    age: "غير معروف", 
-                    gender: "M"
-                });
+                gazaSouls.push({ name_ar: "شهيد مجهول الاسم", name_en: "", id: "", dob: "", age: "غير معروف", gender: "M" });
             }
         }
+
+        try {
+            resize(); 
+            renderStars(); 
+            if(ctx) requestAnimationFrame(gameLoop); 
+            switchMainMode('souls');
+        } catch(renderError) {
+            console.error("خطأ في الرسم:", renderError);
+        }
+    }
+
 
         // تشغيل الرسوميات والواجهة بشكل إجباري ضمن Try-Catch لمنع انهيار السكريبت
         try {
