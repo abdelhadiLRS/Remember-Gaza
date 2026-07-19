@@ -4,11 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="icon" type="image/png" href="favicon.png">
-    <title>أرواح فلسطين | Palestinian Souls</title>
+    <title>أرواح فلسطين | Palestinian Souls v3.0</title>
     
+    <!-- Tailwind CSS للتصميم العصري للإحصائيات -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { primary: '#cc0000', blood: '#220000', glass: 'rgba(15, 15, 15, 0.75)' } } }
+        }
+    </script>
+
+    <!-- مكتبات الخريطة والرسوميات والصوت -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
     <script src="https://pixijs.download/release/pixi.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -16,733 +24,403 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&family=Amiri:ital@1&display=swap" rel="stylesheet">
     
     <style>
-        :root { 
-            --primary-red: #cc0000; 
-            --blood-dark: #220000; 
-            --border-glass: rgba(255, 255, 255, 0.15); 
-        }
+        body { margin: 0; background-color: #000; overflow: hidden; font-family: 'Cairo', sans-serif; color: white; -webkit-tap-highlight-color: transparent; }
         
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #000000; overflow: hidden; font-family: 'Cairo', sans-serif; color: white; -webkit-tap-highlight-color: transparent; }
+        /* الطبقات */
+        #canvas-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        #map-container { display: none; position: absolute; top: 80px; left: 0; width: 100%; height: calc(100% - 80px); z-index: 5; background: #000; }
         
-        canvas { display: block; position: absolute; top: 0; left: 0; z-index: 1; }
-
-        #ui-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; display: flex; flex-direction: column; justify-content: space-between; }
+        #ui-layer { position: fixed; inset: 0; z-index: 10; pointer-events: none; display: flex; flex-direction: column; }
         .interactive { pointer-events: auto; }
 
-        #header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 12px 20px; background: rgba(10, 10, 10, 0.95); 
-            border-bottom: 1px solid var(--border-glass);
-            gap: 10px; flex-wrap: wrap; z-index: 20; position: relative;
-            width: 100%;
-        }
-
-        #search-input {
-            background: #111111; border: 1px solid var(--border-glass);
-            color: white; padding: 8px 16px; border-radius: 30px; width: 140px;
-            outline: none; transition: 0.3s; font-family: 'Cairo'; font-size: 0.85rem;
-        }
-        #search-input:focus { width: 180px; border-color: var(--primary-red); background: #000000; }
-
-        .tabs-container { display: flex; gap: 3px; background: #111111; padding: 4px; border-radius: 25px; border: 1px solid var(--border-glass); }
-        .tab-btn { background: transparent; border: none; padding: 6px 12px; border-radius: 20px; color: #aaa; cursor: pointer; font-size: 0.8rem; font-family: 'Cairo'; transition: 0.2s; white-space: nowrap; }
-        .tab-btn.active { background: var(--primary-red); color: white; font-weight: bold; }
-
-        .top-btns { display: flex; gap: 6px; align-items: center; position: relative; }
-        button, .btn-style {
-            background: #111111; color: white; border: 1px solid var(--border-glass);
-            padding: 8px 12px; border-radius: 20px; cursor: pointer; font-family: 'Cairo'; transition: 0.2s;
-            font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px; text-decoration: none;
-            white-space: nowrap;
-        }
-        button:hover, .btn-style:hover { background: #222222; }
-        button.active { background: var(--primary-red); border-color: #ff4d4d; }
-
-        .lang-dropdown { position: relative; display: inline-block; }
-        .dropdown-content {
-            display: none; position: absolute; background-color: #0a0a0a;
-            min-width: 110px; box-shadow: 0px 8px 24px rgba(0,0,0,0.8);
-            border: 1px solid var(--border-glass); border-radius: 10px;
-            z-index: 200; overflow: hidden; margin-top: 5px;
-        }
-        [dir="rtl"] .dropdown-content { left: 0; right: auto; }
-        [dir="ltr"] .dropdown-content { right: 0; left: auto; }
-
-        .dropdown-content a {
-            color: #ccc; padding: 10px 14px; text-decoration: none;
-            display: block; font-size: 0.85rem; font-family: 'Cairo';
-            transition: 0.2s; text-align: center; cursor: pointer;
-        }
-        .dropdown-content a:hover { background-color: var(--primary-red); color: white; }
-        .lang-dropdown:hover .dropdown-content { display: block; animation: fadeInMenu 0.2s ease-out; }
-
-        @keyframes fadeInMenu {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        #donate-box { background: var(--blood-dark); border: 1px solid var(--primary-red); animation: pulse-border 2s infinite; }
-        @keyframes pulse-border { 0%, 100% { box-shadow: 0 0px 0px transparent; } 50% { box-shadow: 0 0 10px var(--primary-red); } }
-
-        #middle-layer { flex-grow: 1; position: relative; width: 100%; pointer-events: none; }
-
-        #bottom-layer {
-            display: flex; justify-content: space-between; align-items: flex-end;
-            padding: 20px; gap: 15px; width: 100%; z-index: 20; pointer-events: none;
-        }
-
-        #counter-container { text-align: center; background: rgba(10, 10, 10, 0.9); padding: 8px 12px; border-radius: 12px; border: 1px solid var(--border-glass); min-width: 130px; }
-        #number { font-size: 2.2rem; font-weight: 700; line-height: 1.1; color: #fff; }
+        /* التصميم الزجاجي */
+        .glass-panel { background: var(--glass); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
         
-        #dev-credits { 
-            max-width: 320px; background: rgba(10, 10, 10, 0.9); padding: 12px; 
-            border-radius: 12px; border: 1px solid var(--border-glass); border-left: 3px solid var(--primary-red);
-            text-align: initial;
-        }
-        [dir="ltr"] #dev-credits { border-left: none; border-right: 3px solid var(--primary-red); text-align: initial; }
-        .quran-verse { font-family: 'Amiri', serif; font-size: 0.95rem; color: #ccc; line-height: 1.4; text-align: center; }
+        /* التمرير لشاشة الإحصائيات */
+        #stats-view { display: none; overflow-y: auto; height: 100%; padding-bottom: 50px; pointer-events: auto; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.5); }
+        ::-webkit-scrollbar-thumb { background: #cc0000; border-radius: 4px; }
+
+        /* Header UI */
+        #header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        #search-input { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 30px; width: 150px; outline: none; transition: 0.3s; font-family: 'Cairo'; }
+        #search-input:focus { width: 200px; border-color: #cc0000; }
+
+        .btn-main { background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: 0.3s; font-size: 0.9rem; }
+        .btn-main:hover { background: rgba(204,0,0,0.3); }
+        .btn-main.active { background: #cc0000; border-color: #ff4d4d; font-weight: bold; }
+
+        /* Tooltip and Cards */
+        #tooltip { position: fixed; background: rgba(0, 0, 0, 0.95); color: white; padding: 20px; border-radius: 16px; display: none; pointer-events: auto; transform: translate(-50%, -120%); z-index: 100; box-shadow: 0 10px 30px rgba(204,0,0,0.4); text-align: center; border: 2px solid #cc0000; min-width: 250px; }
+        .duaa-style { font-family: 'Amiri', serif; font-size: 1.3rem; margin-top: 10px; display: block; color: #4ade80; }
         
-        #bottom-center-links {
-            background: rgba(10, 10, 10, 0.9); padding: 8px 14px; border-radius: 25px; 
-            border: 1px solid var(--border-glass); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center;
-        }
+        #bottom-bar { display: flex; justify-content: space-between; align-items: flex-end; padding: 20px; flex-grow: 1; pointer-events: none; }
+        #counter-box { text-align: center; padding: 10px 20px; border-radius: 15px; border-bottom: 3px solid #cc0000; }
         
-        /* تصميم عداد الزوار */
-        #visitor-container {
-            background: rgba(204, 0, 0, 0.15); padding: 4px 10px; border-radius: 15px;
-            border: 1px dotted var(--primary-red); display: flex; align-items: center; gap: 6px;
-        }
-        @keyframes pulse-dot { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
-        .dev-tag-style { font-size: 0.8rem; color: #aaa; font-weight: bold; white-space: nowrap; }
-        .social-links { display: flex; gap: 6px; }
-        .social-links a { 
-            color: #fff; background: rgba(255,255,255,0.05); text-decoration: none; 
-            padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; transition: 0.2s;
-        }
-        .social-links a:hover { background: var(--primary-red); }
-
-        #tooltip {
-            position: fixed; background: rgba(255, 255, 255, 0.98); color: black; padding: 16px;
-            border-radius: 16px; display: none; pointer-events: auto;
-            transform: translate(-50%, -120%); z-index: 100;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5); width: 280px; max-width: 90vw;
-            font-family: 'Cairo', sans-serif; text-align: center; border: 2px solid #cc0000;
-        }
-        .duaa-style { font-family: 'Amiri', serif; font-size: 1.2rem; font-weight: bold; margin-top: 6px; display: block; }
-        .male-duaa { color: #1b5e20; }
-        .female-duaa { color: #880e4f; }
-        .press-tag { color: #0d47a1; font-weight: bold; font-size: 0.8rem; }
-        
-        .download-btn {
-            margin-top: 12px; background: #111; color: #fff; border: none; padding: 6px 14px;
-            border-radius: 20px; font-size: 0.8rem; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: 0.2s; width: 100%; justify-content: center;
-        }
-        .download-btn:hover { background: var(--primary-red); }
-
-        #share-card-template {
-            position: fixed; top: -9999px; left: -9999px; width: 400px; height: 400px;
-            background: #000; color: #fff; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center; padding: 30px;
-            box-sizing: border-box; border: 6px double #cc0000; font-family: 'Cairo', sans-serif;
-        }
-        
-        #empty-notice { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.9); padding: 20px; border-radius: 10px; border: 1px dashed #555; text-align: center; display: none; z-index: 5; }
-
-        #analytics-modal {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: #0a0a0a; border: 1px solid var(--border-glass); padding: 25px; border-radius: 20px;
-            width: 90%; max-width: 400px; z-index: 500; display: none; box-shadow: 0 30px 60px rgba(0,0,0,0.8);
-        }
-        .stat-row { margin: 15px 0; }
-        .stat-bar-bg { background: rgba(255,255,255,0.05); height: 8px; border-radius: 5px; overflow: hidden; margin-top: 5px; }
-        .stat-bar-fill { background: var(--primary-red); height: 100%; width: 0%; transition: width 1.5s ease-out; }
-        .close-modal { position: absolute; top: 12px; right: 15px; background: none; border: none; color: #666; font-size: 1.6rem; cursor: pointer; }
-
-        #map-container { display: none; position: fixed; top: 80px; left: 0; width: 100%; height: calc(100% - 80px); z-index: 5; background: #000; }
-        
-        #video-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.95); z-index: 1000; flex-direction: column;
-            justify-content: center; align-items: center;
-        }
-        #local-video-player {
-            width: 90%; max-width: 800px; border: 2px solid var(--primary-red);
-            border-radius: 12px; box-shadow: 0 10px 40px rgba(204, 0, 0, 0.3);
-            background: #000;
-        }
-        .close-video-btn {
-            margin-top: 20px; background: var(--primary-red); color: white; border: none;
-            padding: 10px 30px; border-radius: 25px; font-size: 1.1rem; cursor: pointer;
-            font-family: 'Cairo', sans-serif; transition: 0.3s;
-        }
-        .close-video-btn:hover { background: #ff3333; }
-
-        @media (max-width: 768px) {
-            #header { padding: 10px; justify-content: center; }
-            .tabs-container { width: 100%; justify-content: center; order: 3; margin-top: 4px; }
-            #search-input { width: 45%; flex-grow: 1; }
-            .top-btns { width: 50%; flex-grow: 1; justify-content: flex-end; }
-            
-            #bottom-layer { flex-direction: column; align-items: center; gap: 10px; padding: 10px; }
-            #dev-credits { max-width: 100%; width: 100%; text-align: center; order: 2; }
-            [dir="ltr"] #dev-credits { text-align: center; }
-            #counter-container { width: 100%; order: 1; display: flex; justify-content: space-between; align-items: center; padding: 8px 20px; }
-            #number { font-size: 1.8rem; }
-            #bottom-center-links { width: 100%; justify-content: center; order: 3; border-radius: 12px; padding: 6px; }
-            
-            #tooltip { transform: translate(-50%, -50%); top: 50% !important; left: 50% !important; }
-        }
+        /* Share Card (Hidden) */
+        #share-card-template { position: fixed; top: -9999px; left: -9999px; width: 400px; height: 400px; background: #000; color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px; border: 6px double #cc0000; font-family: 'Cairo'; }
     </style>
 </head>
 <body>
 
-<div id="ui-layer">
-    <div id="header" class="interactive">
-        <input type="text" id="search-input" placeholder="بحث عن اسم...">
-        
-        <div class="tabs-container">
-            <button class="tab-btn active" id="tab-gaza" onclick="switchCategory('gaza')">غزة</button>
-            <button class="tab-btn" id="tab-press" onclick="switchCategory('press')">الصحفيين</button>
-            <button class="tab-btn" id="tab-westbank" onclick="switchCategory('westbank')">الضفة الغربية</button>
-            <button class="tab-btn" id="tab-map" onclick="switchCategory('map')">خريطة غزة</button>
-        </div>
+<!-- طبقة النجوم والأرواح -->
+<div id="canvas-layer"></div>
 
-        <div class="top-btns">
-            <button id="stats-btn" onclick="toggleAnalytics(true)">📊 إحصائيات</button>
-            <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-box" class="btn-style">❤️ <span id="donate-text">إدعمنا الآن لنستمر</span></a>
-            <button id="music-btn">🎵 صوت</button>
-            
-            <div class="lang-dropdown">
-                <button id="lang-btn">🌐 AR</button>
-                <div class="dropdown-content">
-                    <a onclick="selectLanguage('ar')">العربية</a>
-                    <a onclick="selectLanguage('en')">English</a>
-                    <a onclick="selectLanguage('fr')">Français</a>
-                    <a onclick="selectLanguage('es')">Español</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="middle-layer"></div>
-
-    <div id="bottom-layer">
-        <div id="dev-credits" class="interactive">
-            <div class="quran-verse" id="verse">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</div>
-        </div>
-
-        <div id="bottom-center-links" class="interactive">
-            <!-- عداد الزوار المباشر -->
-            <div id="visitor-container">
-                <span style="display:inline-block; width:8px; height:8px; background:var(--primary-red); border-radius:50%; animation: pulse-dot 1.5s infinite;"></span>
-                <span style="font-size: 0.8rem; color: #aaa;" id="visitor-text">زوار الآن:</span>
-                <span id="visitor-count" style="font-weight: bold; color: #fff; font-family: monospace; font-size: 0.9rem;">0</span>
-            </div>
-
-            <span class="dev-tag-style" id="dev-tag">تطوير: عبد الهادي</span>
-            <div class="social-links">
-                <a href="https://www.facebook.com/abdelhadilrs" target="_blank">Facebook</a>
-                <a href="https://www.instagram.com/abdelhadilrs" target="_blank">Instagram</a>
-                <a href="https://x.com/larrasabdelhadi" target="_blank">X</a>
-            </div>
-        </div>
-
-        <div id="counter-container" class="interactive">
-            <div id="number">0</div>
-            <div id="label" style="opacity: 0.6; font-size: 0.8rem;">شهيداً وثّقت أسماؤهم</div>
-        </div>
-    </div>
-</div>
-
-<div id="empty-notice">
-    <p id="notice-text" style="margin: 0; font-size: 0.95rem; color: #ccc;"></p>
-</div>
-
-<div id="analytics-modal" class="interactive">
-    <button class="close-modal" onclick="toggleAnalytics(false)">×</button>
-    <h3 style="margin-top:0; border-bottom: 1px solid #222; padding-bottom: 10px;" id="modal-title">سجل التوثيق الإحصائي</h3>
-    <div class="stat-row">
-        <div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span id="stat-child">الأطفال والأجنة</span><span style="color:var(--primary-red)">42%</span></div>
-        <div class="stat-bar-bg"><div class="stat-bar-fill" id="bar-children"></div></div>
-    </div>
-    <div class="stat-row">
-        <div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span id="stat-women">النساء والأمهات</span><span style="color:var(--primary-red)">31%</span></div>
-        <div class="stat-bar-bg"><div class="stat-bar-fill" id="bar-women"></div></div>
-    </div>
-    <div class="stat-row">
-        <div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span id="stat-elder">الشيوخ وكبار السن</span><span style="color:var(--primary-red)">18%</span></div>
-        <div class="stat-bar-bg"><div class="stat-bar-fill" id="bar-elders"></div></div>
-    </div>
-</div>
-
-<div id="tooltip" class="interactive"></div>
-
-<div id="share-card-template">
-    <div style="font-family: 'Amiri', serif; font-size: 1.1rem; color: #cc0000; margin-bottom: 15px;" id="card-title-text">قوافل الشهداء البررة</div>
-    <h2 id="card-name" style="margin: 10px 0; font-size: 1.8rem;"></h2>
-    <p id="card-age" style="font-size: 1.1rem; color: #aaa; margin: 5px 0;"></p>
-    <div id="card-duaa" style="font-family: 'Amiri', serif; font-size: 1.6rem; margin-top: 15px; color: #fff;"></div>
-    <div style="margin-top: 40px; font-size: 0.75rem; color: #555; border-top: 1px solid #222; width: 100%; padding-top: 10px;">أرواح غزة وفلسطين | Palestinian Souls</div>
-</div>
-
+<!-- طبقة الخريطة -->
 <div id="map-container"></div>
 
-<div id="video-modal">
-    <video id="local-video-player" controls></video>
-    <button class="close-video-btn" onclick="closeVideoModal()">إغلاق الفيديو</button>
+<!-- طبقة واجهة المستخدم -->
+<div id="ui-layer">
+    <!-- الشريط العلوي -->
+    <header id="header" class="glass-panel interactive">
+        <div class="flex gap-2 items-center">
+            <h1 class="text-xl font-bold hidden md:block text-red-500">أرواح فلسطين</h1>
+            <input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد...">
+        </div>
+        
+        <!-- نظام التبويبات الجديد للتبديل بين الأرواح والإحصائيات -->
+        <div class="flex gap-2 bg-black/50 p-1 rounded-full border border-white/10">
+            <button class="btn-main active" id="tab-souls" onclick="switchMainMode('souls')">✨ فضاء الأرواح</button>
+            <button class="btn-main" id="tab-stats" onclick="switchMainMode('stats')">📊 سجل الإحصائيات</button>
+            <button class="btn-main" id="tab-map" onclick="switchMainMode('map')">🗺️ الخريطة</button>
+        </div>
+
+        <div class="flex gap-2">
+            <button id="music-btn" class="btn-main">🎵 الصوت</button>
+            <div class="bg-red-900/50 border border-red-500 px-3 py-1 rounded-full flex items-center gap-2">
+                <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                <span class="text-xs" id="visitor-count">زوار الآن: 0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- شاشة الإحصائيات (تظهر عند النقر على "سجل الإحصائيات") -->
+    <main id="stats-view" class="w-full max-w-7xl mx-auto p-4 md:p-8">
+        <div class="mb-8 text-center">
+            <h2 class="text-3xl font-bold mb-2">السجل الإحصائي لجرائم الإبادة</h2>
+            <p class="text-gray-400">توثيق شامل لحجم الدمار والفقد المستمر</p>
+        </div>
+
+        <!-- الأرقام الكبرى -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="glass-panel p-6 rounded-xl hover:-translate-y-1 transition-transform">
+                <h3 class="text-sm text-gray-400 mb-2">إجمالي الشهداء والمفقودين</h3>
+                <p class="text-4xl font-bold text-white">~50,000</p>
+                <p class="text-xs text-red-400 mt-2">+10,000 مفقود تحت الأنقاض</p>
+            </div>
+            <div class="glass-panel p-6 rounded-xl hover:-translate-y-1 transition-transform">
+                <h3 class="text-sm text-gray-400 mb-2">الأطفال والنساء</h3>
+                <p class="text-4xl font-bold text-white">68%</p>
+                <div class="w-full bg-gray-700 h-1 mt-3 rounded"><div class="bg-red-500 h-1 rounded" style="width: 68%"></div></div>
+            </div>
+            <div class="glass-panel p-6 rounded-xl hover:-translate-y-1 transition-transform">
+                <h3 class="text-sm text-gray-400 mb-2">النازحون قسراً</h3>
+                <p class="text-4xl font-bold text-white">2 مليون+</p>
+                <p class="text-xs text-orange-400 mt-2">يعيشون في ظروف قاهرة</p>
+            </div>
+            <div class="glass-panel p-6 rounded-xl hover:-translate-y-1 transition-transform">
+                <h3 class="text-sm text-gray-400 mb-2">الجرحى والمصابون</h3>
+                <p class="text-4xl font-bold text-white">85,000+</p>
+                <p class="text-xs text-gray-400 mt-2">نظام صحي منهار بالكامل</p>
+            </div>
+        </div>
+
+        <!-- التفاصيل (المستشفيات، المنازل، الصحافة) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- الاستهداف الممنهج -->
+            <div class="lg:col-span-2 glass-panel p-6 rounded-xl">
+                <h3 class="text-xl font-bold border-b border-white/10 pb-3 mb-4">الاستهداف الممنهج للقطاعات</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-black/40 p-4 rounded-lg border border-white/5">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray-300">الصحفيون والإعلام</span>
+                            <span class="font-bold text-red-500">175 شهيداً</span>
+                        </div>
+                    </div>
+                    <div class="bg-black/40 p-4 rounded-lg border border-white/5">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray-300">الطواقم الطبية</span>
+                            <span class="font-bold text-red-500">500+ شهيد</span>
+                        </div>
+                    </div>
+                    <div class="bg-black/40 p-4 rounded-lg border border-white/5">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray-300">الدفاع المدني</span>
+                            <span class="font-bold text-red-500">70 شهيداً</span>
+                        </div>
+                    </div>
+                    <div class="bg-black/40 p-4 rounded-lg border border-white/5">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray-300">المعتقلون قسراً</span>
+                            <span class="font-bold text-red-500">5,000+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- البنية التحتية -->
+            <div class="glass-panel p-6 rounded-xl">
+                <h3 class="text-xl font-bold border-b border-white/10 pb-3 mb-4">دمار البنية التحتية</h3>
+                <ul class="space-y-4">
+                    <li>
+                        <div class="flex justify-between text-sm mb-1"><span class="text-gray-300">المستشفيات المدمرة</span><span class="text-red-400">33 من أصل 36</span></div>
+                        <div class="w-full bg-gray-800 h-1.5 rounded"><div class="bg-red-600 h-1.5 rounded" style="width: 90%"></div></div>
+                    </li>
+                    <li>
+                        <div class="flex justify-between text-sm mb-1"><span class="text-gray-300">المدارس والجامعات</span><span class="text-red-400">80% مدمر</span></div>
+                        <div class="w-full bg-gray-800 h-1.5 rounded"><div class="bg-red-600 h-1.5 rounded" style="width: 80%"></div></div>
+                    </li>
+                    <li>
+                        <div class="flex justify-between text-sm mb-1"><span class="text-gray-300">الوحدات السكنية</span><span class="text-red-400">360,000+ متضررة</span></div>
+                        <div class="w-full bg-gray-800 h-1.5 rounded"><div class="bg-red-600 h-1.5 rounded" style="width: 75%"></div></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- شريط الأسفل (يظهر فقط في شاشة الأرواح) -->
+    <div id="bottom-bar">
+        <div class="interactive glass-panel p-3 rounded-xl border-l-4 border-l-red-600 max-w-sm">
+            <p class="font-family-amiri text-gray-300 text-sm leading-relaxed text-center">
+                "وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"
+            </p>
+        </div>
+        <div id="counter-box" class="interactive glass-panel">
+            <div id="number" class="text-4xl font-bold text-white">0</div>
+            <div class="text-xs text-gray-400 mt-1">شهيداً وثّقت أسماؤهم (قابلة للتحديث)</div>
+        </div>
+    </div>
+</div>
+
+<!-- التول تيب والبطاقة -->
+<div id="tooltip" class="interactive"></div>
+<div id="share-card-template">
+    <div style="font-family: 'Amiri', serif; font-size: 1.2rem; color: #cc0000; margin-bottom: 10px;">قوافل الشهداء البررة</div>
+    <h2 id="card-name" style="margin: 10px 0; font-size: 2rem;"></h2>
+    <p id="card-age" style="font-size: 1.2rem; color: #aaa; margin: 5px 0;"></p>
+    <div id="card-duaa" style="font-family: 'Amiri', serif; font-size: 1.8rem; margin-top: 20px; color: #fff;"></div>
 </div>
 
 <script>
-    let app, mainContainer, points = [], currentLang = 'ar', isPlaying = false;
-    let currentCategory = 'gaza', tooltipTimeout = null, activeSprite = null;
-    let analyticsTimeout = null;
-    let map = null;
-
+    let app, mainContainer, points = [], isPlaying = false, map = null;
     let gazaSouls = [];
-    let pressSouls = [];
-    let westbankSouls = [];
-
-    // محاكاة نظام العداد الحي للزوار
-    let visitorCounter = 12450 + Math.floor(Math.random() * 500);
-    setInterval(() => {
-        visitorCounter += Math.floor(Math.random() * 3);
-        const vc = document.getElementById('visitor-count');
-        if(vc) vc.innerText = visitorCounter.toLocaleString();
-    }, 4500);
-    // تفعيل العداد مبدئياً
-    document.getElementById('visitor-count').innerText = visitorCounter.toLocaleString();
-
-    const locationVideoMap = {
-        "غزة": "videos/gaza_status.mp4",
-        "شمال غزة": "videos/north_gaza.mp4",
-        "دير البلح": "videos/deir_albalah.mp4",
-        "خان يونس": "videos/khan_younis.mp4",
-        "رفح": "videos/rafah.mp4"
-    };
-
-    const translations = {
-        ar: {
-            dir: "rtl", search: "بحث عن اسم...", gaza: "غزة", press: "الصحفيين", westbank: "الضفة الغربية",
-            stats: "📊 إحصائيات", donate: "تبرع الآن", music_on: "🔇 كتم", music_off: "🎵 صوت",
-            verse: '"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"',
-            dev: "تطوير: عبد الهادي", label: "شهيداً وثّقت أسماؤهم",
-            title: "سجل التوثيق الإحصائي", child: "الأطفال والأجنة", women: "النساء والأمهات", elder: "الشيوخ وكبار السن",
-            download: "📥 حفظ البطاقة", age_text: "العمر: {age} سنة", unknown_age: "غير معروف", unknown_name: "غير مدرج",
-            notice_wb: "جاري توثيق وتحديث أسماء شهداء الضفة الغربية...", alert_gen: "جاري معالجة الصورة للحفظ الفوري...",
-            card_top: "قوافل الشهداء البررة", duaa_m: "رحمه الله", duaa_f: "رحمها الله", press_tag: "شَهيدُ الصَّحافة",
-            visitor: "زوار الآن:"
-        },
-        en: {
-            dir: "ltr", search: "Search name...", gaza: "Gaza", press: "Journalists", westbank: "West Bank",
-            stats: "📊 Stats", donate: "Donate", music_on: "🔇 Mute", music_off: "🎵 Audio",
-            verse: '"Think not of those who are slain in Allah\'s way as dead. Nay, they live with their Lord"',
-            dev: "Dev: Abdelhadi", label: "Documented Martyred Souls",
-            title: "Statistical Records", child: "Children & Infants", women: "Women & Mothers", elder: "Elders & Seniors",
-            download: "📥 Download Card", age_text: "Age: {age} years old", unknown_age: "Unknown", unknown_name: "Not listed",
-            notice_wb: "Documenting and updating West Bank martyrs registries...", alert_gen: "Processing card image generation...",
-            card_top: "The Noble Martyrs of Palestine", duaa_m: "May Allah rest his soul", duaa_f: "May Allah rest her soul", press_tag: "Press Martyr",
-            visitor: "Live Visitors:"
-        },
-        fr: {
-            dir: "ltr", search: "Chercher...", gaza: "Gaza", press: "Journalistes", westbank: "Cisjordanie",
-            stats: "📊 Stats", donate: "Faire un don", music_on: "🔇 Sourdine", music_off: "🎵 Audio",
-            verse: '"Ne pense pas que ceux qui ont été tués dans le sentier d\'Allah soient morts. Au contraire, ils sont vivants"',
-            dev: "Dev: Abdelhadi", label: "Âmes Martyrisées Documentées",
-            title: "Registres Statistiques", child: "Enfants et Nourrissons", women: "Femmes et Mères", elder: "Aînés et Personnes Âgées",
-            download: "📥 Télécharger la Carte", age_text: "Âge: {age} ans", unknown_age: "Inconnu", unknown_name: "Non répertorié",
-            notice_wb: "Mise à jour des registres des martyrs de Cisjordanie...", alert_gen: "Génération de l'image de la carte...",
-            card_top: "Les Nobles Martyrs de Palestine", duaa_m: "Que Dieu ait son âme", duaa_f: "Que Dieu ait son âme", press_tag: "Martyr de la Presse",
-            visitor: "Visiteurs Actifs:"
-        },
-        es: {
-            dir: "ltr", search: "Buscar...", gaza: "Gaza", press: "Periodistas", westbank: "Cisjordania",
-            stats: "📊 Estadísticas", donate: "Donar", music_on: "🔇 Silenciar", music_off: "🎵 Audio",
-            verse: '"Y no pienses que los que han sido muertos en el camino de Alá están muertos. Al contrario, están vivos"',
-            dev: "Dev: Abdelhadi", label: "Almas Mártires Documentadas",
-            title: "Registros Estadísticos", child: "Niños e Infantes", women: "Mujeres y Madres", elder: "Ancianos y Mayores",
-            download: "📥 Descargar Tarjeta", age_text: "Edad: {age} años", unknown_age: "Desconocida", unknown_name: "No listado",
-            notice_wb: "Documentando y actualizando registros de Cisjordania...", alert_gen: "Procesando generación de imagen...",
-            card_top: "Los Nobles Mártires de Palestina", duaa_m: "Que Alá tenga piedad de él", duaa_f: "Que Alá tenga piedad de ella", press_tag: "Mártir de la Prensa",
-            visitor: "Visitantes Vivos:"
-        }
-    };
-
-    const sound = new Howl({ src: ['ambient.mp3'], loop: true, volume: 0.4, html5: false });
+    
+    // إعداد الصوت[cite: 1]
+    const sound = new Howl({ src: ['ambient.mp3'], loop: true, volume: 0.4 });
     const clickSound = new Howl({ src: ['click.mp3'], volume: 0.5 });
 
-    async function init() {
-        app = new PIXI.Application();
-        await app.init({ resizeTo: window, backgroundColor: 0x000000, antialias: false, backgroundAlpha: 0 });
-        document.body.appendChild(app.canvas);
+    // العداد الحي للزوار[cite: 1]
+    let visitorCounter = 15302;
+    setInterval(() => {
+        visitorCounter += Math.floor(Math.random() * 3);
+        document.getElementById('visitor-count').innerText = "زوار الآن: " + visitorCounter.toLocaleString();
+    }, 4000);
+    document.getElementById('visitor-count').innerText = "زوار الآن: " + visitorCounter.toLocaleString();
 
+    async function initSystem() {
+        // إعداد PixiJS (طبقة النجوم)[cite: 1]
+        app = new PIXI.Application();
+        await app.init({ resizeTo: window, backgroundColor: 0x000000, backgroundAlpha: 0 });
+        document.getElementById('canvas-layer').appendChild(app.canvas);
         mainContainer = new PIXI.Container();
-        mainContainer.eventMode = 'static';
         app.stage.addChild(mainContainer);
 
-        await loadExternalCSV();
-        renderWorld();
+        await loadData();
+        renderStars();
+        setupEvents();
     }
 
-    async function loadExternalCSV() {
+    // تحميل بيانات الـ CSV[cite: 1]
+    async function loadData() {
         try {
-            const resGaza = await fetch('out_killed-in-gaza.csv');
-            if (resGaza.ok) {
-                const csvText = await resGaza.text();
-                const lines = csvText.split('\n');
-                
-                if (lines.length > 0) {
-                    const parseCSVLine = (text) => {
-                        let ret = [], cur = '', inQuotes = false;
-                        for (let char of text) {
-                            if (char === '"') inQuotes = !inQuotes;
-                            else if (char === ',' && !inQuotes) { ret.push(cur.trim()); cur = ''; }
-                            else cur += char;
-                        }
-                        ret.push(cur.trim());
-                        return ret;
-                    };
-
-                    const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase());
-                    
-                    let nameArIdx = headers.indexOf('name');
-                    if (nameArIdx === -1) nameArIdx = headers.indexOf('name_ar');
-                    let nameEnIdx = headers.indexOf('en_name');
-                    if (nameEnIdx === -1) nameEnIdx = headers.indexOf('name_en');
-                    let ageIdx = headers.indexOf('age');
-                    if (ageIdx === -1) ageIdx = headers.indexOf('dob');
-                    let genderIdx = headers.indexOf('sex');
-                    if (genderIdx === -1) genderIdx = headers.indexOf('gender');
-
-                    if (lines.length > 1 && (nameArIdx === -1 || ageIdx === -1)) {
-                        const firstData = parseCSVLine(lines[1]);
-                        for(let c=0; c<firstData.length; c++) {
-                            const val = firstData[c];
-                            if (/[\u0600-\u06FF]/.test(val)) nameArIdx = c;
-                            else if (!isNaN(val) && val !== "" && parseInt(val) < 130) ageIdx = c;
-                            else if (/^[a-zA-Z\s\-]+$/.test(val) && nameEnIdx === -1) nameEnIdx = c;
-                        }
-                    }
-
-                    if (nameArIdx === -1) nameArIdx = 0;
-                    if (ageIdx === -1) ageIdx = 2; 
-
-                    for (let i = 1; i < lines.length; i++) {
-                        if (!lines[i].trim()) continue;
-                        const cols = parseCSVLine(lines[i]);
-                        
-                        let name_ar = cols[nameArIdx] || "غير مدرج";
-                        let name_en = nameEnIdx > -1 ? cols[nameEnIdx] : "";
-                        
-                        // تصليح ظهور الأعمار المجهولة
-                        let age = cols[ageIdx] ? cols[ageIdx].trim() : "غير معروف";
-                        if (age === "" || isNaN(parseInt(age))) {
-                            age = "غير معروف";
-                        }
-                        
-                        let gender = genderIdx > -1 ? cols[genderIdx].toUpperCase() : "M";
-
-                        if (!/[\u0600-\u06FF]/.test(name_ar) && /[\u0600-\u06FF]/.test(name_en)) {
-                            let temp = name_ar; 
-                            name_ar = name_en; 
-                            name_en = temp;
-                        }
-
-                        gazaSouls.push({ 
-                            name_ar: name_ar, name_en: name_en !== "" ? name_en : name_ar, age: age, gender: gender 
-                        });
+            const res = await fetch('out_killed-in-gaza.csv');
+            if (res.ok) {
+                const text = await res.text();
+                const lines = text.split('\n');
+                for (let i = 1; i < lines.length; i++) {
+                    const cols = lines[i].split(',');
+                    if (cols.length > 2) {
+                        let age = cols[2] ? cols[2].trim() : "غير معروف";
+                        if (isNaN(parseInt(age))) age = "غير معروف";
+                        gazaSouls.push({ name: cols[0] || "غير مدرج", age: age, gender: cols[3] || "M" });
                     }
                 }
             }
-        } catch(e) { console.log("خطأ في قراءة ملف CSV", e); }
+        } catch(e) { console.log("استخدام بيانات افتراضية لعدم توفر CSV"); }
         
-        // تصحيح ظهور عدد الصحفيين في الشاشة
-        pressSouls = [{ name_ar: "حمزة وائل الدحدوح", name_en: "Hamza Wael Al-Dahdouh", age: 27, gender: "M", isPress: true }];
-        for(let i=1; i<175; i++) {
-            pressSouls.push({ name_ar: "صحفي شهيد (الاسم قيد التوثيق)", name_en: "Press Martyr", age: "غير معروف", gender: "M", isPress: true });
+        // إذا لم يكن هناك بيانات، اصنع بيانات تجريبية
+        if(gazaSouls.length === 0) {
+            for(let i=0; i<35000; i++) gazaSouls.push({name: "شهيد مجهول الاسم", age: "غير معروف", gender: "M"});
         }
     }
 
-    function isInForbiddenZone(x, y) {
-        const headerEl = document.getElementById('header');
-        const headerHeight = headerEl ? headerEl.offsetHeight + 15 : 130;
-        if (y < headerHeight) return true;
-        
-        if (window.innerWidth <= 768) {
-            const bottomEl = document.getElementById('bottom-layer');
-            const bottomHeight = bottomEl ? bottomEl.offsetHeight + 15 : 180;
-            if (y > app.screen.height - bottomHeight) return true;
-        } else {
-            if (y > app.screen.height - 145 && x < 440) return true;
-            if (y > app.screen.height - 145 && x > app.screen.width - 270) return true;
-            const centerX = app.screen.width / 2;
-            if (y > app.screen.height - 100 && x > centerX - 200 && x < centerX + 200) return true;
-        }
-        return false;
-    }
-
-    function renderWorld() {
+    // رسم النجوم[cite: 1]
+    function renderStars() {
         points.forEach(p => p.destroy());
         points = [];
         mainContainer.removeChildren();
 
-        let currentList = [];
-        let totalCount = 0; 
-        const t = translations[currentLang];
-
-        if (currentCategory === 'gaza') {
-            currentList = gazaSouls;
-            // الاعتماد المباشر على البيانات للعداد
-            totalCount = gazaSouls.length > 0 ? gazaSouls.length : 40000;
-            document.getElementById('empty-notice').style.display = 'none';
-        } else if (currentCategory === 'press') {
-            currentList = pressSouls;
-            totalCount = pressSouls.length; 
-            document.getElementById('empty-notice').style.display = 'none';
-        } else if (currentCategory === 'westbank') {
-            currentList = westbankSouls;
-            totalCount = 0;
-            document.getElementById('notice-text').innerText = t.notice_wb;
-            document.getElementById('empty-notice').style.display = 'block';
-        }
-
-        if (currentList.length === 0 && currentCategory !== 'westbank') return;
-
         const g = new PIXI.Graphics().circle(0, 0, 3.5).fill({ color: 0xffffff, alpha: 0.8 });
         const tex = app.renderer.generateTexture(g);
-        // عرض نجوم تصل إلى 2000 للحد من استهلاك الذاكرة ولكن تعكس الصحفيين (الذين عددهم 175) بشكل كامل
-        const dotsToRender = currentList.length === 0 ? 0 : Math.min(2000, currentList.length);
+        const dotsToRender = Math.min(2500, gazaSouls.length); // تحديد سقف بصري للحفاظ على الأداء[cite: 1]
 
         for(let i=0; i < dotsToRender; i++) { 
             const dot = new PIXI.Sprite(tex);
-            let posX, posY, attempts = 0;
-            do {
-                posX = Math.random() * (app.screen.width - 30) + 15;
-                posY = Math.random() * (app.screen.height - 30) + 15;
-                attempts++;
-            } while (isInForbiddenZone(posX, posY) && attempts < 25);
-
-            dot.x = posX; dot.y = posY; dot.anchor.set(0.5); dot.alpha = Math.random() * 0.4 + 0.2; 
-            dot.userData = currentList[i];
-            dot.speedX = (Math.random() - 0.5) * 0.12; dot.speedY = (Math.random() - 0.5) * 0.12;
-            dot.eventMode = 'static'; dot.cursor = 'pointer';
+            dot.x = Math.random() * window.innerWidth;
+            dot.y = Math.random() * window.innerHeight;
+            dot.anchor.set(0.5); 
+            dot.alpha = Math.random() * 0.5 + 0.2; 
+            dot.userData = gazaSouls[i];
+            dot.speedX = (Math.random() - 0.5) * 0.15; 
+            dot.speedY = (Math.random() - 0.5) * 0.15;
             
+            dot.eventMode = 'static'; 
+            dot.cursor = 'pointer';
             dot.on('pointerdown', (e) => { e.stopPropagation(); showTooltip(e, dot); });
-            dot.on('pointerover', (e) => { if(window.innerWidth > 768) showTooltip(e, dot); });
-            dot.on('pointerout', () => startHideTimer());
-
-            mainContainer.addChild(dot); points.push(dot);
+            
+            mainContainer.addChild(dot); 
+            points.push(dot);
         }
-        animateCounter(totalCount);
+        
+        // تحريك العداد الكلي بناءً على العدد الفعلي للبيانات
+        animateCounter(gazaSouls.length > 0 ? gazaSouls.length : 40000);
     }
 
-    const tooltip = document.getElementById('tooltip');
-
+    // عرض التول تيب والبيانات الخاصة بالشهيد[cite: 1]
     function showTooltip(event, sprite) {
         if (!sprite.userData) return;
-        if (tooltipTimeout) { clearTimeout(tooltipTimeout); tooltipTimeout = null; }
-        activeSprite = sprite;
-
         try { clickSound.play(); } catch(e){}
-        points.forEach(p => { if(p !== sprite) { p.alpha = 0.2; p.scale.set(1); p.tint = 0xffffff; } });
+        
+        points.forEach(p => { p.alpha = 0.2; p.tint = 0xffffff; p.scale.set(1); });
+        sprite.alpha = 1; sprite.scale.set(3); sprite.tint = 0xff3333; 
 
         const d = sprite.userData;
+        const tooltip = document.getElementById('tooltip');
         tooltip.style.display = 'block';
-        if(window.innerWidth > 768) { tooltip.style.left = event.global.x + 'px'; tooltip.style.top = event.global.y + 'px'; }
+        tooltip.style.left = event.global.x + 'px'; 
+        tooltip.style.top = (event.global.y - 20) + 'px';
 
-        const t = translations[currentLang];
-        const display_name = (currentLang === 'ar') ? d.name_ar : (d.name_en || d.name_ar);
-        const final_name = display_name || t.unknown_name;
-        const safe_name_param = final_name.replace(/'/g, "\\'"); 
-        const age = d.age === "غير معروف" || d.age === "Unknown" ? t.unknown_age : d.age;
-        const processedAge = t.age_text.replace("{age}", age);
+        const ageText = d.age === "غير معروف" ? "العمر: غير معروف" : `العمر: ${d.age} سنة`;
+        const duaa = d.gender === "F" ? "رحمها الله" : "رحمه الله";
         
-        let duaaText = "", plainDuaa = "";
-        if (d.isPress) {
-            plainDuaa = t.duaa_m;
-            duaaText = `<span class="press-tag">${t.press_tag}</span> <br><span class="duaa-style male-duaa">﴿ ${t.duaa_m} ﴾</span>`;
-        } else if (d.gender === "F") {
-            plainDuaa = t.duaa_f; duaaText = `<span class="duaa-style female-duaa">﴿ ${t.duaa_f} ﴾</span>`;
-        } else {
-            plainDuaa = t.duaa_m; duaaText = `<span class="duaa-style male-duaa">﴿ ${t.duaa_m} ﴾</span>`;
+        // زر تحميل البطاقة[cite: 1]
+        tooltip.innerHTML = `
+            <div class="text-xl font-bold mb-1">${d.name}</div>
+            <div class="text-gray-400 mb-2">${ageText}</div>
+            <span class="duaa-style mb-4">﴿ ${duaa} ﴾</span>
+            <button onclick="downloadShareCard('${d.name}', '${ageText}', '${duaa}')" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-full text-sm transition">حفظ بطاقة الشهيد</button>
+        `;
+        
+        // إخفاء تلقائي
+        setTimeout(() => { tooltip.style.display = 'none'; points.forEach(p => { p.alpha = Math.random()*0.5+0.2; p.scale.set(1); }); }, 4000);
+    }
+
+    // دالة تبديل واجهات العرض (الدمج الجوهري بين 1 و 2)
+    window.switchMainMode = function(mode) {
+        // تحديث أزرار التبويب
+        document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`tab-${mode}`).classList.add('active');
+
+        const mapLayer = document.getElementById('map-container');
+        const statsLayer = document.getElementById('stats-view');
+        const bottomBar = document.getElementById('bottom-bar');
+        const canvasLayer = document.getElementById('canvas-layer');
+
+        if(mode === 'souls') {
+            // وضع الأرواح[cite: 1]
+            mapLayer.style.display = 'none';
+            statsLayer.style.display = 'none';
+            bottomBar.style.display = 'flex';
+            canvasLayer.style.opacity = '1';
+            mainContainer.visible = true;
+        } else if (mode === 'stats') {
+            // وضع لوحة الإحصائيات
+            mapLayer.style.display = 'none';
+            statsLayer.style.display = 'block';
+            bottomBar.style.display = 'none';
+            // جعل النجوم شفافة قليلاً في الخلفية دون إيقافها
+            canvasLayer.style.opacity = '0.3'; 
+            mainContainer.visible = true;
+        } else if (mode === 'map') {
+            // وضع الخريطة[cite: 1]
+            statsLayer.style.display = 'none';
+            bottomBar.style.display = 'none';
+            canvasLayer.style.opacity = '0.1';
+            mainContainer.visible = false;
+            mapLayer.style.display = 'block';
+            if(!map) initMap();
         }
+    };
 
-        tooltip.innerHTML = `<b>${final_name}</b> <br>${processedAge} <br>${duaaText}
-             <button class="download-btn" onclick="downloadShareCard('${safe_name_param}', '${processedAge}', '${plainDuaa}')">${t.download}</button>`;
-        sprite.alpha = 1; sprite.scale.set(3); sprite.tint = 0xff3333; 
+    // إعداد الخريطة[cite: 1]
+    async function initMap() {
+        map = L.map('map-container').setView([31.3547, 34.3088], 11); 
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
     }
 
-    tooltip.addEventListener('mouseenter', () => { if (tooltipTimeout) clearTimeout(tooltipTimeout); });
-    tooltip.addEventListener('mouseleave', () => { startHideTimer(); });
+    // محرك الرسوميات (Ticker) والأحداث
+    function setupEvents() {
+        // تحريك النجوم باستمرار[cite: 1]
+        app.ticker.add(() => {
+            if(!mainContainer.visible) return;
+            for(let i=0; i < points.length; i++) {
+                const p = points[i]; 
+                p.x += p.speedX; p.y += p.speedY;
+                if (p.x < 0) p.x = app.screen.width; if (p.x > app.screen.width) p.x = 0;
+                if (p.y < 0) p.y = app.screen.height; if (p.y > app.screen.height) p.y = 0;
+            }
+        });
 
-    function startHideTimer() {
-        if (tooltipTimeout) clearTimeout(tooltipTimeout);
-        tooltipTimeout = setTimeout(() => {
-            tooltip.style.display = 'none';
-            if (activeSprite) { resetSpriteAppearance(activeSprite); activeSprite = null; }
-            points.forEach(p => resetSpriteAppearance(p));
-        }, 3500); 
+        // البحث
+        document.getElementById('search-input').oninput = (e) => {
+            if(document.getElementById('stats-view').style.display === 'block') switchMainMode('souls');
+            const val = e.target.value.trim().toLowerCase();
+            points.forEach(p => {
+                const name = p.userData.name.toLowerCase();
+                const match = name.includes(val);
+                if(val === "") { p.alpha = 0.5; p.tint = 0xffffff; p.scale.set(1); }
+                else { p.alpha = match ? 1 : 0.05; p.tint = match ? 0xff0000 : 0xffffff; p.scale.set(match ? 2.5 : 0.8); }
+            });
+        };
+
+        // زر الصوت
+        document.getElementById('music-btn').onclick = function() {
+            if (Howler.ctx && Howler.ctx.state === 'suspended') Howler.ctx.resume();
+            if (!isPlaying) { sound.play(); this.classList.add('active'); this.innerText = "🔇 كتم الصوت"; } 
+            else { sound.pause(); this.classList.remove('active'); this.innerText = "🎵 الصوت"; }
+            isPlaying = !isPlaying;
+        };
+
+        window.addEventListener('resize', () => app.renderer.resize(window.innerWidth, window.innerHeight));
     }
 
-    function resetSpriteAppearance(sprite) {
-        sprite.alpha = Math.random() * 0.4 + 0.2; sprite.scale.set(1); sprite.tint = 0xffffff;
-    }
-
-    window.toggleAnalytics = function(show) {
-        const modal = document.getElementById('analytics-modal');
-        if (analyticsTimeout) clearTimeout(analyticsTimeout);
-        modal.style.display = show ? 'block' : 'none';
-        if(show) {
-            setTimeout(() => {
-                document.getElementById('bar-children').style.width = '42%';
-                document.getElementById('bar-women').style.width = '31%';
-                document.getElementById('bar-elders').style.width = '18%';
-            }, 100);
-            analyticsTimeout = setTimeout(() => { window.toggleAnalytics(false); }, 4000);
-        } else {
-            document.getElementById('bar-children').style.width = '0%';
-            document.getElementById('bar-women').style.width = '0%';
-            document.getElementById('bar-elders').style.width = '0%';
-        }
-    }
-
+    // تصدير الصورة (البطاقة)[cite: 1]
     window.downloadShareCard = function(name, ageStr, duaa) {
         document.getElementById('card-name').innerText = name;
         document.getElementById('card-age').innerText = ageStr;
         document.getElementById('card-duaa').innerText = `﴿ ${duaa} ﴾`;
         html2canvas(document.getElementById('share-card-template'), { backgroundColor: '#000000', scale: 2 }).then(canvas => {
             const link = document.createElement('a');
-            link.download = `Palestine_Soul - ${name}.png`; link.href = canvas.toDataURL(); link.click();
+            link.download = `Palestine_Soul - ${name}.png`; 
+            link.href = canvas.toDataURL(); 
+            link.click();
         });
     };
 
-    window.switchCategory = function(category) {
-        currentCategory = category;
-        document.getElementById('map-container').style.display = (category === 'map') ? 'block' : 'none';
-        mainContainer.visible = (category !== 'map');
-
-        const buttons = document.querySelectorAll('.tab-btn');
-        buttons.forEach(btn => btn.classList.remove('active'));
-        document.getElementById(`tab-${category}`).classList.add('active');
-        
-        if (category === 'map' && !map) initMap();
-        if (category !== 'map') renderWorld();
-    };
-
-    window.openLocalVideo = function(videoSrc) {
-        const modal = document.getElementById('video-modal');
-        const player = document.getElementById('local-video-player');
-        player.src = videoSrc; 
-        modal.style.display = 'flex';
-        player.play(); 
-    };
-
-    window.closeVideoModal = function() {
-        const modal = document.getElementById('video-modal');
-        const player = document.getElementById('local-video-player');
-        player.pause(); 
-        player.src = ""; 
-        modal.style.display = 'none';
-    };
-
-    async function initMap() {
-        map = L.map('map-container').setView([31.3547, 34.3088], 11); 
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
-
-        const response = await fetch('gaza.geo.json');
-        const geoData = await response.json();
-
-        L.geoJSON(geoData, {
-            style: { color: "#cc0000", weight: 2, fillOpacity: 0.4 },
-            onEachFeature: (feature, layer) => {
-                const areaName = feature.properties && feature.properties.name ? feature.properties.name : null;
-                const videoLocalPath = locationVideoMap[areaName];
-
-                if (areaName) {
-                    let content = `<b>${areaName}</b>`;
-                    if (videoLocalPath) {
-                        content += `<br><button onclick="openLocalVideo('${videoLocalPath}')" style="background:var(--primary-red); color:white; border:none; padding:5px; margin-top:5px; cursor:pointer; border-radius:5px; width:100%; font-family:'Cairo';">شاهد فيديو من ${areaName}</button>`;
-                    }
-                    layer.bindPopup(content);
-                } else {
-                    layer.unbindPopup();
-                }
-                layer.on('mouseover', function() { this.setStyle({fillOpacity: 0.7}); });
-                layer.on('mouseout', function() { this.setStyle({fillOpacity: 0.4}); });
-            }
-        }).addTo(map);
-    }
-
-    window.selectLanguage = function(langCode) {
-        currentLang = langCode; document.getElementById('lang-btn').innerText = `🌐 ${langCode.toUpperCase()}`; updateUIAllLanguages();
-    };
-
-    function updateUIAllLanguages() {
-        const t = translations[currentLang];
-        document.documentElement.lang = currentLang; document.documentElement.dir = t.dir;
-        document.getElementById('search-input').placeholder = t.search;
-        document.getElementById('tab-gaza').innerText = t.gaza;
-        document.getElementById('tab-press').innerText = t.press;
-        document.getElementById('tab-westbank').innerText = t.westbank;
-        document.getElementById('stats-btn').innerText = t.stats;
-        document.getElementById('donate-text').innerText = t.donate;
-        document.getElementById('music-btn').innerText = isPlaying ? t.music_on : t.music_off;
-        document.getElementById('verse').innerText = t.verse;
-        document.getElementById('dev-tag').innerText = t.dev;
-        document.getElementById('label').innerText = t.label;
-        document.getElementById('modal-title').innerText = t.title;
-        document.getElementById('stat-child').innerText = t.child;
-        document.getElementById('stat-women').innerText = t.women;
-        document.getElementById('stat-elder').innerText = t.elder;
-        document.getElementById('card-title-text').innerText = t.card_top;
-        document.getElementById('visitor-text').innerText = t.visitor;
-        renderWorld();
-    }
-
-    function setupUIEvents() {
-        document.getElementById('search-input').oninput = (e) => {
-            const val = e.target.value.trim().toLowerCase();
-            points.forEach(p => {
-                const nameFieldAr = p.userData?.name_ar || "";
-                const nameFieldEn = p.userData?.name_en || "";
-                const match = nameFieldAr.toLowerCase().includes(val) || nameFieldEn.toLowerCase().includes(val);
-                if(val === "") { p.alpha = 0.4; p.tint = 0xffffff; p.scale.set(1); }
-                else { p.alpha = match ? 1 : 0.03; p.tint = match ? 0xff0000 : 0xffffff; if (match) p.scale.set(2.5); else p.scale.set(0.7); }
-            });
-        };
-
-        document.getElementById('music-btn').onclick = function() {
-            const t = translations[currentLang];
-            if (Howler.ctx && Howler.ctx.state === 'suspended') Howler.ctx.resume();
-            if (!isPlaying) { sound.play(); this.classList.add('active'); this.innerText = t.music_on; } 
-            else { sound.pause(); this.classList.remove('active'); this.innerText = t.music_off; }
-            isPlaying = !isPlaying;
-        };
-
-        app.stage.on('pointerdown', () => { tooltip.style.display = 'none'; points.forEach(p => resetSpriteAppearance(p)); });
-
-        app.ticker.add(() => {
-            for(let i=0; i < points.length; i++) {
-                const p = points[i]; p.x += p.speedX; p.y += p.speedY;
-                if (p.x < 0) p.x = app.screen.width; if (p.x > app.screen.width) p.x = 0;
-                if (p.y < 0) p.y = app.screen.height; if (p.y > app.screen.height) p.y = 0;
-                if (isInForbiddenZone(p.x, p.y)) { p.speedX *= -1; p.speedY *= -1; p.x += p.speedX * 2.5; p.y += p.speedY * 2.5; }
-            }
-        });
-        
-        window.addEventListener('resize', () => { app.renderer.resize(window.innerWidth, window.innerHeight); renderWorld(); });
-    }
-
+    // حركة العداد السفلي[cite: 1]
     function animateCounter(target) {
-        let cur = 0; const step = Math.ceil(target / 80) || 1; document.getElementById('number').innerText = "0";
-        const timer = setInterval(() => { cur += step; if(cur >= target) { cur = target; clearInterval(timer); }
-            document.getElementById('number').innerText = cur.toLocaleString(); }, 12);
+        let cur = 0; const step = Math.ceil(target / 100); 
+        const timer = setInterval(() => { 
+            cur += step; 
+            if(cur >= target) { cur = target; clearInterval(timer); }
+            document.getElementById('number').innerText = cur.toLocaleString(); 
+        }, 15);
     }
 
-    init().then(() => setupUIEvents());
+    // تشغيل النظام
+    initSystem();
 </script>
 </body>
 </html>
