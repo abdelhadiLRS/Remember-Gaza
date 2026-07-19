@@ -377,50 +377,46 @@ updateVisitorCount();
 // 1. تعريف المصفوفة كمتغير عام
 let gazaSouls = [];
 
-// 2. تعديل دالة التحميل لتكون أكثر متانة
 async function loadDataAndInit() {
-    if (gazaSouls.length > 0) return; // إذا تم التحميل مسبقاً، لا تعيد التحميل
-
+    console.log("جاري محاولة تحميل البيانات...");
+    
     try {
         const res = await fetch('out_killed-in-gaza.csv');
-        if (!res.ok) throw new Error("فشل في الوصول للملف");
+        
+        if (!res.ok) throw new Error("فشل الوصول للملف - هذا طبيعي إذا كنت تفتح الملف بدون خادم محلي");
+        
         const text = await res.text();
         const lines = text.split('\n');
         const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
         const nameArIdx = headers.indexOf('ar_name');
         const ageIdx = headers.indexOf('age');
 
+        gazaSouls = []; // تفريغ المصفوفة
+
         for (let i = 1; i < lines.length; i++) {
             if (!lines[i].trim()) continue;
             const cols = lines[i].split(',');
             gazaSouls.push({ 
-                name: cols[nameArIdx] || "غير مدرج", 
+                name: cols[nameArIdx] || "شهيد مجهول", 
                 age: cols[ageIdx] ? cols[ageIdx].trim() : "غير معروف" 
             });
         }
-        console.log("تم تحميل " + gazaSouls.length + " شهيد");
-        renderStars();
+        console.log("تم تحميل " + gazaSouls.length + " شهيد بنجاح.");
+        
     } catch(e) { 
-        console.error("خطأ:", e); 
+        console.warn("تعذر تحميل ملف CSV: " + e.message);
+        console.log("جاري استخدام بيانات افتراضية لضمان عمل الموقع...");
+        // بيانات افتراضية لضمان عدم توقف الموقع
+        gazaSouls = [
+            { name: "تجربة: شهيد 1", age: "20" },
+            { name: "تجربة: شهيد 2", age: "35" }
+        ];
     }
+    
+    // تأكد من استدعاء دالة الرسم هنا
+    renderStars();
+    requestAnimationFrame(gameLoop);
 }
-
-// 3. تأكد أن دالة العرض تستخدم المصفوفة العامة دائماً
-function renderStars() {
-    points = [];
-    // نستخدم المصفوفة العالمية gazaSouls هنا
-    gazaSouls.forEach((soul, i) => {
-        if (i >= 2500) return; // حد أقصى للنقاط
-        points.push({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            userData: soul, // الربط المباشر للبيانات
-            alpha: 0.5, baseAlpha: 0.5, targetAlpha: 0.5,
-            scale: 1, targetScale: 1, color: '#ffffff'
-        });
-    });
-}
-
     function gameLoop() {
         ctx.clearRect(0, 0, width, height);
         
