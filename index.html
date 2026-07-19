@@ -197,7 +197,7 @@
         </div>
     </main>
 
-    <!-- شاشة التوثيق الحي (تم دمج روابط تيليجرام بنظام التضمين التفاعلي) -->
+    <!-- شاشة التوثيق الحي -->
     <main id="videos-view" class="w-full max-w-7xl mx-auto p-4 md:p-8">
         <div class="mb-8 text-center">
             <h2 class="text-3xl font-bold mb-2">التوثيق المرئي الميداني</h2>
@@ -261,7 +261,7 @@
     <div id="bottom-bar">
         <div class="interactive glass-panel p-3 rounded-xl border-l-4 border-l-red-600 order-2 md:order-1 hidden md:block">
             <p class="font-amiri text-gray-300 text-sm leading-relaxed text-center">
-                "وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي Sَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"
+                "وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْآءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"
             </p>
         </div>
         
@@ -290,7 +290,6 @@
 </div>
 
 <script>
-    // التحكم بالواجهات وتحديثها لتشمل قسم الفيديوهات والنجوم
     window.switchMainMode = function(mode) {
         document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
         const activeBtn = document.getElementById(`tab-${mode}`);
@@ -302,7 +301,6 @@
         const bottomBar = document.getElementById('bottom-bar');
         const canvasLayer = document.getElementById('canvas-layer');
 
-        // إخفاء كل شيء أولاً
         mapLayer.style.display = 'none';
         statsLayer.style.display = 'none';
         videosLayer.style.display = 'none';
@@ -330,7 +328,6 @@
     const sound = new Howl({ src: ['ambient.mp3'], loop: true, volume: 0.4 });
     const clickSound = new Howl({ src: ['click.mp3'], volume: 0.5 });
 
-    // دالة لجلب عدد الزوار الحقيقي من السيرفر
     async function updateVisitorCount() {
         try {
             const response = await fetch('https://api.counterapi.dev/v1/palestinian-souls-live/visits/up');
@@ -379,43 +376,86 @@
             if (res.ok) {
                 const text = await res.text();
                 
-                // فحص ذكي: إذا قام السيرفر بإرجاع صفحة HTML 404 بدلاً من الـ CSV نقوم برمي استثناء للذهاب للاحتياطي فوراً
                 if (text.trim().startsWith('<!DOCTYPE') || text.includes('<html')) {
-                    throw new Error("ملف غير صالح، استجابة الخادم عبارة عن صفحة ويب وليست بيانات CSV دقيقة.");
+                    throw new Error("ملف غير صالح");
                 }
 
                 const lines = text.split('\n');
                 if (lines.length > 0) {
-                    const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase());
-                    let nameArIdx = headers.indexOf('name') > -1 ? headers.indexOf('name') : headers.indexOf('name_ar');
-                    let ageIdx = headers.indexOf('age') > -1 ? headers.indexOf('age') : headers.indexOf('dob');
-                    let genderIdx = headers.indexOf('sex') > -1 ? headers.indexOf('sex') : headers.indexOf('gender');
+                    const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
+                    
+                    let nameArIdx = -1;
+                    let ageIdx = -1;
+                    let genderIdx = -1;
 
-                    if (nameArIdx === -1) nameArIdx = 0;
-                    if (ageIdx === -1) ageIdx = 2;
+                    // فحص ذكي لأعمدة العناوين
+                    for (let i = 0; i < headers.length; i++) {
+                        const h = headers[i];
+                        if ((h.includes('name') || h.includes('اسم')) && !h.includes('id') && nameArIdx === -1) {
+                            nameArIdx = i;
+                        }
+                        if (h.includes('age') || h.includes('عمر') || h.includes('dob')) {
+                            ageIdx = i;
+                        }
+                        if (h.includes('sex') || h.includes('gender') || h.includes('جنس')) {
+                            genderIdx = i;
+                        }
+                    }
 
                     for (let i = 1; i < lines.length; i++) {
                         if (!lines[i].trim()) continue;
                         try {
                             const cols = parseCSVLine(lines[i]);
-                            let name_ar = cols[nameArIdx] || "غير مدرج";
-                            let age = cols[ageIdx] ? cols[ageIdx].trim() : "غير معروف";
+                            if (cols.length === 0) continue;
+
+                            // 1. خوارزمية استخراج الاسم الذكية (تمنع سحب أرقام الـ ID)
+                            let name_ar = "";
+                            if (nameArIdx > -1 && cols[nameArIdx] && isNaN(cols[nameArIdx].trim())) {
+                                name_ar = cols[nameArIdx].trim();
+                            } else {
+                                // فحص تلقائي لكافة الخلايا: أول خلية نصية صريحة (ليست رقماً وطولها > 2) تعتبر هي الاسم
+                                for (let c = 0; c < cols.length; c++) {
+                                    let cellValue = cols[c].trim();
+                                    if (cellValue && isNaN(cellValue) && cellValue.length > 2 && c !== ageIdx && c !== genderIdx) {
+                                        name_ar = cellValue;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!name_ar || !isNaN(name_ar)) name_ar = "شهيد غير مدرج الاسم";
+
+                            // 2. خوارزمية استخراج العمر الذكية
+                            let age = "غير معروف";
+                            if (ageIdx > -1 && cols[ageIdx]) {
+                                age = cols[ageIdx].trim();
+                            } else {
+                                for (let c = 0; c < cols.length; c++) {
+                                    let cellValue = cols[c].trim();
+                                    if (cellValue && !isNaN(cellValue) && cellValue.length <= 3 && c !== nameArIdx) {
+                                        age = cellValue;
+                                        break;
+                                    }
+                                }
+                            }
                             if (age === "" || isNaN(parseInt(age))) age = "غير معروف";
-                            let gender = (genderIdx > -1 && cols[genderIdx]) ? cols[genderIdx].toUpperCase() : "M";
+
+                            // 3. استخراج الجنس
+                            let gender = "M";
+                            if (genderIdx > -1 && cols[genderIdx]) {
+                                gender = cols[genderIdx].trim().toUpperCase();
+                            }
 
                             gazaSouls.push({ name: name_ar, age: age, gender: gender });
                         } catch(lineError) {
-                            // تخطي السطور التالفة الفردية لمنع الانهيار الكامل للملف
                             continue;
                         }
                     }
                 }
             }
         } catch(e) { 
-            console.log("سيتم استخدام قاعدة البيانات الافتراضية التوثيقية لعدم توفر ملف خارجي."); 
+            console.log("سيتم استخدام قاعدة البيانات الافتراضية لعدم توفر ملف خارجي متوافق."); 
         }
         
-        // إذا فشل الجلب أو كان الملف فارغاً، يتم تعبئة المصفوفة بالكامل لضمان عمل النجوم دائماً
         if(gazaSouls.length === 0) {
             for(let i=0; i<35000; i++) {
                 gazaSouls.push({name: "شهيد مجهول الاسم", age: "غير معروف", gender: "M"});
@@ -425,7 +465,7 @@
         resize();
         renderStars();
         requestAnimationFrame(gameLoop);
-        switchMainMode('souls'); // تفعيل نمط الأرواح فور انتهاء بناء البيانات والنجوم
+        switchMainMode('souls');
     }
 
     function renderStars() {
@@ -523,7 +563,7 @@
         const duaa = d.gender === "F" ? "رحمها الله" : "رحمه الله";
         
         tooltip.innerHTML = `
-            <div class="text-xl font-bold mb-1">${d.name}</div>
+            <div class="text-xl font-bold mb-1 text-white">${d.name}</div>
             <div class="text-gray-400 mb-2">${ageText}</div>
             <span class="duaa-style mb-4">﴿ ${duaa} ﴾</span>
             <button onclick="downloadShareCard('${safeName}', '${ageText}', '${duaa}')" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-full text-sm transition">حفظ بطاقة الشهيد</button>
