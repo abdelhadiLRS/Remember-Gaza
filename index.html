@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- إضافة أيقونة الموقع -->
     <link rel="icon" type="image/png" href="favicon.png">
-    <title>أرواح فلسطين | Palestinian Souls </title>
+    <title>أرواح فلسطين | Palestinian Souls</title>
     
-    <!-- المكتبات الخارجية -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- مكتبات الرسوميات والصوت والمشاركة المستقرة والمحدثة -->
     <script src="https://pixijs.download/release/pixi.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -16,165 +18,182 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&family=Amiri:ital@1&display=swap" rel="stylesheet">
     
     <style>
-        /* =========================================
-           1. المتغيرات والأساسيات
-           ========================================= */
         :root { 
             --primary-red: #cc0000; 
-            --primary-red-hover: #ff3333;
             --blood-dark: #220000; 
-            --bg-dark: #0a0a0a;
             --border-glass: rgba(255, 255, 255, 0.15); 
-            --text-main: #ffffff;
-            --text-muted: #aaaaaa;
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #000000; overflow: hidden; font-family: 'Cairo', sans-serif; color: var(--text-main); -webkit-tap-highlight-color: transparent; }
+        body { background-color: #000000; overflow: hidden; font-family: 'Cairo', sans-serif; color: white; -webkit-tap-highlight-color: transparent; }
+        
         canvas { display: block; position: absolute; top: 0; left: 0; z-index: 1; }
 
-        /* =========================================
-           2. واجهة المستخدم (UI Layer)
-           ========================================= */
         #ui-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; display: flex; flex-direction: column; justify-content: space-between; }
         .interactive { pointer-events: auto; }
 
-        /* الهيدر */
         #header { 
             display: flex; justify-content: space-between; align-items: center; 
-            padding: 12px 20px; background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(8px);
-            border-bottom: 1px solid var(--border-glass); gap: 10px; flex-wrap: wrap; z-index: 20; width: 100%;
+            padding: 12px 20px; background: rgba(10, 10, 10, 0.95); 
+            border-bottom: 1px solid var(--border-glass);
+            gap: 10px; flex-wrap: wrap; z-index: 20; position: relative;
+            width: 100%;
         }
 
-        /* البحث */
         #search-input {
-            background: rgba(17, 17, 17, 0.8); border: 1px solid var(--border-glass);
-            color: var(--text-main); padding: 8px 16px; border-radius: 30px; width: 140px;
-            outline: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-family: 'Cairo'; font-size: 0.9rem;
+            background: #111111; border: 1px solid var(--border-glass);
+            color: white; padding: 8px 16px; border-radius: 30px; width: 140px;
+            outline: none; transition: 0.3s; font-family: 'Cairo'; font-size: 0.85rem;
         }
-        #search-input:focus { width: 220px; border-color: var(--primary-red); background: #000000; box-shadow: 0 0 10px rgba(204, 0, 0, 0.3); }
+        #search-input:focus { width: 180px; border-color: var(--primary-red); background: #000000; }
 
-        /* التبويبات */
-        .tabs-container { display: flex; gap: 5px; background: rgba(17, 17, 17, 0.8); padding: 5px; border-radius: 30px; border: 1px solid var(--border-glass); backdrop-filter: blur(5px); }
-        .tab-btn { background: transparent; border: none; padding: 6px 16px; border-radius: 25px; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; font-family: 'Cairo'; transition: 0.3s; white-space: nowrap; }
-        .tab-btn:hover { color: var(--text-main); }
-        .tab-btn.active { background: var(--primary-red); color: white; font-weight: bold; box-shadow: 0 4px 10px rgba(204, 0, 0, 0.4); }
+        .tabs-container { display: flex; gap: 3px; background: #111111; padding: 4px; border-radius: 25px; border: 1px solid var(--border-glass); }
+        .tab-btn { background: transparent; border: none; padding: 6px 12px; border-radius: 20px; color: #aaa; cursor: pointer; font-size: 0.8rem; font-family: 'Cairo'; transition: 0.2s; white-space: nowrap; }
+        .tab-btn.active { background: var(--primary-red); color: white; font-weight: bold; }
 
-        /* الأزرار العلوية */
-        .top-btns { display: flex; gap: 8px; align-items: center; }
+        .top-btns { display: flex; gap: 6px; align-items: center; position: relative; }
         button, .btn-style {
-            background: rgba(17, 17, 17, 0.8); color: white; border: 1px solid var(--border-glass);
-            padding: 8px 14px; border-radius: 20px; cursor: pointer; font-family: 'Cairo'; transition: 0.3s;
-            font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; backdrop-filter: blur(5px);
+            background: #111111; color: white; border: 1px solid var(--border-glass);
+            padding: 8px 12px; border-radius: 20px; cursor: pointer; font-family: 'Cairo'; transition: 0.2s;
+            font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px; text-decoration: none;
+            white-space: nowrap;
         }
-        button:hover, .btn-style:hover { background: #222222; transform: translateY(-2px); }
-        button.active { background: var(--primary-red); border-color: var(--primary-red-hover); }
+        button:hover, .btn-style:hover { background: #222222; }
+        button.active { background: var(--primary-red); border-color: #ff4d4d; }
 
-        /* القائمة المنسدلة للغات */
         .lang-dropdown { position: relative; display: inline-block; }
         .dropdown-content {
-            display: none; position: absolute; background-color: var(--bg-dark);
-            min-width: 120px; box-shadow: 0px 8px 24px rgba(0,0,0,0.8);
-            border: 1px solid var(--border-glass); border-radius: 12px;
-            z-index: 200; overflow: hidden; margin-top: 8px;
-            opacity: 0; transform: translateY(-10px); transition: all 0.3s ease;
+            display: none; position: absolute; background-color: #0a0a0a;
+            min-width: 110px; box-shadow: 0px 8px 24px rgba(0,0,0,0.8);
+            border: 1px solid var(--border-glass); border-radius: 10px;
+            z-index: 200; overflow: hidden; margin-top: 5px;
         }
         [dir="rtl"] .dropdown-content { left: 0; right: auto; }
         [dir="ltr"] .dropdown-content { right: 0; left: auto; }
-        .dropdown-content a { color: #ccc; padding: 10px 14px; text-decoration: none; display: block; font-size: 0.85rem; text-align: center; cursor: pointer; transition: 0.2s; }
+
+        .dropdown-content a {
+            color: #ccc; padding: 10px 14px; text-decoration: none;
+            display: block; font-size: 0.85rem; font-family: 'Cairo';
+            transition: 0.2s; text-align: center; cursor: pointer;
+        }
         .dropdown-content a:hover { background-color: var(--primary-red); color: white; }
-        .lang-dropdown:hover .dropdown-content { display: block; opacity: 1; transform: translateY(0); }
+        .lang-dropdown:hover .dropdown-content { display: block; animation: fadeInMenu 0.2s ease-out; }
+
+        @keyframes fadeInMenu {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         #donate-box { background: var(--blood-dark); border: 1px solid var(--primary-red); animation: pulse-border 2s infinite; }
-        @keyframes pulse-border { 0%, 100% { box-shadow: 0 0 5px transparent; } 50% { box-shadow: 0 0 15px var(--primary-red); } }
+        @keyframes pulse-border { 0%, 100% { box-shadow: 0 0px 0px transparent; } 50% { box-shadow: 0 0 10px var(--primary-red); } }
 
-        /* =========================================
-           3. الطبقة السفلية (العداد والحقوق)
-           ========================================= */
-        #bottom-layer { display: flex; justify-content: space-between; align-items: flex-end; padding: 20px; gap: 15px; width: 100%; z-index: 20; pointer-events: none; }
-        
-        #counter-container { text-align: center; background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(8px); padding: 10px 20px; border-radius: 16px; border: 1px solid var(--border-glass); min-width: 150px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        #number { font-size: 2.5rem; font-weight: 700; line-height: 1.1; color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
-        
-        #dev-credits { max-width: 350px; background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(8px); padding: 15px; border-radius: 16px; border: 1px solid var(--border-glass); border-left: 4px solid var(--primary-red); text-align: initial; }
-        [dir="ltr"] #dev-credits { border-left: none; border-right: 4px solid var(--primary-red); text-align: initial; }
-        .quran-verse { font-family: 'Amiri', serif; font-size: 1rem; color: #e0e0e0; line-height: 1.5; text-align: center; }
-        
-        #bottom-center-links { background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(8px); padding: 10px 20px; border-radius: 30px; border: 1px solid var(--border-glass); display: flex; gap: 15px; align-items: center; }
-        .dev-tag-style { font-size: 0.85rem; color: var(--text-muted); font-weight: bold; white-space: nowrap; }
-        .social-links { display: flex; gap: 8px; }
-        .social-links a { color: #fff; background: rgba(255,255,255,0.1); text-decoration: none; padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; transition: 0.3s; }
-        .social-links a:hover { background: var(--primary-red); transform: translateY(-2px); }
+        #middle-layer { flex-grow: 1; position: relative; width: 100%; pointer-events: none; }
 
-        /* =========================================
-           4. النوافذ المنبثقة والبطاقات
-           ========================================= */
+        #bottom-layer {
+            display: flex; justify-content: space-between; align-items: flex-end;
+            padding: 20px; gap: 15px; width: 100%; z-index: 20; pointer-events: none;
+        }
+
+        #counter-container { text-align: center; background: rgba(10, 10, 10, 0.9); padding: 8px 12px; border-radius: 12px; border: 1px solid var(--border-glass); min-width: 130px; }
+        #number { font-size: 2.2rem; font-weight: 700; line-height: 1.1; color: #fff; }
+        
+        #dev-credits { 
+            max-width: 320px; background: rgba(10, 10, 10, 0.9); padding: 12px; 
+            border-radius: 12px; border: 1px solid var(--border-glass); border-left: 3px solid var(--primary-red);
+            text-align: initial;
+        }
+        [dir="ltr"] #dev-credits { border-left: none; border-right: 3px solid var(--primary-red); text-align: initial; }
+        .quran-verse { font-family: 'Amiri', serif; font-size: 0.95rem; color: #ccc; line-height: 1.4; text-align: center; }
+        
+        #bottom-center-links {
+            background: rgba(10, 10, 10, 0.9); padding: 8px 14px; border-radius: 25px; 
+            border: 1px solid var(--border-glass); display: flex; gap: 10px; align-items: center;
+        }
+        .dev-tag-style { font-size: 0.8rem; color: #aaa; font-weight: bold; white-space: nowrap; }
+        .social-links { display: flex; gap: 6px; }
+        .social-links a { 
+            color: #fff; background: rgba(255,255,255,0.05); text-decoration: none; 
+            padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; transition: 0.2s;
+        }
+        .social-links a:hover { background: var(--primary-red); }
+
         #tooltip {
-            position: fixed; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); color: black; padding: 20px;
-            border-radius: 20px; display: none; pointer-events: auto; transform: translate(-50%, -120%); z-index: 100;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6); width: 300px; max-width: 90vw; text-align: center; border: 2px solid var(--primary-red);
-            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: fixed; background: rgba(255, 255, 255, 0.98); color: black; padding: 16px;
+            border-radius: 16px; display: none; pointer-events: auto;
+            transform: translate(-50%, -120%); z-index: 100;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5); width: 280px; max-width: 90vw;
+            font-family: 'Cairo', sans-serif; text-align: center; border: 2px solid #cc0000;
         }
-        @keyframes popIn { from { opacity: 0; transform: translate(-50%, -100%) scale(0.8); } to { opacity: 1; transform: translate(-50%, -120%) scale(1); } }
+        .duaa-style { font-family: 'Amiri', serif; font-size: 1.2rem; font-weight: bold; margin-top: 6px; display: block; }
+        .male-duaa { color: #1b5e20; }
+        .female-duaa { color: #880e4f; }
+        .press-tag { color: #0d47a1; font-weight: bold; font-size: 0.8rem; }
         
-        .duaa-style { font-family: 'Amiri', serif; font-size: 1.3rem; font-weight: bold; margin-top: 10px; display: block; }
-        .male-duaa { color: #1b5e20; } .female-duaa { color: #880e4f; } .press-tag { color: #0d47a1; font-weight: bold; font-size: 0.9rem; background: rgba(13, 71, 161, 0.1); padding: 2px 8px; border-radius: 10px;}
+        .download-btn {
+            margin-top: 12px; background: #111; color: #fff; border: none; padding: 6px 14px;
+            border-radius: 20px; font-size: 0.8rem; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: 0.2s; width: 100%; justify-content: center;
+        }
+        .download-btn:hover { background: var(--primary-red); }
+
+        #share-card-template {
+            position: fixed; top: -9999px; left: -9999px; width: 400px; height: 400px;
+            background: #000; color: #fff; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center; padding: 30px;
+            box-sizing: border-box; border: 6px double #cc0000; font-family: 'Cairo', sans-serif;
+        }
         
-        .download-btn { margin-top: 15px; background: var(--bg-dark); color: #fff; border: none; padding: 10px 20px; border-radius: 25px; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; transition: 0.3s; }
-        .download-btn:hover { background: var(--primary-red); transform: scale(1.02); }
+        #empty-notice { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.9); padding: 20px; border-radius: 10px; border: 1px dashed #555; text-align: center; display: none; z-index: 5; }
 
-        #share-card-template { position: fixed; top: -9999px; left: -9999px; width: 500px; height: 500px; background: #000; color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px; box-sizing: border-box; border: 8px double var(--primary-red); font-family: 'Cairo', sans-serif; background-image: radial-gradient(circle, #220000 0%, #000000 100%); }
-
-        /* =========================================
-           5. الإحصائيات والخريطة والفيديو
-           ========================================= */
         #analytics-modal {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
-            background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(15px); border: 1px solid var(--border-glass); padding: 30px; border-radius: 24px;
-            width: 90%; max-width: 450px; z-index: 500; display: none; box-shadow: 0 30px 60px rgba(0,0,0,0.9); opacity: 0; transition: all 0.3s ease;
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: #0a0a0a; border: 1px solid var(--border-glass); padding: 25px; border-radius: 20px;
+            width: 90%; max-width: 400px; z-index: 500; display: none; box-shadow: 0 30px 60px rgba(0,0,0,0.8);
         }
-        #analytics-modal.show { display: block; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        .stat-row { margin: 20px 0; }
-        .stat-bar-bg { background: rgba(255,255,255,0.1); height: 10px; border-radius: 5px; overflow: hidden; margin-top: 8px; }
-        .stat-bar-fill { background: linear-gradient(90deg, #ff0000, #cc0000); height: 100%; width: 0%; transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        .close-modal { position: absolute; top: 15px; right: 20px; background: none; border: none; color: var(--text-muted); font-size: 2rem; cursor: pointer; transition: 0.3s; }
-        .close-modal:hover { color: white; transform: rotate(90deg); }
+        .stat-row { margin: 15px 0; }
+        .stat-bar-bg { background: rgba(255,255,255,0.05); height: 8px; border-radius: 5px; overflow: hidden; margin-top: 5px; }
+        .stat-bar-fill { background: var(--primary-red); height: 100%; width: 0%; transition: width 1.5s ease-out; }
+        .close-modal { position: absolute; top: 12px; right: 15px; background: none; border: none; color: #666; font-size: 1.6rem; cursor: pointer; }
 
-        #map-container { display: none; position: fixed; top: 70px; left: 0; width: 100%; height: calc(100% - 70px); z-index: 5; background: #000; }
+        #map-container { display: none; position: fixed; top: 80px; left: 0; width: 100%; height: calc(100% - 80px); z-index: 5; background: #000; }
         
-        #video-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.98); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
-        #local-video-player { width: 90%; max-width: 900px; border: 2px solid var(--border-glass); border-radius: 16px; box-shadow: 0 20px 50px rgba(204, 0, 0, 0.2); background: #000; outline: none; }
-        .close-video-btn { margin-top: 25px; background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--border-glass); padding: 12px 40px; border-radius: 30px; font-size: 1.1rem; cursor: pointer; font-family: 'Cairo', sans-serif; transition: 0.3s; }
-        .close-video-btn:hover { background: var(--primary-red); border-color: var(--primary-red); }
+        /* تصميم نافذة الفيديو المحلية المنبثقة */
+        #video-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.95); z-index: 1000; flex-direction: column;
+            justify-content: center; align-items: center;
+        }
+        #local-video-player {
+            width: 90%; max-width: 800px; border: 2px solid var(--primary-red);
+            border-radius: 12px; box-shadow: 0 10px 40px rgba(204, 0, 0, 0.3);
+            background: #000;
+        }
+        .close-video-btn {
+            margin-top: 20px; background: var(--primary-red); color: white; border: none;
+            padding: 10px 30px; border-radius: 25px; font-size: 1.1rem; cursor: pointer;
+            font-family: 'Cairo', sans-serif; transition: 0.3s;
+        }
+        .close-video-btn:hover { background: #ff3333; }
 
-        #empty-notice { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(10,10,10,0.9); padding: 25px; border-radius: 16px; border: 1px dashed #555; text-align: center; display: none; z-index: 5; backdrop-filter: blur(5px); }
-
-        /* =========================================
-           6. التوافق مع الهواتف (Responsive)
-           ========================================= */
         @media (max-width: 768px) {
-            #header { padding: 10px; justify-content: center; gap: 8px; }
-            .tabs-container { width: 100%; justify-content: center; order: 3; margin-top: 5px; }
+            #header { padding: 10px; justify-content: center; }
+            .tabs-container { width: 100%; justify-content: center; order: 3; margin-top: 4px; }
             #search-input { width: 45%; flex-grow: 1; }
-            #search-input:focus { width: 100%; }
             .top-btns { width: 50%; flex-grow: 1; justify-content: flex-end; }
             
-            #bottom-layer { flex-direction: column; align-items: center; gap: 12px; padding: 15px 10px; }
-            #dev-credits { max-width: 100%; width: 100%; text-align: center; order: 2; padding: 10px; }
+            #bottom-layer { flex-direction: column; align-items: center; gap: 10px; padding: 10px; }
+            #dev-credits { max-width: 100%; width: 100%; text-align: center; order: 2; }
             [dir="ltr"] #dev-credits { text-align: center; }
-            #counter-container { width: 100%; order: 1; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; }
-            #number { font-size: 2rem; }
-            #bottom-center-links { width: 100%; justify-content: center; order: 3; border-radius: 16px; padding: 10px; flex-wrap: wrap; }
+            #counter-container { width: 100%; order: 1; display: flex; justify-content: space-between; align-items: center; padding: 8px 20px; }
+            #number { font-size: 1.8rem; }
+            #bottom-center-links { width: 100%; justify-content: center; order: 3; border-radius: 12px; padding: 6px; }
             
-            #tooltip { transform: translate(-50%, -50%); top: 50% !important; left: 50% !important; width: 85vw; }
-            @keyframes popIn { from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+            #tooltip { transform: translate(-50%, -50%); top: 50% !important; left: 50% !important; }
         }
     </style>
 </head>
 <body>
 
 <div id="ui-layer">
-    <!-- الهيدر -->
     <div id="header" class="interactive">
         <input type="text" id="search-input" placeholder="بحث عن اسم...">
         
@@ -202,10 +221,8 @@
         </div>
     </div>
 
-    <!-- الطبقة الوسطى للنقاط (PixiJS) -->
-    <div id="middle-layer" style="flex-grow: 1; position: relative; width: 100%; pointer-events: none;"></div>
+    <div id="middle-layer"></div>
 
-    <!-- الطبقة السفلية -->
     <div id="bottom-layer">
         <div id="dev-credits" class="interactive">
             <div class="quran-verse" id="verse">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</div>
@@ -222,56 +239,51 @@
 
         <div id="counter-container" class="interactive">
             <div id="number">0</div>
-            <div id="label" style="opacity: 0.7; font-size: 0.85rem; margin-top: 5px;">شهيداً وثّقت أسماؤهم</div>
+            <div id="label" style="opacity: 0.6; font-size: 0.8rem;">شهيداً وثّقت أسماؤهم</div>
         </div>
     </div>
 </div>
 
-<!-- التنبيهات والنوافذ المنبثقة -->
 <div id="empty-notice">
-    <p id="notice-text" style="margin: 0; font-size: 1rem; color: #e0e0e0;"></p>
+    <p id="notice-text" style="margin: 0; font-size: 0.95rem; color: #ccc;"></p>
 </div>
 
 <div id="analytics-modal" class="interactive">
     <button class="close-modal" onclick="toggleAnalytics(false)">×</button>
-    <h3 style="margin-top:0; border-bottom: 1px solid #333; padding-bottom: 15px; font-size: 1.3rem;" id="modal-title">سجل التوثيق الإحصائي</h3>
+    <h3 style="margin-top:0; border-bottom: 1px solid #222; padding-bottom: 10px;" id="modal-title">سجل التوثيق الإحصائي</h3>
     <div class="stat-row">
-        <div style="display:flex; justify-content:space-between; font-size:0.95rem; margin-bottom: 5px;"><span id="stat-child">الأطفال والأجنة</span><span style="color:var(--primary-red); font-weight: bold;">42%</span></div>
+        <div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span id="stat-child">الأطفال والأجنة</span><span style="color:var(--primary-red)">42%</span></div>
         <div class="stat-bar-bg"><div class="stat-bar-fill" id="bar-children"></div></div>
     </div>
     <div class="stat-row">
-        <div style="display:flex; justify-content:space-between; font-size:0.95rem; margin-bottom: 5px;"><span id="stat-women">النساء والأمهات</span><span style="color:var(--primary-red); font-weight: bold;">31%</span></div>
+        <div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span id="stat-women">النساء والأمهات</span><span style="color:var(--primary-red)">31%</span></div>
         <div class="stat-bar-bg"><div class="stat-bar-fill" id="bar-women"></div></div>
     </div>
     <div class="stat-row">
-        <div style="display:flex; justify-content:space-between; font-size:0.95rem; margin-bottom: 5px;"><span id="stat-elder">الشيوخ وكبار السن</span><span style="color:var(--primary-red); font-weight: bold;">18%</span></div>
+        <div style="display:flex; justify-content:space-between; font-size:0.9rem;"><span id="stat-elder">الشيوخ وكبار السن</span><span style="color:var(--primary-red)">18%</span></div>
         <div class="stat-bar-bg"><div class="stat-bar-fill" id="bar-elders"></div></div>
     </div>
 </div>
 
 <div id="tooltip" class="interactive"></div>
 
-<!-- قالب بطاقة المشاركة -->
 <div id="share-card-template">
-    <div style="font-family: 'Amiri', serif; font-size: 1.4rem; color: #ff3333; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px;" id="card-title-text">قوافل الشهداء البررة</div>
-    <h2 id="card-name" style="margin: 15px 0; font-size: 2.2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);"></h2>
-    <p id="card-age" style="font-size: 1.2rem; color: #ccc; margin: 10px 0; background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 20px; display: inline-block;"></p>
-    <div id="card-duaa" style="font-family: 'Amiri', serif; font-size: 1.8rem; margin-top: 25px; color: #fff;"></div>
-    <div style="margin-top: 50px; font-size: 0.85rem; color: #777; border-top: 1px solid #222; width: 100%; padding-top: 15px; letter-spacing: 1px;">أرواح غزة وفلسطين | Palestinian Souls v2.0</div>
+    <div style="font-family: 'Amiri', serif; font-size: 1.1rem; color: #cc0000; margin-bottom: 15px;" id="card-title-text">قوافل الشهداء البررة</div>
+    <h2 id="card-name" style="margin: 10px 0; font-size: 1.8rem;"></h2>
+    <p id="card-age" style="font-size: 1.1rem; color: #aaa; margin: 5px 0;"></p>
+    <div id="card-duaa" style="font-family: 'Amiri', serif; font-size: 1.6rem; margin-top: 15px; color: #fff;"></div>
+    <div style="margin-top: 40px; font-size: 0.75rem; color: #555; border-top: 1px solid #222; width: 100%; padding-top: 10px;">أرواح غزة وفلسطين | Palestinian Souls</div>
 </div>
 
-<!-- حاوية الخريطة -->
+<!-- الحاوية الخاصة بالخريطة -->
 <div id="map-container"></div>
 
-<!-- نافذة الفيديو -->
+<!-- نافذة الفيديو المحلية -->
 <div id="video-modal">
-    <video id="local-video-player" controls playsinline></video>
+    <video id="local-video-player" controls></video>
     <button class="close-video-btn" onclick="closeVideoModal()">إغلاق الفيديو</button>
 </div>
 
-<!-- =========================================
-     السكريبتات (المنطق البرمجي المحدث)
-     ========================================= -->
 <script>
     let app, mainContainer, points = [], currentLang = 'ar', isPlaying = false;
     let currentCategory = 'gaza', tooltipTimeout = null, activeSprite = null;
@@ -282,6 +294,7 @@
     let pressSouls = [];
     let westbankSouls = [];
 
+    // مصفوفة الفيديوهات: استخدم مسارات الملفات المحلية (مثل مجلد videos الموجود على سيرفرك)
     const locationVideoMap = {
         "غزة": "videos/gaza_status.mp4",
         "شمال غزة": "videos/north_gaza.mp4",
@@ -310,16 +323,35 @@
             download: "📥 Download Card", age_text: "Age: {age} years old", unknown_age: "Unknown", unknown_name: "Not listed",
             notice_wb: "Documenting and updating West Bank martyrs registries...", alert_gen: "Processing card image generation...",
             card_top: "The Noble Martyrs of Palestine", duaa_m: "May Allah rest his soul", duaa_f: "May Allah rest her soul", press_tag: "Press Martyr"
+        },
+        fr: {
+            dir: "ltr", search: "Chercher...", gaza: "Gaza", press: "Journalistes", westbank: "Cisjordanie",
+            stats: "📊 Stats", donate: "Faire un don", music_on: "🔇 Sourdine", music_off: "🎵 Audio",
+            verse: '"Ne pense pas que ceux qui ont été tués dans le sentier d\'Allah soient morts. Au contraire, ils sont vivants"',
+            dev: "Dev: Abdelhadi", label: "Âmes Martyrisées Documentées",
+            title: "Registres Statistiques", child: "Enfants et Nourrissons", women: "Femmes et Mères", elder: "Aînés et Personnes Âgées",
+            download: "📥 Télécharger la Carte", age_text: "Âge: {age} ans", unknown_age: "Inconnu", unknown_name: "Non répertorié",
+            notice_wb: "Mise à jour des registres des martyrs de Cisjordanie...", alert_gen: "Génération de l'image de la carte...",
+            card_top: "Les Nobles Martyrs de Palestine", duaa_m: "Que Dieu ait son âme", duaa_f: "Que Dieu ait son âme", press_tag: "Martyr de la Presse"
+        },
+        es: {
+            dir: "ltr", search: "Buscar...", gaza: "Gaza", press: "Periodistas", westbank: "Cisjordania",
+            stats: "📊 Estadísticas", donate: "Donar", music_on: "🔇 Silenciar", music_off: "🎵 Audio",
+            verse: '"Y no pienses que los que han sido muertos en el camino de Alá están muertos. Al contrario, están vivos"',
+            dev: "Dev: Abdelhadi", label: "Almas Mártires Documentadas",
+            title: "Registros Estadísticos", child: "Niños e Infantes", women: "Mujeres y Madres", elder: "Ancianos y Mayores",
+            download: "📥 Descargar Tarjeta", age_text: "Edad: {age} años", unknown_age: "Desconocida", unknown_name: "No listado",
+            notice_wb: "Documentando y actualizando registros de Cisjordania...", alert_gen: "Procesando generación de imagen...",
+            card_top: "Los Nobles Mártires de Palestina", duaa_m: "Que Alá tenga piedad de él", duaa_f: "Que Alá tenga piedad de ella", press_tag: "Mártir de la Prensa"
         }
     };
 
     const sound = new Howl({ src: ['ambient.mp3'], loop: true, volume: 0.4, html5: false });
     const clickSound = new Howl({ src: ['click.mp3'], volume: 0.5 });
 
-    // دالة التهيئة الرئيسية (دخول مباشر)
     async function init() {
         app = new PIXI.Application();
-        await app.init({ resizeTo: window, backgroundColor: 0x000000, antialias: true, backgroundAlpha: 0, resolution: window.devicePixelRatio || 1 });[cite: 1]
+        await app.init({ resizeTo: window, backgroundColor: 0x000000, antialias: false, backgroundAlpha: 0 });
         document.body.appendChild(app.canvas);
 
         mainContainer = new PIXI.Container();
@@ -328,7 +360,6 @@
 
         await loadExternalCSV();
         renderWorld();
-        setupUIEvents();
     }
 
     async function loadExternalCSV() {
@@ -351,6 +382,7 @@
                     };
 
                     const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase());
+                    
                     let nameArIdx = headers.indexOf('name');
                     if (nameArIdx === -1) nameArIdx = headers.indexOf('name_ar');
                     let nameEnIdx = headers.indexOf('en_name');
@@ -360,43 +392,60 @@
                     let genderIdx = headers.indexOf('sex');
                     if (genderIdx === -1) genderIdx = headers.indexOf('gender');
 
+                    if (lines.length > 1 && (nameArIdx === -1 || ageIdx === -1)) {
+                        const firstData = parseCSVLine(lines[1]);
+                        for(let c=0; c<firstData.length; c++) {
+                            const val = firstData[c];
+                            if (/[\u0600-\u06FF]/.test(val)) nameArIdx = c;
+                            else if (!isNaN(val) && val !== "" && parseInt(val) < 130) ageIdx = c;
+                            else if (/^[a-zA-Z\s\-]+$/.test(val) && nameEnIdx === -1) nameEnIdx = c;
+                        }
+                    }
+
                     if (nameArIdx === -1) nameArIdx = 0;
                     if (ageIdx === -1) ageIdx = 2; 
 
                     for (let i = 1; i < lines.length; i++) {
                         if (!lines[i].trim()) continue;
                         const cols = parseCSVLine(lines[i]);
+                        
                         let name_ar = cols[nameArIdx] || "غير مدرج";
                         let name_en = nameEnIdx > -1 ? cols[nameEnIdx] : "";
                         let age = cols[ageIdx] || "غير معروف";
                         let gender = genderIdx > -1 ? cols[genderIdx].toUpperCase() : "M";
 
                         if (age !== "غير معروف" && isNaN(parseInt(age))) age = "غير معروف";
+
                         if (!/[\u0600-\u06FF]/.test(name_ar) && /[\u0600-\u06FF]/.test(name_en)) {
-                            [name_ar, name_en] = [name_en, name_ar];
+                            let temp = name_ar; 
+                            name_ar = name_en; 
+                            name_en = temp;
                         }
-                        gazaSouls.push({ name_ar, name_en: name_en !== "" ? name_en : name_ar, age, gender });
+
+                        gazaSouls.push({ 
+                            name_ar: name_ar, name_en: name_en !== "" ? name_en : name_ar, age: age, gender: gender 
+                        });
                     }
                 }
             }
-        } catch(e) { console.warn("تعذر تحميل ملف CSV، سيتم استخدام بيانات افتراضية.", e); }
+        } catch(e) { console.log("خطأ في قراءة ملف CSV", e); }
         pressSouls = [{ name_ar: "حمزة وائل الدحدوح", name_en: "Hamza Wael Al-Dahdouh", age: 27, gender: "M", isPress: true }];
     }
 
     function isInForbiddenZone(x, y) {
         const headerEl = document.getElementById('header');
-        const headerHeight = headerEl ? headerEl.offsetHeight + 20 : 130;[cite: 1]
+        const headerHeight = headerEl ? headerEl.offsetHeight + 15 : 130;
         if (y < headerHeight) return true;
         
         if (window.innerWidth <= 768) {
             const bottomEl = document.getElementById('bottom-layer');
-            const bottomHeight = bottomEl ? bottomEl.offsetHeight + 20 : 180;
+            const bottomHeight = bottomEl ? bottomEl.offsetHeight + 15 : 180;
             if (y > app.screen.height - bottomHeight) return true;
         } else {
-            if (y > app.screen.height - 150 && x < 450) return true;
-            if (y > app.screen.height - 150 && x > app.screen.width - 280) return true;
+            if (y > app.screen.height - 145 && x < 440) return true;
+            if (y > app.screen.height - 145 && x > app.screen.width - 270) return true;
             const centerX = app.screen.width / 2;
-            if (y > app.screen.height - 120 && x > centerX - 220 && x < centerX + 220) return true;
+            if (y > app.screen.height - 100 && x > centerX - 200 && x < centerX + 200) return true;
         }
         return false;
     }
@@ -427,27 +476,24 @@
 
         if (currentList.length === 0 && currentCategory !== 'westbank') return;
 
-        const g = new PIXI.Graphics().circle(0, 0, 3.5).fill({ color: 0xffffff, alpha: 0.9 });
+        const g = new PIXI.Graphics().circle(0, 0, 3.5).fill({ color: 0xffffff, alpha: 0.8 });
         const tex = app.renderer.generateTexture(g);
-        const dotsToRender = currentList.length === 0 ? 0 : Math.min(2000, currentList.length);
+        const dotsToRender = currentList.length === 0 ? 0 : Math.min(1800, currentList.length);
 
         for(let i=0; i < dotsToRender; i++) { 
             const dot = new PIXI.Sprite(tex);
             let posX, posY, attempts = 0;
             do {
-                posX = Math.random() * (app.screen.width - 40) + 20;
-                posY = Math.random() * (app.screen.height - 40) + 20;
+                posX = Math.random() * (app.screen.width - 30) + 15;
+                posY = Math.random() * (app.screen.height - 30) + 15;
                 attempts++;
-            } while (isInForbiddenZone(posX, posY) && attempts < 30);
+            } while (isInForbiddenZone(posX, posY) && attempts < 25);
 
-            dot.x = posX; dot.y = posY; dot.anchor.set(0.5); dot.alpha = Math.random() * 0.5 + 0.2; 
+            dot.x = posX; dot.y = posY; dot.anchor.set(0.5); dot.alpha = Math.random() * 0.4 + 0.2; 
             dot.userData = currentList[i];
-            
-            const baseSpeed = 0.15;
-            dot.speedX = (Math.random() - 0.5) * baseSpeed; 
-            dot.speedY = (Math.random() - 0.5) * baseSpeed;
-            
+            dot.speedX = (Math.random() - 0.5) * 0.12; dot.speedY = (Math.random() - 0.5) * 0.12;
             dot.eventMode = 'static'; dot.cursor = 'pointer';
+            
             dot.on('pointerdown', (e) => { e.stopPropagation(); showTooltip(e, dot); });
             dot.on('pointerover', (e) => { if(window.innerWidth > 768) showTooltip(e, dot); });
             dot.on('pointerout', () => startHideTimer());
@@ -465,7 +511,7 @@
         activeSprite = sprite;
 
         try { clickSound.play(); } catch(e){}
-        points.forEach(p => { if(p !== sprite) { p.alpha = 0.15; p.scale.set(1); p.tint = 0xffffff; } });
+        points.forEach(p => { if(p !== sprite) { p.alpha = 0.2; p.scale.set(1); p.tint = 0xffffff; } });
 
         const d = sprite.userData;
         tooltip.style.display = 'block';
@@ -489,11 +535,8 @@
         }
 
         tooltip.innerHTML = `<b>${final_name}</b> <br>${processedAge} <br>${duaaText}
-             <button class="download-btn" onclick="downloadShareCard('${safe_name_param}', '${processedAge}', '${plainDuaa}')">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-                ${t.download}
-             </button>`;
-        sprite.alpha = 1; sprite.scale.set(3.5); sprite.tint = 0xff3333; 
+             <button class="download-btn" onclick="downloadShareCard('${safe_name_param}', '${processedAge}', '${plainDuaa}')">${t.download}</button>`;
+        sprite.alpha = 1; sprite.scale.set(3); sprite.tint = 0xff3333; 
     }
 
     tooltip.addEventListener('mouseenter', () => { if (tooltipTimeout) clearTimeout(tooltipTimeout); });
@@ -505,24 +548,25 @@
             tooltip.style.display = 'none';
             if (activeSprite) { resetSpriteAppearance(activeSprite); activeSprite = null; }
             points.forEach(p => resetSpriteAppearance(p));
-        }, 3000); 
+        }, 3500); 
     }
 
-    function resetSpriteAppearance(sprite) { sprite.alpha = Math.random() * 0.5 + 0.2; sprite.scale.set(1); sprite.tint = 0xffffff; }
+    function resetSpriteAppearance(sprite) {
+        sprite.alpha = Math.random() * 0.4 + 0.2; sprite.scale.set(1); sprite.tint = 0xffffff;
+    }
 
     window.toggleAnalytics = function(show) {
         const modal = document.getElementById('analytics-modal');
         if (analyticsTimeout) clearTimeout(analyticsTimeout);
+        modal.style.display = show ? 'block' : 'none';
         if(show) {
-            modal.classList.add('show');
             setTimeout(() => {
                 document.getElementById('bar-children').style.width = '42%';
                 document.getElementById('bar-women').style.width = '31%';
                 document.getElementById('bar-elders').style.width = '18%';
             }, 100);
-            analyticsTimeout = setTimeout(() => { window.toggleAnalytics(false); }, 5000);
+            analyticsTimeout = setTimeout(() => { window.toggleAnalytics(false); }, 4000);
         } else {
-            modal.classList.remove('show');
             document.getElementById('bar-children').style.width = '0%';
             document.getElementById('bar-women').style.width = '0%';
             document.getElementById('bar-elders').style.width = '0%';
@@ -533,12 +577,13 @@
         document.getElementById('card-name').innerText = name;
         document.getElementById('card-age').innerText = ageStr;
         document.getElementById('card-duaa').innerText = `﴿ ${duaa} ﴾`;
-        html2canvas(document.getElementById('share-card-template'), { backgroundColor: '#000000', scale: 2 }).then(canvas => {[cite: 1]
+        html2canvas(document.getElementById('share-card-template'), { backgroundColor: '#000000', scale: 2 }).then(canvas => {
             const link = document.createElement('a');
             link.download = `Palestine_Soul - ${name}.png`; link.href = canvas.toDataURL(); link.click();
         });
     };
 
+    // التبديل بين الخريطة والشهداء (تم إزالة تبويب الفيديو)
     window.switchCategory = function(category) {
         currentCategory = category;
         document.getElementById('map-container').style.display = (category === 'map') ? 'block' : 'none';
@@ -552,43 +597,53 @@
         if (category !== 'map') renderWorld();
     };
 
+    // --- دوال التحكم في تشغيل وإغلاق الفيديو المحلي ---
     window.openLocalVideo = function(videoSrc) {
         const modal = document.getElementById('video-modal');
         const player = document.getElementById('local-video-player');
-        player.src = videoSrc; 
+        player.src = videoSrc; // تمرير مسار الملف
         modal.style.display = 'flex';
-        player.play(); 
+        player.play(); // تشغيل تلقائي عند الفتح
     };
 
     window.closeVideoModal = function() {
         const modal = document.getElementById('video-modal');
         const player = document.getElementById('local-video-player');
-        player.pause(); player.src = ""; 
+        player.pause(); // إيقاف الفيديو
+        player.src = ""; // إفراغ المصدر لضمان توقف الصوت
         modal.style.display = 'none';
     };
 
+    // الخريطة مع استدعاء الفيديو المحلي
     async function initMap() {
         map = L.map('map-container').setView([31.3547, 34.3088], 11); 
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
 
-        try {
-            const response = await fetch('gaza.geo.json');
-            const geoData = await response.json();
-            L.geoJSON(geoData, {
-                style: { color: "#cc0000", weight: 2, fillOpacity: 0.3, className: 'map-polygon' },
-                onEachFeature: (feature, layer) => {
-                    const areaName = feature.properties?.name;
-                    const videoLocalPath = locationVideoMap[areaName];
-                    if (areaName) {
-                        let content = `<div style="text-align:center; font-family:'Cairo';"><b>${areaName}</b></div>`;
-                        if (videoLocalPath) content += `<button onclick="openLocalVideo('${videoLocalPath}')" style="background:var(--primary-red); color:white; border:none; padding:8px; margin-top:10px; cursor:pointer; border-radius:8px; width:100%; font-family:'Cairo'; font-weight:bold;">شاهد التوثيق المرئي</button>`;
-                        layer.bindPopup(content);
+        const response = await fetch('gaza.geo.json');
+        const geoData = await response.json();
+
+        L.geoJSON(geoData, {
+            style: { color: "#cc0000", weight: 2, fillOpacity: 0.4 },
+            onEachFeature: (feature, layer) => {
+                const areaName = feature.properties && feature.properties.name ? feature.properties.name : null;
+                const videoLocalPath = locationVideoMap[areaName];
+
+                if (areaName) {
+                    let content = `<b>${areaName}</b>`;
+                    if (videoLocalPath) {
+                        // استدعاء دالة openLocalVideo بدلاً من التبديل لتبويب آخر
+                        content += `<br><button onclick="openLocalVideo('${videoLocalPath}')" style="background:var(--primary-red); color:white; border:none; padding:5px; margin-top:5px; cursor:pointer; border-radius:5px; width:100%; font-family:'Cairo';">شاهد فيديو من ${areaName}</button>`;
                     }
-                    layer.on('mouseover', function() { this.setStyle({fillOpacity: 0.6, color: "#ff3333"}); });
-                    layer.on('mouseout', function() { this.setStyle({fillOpacity: 0.3, color: "#cc0000"}); });
+                    layer.bindPopup(content);
+                } else {
+                    layer.unbindPopup();
                 }
-            }).addTo(map);
-        } catch(e) { console.warn("GeoJSON غير موجود محلياً بعد"); }
+                layer.on('mouseover', function() { this.setStyle({fillOpacity: 0.7}); });
+                layer.on('mouseout', function() { this.setStyle({fillOpacity: 0.4}); });
+            }
+        }).addTo(map);
     }
 
     window.selectLanguage = function(langCode) {
@@ -623,8 +678,8 @@
                 const nameFieldAr = p.userData?.name_ar || "";
                 const nameFieldEn = p.userData?.name_en || "";
                 const match = nameFieldAr.toLowerCase().includes(val) || nameFieldEn.toLowerCase().includes(val);
-                if(val === "") { p.alpha = Math.random() * 0.5 + 0.2; p.tint = 0xffffff; p.scale.set(1); }
-                else { p.alpha = match ? 1 : 0.05; p.tint = match ? 0xff0000 : 0xffffff; if (match) p.scale.set(3); else p.scale.set(0.7); }
+                if(val === "") { p.alpha = 0.4; p.tint = 0xffffff; p.scale.set(1); }
+                else { p.alpha = match ? 1 : 0.03; p.tint = match ? 0xff0000 : 0xffffff; if (match) p.scale.set(2.5); else p.scale.set(0.7); }
             });
         };
 
@@ -640,16 +695,10 @@
 
         app.ticker.add(() => {
             for(let i=0; i < points.length; i++) {
-                const p = points[i]; 
-                p.x += p.speedX; p.y += p.speedY;
-                
-                if (p.x < 5 || p.x > app.screen.width - 5) p.speedX *= -1;
-                if (p.y < 5 || p.y > app.screen.height - 5) p.speedY *= -1;
-                
-                if (isInForbiddenZone(p.x, p.y)) { 
-                    p.speedX *= -1.05; p.speedY *= -1.05; 
-                    p.x += p.speedX * 3; p.y += p.speedY * 3; 
-                }
+                const p = points[i]; p.x += p.speedX; p.y += p.speedY;
+                if (p.x < 0) p.x = app.screen.width; if (p.x > app.screen.width) p.x = 0;
+                if (p.y < 0) p.y = app.screen.height; if (p.y > app.screen.height) p.y = 0;
+                if (isInForbiddenZone(p.x, p.y)) { p.speedX *= -1; p.speedY *= -1; p.x += p.speedX * 2.5; p.y += p.speedY * 2.5; }
             }
         });
         
@@ -657,23 +706,12 @@
     }
 
     function animateCounter(target) {
-        let cur = 0; 
-        const duration = 2000; 
-        const stepTime = 20;
-        const steps = duration / stepTime;
-        const increment = Math.ceil(target / steps) || 1;
-        
-        document.getElementById('number').innerText = "0";
-        const timer = setInterval(() => { 
-            cur += increment; 
-            if(cur >= target) { cur = target; clearInterval(timer); }
-            document.getElementById('number').innerText = cur.toLocaleString('en-US'); 
-        }, stepTime);
+        let cur = 0; const step = Math.ceil(target / 80) || 1; document.getElementById('number').innerText = "0";
+        const timer = setInterval(() => { cur += step; if(cur >= target) { cur = target; clearInterval(timer); }
+            document.getElementById('number').innerText = cur.toLocaleString(); }, 12);
     }
 
-    window.onload = () => {
-        init();
-    };
+    init().then(() => setupUIEvents());
 </script>
 </body>
 </html>
