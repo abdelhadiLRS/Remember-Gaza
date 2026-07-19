@@ -376,41 +376,50 @@ updateVisitorCount();
 
 
 
-async function loadDataAndInit() {
-    console.log("جاري محاولة تحميل البيانات...");
+// تعريف المصفوفة كمتغير عام
+let gazaSouls = [];
+
+// دالة التحميل المضمونة
+async function initSystem() {
+    console.log("جاري البدء...");
     
     try {
-        const res = await fetch('out_killed-in-gaza.csv');
+        const response = await fetch('out_killed-in-gaza.csv');
+        if (!response.ok) throw new Error("الملف غير موجود");
         
-        if (!res.ok) throw new Error("فشل الوصول للملف - هذا طبيعي إذا كنت تفتح الملف بدون خادم محلي");
-        
-        const text = await res.text();
+        const text = await response.text();
         const lines = text.split('\n');
         const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+        
+        // إيجاد أماكن الأعمدة بناءً على ملفك
         const nameArIdx = headers.indexOf('ar_name');
         const ageIdx = headers.indexOf('age');
 
-        gazaSouls = []; // تفريغ المصفوفة
-
+        // تنظيف المصفوفة وملؤها
+        gazaSouls = []; 
         for (let i = 1; i < lines.length; i++) {
             if (!lines[i].trim()) continue;
             const cols = lines[i].split(',');
-            gazaSouls.push({ 
-                name: cols[nameArIdx] || "شهيد مجهول", 
-                age: cols[ageIdx] ? cols[ageIdx].trim() : "غير معروف" 
-            });
+            if (cols[nameArIdx]) {
+                gazaSouls.push({ 
+                    name: cols[nameArIdx].trim(), 
+                    age: cols[ageIdx] ? cols[ageIdx].trim() : "غير معروف" 
+                });
+            }
         }
-        console.log("تم تحميل " + gazaSouls.length + " شهيد بنجاح.");
-        
-    } catch(e) { 
-        console.warn("تعذر تحميل ملف CSV: " + e.message);
-        console.log("جاري استخدام بيانات افتراضية لضمان عمل الموقع...");
-        // بيانات افتراضية لضمان عدم توقف الموقع
-        gazaSouls = [
-            { name: "تجربة: شهيد 1", age: "20" },
-            { name: "تجربة: شهيد 2", age: "35" }
-        ];
+        console.log("تم تحميل " + gazaSouls.length + " شهيد.");
+    } catch(e) {
+        console.error("خطأ في التحميل، سيتم استخدام بيانات تجريبية:", e);
+        gazaSouls = [{ name: "شهيد (تجربة)", age: "25" }, { name: "شهيد (تجربة)", age: "30" }];
     }
+
+    // هنا الخطوة الأهم: لا نرسم إلا بعد تحميل البيانات
+    renderStars();
+    requestAnimationFrame(gameLoop);
+}
+
+// تشغيل النظام عند تحميل الصفحة
+initSystem();
     
     // تأكد من استدعاء دالة الرسم هنا
     renderStars();
