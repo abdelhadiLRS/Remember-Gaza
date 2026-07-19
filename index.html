@@ -480,7 +480,7 @@
         ret.push(cur.trim()); return ret;
     };
 
-        async function loadDataAndInit() {
+    async function loadDataAndInit() {
         gazaSouls = []; 
 
         try {
@@ -520,18 +520,6 @@
             switchMainMode('souls');
         } catch(renderError) {
             console.error("خطأ في الرسم:", renderError);
-        }
-    }
-
-
-        // تشغيل الرسوميات والواجهة بشكل إجباري ضمن Try-Catch لمنع انهيار السكريبت
-        try {
-            resize(); 
-            renderStars(); 
-            if(ctx) requestAnimationFrame(gameLoop); 
-            switchMainMode('souls');
-        } catch(renderError) {
-            console.error("حدث خطأ أثناء رسم النجوم على الشاشة:", renderError);
         }
     }
 
