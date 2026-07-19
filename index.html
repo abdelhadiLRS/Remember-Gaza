@@ -374,56 +374,52 @@ updateVisitorCount();
         return ret;
     };
 
+// 1. تعريف المصفوفة كمتغير عام
+let gazaSouls = [];
+
+// 2. تعديل دالة التحميل لتكون أكثر متانة
 async function loadDataAndInit() {
-        try {
-            const res = await fetch('out_killed-in-gaza.csv');
-            if (res.ok) {
-                const text = await res.text();
-                const lines = text.split('\n');
-                
-                // قراءة الصف الأول لتحديد أماكن الأعمدة
-                const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
-                const nameArIdx = headers.indexOf('ar_name'); // تحديث للبحث عن ar_name
-                const ageIdx = headers.indexOf('age');
+    if (gazaSouls.length > 0) return; // إذا تم التحميل مسبقاً، لا تعيد التحميل
 
-                for (let i = 1; i < lines.length; i++) {
-                    if (!lines[i].trim()) continue;
-                    const cols = lines[i].split(',');
-                    
-                    let name_ar = cols[nameArIdx] || "غير مدرج";
-                    let age = cols[ageIdx] ? cols[ageIdx].trim() : "غير معروف";
+    try {
+        const res = await fetch('out_killed-in-gaza.csv');
+        if (!res.ok) throw new Error("فشل في الوصول للملف");
+        const text = await res.text();
+        const lines = text.split('\n');
+        const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+        const nameArIdx = headers.indexOf('ar_name');
+        const ageIdx = headers.indexOf('age');
 
-                    gazaSouls.push({ name: name_ar, age: age, gender: "M" });
-                }
-            }
-        } catch(e) { console.error("خطأ في قراءة الملف:", e); }
-        
-        renderStars();
-        requestAnimationFrame(gameLoop);
-    }
-
-    function renderStars() {
-        points = [];
-        const dotsToRender = Math.min(2500, gazaSouls.length);
-        
-        for(let i=0; i < dotsToRender; i++) { 
-            const alphaVal = Math.random() * 0.5 + 0.2;
-            points.push({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 0.25,
-                vy: (Math.random() - 0.5) * 0.25,
-                alpha: alphaVal,
-                baseAlpha: alphaVal,
-                targetAlpha: alphaVal,
-                scale: 1,
-                targetScale: 1,
-                color: '#ffffff',
-                userData: gazaSouls[i]
+        for (let i = 1; i < lines.length; i++) {
+            if (!lines[i].trim()) continue;
+            const cols = lines[i].split(',');
+            gazaSouls.push({ 
+                name: cols[nameArIdx] || "غير مدرج", 
+                age: cols[ageIdx] ? cols[ageIdx].trim() : "غير معروف" 
             });
         }
-        animateCounter(gazaSouls.length > 0 ? gazaSouls.length : 40000);
+        console.log("تم تحميل " + gazaSouls.length + " شهيد");
+        renderStars();
+    } catch(e) { 
+        console.error("خطأ:", e); 
     }
+}
+
+// 3. تأكد أن دالة العرض تستخدم المصفوفة العامة دائماً
+function renderStars() {
+    points = [];
+    // نستخدم المصفوفة العالمية gazaSouls هنا
+    gazaSouls.forEach((soul, i) => {
+        if (i >= 2500) return; // حد أقصى للنقاط
+        points.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            userData: soul, // الربط المباشر للبيانات
+            alpha: 0.5, baseAlpha: 0.5, targetAlpha: 0.5,
+            scale: 1, targetScale: 1, color: '#ffffff'
+        });
+    });
+}
 
     function gameLoop() {
         ctx.clearRect(0, 0, width, height);
