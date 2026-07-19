@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="icon" type="image/png" href="favicon.png">
-    <title id="page-title">أرواح فلسطين | Palestinian Souls v3.6</title>
+    <title id="page-title">أرواح فلسطين | Palestinian Souls </title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -182,7 +182,7 @@
         </div>
 
         <div class="hidden md:flex gap-3 items-center">
-            <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-sm">❤️ إدعمنا الآن</a>
+            <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-sm">❤️إدعمنا الآن لنستمر</a>
             <button id="music-btn" class="btn-main">🎵 الصوت</button>
             <!-- عداد HitWebCounter للكمبيوتر -->
             <div class="bg-red-900/30 border border-red-500/30 px-3 py-1.5 rounded-full flex items-center gap-2">
@@ -236,111 +236,59 @@
 </div>
 
 <script>
-    // --- 1. تعريف جميع المتغيرات العامة في البداية لتجنب الأخطاء ---
+    // --- 1. تعريف المتغيرات العامة ---
     let currentLang = 'ar';
     let isPlaying = false, map = null, gazaSouls = [], tooltipTimeout = null, isSearching = false;
     let width, height, points = [], mouseX = -1000, mouseY = -1000;
     let sound, clickSound;
 
-    // --- 2. قاموس اللغات والنصوص المتعددة ---
+    // --- 2. قاموس اللغات ---
     const translations = {
         ar: {
-            title: "أرواح فلسطين | Palestinian Souls v3.6",
-            logoText: "فلسطين",
-            searchPlaceholder: "ابحث عن اسم الشهيد...",
-            tabSouls: "✨ الأرواح",
-            tabStats: "📊 الإحصائيات",
-            tabVideos: "🎬 التوثيق",
-            tabMap: "🗺️ الخريطة",
-            donate: "❤️ إدعمنا الآن",
-            musicOn: "🎵 الصوت",
-            musicOff: "🔇 إيقاف",
+            title: "أرواح فلسطين | Palestinian Souls v3.6", logoText: "فلسطين", searchPlaceholder: "ابحث عن اسم الشهيد...",
+            tabSouls: "✨ الأرواح", tabStats: "📊 الإحصائيات", tabVideos: "🎬 التوثيق", tabMap: "🗺️ الخريطة",
+            donate: "❤️ إدعمنا الآن", musicOn: "🎵 الصوت", musicOff: "🔇 إيقاف",
             verse: `"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"`,
-            devText: "تطوير: عبد الهادي",
-            shareBtn: "مشاركة",
-            martyrsLabel: "شهيداً وثّقت أسماؤهم",
+            devText: "تطوير: عبد الهادي", shareBtn: "مشاركة", martyrsLabel: "شهيداً وثّقت أسماؤهم",
             catchphrase: "شارك المنصة لتوثيق الحقيقة ونقل صوتهم وتخليد ذكراهم للعالم أجمع.",
-            copyAlert: "تم نسخ الرابط بنجاح، شكراً لدعمك!",
-            dir: "rtl"
+            copyAlert: "تم نسخ الرابط بنجاح، شكراً لدعمك!", dir: "rtl"
         },
         en: {
-            title: "Palestinian Souls v3.6",
-            logoText: "Souls",
-            searchPlaceholder: "Search for a martyr's name...",
-            tabSouls: "✨ Souls",
-            tabStats: "📊 Statistics",
-            tabVideos: "🎬 Footage",
-            tabMap: "🗺️ Map",
-            donate: "❤️ Donate",
-            musicOn: "🎵 Audio",
-            musicOff: "🔇 Mute",
+            title: "Palestinian Souls v3.6", logoText: "Souls", searchPlaceholder: "Search for a martyr's name...",
+            tabSouls: "✨ Souls", tabStats: "📊 Statistics", tabVideos: "🎬 Footage", tabMap: "🗺️ Map",
+            donate: "❤️ Donate", musicOn: "🎵 Audio", musicOff: "🔇 Mute",
             verse: `"Think not of those who are slain in Allah's way as dead. Nay, they live, finding their sustenance in the presence of their Lord."`,
-            devText: "Dev: Abdelhadi",
-            shareBtn: "Share",
-            martyrsLabel: "Martyrs Documented",
+            devText: "Dev: Abdelhadi", shareBtn: "Share", martyrsLabel: "Martyrs Documented",
             catchphrase: "Share this platform to document the truth and let their voices be heard worldwide.",
-            copyAlert: "Link copied successfully, thank you for your support!",
-            dir: "ltr"
+            copyAlert: "Link copied successfully, thank you for your support!", dir: "ltr"
         },
         fr: {
-            title: "Âmes Palestiniennes v3.6",
-            logoText: "Palestine",
-            searchPlaceholder: "Rechercher le nom d'un martyr...",
-            tabSouls: "✨ Âmes",
-            tabStats: "📊 Statistiques",
-            tabVideos: "🎬 Vidéos",
-            tabMap: "🗺️ Carte",
-            donate: "❤️ Faire un don",
-            musicOn: "🎵 Audio",
-            musicOff: "🔇 Muet",
+            title: "Âmes Palestiniennes v3.6", logoText: "Palestine", searchPlaceholder: "Rechercher le nom d'un martyr...",
+            tabSouls: "✨ Âmes", tabStats: "📊 Statistiques", tabVideos: "🎬 Vidéos", tabMap: "🗺️ Carte",
+            donate: "❤️ Faire un don", musicOn: "🎵 Audio", musicOff: "🔇 Muet",
             verse: `"Ne croyez surtout pas que ceux qui sont tués dans le chemin d'Allah sont morts. Ils sont vivants, auprès de leur Seigneur."`,
-            devText: "Dév: Abdelhadi",
-            shareBtn: "Partager",
-            martyrsLabel: "Martyrs Documentés",
+            devText: "Dév: Abdelhadi", shareBtn: "Partager", martyrsLabel: "Martyrs Documentés",
             catchphrase: "Partagez cette plateforme pour documenter la vérité et faire entendre leur voix dans le monde entier.",
-            copyAlert: "Lien copié avec succès, merci pour votre soutien !",
-            dir: "ltr"
-        },
-        es: {
-            title: "Almas Palestinas v3.6",
-            logoText: "Palestina",
-            searchPlaceholder: "Buscar el nombre de un mártir...",
-            tabSouls: "✨ Almas",
-            tabStats: "📊 Estadísticas",
-            tabVideos: "🎬 Videos",
-            tabMap: "🗺️ Mapa",
-            donate: "❤️ Donar",
-            musicOn: "🎵 Audio",
-            musicOff: "🔇 Silenciar",
-            verse: `"Y no penséis que los que han caído en el camino de Allah están muertos. Al contrario, están vivos y reciben sustento."`,
-            devText: "Desarrollo: Abdelhadi",
-            shareBtn: "Compartir",
-            martyrsLabel: "Mártires Documentados",
-            catchphrase: "Comparte esta plataforma para documentar la verdad y que sus voces sean escuchadas en todo el mundo.",
-            copyAlert: "¡Enlace copiado con éxito, gracias por tu apoyo!",
-            dir: "ltr"
+            copyAlert: "Lien copié avec succès, merci pour votre soutien !", dir: "ltr"
         }
     };
 
-    // --- 3. تهيئة مكتبة الصوت ---
+    // --- 3. تهيئة الصوت ---
     try {
         sound = new Howl({ src: ['ambient.mp3'], loop: true, volume: 0.4 });
         clickSound = new Howl({ src: ['click.mp3'], volume: 0.5 });
     } catch(e) { console.warn("مكتبة الصوت غير متوفرة حالياً"); }
 
-    // --- 4. وظائف الكشف عن اللغة وضبطها ---
+    // --- 4. وظائف اللغة ---
     function detectAndSetLanguage() {
         const browserLang = navigator.language || navigator.userLanguage;
         if (browserLang.startsWith('en')) currentLang = 'en';
         else if (browserLang.startsWith('fr')) currentLang = 'fr';
-        else if (browserLang.startsWith('es')) currentLang = 'es';
         else currentLang = 'ar'; 
 
         const t = translations[currentLang];
-        
         document.getElementById('html-root').lang = currentLang;
         document.getElementById('html-root').dir = t.dir;
-
         document.getElementById('page-title').innerText = t.title;
         document.getElementById('logo-text').innerText = t.logoText;
         document.getElementById('search-input').placeholder = t.searchPlaceholder;
@@ -354,55 +302,29 @@
         const musicStateText = isPlaying ? t.musicOff : t.musicOn;
         document.getElementById('music-btn').innerText = musicStateText;
         if(document.getElementById('music-btn-mobile')) document.getElementById('music-btn-mobile').innerText = musicStateText;
-        
         document.getElementById('verse-text').innerText = t.verse;
         document.getElementById('dev-text').innerText = t.devText;
         document.getElementById('share-btn-text').innerText = t.shareBtn;
         document.getElementById('martyrs-label').innerText = t.martyrsLabel;
     }
-
-    // الآن يمكننا استدعاء الدالة بأمان لأن isPlaying معرفة مسبقاً
     detectAndSetLanguage();
 
     window.shareSite = function() {
         const t = translations[currentLang];
-        const shareData = {
-            title: t.title,
-            text: t.catchphrase,
-            url: window.location.href
-        };
-
+        const shareData = { title: t.title, text: t.catchphrase, url: window.location.href };
         if (navigator.share) {
-            navigator.share(shareData).catch((error) => console.log('خطأ في المشاركة:', error));
+            navigator.share(shareData).catch((error) => console.log('خطأ:', error));
         } else {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                alert(t.copyAlert);
-            }).catch(err => console.error(err));
+            navigator.clipboard.writeText(window.location.href).then(() => alert(t.copyAlert));
         }
     };
 
-    // --- 5. بيانات ووظائف الفيديوهات ---
+    // --- 5. الفيديوهات ---
     const videosData = [
-        {
-            url: "https://t.me/gazaalannet/81461?embed=1",
-            title: "قصف واستهداف أحياء سكنية",
-            date: "توثيق ميداني",
-            desc: "مشاهد تظهر حجم الدمار الذي لحق بالمباني السكنية والبنية التحتية."
-        },
-        {
-            url: "https://t.me/gazaalannet/81560?embed=1",
-            title: "عمليات الإنقاذ والدفاع المدني",
-            date: "توثيق ميداني",
-            desc: "جهود المواطنين وطواقم الإنقاذ في محاولة البحث بين الأنقاض والركام."
-        },
-        {
-            url: "https://t.me/gazaalannet/81611?embed=1",
-            title: "معاناة النزوح المستمر",
-            date: "توثيق ميداني",
-            desc: "حركة العائلات الفلسطينية ومحاولات النزوح القسري بحثاً عن أماكن آمنة."
-        }
+        { url: "https://t.me/gazaalannet/81461?embed=1", title: "قصف واستهداف أحياء سكنية", date: "توثيق ميداني", desc: "مشاهد تظهر حجم الدمار الذي لحق بالمباني السكنية والبنية التحتية." },
+        { url: "https://t.me/gazaalannet/81560?embed=1", title: "عمليات الإنقاذ والدفاع المدني", date: "توثيق ميداني", desc: "جهود المواطنين وطواقم الإنقاذ في محاولة البحث بين الأنقاض والركام." },
+        { url: "https://t.me/gazaalannet/81611?embed=1", title: "معاناة النزوح المستمر", date: "توثيق ميداني", desc: "حركة العائلات الفلسطينية ومحاولات النزوح القسري بحثاً عن أماكن آمنة." }
     ];
-
     function renderVideos() {
         const grid = document.getElementById('videos-grid');
         if(!grid) return;
@@ -421,51 +343,35 @@
     }
     renderVideos();
 
-    // --- 6. التبديل بين النوافذ والتابات ---
+    // --- 6. التبديل بين النوافذ ---
     window.switchMainMode = function(mode) {
         document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
         const activeBtn = document.getElementById(`tab-${mode}`);
         if(activeBtn) activeBtn.classList.add('active');
 
-        const mapLayer = document.getElementById('map-container');
-        const statsLayer = document.getElementById('stats-view');
-        const videosLayer = document.getElementById('videos-view');
-        const bottomBar = document.getElementById('bottom-bar');
+        document.getElementById('map-container').style.display = 'none'; 
+        document.getElementById('stats-view').style.display = 'none';
+        document.getElementById('videos-view').style.display = 'none'; 
+        document.getElementById('bottom-bar').style.display = 'none';
+
         const canvasLayer = document.getElementById('canvas-layer');
 
-        if(mapLayer) mapLayer.style.display = 'none'; 
-        if(statsLayer) statsLayer.style.display = 'none';
-        if(videosLayer) videosLayer.style.display = 'none'; 
-        if(bottomBar) bottomBar.style.display = 'none';
-
         if(mode === 'souls') {
-            if(bottomBar) bottomBar.style.display = 'flex';
-            if(canvasLayer) {
-                canvasLayer.style.opacity = '1';
-                canvasLayer.style.pointerEvents = 'auto';
-            }
+            document.getElementById('bottom-bar').style.display = 'flex';
+            if(canvasLayer) { canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto'; }
         } else {
-            if(canvasLayer) {
-                canvasLayer.style.opacity = '0';
-                canvasLayer.style.pointerEvents = 'none';
-            }
+            if(canvasLayer) { canvasLayer.style.opacity = '0'; canvasLayer.style.pointerEvents = 'none'; }
             hideTooltip();
             
-            if (mode === 'stats' && statsLayer) {
-                statsLayer.style.display = 'block'; 
-            } else if (mode === 'videos' && videosLayer) {
-                videosLayer.style.display = 'block'; 
-            } else if (mode === 'map' && mapLayer) {
-                mapLayer.style.display = 'block';
-                if(!map) initMap();
-            }
+            if (mode === 'stats') document.getElementById('stats-view').style.display = 'block'; 
+            else if (mode === 'videos') document.getElementById('videos-view').style.display = 'block'; 
+            else if (mode === 'map') { document.getElementById('map-container').style.display = 'block'; if(!map) initMap(); }
         }
     };
 
     // --- 7. الكانفاس والرسوميات ---
     const canvas = document.getElementById('stars-canvas');
     const ctx = canvas ? canvas.getContext('2d') : null;
-
     function resize() {
         if(!canvas) return;
         width = window.innerWidth; height = window.innerHeight;
@@ -474,45 +380,29 @@
     window.addEventListener('resize', resize); 
     resize();
 
-    // --- 8. جلب البيانات من الـ JSON وإنشاء النجوم ---
+    // --- 8. جلب البيانات من الـ JSON ---
     async function loadDataAndInit() {
         gazaSouls = []; 
-
         try {
             const res = await fetch('./killed-in-gaza.json', { cache: 'no-cache' });
-            
             if (res.ok) {
                 const data = await res.json();
                 const list = Array.isArray(data) ? data : (data.data || []);
-                
                 gazaSouls = list.map(item => ({
                     name_ar: item.name_ar || item.name || "شهيد مجهول الاسم",
                     name_en: item.name_en || "",
-                    id: item.id || "",
-                    dob: item.dob || "",
-                    age: item.age || "غير معروف",
-                    gender: item.gender || "M"
+                    id: item.id || "", dob: item.dob || "", age: item.age || "غير معروف", gender: item.gender || "M"
                 }));
             }
-        } catch(fetchError) {
-            console.warn("تعذر تحميل ملف JSON، سيتم تفعيل النمط الافتراضي.");
-        }
+        } catch(e) { console.warn("تعذر تحميل ملف JSON."); }
 
-        // الخطة البديلة: توليد نجوم افتراضية إذا كان الملف فارغاً
         if(gazaSouls.length === 0) {
-            for(let i=0; i<35000; i++) {
-                gazaSouls.push({ name_ar: "شهيد مجهول الاسم", name_en: "", id: "", dob: "", age: "غير معروف", gender: "M" });
-            }
+            for(let i=0; i<35000; i++) gazaSouls.push({ name_ar: "شهيد مجهول الاسم", name_en: "", id: "", dob: "", age: "غير معروف", gender: "M" });
         }
 
-        try {
-            resize(); 
-            renderStars(); 
-            if(ctx) requestAnimationFrame(gameLoop); 
-            switchMainMode('souls');
-        } catch(renderError) {
-            console.error("خطأ في الرسم:", renderError);
-        }
+        resize(); renderStars(); 
+        if(ctx) requestAnimationFrame(gameLoop); 
+        switchMainMode('souls');
     }
 
     function renderStars() {
@@ -524,7 +414,8 @@
                 x: Math.random() * width, y: Math.random() * height,
                 vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25,
                 alpha: alphaVal, baseAlpha: alphaVal, targetAlpha: alphaVal, scale: 1, targetScale: 1,
-                color: '#ffffff', userData: gazaSouls[i]
+                color: '#ffffff', userData: gazaSouls[i],
+                isMatched: false // تمت إضافة هذا المتغير للبحث
             });
         }
         animateCounter(gazaSouls.length > 0 ? gazaSouls.length : 40000);
@@ -547,7 +438,7 @@
         requestAnimationFrame(gameLoop);
     }
 
-    // --- 9. التفاعل مع الماوس والتلميحات (Tooltip) ---
+    // --- 9. التفاعل مع الماوس (تمت معالجة الخلل هنا) ---
     window.addEventListener('mousemove', (e) => { 
         const canvasLayer = document.getElementById('canvas-layer');
         if(canvasLayer && canvasLayer.style.pointerEvents === 'none') return;
@@ -555,18 +446,26 @@
     });
 
     function checkHover(e) {
-        if(isSearching) return;
         let hovered = null;
         for(let i=0; i<points.length; i++) {
+            // أثناء البحث، نتجاهل النقاط غير المتطابقة بالكامل ليتمكن المستخدم من قراءة النقاط الصحيحة
+            if (isSearching && !points[i].isMatched) continue;
+
             const dx = points[i].x - mouseX, dy = points[i].y - mouseY;
             if(dx*dx + dy*dy < 120) { hovered = points[i]; break; }
         }
 
         if(hovered) {
-            points.forEach(p => { p.targetAlpha = 0.2; p.targetScale = 1; p.color = '#ffffff'; });
-            hovered.targetAlpha = 1; hovered.targetScale = 3.5; hovered.color = '#ff3333';
+            // نخفت بقية النجوم فقط إذا لم نكن في وضع البحث (لأن وضع البحث يخفتها تلقائياً)
+            if(!isSearching) {
+                points.forEach(p => { p.targetAlpha = 0.2; p.targetScale = 1; p.color = '#ffffff'; });
+            }
+            
+            hovered.targetAlpha = 1; hovered.targetScale = 4; hovered.color = '#ff3333';
             showTooltip(e, hovered);
-        } else { hideTooltip(); }
+        } else { 
+            hideTooltip(); 
+        }
     }
 
     function showTooltip(event, point) {
@@ -579,7 +478,6 @@
         if(!tooltip) return;
         
         tooltip.style.display = 'block';
-        
         if(window.innerWidth > 768) { tooltip.style.left = event.clientX + 'px'; tooltip.style.top = (event.clientY - 30) + 'px'; }
 
         let primaryName = d.name_ar;
@@ -613,7 +511,15 @@
     function hideTooltip() {
         const tooltipEl = document.getElementById('tooltip');
         if (tooltipEl) tooltipEl.style.display = 'none';
-        if(!isSearching) points.forEach(p => { p.targetAlpha = p.baseAlpha; p.targetScale = 1; p.color = '#ffffff'; });
+        
+        if(!isSearching) {
+            points.forEach(p => { p.targetAlpha = p.baseAlpha; p.targetScale = 1; p.color = '#ffffff'; });
+        } else {
+            // في حالة البحث، نعيد النقطة المطابقة لحجمها الأحمر الواضح بعد إبعاد الماوس عنها
+            points.forEach(p => {
+                if (p.isMatched) { p.targetAlpha = 1; p.targetScale = 3; p.color = '#ff0000'; }
+            });
+        }
     }
 
     const tooltipElement = document.getElementById('tooltip');
@@ -626,27 +532,28 @@
     const searchInput = document.getElementById('search-input');
     if(searchInput) {
         searchInput.oninput = (e) => {
-            const statsView = document.getElementById('stats-view');
-            const videosView = document.getElementById('videos-view');
-            
-            if((statsView && statsView.style.display === 'block') || (videosView && videosView.style.display === 'block')) {
-                switchMainMode('souls');
-            }
-            
             const val = e.target.value.trim().toLowerCase();
             isSearching = val !== "";
+            
             points.forEach(p => {
                 const nameAr = (p.userData.name_ar || "").toLowerCase();
                 const nameEn = (p.userData.name_en || "").toLowerCase();
                 const match = nameAr.includes(val) || nameEn.includes(val);
                 
-                if(val === "") { p.targetAlpha = p.baseAlpha; p.color = '#ffffff'; p.targetScale = 1; }
-                else { p.targetAlpha = match ? 1 : 0.03; p.color = match ? '#ff0000' : '#ffffff'; p.targetScale = match ? 3 : 0.5; }
+                p.isMatched = match; // حفظ حالة التطابق لتستخدمها دالة Hover
+                
+                if(val === "") { 
+                    p.targetAlpha = p.baseAlpha; p.color = '#ffffff'; p.targetScale = 1; 
+                } else { 
+                    p.targetAlpha = match ? 1 : 0.03; 
+                    p.color = match ? '#ff0000' : '#ffffff'; 
+                    p.targetScale = match ? 3 : 0.5; 
+                }
             });
         };
     }
 
-    // --- 11. الخريطة ---
+    // --- 11. الخريطة والصوت والبطاقة ---
     async function initMap() {
         if(typeof L !== 'undefined') {
             map = L.map('map-container').setView([31.3547, 34.3088], 11); 
@@ -654,7 +561,6 @@
         }
     }
 
-    // --- 12. نظام الصوت للأزرار ---
     function toggleMusic() {
         const t = translations[currentLang];
         if (typeof Howler !== 'undefined' && Howler.ctx && Howler.ctx.state === 'suspended') Howler.ctx.resume();
@@ -668,28 +574,19 @@
         }
         isPlaying = !isPlaying;
     }
-    
     const musicBtnDesktop = document.getElementById('music-btn');
     const musicBtnMobile = document.getElementById('music-btn-mobile');
     if(musicBtnDesktop) musicBtnDesktop.onclick = toggleMusic;
     if(musicBtnMobile) musicBtnMobile.onclick = toggleMusic;
 
-    // --- 13. وظيفة إنشاء وتحميل بطاقة المشاركة ---
     window.downloadShareCard = function(primaryName, secondaryName, idStr, dobStr, ageStr, duaa) {
         document.getElementById('card-name-primary').innerText = primaryName;
-        
         const secNameEl = document.getElementById('card-name-secondary');
-        if(secondaryName) { secNameEl.innerText = secondaryName; secNameEl.style.display = 'block'; } 
-        else { secNameEl.style.display = 'none'; }
-        
+        if(secondaryName) { secNameEl.innerText = secondaryName; secNameEl.style.display = 'block'; } else { secNameEl.style.display = 'none'; }
         const idEl = document.getElementById('card-id');
-        if(idStr) { idEl.innerText = `رقم الهوية: ${idStr}`; idEl.style.display = 'block'; } 
-        else { idEl.style.display = 'none'; }
-        
+        if(idStr) { idEl.innerText = `رقم الهوية: ${idStr}`; idEl.style.display = 'block'; } else { idEl.style.display = 'none'; }
         const dobEl = document.getElementById('card-dob');
-        if(dobStr) { dobEl.innerText = `تاريخ الميلاد: ${dobStr}`; dobEl.style.display = 'block'; } 
-        else { dobEl.style.display = 'none'; }
-        
+        if(dobStr) { dobEl.innerText = `تاريخ الميلاد: ${dobStr}`; dobEl.style.display = 'block'; } else { dobEl.style.display = 'none'; }
         document.getElementById('card-age').innerText = `العمر: ${ageStr}`;
         document.getElementById('card-duaa').innerText = `﴿ ${duaa} ﴾`;
 
@@ -713,7 +610,7 @@
         }, 15);
     }
 
-    // --- 14. بدء التشغيل بمجرد تحميل الصفحة ---
+    // --- 12. بدء التشغيل ---
     window.addEventListener('DOMContentLoaded', loadDataAndInit);
 </script>
 </body>
