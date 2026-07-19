@@ -97,13 +97,13 @@
             <input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد...">
         </div>
         
-        <div class="flex gap-2 bg-black/50 p-1 rounded-full border border-white/10 overflow-x-auto">
-            <button class="btn-main active" id="tab-souls" onclick="switchMainMode('souls')">✨ فضاء الأرواح</button>
-            <button class="btn-main" id="tab-stats" onclick="switchMainMode('stats')">📊 سجل الإحصائيات</button>
-            <!-- تمت إضافة زر التوثيق الحي هنا -->
-            <button class="btn-main" id="tab-videos" onclick="switchMainMode('videos')">🎬 توثيق حي</button>
-            <button class="btn-main" id="tab-map" onclick="switchMainMode('map')">🗺️ الخريطة</button>
-        </div>
+       <!-- في قسم الـ HTML، أضف كلاس flex-shrink-0 للحاوية -->
+<div class="flex gap-1 bg-black/50 p-1 rounded-full border border-white/10 overflow-x-auto flex-shrink-0">
+    <button class="btn-main active" id="tab-souls" onclick="switchMainMode('souls')">✨ الأرواح</button>
+    <button class="btn-main" id="tab-stats" onclick="switchMainMode('stats')">📊 الإحصائيات</button>
+    <button class="btn-main" id="tab-videos" onclick="switchMainMode('videos')">🎬 التوثيق</button>
+    <button class="btn-main" id="tab-map" onclick="switchMainMode('map')">🗺️ الخريطة</button>
+</div>
 
         <div class="flex gap-2 items-center flex-wrap justify-center">
             <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-box" class="btn-main font-bold">❤️ إدعمنا الآن لنستمر</a>
