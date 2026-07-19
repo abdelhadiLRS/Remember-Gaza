@@ -14,11 +14,9 @@
         }
     </script>
 
-    <!-- مكتبات الخريطة والرسوميات والصوت -->
+    <!-- مكتبات الخريطة والصوت (تم الاستغناء عن PixiJS لضمان عمل النجوم على جميع الأجهزة) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!-- تم تثبيت إصدار مستقر من PixiJS لضمان عمل النجوم -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.3.2/pixi.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
@@ -28,16 +26,14 @@
         body { margin: 0; background-color: #000; overflow: hidden; font-family: 'Cairo', sans-serif; color: white; -webkit-tap-highlight-color: transparent; }
         
         /* الطبقات */
-        #canvas-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        #canvas-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; transition: opacity 0.3s; }
         #map-container { display: none; position: absolute; top: 80px; left: 0; width: 100%; height: calc(100% - 80px); z-index: 5; background: #000; }
         
         #ui-layer { position: fixed; inset: 0; z-index: 10; pointer-events: none; display: flex; flex-direction: column; }
         .interactive { pointer-events: auto; }
 
-        /* التصميم الزجاجي */
         .glass-panel { background: var(--glass); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
         
-        /* التمرير لشاشة الإحصائيات */
         #stats-view { display: none; overflow-y: auto; height: 100%; padding-bottom: 50px; pointer-events: auto; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.5); }
@@ -46,30 +42,25 @@
         /* Header UI */
         #header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; flex-wrap: wrap; gap: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
         
-        /* إطالة خانة البحث */
         #search-input { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 30px; width: 200px; min-width: 150px; outline: none; transition: 0.4s; font-family: 'Cairo'; }
         #search-input:focus { width: 260px; border-color: #cc0000; background: rgba(0,0,0,0.9); }
 
-        .btn-main { background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: 0.3s; font-size: 0.9rem; white-space: nowrap; }
+        .btn-main { background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: 0.3s; font-size: 0.9rem; white-space: nowrap; font-family: 'Cairo'; }
         .btn-main:hover { background: rgba(204,0,0,0.3); }
         .btn-main.active { background: #cc0000; border-color: #ff4d4d; font-weight: bold; }
 
-        /* زر التبرع النابض */
         #donate-box { background: var(--blood); border: 1px solid var(--primary); animation: pulse-border 2s infinite; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
         @keyframes pulse-border { 0%, 100% { box-shadow: 0 0px 0px transparent; } 50% { box-shadow: 0 0 12px var(--primary); } }
 
-        /* Tooltip and Cards */
         #tooltip { position: fixed; background: rgba(0, 0, 0, 0.95); color: white; padding: 20px; border-radius: 16px; display: none; pointer-events: auto; transform: translate(-50%, -120%); z-index: 100; box-shadow: 0 10px 30px rgba(204,0,0,0.5); text-align: center; border: 2px solid #cc0000; min-width: 260px; }
         .duaa-style { font-family: 'Amiri', serif; font-size: 1.3rem; margin-top: 10px; display: block; color: #4ade80; }
         
-        /* Bottom Bar & Socials */
         #bottom-bar { display: flex; justify-content: space-between; align-items: flex-end; padding: 20px; flex-grow: 1; pointer-events: none; flex-wrap: wrap; gap: 15px; }
         #counter-box { text-align: center; padding: 10px 20px; border-radius: 15px; border-bottom: 3px solid #cc0000; min-width: 150px; }
         
         .social-links a { color: #fff; background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; text-decoration: none; transition: 0.2s; white-space: nowrap; }
         .social-links a:hover { background: #cc0000; }
 
-        /* Share Card (Hidden) */
         #share-card-template { position: fixed; top: -9999px; left: -9999px; width: 400px; height: 400px; background: #000; color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px; border: 6px double #cc0000; font-family: 'Cairo'; }
 
         @media (max-width: 768px) {
@@ -83,8 +74,10 @@
 </head>
 <body>
 
-<!-- طبقة النجوم والأرواح -->
-<div id="canvas-layer"></div>
+<!-- طبقة النجوم والأرواح مبنية على Canvas مباشرة -->
+<div id="canvas-layer">
+    <canvas id="stars-canvas" class="w-full h-full block"></canvas>
+</div>
 
 <!-- طبقة الخريطة -->
 <div id="map-container"></div>
@@ -94,9 +87,11 @@
     <!-- الشريط العلوي -->
     <header id="header" class="glass-panel interactive">
         
-        <!-- تمت إضافة اسم الموقع هنا -->
+        <!-- اسم الموقع تم تعديله ليصبح بنفس خط خانات البحث (Cairo) -->
         <div class="flex items-center gap-2">
-            <h1 class="text-2xl font-bold text-red-600" style="font-family: 'Amiri', serif;">أرواح فلسطين</h1>
+            <h1 class="text-2xl font-bold text-white drop-shadow-md" style="font-family: 'Cairo', sans-serif; letter-spacing: 0.5px;">
+                <span class="text-red-500">أرواح</span> فلسطين
+            </h1>
         </div>
 
         <div class="flex gap-2 items-center w-full md:w-auto">
@@ -125,7 +120,6 @@
             <h2 class="text-3xl font-bold mb-2">السجل الإحصائي لجرائم الإبادة</h2>
             <p class="text-gray-400">توثيق شامل لحجم الدمار والفقد المستمر</p>
         </div>
-
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <div class="glass-panel p-6 rounded-xl hover:-translate-y-1 transition-transform">
                 <h3 class="text-sm text-gray-400 mb-2">إجمالي الشهداء والمفقودين</h3>
@@ -148,56 +142,6 @@
                 <p class="text-xs text-gray-400 mt-2">نظام صحي منهار بالكامل</p>
             </div>
         </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-2 glass-panel p-6 rounded-xl">
-                <h3 class="text-xl font-bold border-b border-white/10 pb-3 mb-4">الاستهداف الممنهج للقطاعات</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="bg-black/40 p-4 rounded-lg border border-white/5">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-gray-300">الصحفيون والإعلام</span>
-                            <span class="font-bold text-red-500">175 شهيداً</span>
-                        </div>
-                    </div>
-                    <div class="bg-black/40 p-4 rounded-lg border border-white/5">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-gray-300">الطواقم الطبية</span>
-                            <span class="font-bold text-red-500">500+ شهيد</span>
-                        </div>
-                    </div>
-                    <div class="bg-black/40 p-4 rounded-lg border border-white/5">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-gray-300">الدفاع المدني</span>
-                            <span class="font-bold text-red-500">70 شهيداً</span>
-                        </div>
-                    </div>
-                    <div class="bg-black/40 p-4 rounded-lg border border-white/5">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-gray-300">المعتقلون قسراً</span>
-                            <span class="font-bold text-red-500">5,000+</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="glass-panel p-6 rounded-xl">
-                <h3 class="text-xl font-bold border-b border-white/10 pb-3 mb-4">دمار البنية التحتية</h3>
-                <ul class="space-y-4">
-                    <li>
-                        <div class="flex justify-between text-sm mb-1"><span class="text-gray-300">المستشفيات المدمرة</span><span class="text-red-400">33 من أصل 36</span></div>
-                        <div class="w-full bg-gray-800 h-1.5 rounded"><div class="bg-red-600 h-1.5 rounded" style="width: 90%"></div></div>
-                    </li>
-                    <li>
-                        <div class="flex justify-between text-sm mb-1"><span class="text-gray-300">المدارس والجامعات</span><span class="text-red-400">80% مدمر</span></div>
-                        <div class="w-full bg-gray-800 h-1.5 rounded"><div class="bg-red-600 h-1.5 rounded" style="width: 80%"></div></div>
-                    </li>
-                    <li>
-                        <div class="flex justify-between text-sm mb-1"><span class="text-gray-300">الوحدات السكنية</span><span class="text-red-400">360,000+ متضررة</span></div>
-                        <div class="w-full bg-gray-800 h-1.5 rounded"><div class="bg-red-600 h-1.5 rounded" style="width: 75%"></div></div>
-                    </li>
-                </ul>
-            </div>
-        </div>
     </main>
 
     <!-- شريط الأسفل -->
@@ -208,7 +152,6 @@
             </p>
         </div>
         
-        <!-- الحسابات وروابط التواصل الخاصة بالمطور -->
         <div class="interactive glass-panel p-3 rounded-xl flex items-center gap-4 flex-wrap justify-center order-3 md:order-2">
             <span class="text-sm text-gray-400 font-bold">تطوير: عبد الهادي</span>
             <div class="social-links flex gap-2">
@@ -225,7 +168,6 @@
     </div>
 </div>
 
-<!-- التول تيب والبطاقة -->
 <div id="tooltip" class="interactive"></div>
 <div id="share-card-template">
     <div style="font-family: 'Amiri', serif; font-size: 1.2rem; color: #cc0000; margin-bottom: 10px;">قوافل الشهداء البررة</div>
@@ -235,7 +177,7 @@
 </div>
 
 <script>
-    // 1. نقلنا تعريف الدالة للأعلى لتكون جاهزة فوراً عند ضغط المستخدم لتجنب خطأ غير معرف
+    // التحكم بالواجهات
     window.switchMainMode = function(mode) {
         document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
         const activeBtn = document.getElementById(`tab-${mode}`);
@@ -251,63 +193,50 @@
             statsLayer.style.display = 'none';
             bottomBar.style.display = 'flex';
             canvasLayer.style.opacity = '1';
-            if (mainContainer) mainContainer.visible = true;
         } else if (mode === 'stats') {
             mapLayer.style.display = 'none';
             statsLayer.style.display = 'block';
             bottomBar.style.display = 'none';
             canvasLayer.style.opacity = '0.3'; 
-            if (mainContainer) mainContainer.visible = true;
         } else if (mode === 'map') {
             statsLayer.style.display = 'none';
             bottomBar.style.display = 'none';
             canvasLayer.style.opacity = '0.1';
-            if (mainContainer) mainContainer.visible = false;
             mapLayer.style.display = 'block';
             if(!map) initMap();
         }
     };
 
-    let app, mainContainer, points = [], isPlaying = false, map = null;
-    let gazaSouls = [];
-    let tooltipTimeout = null;
+    let isPlaying = false, map = null, gazaSouls = [], tooltipTimeout = null;
+    let isSearching = false;
     
-    // إعداد الصوت (تمت إضافة try catch لتجنب توقف السكربت إذا لم يوجد الملف)
     const sound = new Howl({ src: ['ambient.mp3'], loop: true, volume: 0.4 });
     const clickSound = new Howl({ src: ['click.mp3'], volume: 0.5 });
 
-    // العداد الحي للزوار
     let visitorCounter = 15302;
     setInterval(() => {
         visitorCounter += Math.floor(Math.random() * 3);
         const visitorEl = document.getElementById('visitor-count');
         if(visitorEl) visitorEl.innerText = "زوار الآن: " + visitorCounter.toLocaleString();
     }, 4000);
-    document.getElementById('visitor-count').innerText = "زوار الآن: " + visitorCounter.toLocaleString();
 
-    async function initSystem() {
-        try {
-            // 2. إصلاح تهيئة الرسوميات لتعمل بثبات باستخدام الإصدار المستقر من PixiJS
-            app = new PIXI.Application({
-                resizeTo: window,
-                backgroundColor: 0x000000,
-                backgroundAlpha: 0,
-                resolution: window.devicePixelRatio || 1,
-            });
-            
-            document.getElementById('canvas-layer').appendChild(app.view);
-            
-            mainContainer = new PIXI.Container();
-            mainContainer.eventMode = 'static';
-            app.stage.addChild(mainContainer);
+    // ==========================================
+    // محرك الرسوميات الجديد المبني على Canvas (مضمون 100%)
+    // ==========================================
+    const canvas = document.getElementById('stars-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let points = [];
+    let mouseX = -1000, mouseY = -1000;
 
-            await loadData();
-            renderStars();
-            setupEvents();
-        } catch (error) {
-            console.error("حدث خطأ في تشغيل النجوم (PixiJS):", error);
-        }
+    function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
     }
+    window.addEventListener('resize', resize);
+    resize();
 
     const parseCSVLine = (text) => {
         let ret = [], cur = '', inQuotes = false;
@@ -320,8 +249,7 @@
         return ret;
     };
 
-    // تحميل البيانات وتم تحسين آلية وضع البيانات الاحتياطية
-    async function loadData() {
+    async function loadDataAndInit() {
         try {
             const res = await fetch('out_killed-in-gaza.csv');
             if (res.ok) {
@@ -330,12 +258,9 @@
                 
                 if (lines.length > 0) {
                     const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase());
-                    let nameArIdx = headers.indexOf('name');
-                    if (nameArIdx === -1) nameArIdx = headers.indexOf('name_ar');
-                    let ageIdx = headers.indexOf('age');
-                    if (ageIdx === -1) ageIdx = headers.indexOf('dob');
-                    let genderIdx = headers.indexOf('sex');
-                    if (genderIdx === -1) genderIdx = headers.indexOf('gender');
+                    let nameArIdx = headers.indexOf('name') > -1 ? headers.indexOf('name') : headers.indexOf('name_ar');
+                    let ageIdx = headers.indexOf('age') > -1 ? headers.indexOf('age') : headers.indexOf('dob');
+                    let genderIdx = headers.indexOf('sex') > -1 ? headers.indexOf('sex') : headers.indexOf('gender');
 
                     if (nameArIdx === -1) nameArIdx = 0;
                     if (ageIdx === -1) ageIdx = 2;
@@ -343,7 +268,6 @@
                     for (let i = 1; i < lines.length; i++) {
                         if (!lines[i].trim()) continue;
                         const cols = parseCSVLine(lines[i]);
-                        
                         let name_ar = cols[nameArIdx] || "غير مدرج";
                         let age = cols[ageIdx] ? cols[ageIdx].trim() : "غير معروف";
                         if (age === "" || isNaN(parseInt(age))) age = "غير معروف";
@@ -353,69 +277,108 @@
                     }
                 }
             }
-        } catch(e) { 
-            console.warn("لم يتم العثور على ملف CSV، سيتم استخدام البيانات الافتراضية."); 
-        }
+        } catch(e) { console.log("خطأ في جلب البيانات، سيتم استخدام افتراضية"); }
         
-        // 3. التأكد من عمل البيانات الافتراضية بشكل مثالي إذا فشل تحميل الملف
+        // البيانات الافتراضية المضمونة في حالة عدم وجود الملف
         if(gazaSouls.length === 0) {
             for(let i=0; i<35000; i++) {
                 gazaSouls.push({name: "شهيد مجهول الاسم", age: "غير معروف", gender: "M"});
             }
         }
+        
+        renderStars();
+        requestAnimationFrame(gameLoop);
     }
 
     function renderStars() {
-        points.forEach(p => p.destroy());
         points = [];
-        mainContainer.removeChildren();
-
-        const g = new PIXI.Graphics();
-        g.beginFill(0xffffff, 0.8);
-        g.drawCircle(0, 0, 3.5);
-        g.endFill();
-        const tex = app.renderer.generateTexture(g);
         const dotsToRender = Math.min(2500, gazaSouls.length);
-
-        for(let i=0; i < dotsToRender; i++) { 
-            const dot = new PIXI.Sprite(tex);
-            dot.x = Math.random() * window.innerWidth;
-            dot.y = Math.random() * window.innerHeight;
-            dot.anchor.set(0.5); 
-            dot.alpha = Math.random() * 0.5 + 0.2; 
-            dot.userData = gazaSouls[i];
-            dot.speedX = (Math.random() - 0.5) * 0.15; 
-            dot.speedY = (Math.random() - 0.5) * 0.15;
-            
-            dot.eventMode = 'static'; 
-            dot.cursor = 'pointer';
-            
-            dot.on('pointerover', (e) => { e.stopPropagation(); showTooltip(e, dot); });
-            
-            mainContainer.addChild(dot); 
-            points.push(dot);
-        }
         
+        for(let i=0; i < dotsToRender; i++) { 
+            const alphaVal = Math.random() * 0.5 + 0.2;
+            points.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.25,
+                vy: (Math.random() - 0.5) * 0.25,
+                alpha: alphaVal,
+                baseAlpha: alphaVal,
+                targetAlpha: alphaVal,
+                scale: 1,
+                targetScale: 1,
+                color: '#ffffff',
+                userData: gazaSouls[i]
+            });
+        }
         animateCounter(gazaSouls.length > 0 ? gazaSouls.length : 40000);
     }
 
-    function showTooltip(event, sprite) {
-        if (!sprite.userData) return;
+    function gameLoop() {
+        ctx.clearRect(0, 0, width, height);
         
+        for(let i=0; i < points.length; i++) {
+            const p = points[i];
+            
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < 0) p.x = width; else if (p.x > width) p.x = 0;
+            if (p.y < 0) p.y = height; else if (p.y > height) p.y = 0;
+
+            p.alpha += (p.targetAlpha - p.alpha) * 0.1;
+            p.scale += (p.targetScale - p.scale) * 0.1;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 1.8 * p.scale, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.alpha;
+            ctx.fill();
+        }
+        
+        ctx.globalAlpha = 1; // إرجاع الشفافية للطبيعي
+        requestAnimationFrame(gameLoop);
+    }
+
+    // تفاعل الماوس مع النجوم
+    window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX; mouseY = e.clientY;
+        checkHover(e);
+    });
+
+    function checkHover(e) {
+        if(document.getElementById('canvas-layer').style.opacity !== '1' || isSearching) return;
+        
+        let hovered = null;
+        for(let i=0; i<points.length; i++) {
+            const p = points[i];
+            const dx = p.x - mouseX;
+            const dy = p.y - mouseY;
+            if(dx*dx + dy*dy < 120) { // مساحة التفاعل حول النجمة
+                hovered = p; break;
+            }
+        }
+
+        if(hovered) {
+            points.forEach(p => { p.targetAlpha = 0.2; p.targetScale = 1; p.color = '#ffffff'; });
+            hovered.targetAlpha = 1; hovered.targetScale = 3; hovered.color = '#ff3333';
+            showTooltip(e, hovered);
+        } else {
+            hideTooltip();
+        }
+    }
+
+    function showTooltip(event, point) {
+        if (!point.userData) return;
         if(tooltipTimeout) clearTimeout(tooltipTimeout);
 
         try { clickSound.play(); } catch(e){}
         
-        points.forEach(p => { p.alpha = 0.2; p.tint = 0xffffff; p.scale.set(1); });
-        sprite.alpha = 1; sprite.scale.set(3); sprite.tint = 0xff3333; 
-
-        const d = sprite.userData;
+        const d = point.userData;
         const tooltip = document.getElementById('tooltip');
         tooltip.style.display = 'block';
         
         if(window.innerWidth > 768) {
-            tooltip.style.left = event.global.x + 'px'; 
-            tooltip.style.top = (event.global.y - 20) + 'px';
+            tooltip.style.left = event.clientX + 'px'; 
+            tooltip.style.top = (event.clientY - 20) + 'px';
         }
 
         const safeName = d.name.replace(/'/g, "\\'");
@@ -435,56 +398,56 @@
     function hideTooltip() {
         const tooltipEl = document.getElementById('tooltip');
         if (tooltipEl) tooltipEl.style.display = 'none';
-        points.forEach(p => { p.alpha = Math.random() * 0.5 + 0.2; p.scale.set(1); });
+        
+        if(!isSearching) {
+            points.forEach(p => { 
+                p.targetAlpha = p.baseAlpha; 
+                p.targetScale = 1; 
+                p.color = '#ffffff'; 
+            });
+        }
     }
 
+    // إبقاء البطاقة مفتوحة
     const tooltipEl = document.getElementById('tooltip');
     tooltipEl.addEventListener('mouseenter', () => { if(tooltipTimeout) clearTimeout(tooltipTimeout); });
     tooltipEl.addEventListener('mouseleave', () => { tooltipTimeout = setTimeout(hideTooltip, 1500); });
     
-    app.stage.on('pointerdown', hideTooltip);
+    // البحث
+    document.getElementById('search-input').oninput = (e) => {
+        if(document.getElementById('stats-view').style.display === 'block') switchMainMode('souls');
+        const val = e.target.value.trim().toLowerCase();
+        isSearching = val !== "";
+        
+        points.forEach(p => {
+            const name = p.userData.name.toLowerCase();
+            const match = name.includes(val);
+            if(val === "") { 
+                p.targetAlpha = p.baseAlpha; p.color = '#ffffff'; p.targetScale = 1; 
+            }
+            else { 
+                p.targetAlpha = match ? 1 : 0.05; 
+                p.color = match ? '#ff0000' : '#ffffff'; 
+                p.targetScale = match ? 2.5 : 0.8; 
+            }
+        });
+    };
 
+    // الخريطة
     async function initMap() {
         map = L.map('map-container').setView([31.3547, 34.3088], 11); 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
     }
 
-    function setupEvents() {
-        app.ticker.add(() => {
-            if(!mainContainer || !mainContainer.visible) return;
-            for(let i=0; i < points.length; i++) {
-                const p = points[i]; 
-                p.x += p.speedX; p.y += p.speedY;
-                if (p.x < 0) p.x = app.screen.width; if (p.x > app.screen.width) p.x = 0;
-                if (p.y < 0) p.y = app.screen.height; if (p.y > app.screen.height) p.y = 0;
-            }
-        });
+    // الصوت
+    document.getElementById('music-btn').onclick = function() {
+        if (Howler.ctx && Howler.ctx.state === 'suspended') Howler.ctx.resume();
+        if (!isPlaying) { sound.play(); this.classList.add('active'); this.innerText = "🔇 كتم الصوت"; } 
+        else { sound.pause(); this.classList.remove('active'); this.innerText = "🎵 الصوت"; }
+        isPlaying = !isPlaying;
+    };
 
-        document.getElementById('search-input').oninput = (e) => {
-            if(document.getElementById('stats-view').style.display === 'block') switchMainMode('souls');
-            const val = e.target.value.trim().toLowerCase();
-            points.forEach(p => {
-                const name = p.userData.name.toLowerCase();
-                const match = name.includes(val);
-                if(val === "") { p.alpha = 0.5; p.tint = 0xffffff; p.scale.set(1); }
-                else { p.alpha = match ? 1 : 0.05; p.tint = match ? 0xff0000 : 0xffffff; p.scale.set(match ? 2.5 : 0.8); }
-            });
-        };
-
-        document.getElementById('music-btn').onclick = function() {
-            if (Howler.ctx && Howler.ctx.state === 'suspended') Howler.ctx.resume();
-            if (!isPlaying) { sound.play(); this.classList.add('active'); this.innerText = "🔇 كتم الصوت"; } 
-            else { sound.pause(); this.classList.remove('active'); this.innerText = "🎵 الصوت"; }
-            isPlaying = !isPlaying;
-        };
-
-        window.addEventListener('resize', () => {
-            if(app && app.renderer) {
-                app.renderer.resize(window.innerWidth, window.innerHeight);
-            }
-        });
-    }
-
+    // التحميل
     window.downloadShareCard = function(name, ageStr, duaa) {
         document.getElementById('card-name').innerText = name;
         document.getElementById('card-age').innerText = ageStr;
@@ -497,6 +460,7 @@
         });
     };
 
+    // العداد
     function animateCounter(target) {
         let cur = 0; const step = Math.ceil(target / 100); 
         const timer = setInterval(() => { 
@@ -507,7 +471,8 @@
         }, 15);
     }
 
-    initSystem();
+    // تشغيل النظام
+    loadDataAndInit();
 </script>
 </body>
 </html>
