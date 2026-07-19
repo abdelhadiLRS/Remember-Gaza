@@ -109,9 +109,8 @@
             <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-box" class="btn-main font-bold">❤️ إدعمنا الآن لنستمر</a>
             <button id="music-btn" class="btn-main">🎵 الصوت</button>
             <div class="bg-red-900/50 border border-red-500 px-3 py-1.5 rounded-full flex items-center gap-2">
-                <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                <span class="text-xs font-bold" id="visitor-count">زوار الآن: 0</span>
-            </div>
+            <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+            <span class="text-xs font-bold" id="visitor-count">جاري التحميل...</span>            </div>
         </div>
     </header>
 
@@ -332,13 +331,20 @@
     const sound = new Howl({ src: ['ambient.mp3'], loop: true, volume: 0.4 });
     const clickSound = new Howl({ src: ['click.mp3'], volume: 0.5 });
 
-    let visitorCounter = 15302;
-    setInterval(() => {
-        visitorCounter += Math.floor(Math.random() * 3);
+    // دالة لجلب عدد الزوار الحقيقي من السيرفر
+async function updateVisitorCount() {
+    try {
+        // نستخدم معرف فريد خاص بموقعك (يمكنك تغيير "palestinian-souls-live" لأي اسم آخر)
+        const response = await fetch('https://api.counterapi.dev/v1/palestinian-souls-live/visits/up');
+        const data = await response.json();
         const visitorEl = document.getElementById('visitor-count');
-        if(visitorEl) visitorEl.innerText = "زوار الآن: " + visitorCounter.toLocaleString();
-    }, 4000);
-
+        if(visitorEl) visitorEl.innerText = "الزوار: " + data.count.toLocaleString();
+    } catch(e) {
+        console.error("خطأ في جلب عدد الزوار");
+    }
+}
+// تحديث العدد عند فتح الصفحة
+updateVisitorCount();
     // ==========================================
     // محرك الرسوميات للنجوم على Canvas
     // ==========================================
