@@ -318,7 +318,6 @@
 
     let currentLang = 'ar';
 
-    // --- 2. كشف اللغة التلقائي وتطبيقها ---
     function detectAndSetLanguage() {
         const browserLang = navigator.language || navigator.userLanguage;
         if (browserLang.startsWith('en')) currentLang = 'en';
@@ -351,7 +350,6 @@
         document.getElementById('martyrs-label').innerText = t.martyrsLabel;
     }
 
-    // --- 3. دالة المشاركة الذكية ---
     window.shareSite = function() {
         const t = translations[currentLang];
         const shareData = {
@@ -371,7 +369,6 @@
 
     detectAndSetLanguage();
 
-    // --- 4. بيانات الفيديوهات ---
     const videosData = [
         {
             url: "https://t.me/gazaalannet/81461?embed=1",
@@ -395,6 +392,7 @@
 
     function renderVideos() {
         const grid = document.getElementById('videos-grid');
+        if(!grid) return;
         grid.innerHTML = videosData.map(v => `
             <div class="bg-black/50 backdrop-blur-md border border-white/10 p-5 rounded-2xl flex flex-col shadow-xl hover:border-red-500/40 transition-colors">
                 <div class="mb-4 border-b border-white/10 pb-4">
@@ -410,7 +408,6 @@
     }
     renderVideos();
 
-    // --- 5. منطق النوافذ ---
     window.switchMainMode = function(mode) {
         document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
         const activeBtn = document.getElementById(`tab-${mode}`);
@@ -422,25 +419,29 @@
         const bottomBar = document.getElementById('bottom-bar');
         const canvasLayer = document.getElementById('canvas-layer');
 
-        mapLayer.style.display = 'none'; 
-        statsLayer.style.display = 'none';
-        videosLayer.style.display = 'none'; 
-        bottomBar.style.display = 'none';
+        if(mapLayer) mapLayer.style.display = 'none'; 
+        if(statsLayer) statsLayer.style.display = 'none';
+        if(videosLayer) videosLayer.style.display = 'none'; 
+        if(bottomBar) bottomBar.style.display = 'none';
 
         if(mode === 'souls') {
-            bottomBar.style.display = 'flex';
-            canvasLayer.style.opacity = '1';
-            canvasLayer.style.pointerEvents = 'auto';
+            if(bottomBar) bottomBar.style.display = 'flex';
+            if(canvasLayer) {
+                canvasLayer.style.opacity = '1';
+                canvasLayer.style.pointerEvents = 'auto';
+            }
         } else {
-            canvasLayer.style.opacity = '0';
-            canvasLayer.style.pointerEvents = 'none';
+            if(canvasLayer) {
+                canvasLayer.style.opacity = '0';
+                canvasLayer.style.pointerEvents = 'none';
+            }
             hideTooltip();
             
-            if (mode === 'stats') {
+            if (mode === 'stats' && statsLayer) {
                 statsLayer.style.display = 'block'; 
-            } else if (mode === 'videos') {
+            } else if (mode === 'videos' && videosLayer) {
                 videosLayer.style.display = 'block'; 
-            } else if (mode === 'map') {
+            } else if (mode === 'map' && mapLayer) {
                 mapLayer.style.display = 'block';
                 if(!map) initMap();
             }
@@ -448,21 +449,28 @@
     };
 
     let isPlaying = false, map = null, gazaSouls = [], tooltipTimeout = null, isSearching = false;
-    const sound = new Howl({ src: ['ambient.mp3'], loop: true, volume: 0.4 });
-    const clickSound = new Howl({ src: ['click.mp3'], volume: 0.5 });
+    let width, height, points = [], mouseX = -1000, mouseY = -1000;
+    
+    // التحقق من أن المكتبات الصوتية تعمل
+    let sound, clickSound;
+    try {
+        sound = new Howl({ src: ['ambient.mp3'], loop: true, volume: 0.4 });
+        clickSound = new Howl({ src: ['click.mp3'], volume: 0.5 });
+    } catch(e) { console.warn("مكتبة الصوت غير متوفرة حالياً"); }
 
     const canvas = document.getElementById('stars-canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height, points = [], mouseX = -1000, mouseY = -1000;
+    const ctx = canvas ? canvas.getContext('2d') : null;
 
     function resize() {
+        if(!canvas) return;
         width = window.innerWidth; height = window.innerHeight;
         canvas.width = width; canvas.height = height;
     }
-    window.addEventListener('resize', resize); resize();
+    window.addEventListener('resize', resize); 
+    resize();
 
-    // --- 6. دالة قراءة ملف CSV ---
     const parseCSVLine = (text) => {
+        if (!text) return [];
         let ret = [], cur = '', inQuotes = false;
         for (let char of text) {
             if (char === '"') inQuotes = !inQuotes;
@@ -472,105 +480,90 @@
         ret.push(cur.trim()); return ret;
     };
 
-    // --- 7. دالة جلب البيانات وتهيئتها (تم التعديل لدعم Vercel/GitHub بذكاء) ---
+    // النظام الجديد والمحمي كلياً لجلب البيانات
     async function loadDataAndInit() {
-        let isDataLoaded = false;
-        // إضافة مسارات متعددة لضمان عملها على Vercel و GitHub Pages
-        const pathsToTry = ['out_killed-in-gaza.csv', './out_killed-in-gaza.csv', '/out_killed-in-gaza.csv'];
-        
-        for (const path of pathsToTry) {
-            try {
-                const res = await fetch(path);
-                if (!res.ok) continue;
+        gazaSouls = []; // إفراغ البيانات بالكامل
 
-                // التحقق من أن الملف المسترجع ليس صفحة خطأ 404 (HTML) من الخادم
-                const contentType = res.headers.get("content-type");
-                if (contentType && (contentType.includes("text/html") || contentType.includes("application/json"))) {
-                    continue; 
-                }
-
+        try {
+            // استخدام cache: 'no-cache' لكسر التخزين المؤقت في Vercel/Github
+            const res = await fetch('./out_killed-in-gaza.csv', { cache: 'no-cache' });
+            
+            if (res.ok) {
                 const text = await res.text();
-                // حماية إضافية ضد صفحات الخطأ التي تخفي نفسها على شكل نصوص
-                if (text.trim().startsWith('<!DOCTYPE') || text.toLowerCase().includes('<html')) {
-                    continue;
-                }
-
-                const lines = text.split('\n');
-                if (lines.length > 1) {
-                    const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
-                    let nameArIdx = -1, nameEnIdx = -1, ageIdx = -1, genderIdx = -1, idIdx = -1, dobIdx = -1;
-
-                    for (let i = 0; i < headers.length; i++) {
-                        const h = headers[i];
-                        if (h.includes('name_ar') || h.includes('اسم') || h === 'ar') nameArIdx = i;
-                        else if ((h.includes('name_en') || h.includes('english')) && nameEnIdx === -1) nameEnIdx = i;
-                        else if (h === 'name' || h === 'fullname') { if (nameArIdx === -1) nameArIdx = i; }
+                // حماية ضد صفحات HTML التي ترسلها الخوادم عند حدوث خطأ 404
+                if (text && !text.trim().startsWith('<')) {
+                    const lines = text.split('\n');
+                    if (lines.length > 1) {
+                        const headers = parseCSVLine(lines[0]).map(h => h ? h.toLowerCase().trim() : "");
                         
-                        if ((h.includes('id') || h.includes('هوية') || h === 'id_number') && idIdx === -1) idIdx = i;
-                        if ((h.includes('dob') || h.includes('مواليد') || h.includes('تاريخ')) && dobIdx === -1) dobIdx = i;
-                        if ((h === 'age' || h.includes('عمر')) && ageIdx === -1) ageIdx = i;
-                        if ((h.includes('sex') || h.includes('gender') || h.includes('جنس')) && genderIdx === -1) genderIdx = i;
-                    }
+                        // البحث المرن عن الأعمدة
+                        let nameArIdx = headers.findIndex(h => h.includes('name_ar') || h.includes('اسم') || h === 'ar' || h === 'name');
+                        let nameEnIdx = headers.findIndex(h => h.includes('name_en') || h.includes('english'));
+                        let idIdx = headers.findIndex(h => h.includes('id') || h.includes('هوية'));
+                        let dobIdx = headers.findIndex(h => h.includes('dob') || h.includes('مواليد') || h.includes('تاريخ'));
+                        let ageIdx = headers.findIndex(h => h === 'age' || h.includes('عمر'));
+                        let genderIdx = headers.findIndex(h => h.includes('sex') || h.includes('gender') || h.includes('جنس'));
 
-                    for (let i = 1; i < lines.length; i++) {
-                        if (!lines[i].trim()) continue;
-                        try {
-                            const cols = parseCSVLine(lines[i]);
-                            if (cols.length === 0) continue;
-                            let name_ar = nameArIdx > -1 && cols[nameArIdx] ? cols[nameArIdx].trim() : "";
-                            let name_en = nameEnIdx > -1 && cols[nameEnIdx] ? cols[nameEnIdx].trim() : "";
-                            let id_val = (idIdx > -1 && cols[idIdx]) ? cols[idIdx].trim() : "";
-                            let dob_val = (dobIdx > -1 && cols[dobIdx]) ? cols[dobIdx].trim() : "";
-                            let age_val = (ageIdx > -1 && cols[ageIdx]) ? cols[ageIdx].trim() : "";
-                            let gender_val = (genderIdx > -1 && cols[genderIdx]) ? cols[genderIdx].trim().toUpperCase() : "M";
+                        for (let i = 1; i < lines.length; i++) {
+                            const line = lines[i];
+                            if (!line || !line.trim()) continue;
+                            
+                            try {
+                                const cols = parseCSVLine(line);
+                                if (cols.length === 0) continue;
 
-                            if (name_ar && /[a-zA-Z]/.test(name_ar) && !/[\u0600-\u06FF]/.test(name_ar)) {
-                                if(!name_en) name_en = name_ar; name_ar = "";
+                                let name_ar = nameArIdx > -1 && cols[nameArIdx] ? cols[nameArIdx].trim() : "";
+                                let name_en = nameEnIdx > -1 && cols[nameEnIdx] ? cols[nameEnIdx].trim() : "";
+                                let id_val = idIdx > -1 && cols[idIdx] ? cols[idIdx].trim() : "";
+                                let dob_val = dobIdx > -1 && cols[dobIdx] ? cols[dobIdx].trim() : "";
+                                let age_val = ageIdx > -1 && cols[ageIdx] ? cols[ageIdx].trim() : "";
+                                let gender_val = genderIdx > -1 && cols[genderIdx] ? cols[genderIdx].trim().toUpperCase() : "M";
+
+                                if (!name_ar && name_en) name_ar = name_en;
+                                if (!name_ar) name_ar = "شهيد مجهول الاسم";
+                                if (!age_val || isNaN(parseInt(age_val))) age_val = "غير معروف";
+
+                                gazaSouls.push({ name_ar, name_en, id: id_val, dob: dob_val, age: age_val, gender: gender_val });
+                            } catch(lineErr) { 
+                                // تجاهل السطر المعطوب وإكمال القراءة
+                                continue; 
                             }
-                            for (let c = 0; c < cols.length; c++) {
-                                let val = cols[c].trim();
-                                if (!val) continue;
-                                if (/[\u0600-\u06FF]/.test(val) && val.length > 3 && !val.includes('-') && !val.includes('/')) {
-                                    if (!name_ar) name_ar = val;
-                                } else if (/[a-zA-Z]/.test(val) && val.length > 3 && c !== genderIdx && !val.includes('-') && !val.includes('/')) {
-                                    if (!name_en) name_en = val;
-                                } else if (/^\d{8,10}$/.test(val) && c !== ageIdx && !id_val) {
-                                    id_val = val;
-                                } else if (/^\d{1,3}$/.test(val) && !age_val) {
-                                    age_val = val;
-                                }
-                            }
-                            if (!name_ar && name_en) name_ar = name_en;
-                            if (!name_ar) name_ar = "شهيد مجهول الاسم";
-                            if (!age_val || isNaN(parseInt(age_val))) age_val = "غير معروف";
-
-                            gazaSouls.push({ name_ar: name_ar, name_en: name_en, id: id_val, dob: dob_val, age: age_val, gender: gender_val });
-                        } catch(lineError) { continue; }
-                    }
-
-                    if (gazaSouls.length > 0) {
-                        isDataLoaded = true;
-                        break; 
+                        }
                     }
                 }
-            } catch(e) {
-                console.log("محاولة جلب مسار فشلت، جاري تجربة المسار التالي...", e);
+            }
+        } catch(fetchError) {
+            console.warn("تنبيه: لم يتم العثور على ملف البيانات أو تعذرت قراءته، سيتم تشغيل النمط الافتراضي.");
+        }
+
+        // الخطة البديلة الآمنة: إذا فشل كل شيء، قم بإنشاء 35 ألف نجمة لضمان استمرار عمل الواجهة
+        if(gazaSouls.length === 0) {
+            for(let i=0; i<35000; i++) {
+                gazaSouls.push({
+                    name_ar: "شهيد مجهول الاسم", 
+                    name_en: "", 
+                    id: "", 
+                    dob: "", 
+                    age: "غير معروف", 
+                    gender: "M"
+                });
             }
         }
-        
-        // في حال فشل جميع المسارات، نستخدم البيانات الافتراضية
-        if(!isDataLoaded || gazaSouls.length === 0) {
-            console.log("استخدام البيانات الافتراضية - لم يتم العثور على الملف الصالح");
-            gazaSouls = []; // تصفير المصفوفة لتجنب البيانات التالفة
-            for(let i=0; i<35000; i++) gazaSouls.push({name_ar: "شهيد مجهول الاسم", name_en: "", id: "", dob: "", age: "غير معروف", gender: "M"});
+
+        // تشغيل الرسوميات والواجهة بشكل إجباري ضمن Try-Catch لمنع انهيار السكريبت
+        try {
+            resize(); 
+            renderStars(); 
+            if(ctx) requestAnimationFrame(gameLoop); 
+            switchMainMode('souls');
+        } catch(renderError) {
+            console.error("حدث خطأ أثناء رسم النجوم على الشاشة:", renderError);
         }
-        
-        resize(); renderStars(); requestAnimationFrame(gameLoop); switchMainMode('souls');
     }
 
-    // --- 8. رسم النجوم والحركة ---
     function renderStars() {
-        points = []; const dotsToRender = Math.min(2500, gazaSouls.length);
+        points = []; 
+        const dotsToRender = Math.min(2500, gazaSouls.length);
         for(let i=0; i < dotsToRender; i++) { 
             const alphaVal = Math.random() * 0.5 + 0.2;
             points.push({
@@ -584,6 +577,7 @@
     }
 
     function gameLoop() {
+        if(!ctx) return;
         ctx.clearRect(0, 0, width, height);
         for(let i=0; i < points.length; i++) {
             const p = points[i];
@@ -595,12 +589,13 @@
             ctx.beginPath(); ctx.arc(p.x, p.y, 1.8 * p.scale, 0, Math.PI * 2);
             ctx.fillStyle = p.color; ctx.globalAlpha = p.alpha; ctx.fill();
         }
-        ctx.globalAlpha = 1; requestAnimationFrame(gameLoop);
+        ctx.globalAlpha = 1; 
+        requestAnimationFrame(gameLoop);
     }
 
-    // --- 9. التفاعل مع الماوس (Hover) ---
     window.addEventListener('mousemove', (e) => { 
-        if(document.getElementById('canvas-layer').style.pointerEvents === 'none') return;
+        const canvasLayer = document.getElementById('canvas-layer');
+        if(canvasLayer && canvasLayer.style.pointerEvents === 'none') return;
         mouseX = e.clientX; mouseY = e.clientY; checkHover(e); 
     });
 
@@ -619,14 +614,15 @@
         } else { hideTooltip(); }
     }
 
-    // --- 10. نافذة بيانات الشهيد (Tooltip) ---
     function showTooltip(event, point) {
         if (!point.userData) return;
         if(tooltipTimeout) clearTimeout(tooltipTimeout);
-        try { clickSound.play(); } catch(e){}
+        try { if(clickSound) clickSound.play(); } catch(e){}
         
         const d = point.userData;
         const tooltip = document.getElementById('tooltip');
+        if(!tooltip) return;
+        
         tooltip.style.display = 'block';
         
         if(window.innerWidth > 768) { tooltip.style.left = event.clientX + 'px'; tooltip.style.top = (event.clientY - 30) + 'px'; }
@@ -665,48 +661,61 @@
         if(!isSearching) points.forEach(p => { p.targetAlpha = p.baseAlpha; p.targetScale = 1; p.color = '#ffffff'; });
     }
 
-    document.getElementById('tooltip').addEventListener('mouseenter', () => { if(tooltipTimeout) clearTimeout(tooltipTimeout); });
-    document.getElementById('tooltip').addEventListener('mouseleave', () => { tooltipTimeout = setTimeout(hideTooltip, 1000); });
+    const tooltipElement = document.getElementById('tooltip');
+    if(tooltipElement) {
+        tooltipElement.addEventListener('mouseenter', () => { if(tooltipTimeout) clearTimeout(tooltipTimeout); });
+        tooltipElement.addEventListener('mouseleave', () => { tooltipTimeout = setTimeout(hideTooltip, 1000); });
+    }
     
-    // --- 11. وظيفة البحث ---
-    document.getElementById('search-input').oninput = (e) => {
-        if(document.getElementById('stats-view').style.display === 'block' || document.getElementById('videos-view').style.display === 'block') switchMainMode('souls');
-        const val = e.target.value.trim().toLowerCase();
-        isSearching = val !== "";
-        points.forEach(p => {
-            const nameAr = (p.userData.name_ar || "").toLowerCase();
-            const nameEn = (p.userData.name_en || "").toLowerCase();
-            const match = nameAr.includes(val) || nameEn.includes(val);
+    const searchInput = document.getElementById('search-input');
+    if(searchInput) {
+        searchInput.oninput = (e) => {
+            const statsView = document.getElementById('stats-view');
+            const videosView = document.getElementById('videos-view');
             
-            if(val === "") { p.targetAlpha = p.baseAlpha; p.color = '#ffffff'; p.targetScale = 1; }
-            else { p.targetAlpha = match ? 1 : 0.03; p.color = match ? '#ff0000' : '#ffffff'; p.targetScale = match ? 3 : 0.5; }
-        });
-    };
+            if((statsView && statsView.style.display === 'block') || (videosView && videosView.style.display === 'block')) {
+                switchMainMode('souls');
+            }
+            
+            const val = e.target.value.trim().toLowerCase();
+            isSearching = val !== "";
+            points.forEach(p => {
+                const nameAr = (p.userData.name_ar || "").toLowerCase();
+                const nameEn = (p.userData.name_en || "").toLowerCase();
+                const match = nameAr.includes(val) || nameEn.includes(val);
+                
+                if(val === "") { p.targetAlpha = p.baseAlpha; p.color = '#ffffff'; p.targetScale = 1; }
+                else { p.targetAlpha = match ? 1 : 0.03; p.color = match ? '#ff0000' : '#ffffff'; p.targetScale = match ? 3 : 0.5; }
+            });
+        };
+    }
 
-    // --- 12. الخريطة والصوت ---
     async function initMap() {
-        map = L.map('map-container').setView([31.3547, 34.3088], 11); 
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+        if(typeof L !== 'undefined') {
+            map = L.map('map-container').setView([31.3547, 34.3088], 11); 
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+        }
     }
 
     function toggleMusic() {
         const t = translations[currentLang];
-        if (Howler.ctx && Howler.ctx.state === 'suspended') Howler.ctx.resume();
+        if (typeof Howler !== 'undefined' && Howler.ctx && Howler.ctx.state === 'suspended') Howler.ctx.resume();
         const btns = [document.getElementById('music-btn'), document.getElementById('music-btn-mobile')];
         if (!isPlaying) { 
-            sound.play(); 
+            if(sound) sound.play(); 
             btns.forEach(b => { if(b){ b.classList.add('active'); b.innerText = t.musicOff; }}); 
         } else { 
-            sound.pause(); 
+            if(sound) sound.pause(); 
             btns.forEach(b => { if(b){ b.classList.remove('active'); b.innerText = t.musicOn; }}); 
         }
         isPlaying = !isPlaying;
     }
     
-    document.getElementById('music-btn').onclick = toggleMusic;
-    if(document.getElementById('music-btn-mobile')) document.getElementById('music-btn-mobile').onclick = toggleMusic;
+    const musicBtnDesktop = document.getElementById('music-btn');
+    const musicBtnMobile = document.getElementById('music-btn-mobile');
+    if(musicBtnDesktop) musicBtnDesktop.onclick = toggleMusic;
+    if(musicBtnMobile) musicBtnMobile.onclick = toggleMusic;
 
-    // --- 13. تحميل البطاقة كصورة ---
     window.downloadShareCard = function(primaryName, secondaryName, idStr, dobStr, ageStr, duaa) {
         document.getElementById('card-name-primary').innerText = primaryName;
         
@@ -725,15 +734,16 @@
         document.getElementById('card-age').innerText = `العمر: ${ageStr}`;
         document.getElementById('card-duaa').innerText = `﴿ ${duaa} ﴾`;
 
-        html2canvas(document.getElementById('share-card-template'), { backgroundColor: '#000000', scale: 2 }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = `Palestine_Soul - ${primaryName}.png`; 
-            link.href = canvas.toDataURL(); 
-            link.click();
-        });
+        if(typeof html2canvas !== 'undefined') {
+            html2canvas(document.getElementById('share-card-template'), { backgroundColor: '#000000', scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Palestine_Soul - ${primaryName}.png`; 
+                link.href = canvas.toDataURL(); 
+                link.click();
+            });
+        }
     };
 
-    // --- 14. عداد الأرواح أسفل الشاشة ---
     function animateCounter(target) {
         let cur = 0; const step = Math.ceil(target / 120); 
         const timer = setInterval(() => { 
@@ -744,8 +754,8 @@
         }, 15);
     }
 
-    // --- تشغيل البرنامج ---
-    loadDataAndInit();
+    // الانتظار حتى تحميل كامل عناصر الواجهة لتجنب انهيار الرسوميات
+    window.addEventListener('DOMContentLoaded', loadDataAndInit);
 </script>
 </body>
 </html>
