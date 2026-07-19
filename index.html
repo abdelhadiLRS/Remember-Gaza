@@ -472,13 +472,29 @@
         ret.push(cur.trim()); return ret;
     };
 
-    // --- 7. دالة جلب البيانات وتهيئتها ---
+    // --- 7. دالة جلب البيانات وتهيئتها (تم التعديل لدعم Vercel/GitHub بذكاء) ---
     async function loadDataAndInit() {
-        try {
-            const res = await fetch('out_killed-in-gaza.csv');
-            if (res.ok) {
+        let isDataLoaded = false;
+        // إضافة مسارات متعددة لضمان عملها على Vercel و GitHub Pages
+        const pathsToTry = ['out_killed-in-gaza.csv', './out_killed-in-gaza.csv', '/out_killed-in-gaza.csv'];
+        
+        for (const path of pathsToTry) {
+            try {
+                const res = await fetch(path);
+                if (!res.ok) continue;
+
+                // التحقق من أن الملف المسترجع ليس صفحة خطأ 404 (HTML) من الخادم
+                const contentType = res.headers.get("content-type");
+                if (contentType && (contentType.includes("text/html") || contentType.includes("application/json"))) {
+                    continue; 
+                }
+
                 const text = await res.text();
-                if (text.trim().startsWith('<!DOCTYPE') || text.includes('<html')) throw new Error("ملف غير صالح");
+                // حماية إضافية ضد صفحات الخطأ التي تخفي نفسها على شكل نصوص
+                if (text.trim().startsWith('<!DOCTYPE') || text.toLowerCase().includes('<html')) {
+                    continue;
+                }
+
                 const lines = text.split('\n');
                 if (lines.length > 1) {
                     const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
@@ -531,11 +547,21 @@
                             gazaSouls.push({ name_ar: name_ar, name_en: name_en, id: id_val, dob: dob_val, age: age_val, gender: gender_val });
                         } catch(lineError) { continue; }
                     }
+
+                    if (gazaSouls.length > 0) {
+                        isDataLoaded = true;
+                        break; 
+                    }
                 }
+            } catch(e) {
+                console.log("محاولة جلب مسار فشلت، جاري تجربة المسار التالي...", e);
             }
-        } catch(e) { console.log("استخدام البيانات الافتراضية"); }
+        }
         
-        if(gazaSouls.length === 0) {
+        // في حال فشل جميع المسارات، نستخدم البيانات الافتراضية
+        if(!isDataLoaded || gazaSouls.length === 0) {
+            console.log("استخدام البيانات الافتراضية - لم يتم العثور على الملف الصالح");
+            gazaSouls = []; // تصفير المصفوفة لتجنب البيانات التالفة
             for(let i=0; i<35000; i++) gazaSouls.push({name_ar: "شهيد مجهول الاسم", name_en: "", id: "", dob: "", age: "غير معروف", gender: "M"});
         }
         
