@@ -14,7 +14,7 @@
         }
     </script>
 
-    <!-- مكتبات الخريطة والصوت (تم الاستغناء عن PixiJS لضمان عمل النجوم على جميع الأجهزة) -->
+    <!-- مكتبات الخريطة والصوت -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
@@ -34,7 +34,7 @@
 
         .glass-panel { background: var(--glass); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
         
-        #stats-view { display: none; overflow-y: auto; height: 100%; padding-bottom: 50px; pointer-events: auto; }
+        #stats-view, #videos-view { display: none; overflow-y: auto; height: 100%; padding-bottom: 50px; pointer-events: auto; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.5); }
         ::-webkit-scrollbar-thumb { background: #cc0000; border-radius: 4px; }
@@ -87,7 +87,6 @@
     <!-- الشريط العلوي -->
     <header id="header" class="glass-panel interactive">
         
-        <!-- اسم الموقع تم تعديله ليصبح بنفس خط خانات البحث (Cairo) -->
         <div class="flex items-center gap-2">
             <h1 class="text-2xl font-bold text-white drop-shadow-md" style="font-family: 'Cairo', sans-serif; letter-spacing: 0.5px;">
                 <span class="text-red-500">أرواح</span> فلسطين
@@ -101,6 +100,8 @@
         <div class="flex gap-2 bg-black/50 p-1 rounded-full border border-white/10 overflow-x-auto">
             <button class="btn-main active" id="tab-souls" onclick="switchMainMode('souls')">✨ فضاء الأرواح</button>
             <button class="btn-main" id="tab-stats" onclick="switchMainMode('stats')">📊 سجل الإحصائيات</button>
+            <!-- تمت إضافة زر التوثيق الحي هنا -->
+            <button class="btn-main" id="tab-videos" onclick="switchMainMode('videos')">🎬 توثيق حي</button>
             <button class="btn-main" id="tab-map" onclick="switchMainMode('map')">🗺️ الخريطة</button>
         </div>
 
@@ -114,12 +115,13 @@
         </div>
     </header>
 
-    <!-- شاشة الإحصائيات -->
+    <!-- شاشة الإحصائيات (عادت كما كانت سابقاً) -->
     <main id="stats-view" class="w-full max-w-7xl mx-auto p-4 md:p-8">
         <div class="mb-8 text-center">
             <h2 class="text-3xl font-bold mb-2">السجل الإحصائي لجرائم الإبادة</h2>
             <p class="text-gray-400">توثيق شامل لحجم الدمار والفقد المستمر</p>
         </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <div class="glass-panel p-6 rounded-xl hover:-translate-y-1 transition-transform">
                 <h3 class="text-sm text-gray-400 mb-2">إجمالي الشهداء والمفقودين</h3>
@@ -141,6 +143,119 @@
                 <p class="text-4xl font-bold text-white">85,000+</p>
                 <p class="text-xs text-gray-400 mt-2">نظام صحي منهار بالكامل</p>
             </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 glass-panel p-6 rounded-xl">
+                <h3 class="text-xl font-bold border-b border-white/10 pb-3 mb-4">الاستهداف الممنهج للقطاعات</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-black/40 p-4 rounded-lg border border-white/5">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray-300">الصحفيون والإعلام</span>
+                            <span class="font-bold text-red-500">175 شهيداً</span>
+                        </div>
+                    </div>
+                    <div class="bg-black/40 p-4 rounded-lg border border-white/5">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray-300">الطواقم الطبية</span>
+                            <span class="font-bold text-red-500">500+ شهيد</span>
+                        </div>
+                    </div>
+                    <div class="bg-black/40 p-4 rounded-lg border border-white/5">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray-300">الدفاع المدني</span>
+                            <span class="font-bold text-red-500">70 شهيداً</span>
+                        </div>
+                    </div>
+                    <div class="bg-black/40 p-4 rounded-lg border border-white/5">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray-300">المعتقلون قسراً</span>
+                            <span class="font-bold text-red-500">5,000+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 rounded-xl">
+                <h3 class="text-xl font-bold border-b border-white/10 pb-3 mb-4">دمار البنية التحتية</h3>
+                <ul class="space-y-4">
+                    <li>
+                        <div class="flex justify-between text-sm mb-1"><span class="text-gray-300">المستشفيات المدمرة</span><span class="text-red-400">33 من أصل 36</span></div>
+                        <div class="w-full bg-gray-800 h-1.5 rounded"><div class="bg-red-600 h-1.5 rounded" style="width: 90%"></div></div>
+                    </li>
+                    <li>
+                        <div class="flex justify-between text-sm mb-1"><span class="text-gray-300">المدارس والجامعات</span><span class="text-red-400">80% مدمر</span></div>
+                        <div class="w-full bg-gray-800 h-1.5 rounded"><div class="bg-red-600 h-1.5 rounded" style="width: 80%"></div></div>
+                    </li>
+                    <li>
+                        <div class="flex justify-between text-sm mb-1"><span class="text-gray-300">الوحدات السكنية</span><span class="text-red-400">360,000+ متضررة</span></div>
+                        <div class="w-full bg-gray-800 h-1.5 rounded"><div class="bg-red-600 h-1.5 rounded" style="width: 75%"></div></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- شاشة التوثيق الحي (القسم الجديد مع اقتراح التمويه) -->
+    <main id="videos-view" class="w-full max-w-7xl mx-auto p-4 md:p-8">
+        <div class="mb-8 text-center">
+            <h2 class="text-3xl font-bold mb-2">التوثيق المرئي للجرائم</h2>
+            <p class="text-gray-400">سجل حي يوثق الحقيقة كما هي لتشهد الأجيال</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- فيديو 1 -->
+            <div class="glass-panel p-4 rounded-xl flex flex-col gap-3 relative overflow-hidden">
+                <!-- غلاف التحذير (الاقتراح) -->
+                <div class="absolute inset-0 bg-black/95 z-10 flex flex-col items-center justify-center p-4 text-center transition-opacity duration-300" id="warning-1">
+                    <span class="text-4xl mb-3">⚠️</span>
+                    <h3 class="text-red-500 font-bold mb-2 text-lg">تحذير: محتوى حساس ودموي</h3>
+                    <p class="text-xs text-gray-300 mb-4">هذا المقطع يحتوي على مشاهد قاسية توثق جرائم الإبادة، قد تكون مزعجة أو غير مناسبة للبعض.</p>
+                    <button onclick="document.getElementById('warning-1').style.display='none'" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-full text-sm font-bold transition">عرض التوثيق</button>
+                </div>
+                <!-- مكان وضع الفيديو (يوتيوب أو غيره) -->
+                <div class="aspect-video bg-gray-900 rounded-lg border border-gray-700 flex items-center justify-center overflow-hidden">
+                    <!-- استبدل هذا السطر بكود الـ iframe الخاص بالفيديو -->
+                    <span class="text-gray-500 text-sm">ضع رابط فيديو يوتيوب هنا (iframe)</span>
+                </div>
+                <h3 class="font-bold text-lg mt-2">عنوان المقطع (مثال: مجزرة المستشفى المعمداني)</h3>
+                <p class="text-sm text-gray-400 flex-grow">وصف قصير لما يحتويه الفيديو لتوثيق الحدث بشكل دقيق ومفصل...</p>
+                <span class="text-xs text-red-400 border border-red-500/30 bg-red-500/10 self-start px-2 py-1 rounded">17 أكتوبر 2023</span>
+            </div>
+
+            <!-- فيديو 2 -->
+            <div class="glass-panel p-4 rounded-xl flex flex-col gap-3 relative overflow-hidden">
+                <div class="absolute inset-0 bg-black/95 z-10 flex flex-col items-center justify-center p-4 text-center transition-opacity duration-300" id="warning-2">
+                    <span class="text-4xl mb-3">⚠️</span>
+                    <h3 class="text-red-500 font-bold mb-2 text-lg">تحذير: محتوى حساس ودموي</h3>
+                    <p class="text-xs text-gray-300 mb-4">هذا المقطع يحتوي على مشاهد قاسية توثق جرائم الإبادة، قد تكون مزعجة أو غير مناسبة للبعض.</p>
+                    <button onclick="document.getElementById('warning-2').style.display='none'" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-full text-sm font-bold transition">عرض التوثيق</button>
+                </div>
+                <div class="aspect-video bg-gray-900 rounded-lg border border-gray-700 flex items-center justify-center overflow-hidden">
+                    <span class="text-gray-500 text-sm">ضع رابط فيديو يوتيوب هنا (iframe)</span>
+                </div>
+                <h3 class="font-bold text-lg mt-2">عنوان المقطع (مثال: استهداف خيام النازحين)</h3>
+                <p class="text-sm text-gray-400 flex-grow">وصف قصير لما يحتويه الفيديو لتوثيق الحدث بشكل دقيق ومفصل...</p>
+                <span class="text-xs text-red-400 border border-red-500/30 bg-red-500/10 self-start px-2 py-1 rounded">رفح - مايو 2024</span>
+            </div>
+
+            <!-- فيديو 3 -->
+            <div class="glass-panel p-4 rounded-xl flex flex-col gap-3 relative overflow-hidden">
+                <div class="absolute inset-0 bg-black/95 z-10 flex flex-col items-center justify-center p-4 text-center transition-opacity duration-300" id="warning-3">
+                    <span class="text-4xl mb-3">⚠️</span>
+                    <h3 class="text-red-500 font-bold mb-2 text-lg">تحذير: محتوى حساس ودموي</h3>
+                    <p class="text-xs text-gray-300 mb-4">هذا المقطع يحتوي على مشاهد قاسية توثق جرائم الإبادة، قد تكون مزعجة أو غير مناسبة للبعض.</p>
+                    <button onclick="document.getElementById('warning-3').style.display='none'" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-full text-sm font-bold transition">عرض التوثيق</button>
+                </div>
+                <div class="aspect-video bg-gray-900 rounded-lg border border-gray-700 flex items-center justify-center overflow-hidden">
+                    <span class="text-gray-500 text-sm">ضع رابط فيديو يوتيوب هنا (iframe)</span>
+                </div>
+                <h3 class="font-bold text-lg mt-2">عنوان المقطع (مثال: دمار مربع سكني كامل)</h3>
+                <p class="text-sm text-gray-400 flex-grow">وصف قصير لما يحتويه الفيديو لتوثيق الحدث بشكل دقيق ومفصل...</p>
+                <span class="text-xs text-red-400 border border-red-500/30 bg-red-500/10 self-start px-2 py-1 rounded">شمال غزة</span>
+            </div>
+
         </div>
     </main>
 
@@ -177,7 +292,7 @@
 </div>
 
 <script>
-    // التحكم بالواجهات
+    // التحكم بالواجهات وتحديثها لتشمل قسم الفيديوهات
     window.switchMainMode = function(mode) {
         document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
         const activeBtn = document.getElementById(`tab-${mode}`);
@@ -185,22 +300,26 @@
 
         const mapLayer = document.getElementById('map-container');
         const statsLayer = document.getElementById('stats-view');
+        const videosLayer = document.getElementById('videos-view');
         const bottomBar = document.getElementById('bottom-bar');
         const canvasLayer = document.getElementById('canvas-layer');
 
+        // إخفاء كل شيء أولاً
+        mapLayer.style.display = 'none';
+        statsLayer.style.display = 'none';
+        videosLayer.style.display = 'none';
+        bottomBar.style.display = 'none';
+
         if(mode === 'souls') {
-            mapLayer.style.display = 'none';
-            statsLayer.style.display = 'none';
             bottomBar.style.display = 'flex';
             canvasLayer.style.opacity = '1';
         } else if (mode === 'stats') {
-            mapLayer.style.display = 'none';
             statsLayer.style.display = 'block';
-            bottomBar.style.display = 'none';
+            canvasLayer.style.opacity = '0.3'; 
+        } else if (mode === 'videos') {
+            videosLayer.style.display = 'block';
             canvasLayer.style.opacity = '0.3'; 
         } else if (mode === 'map') {
-            statsLayer.style.display = 'none';
-            bottomBar.style.display = 'none';
             canvasLayer.style.opacity = '0.1';
             mapLayer.style.display = 'block';
             if(!map) initMap();
@@ -221,7 +340,7 @@
     }, 4000);
 
     // ==========================================
-    // محرك الرسوميات الجديد المبني على Canvas (مضمون 100%)
+    // محرك الرسوميات للنجوم على Canvas
     // ==========================================
     const canvas = document.getElementById('stars-canvas');
     const ctx = canvas.getContext('2d');
@@ -279,7 +398,6 @@
             }
         } catch(e) { console.log("خطأ في جلب البيانات، سيتم استخدام افتراضية"); }
         
-        // البيانات الافتراضية المضمونة في حالة عدم وجود الملف
         if(gazaSouls.length === 0) {
             for(let i=0; i<35000; i++) {
                 gazaSouls.push({name: "شهيد مجهول الاسم", age: "غير معروف", gender: "M"});
@@ -334,11 +452,10 @@
             ctx.fill();
         }
         
-        ctx.globalAlpha = 1; // إرجاع الشفافية للطبيعي
+        ctx.globalAlpha = 1;
         requestAnimationFrame(gameLoop);
     }
 
-    // تفاعل الماوس مع النجوم
     window.addEventListener('mousemove', (e) => {
         mouseX = e.clientX; mouseY = e.clientY;
         checkHover(e);
@@ -352,7 +469,7 @@
             const p = points[i];
             const dx = p.x - mouseX;
             const dy = p.y - mouseY;
-            if(dx*dx + dy*dy < 120) { // مساحة التفاعل حول النجمة
+            if(dx*dx + dy*dy < 120) { 
                 hovered = p; break;
             }
         }
@@ -408,14 +525,12 @@
         }
     }
 
-    // إبقاء البطاقة مفتوحة
     const tooltipEl = document.getElementById('tooltip');
     tooltipEl.addEventListener('mouseenter', () => { if(tooltipTimeout) clearTimeout(tooltipTimeout); });
     tooltipEl.addEventListener('mouseleave', () => { tooltipTimeout = setTimeout(hideTooltip, 1500); });
     
-    // البحث
     document.getElementById('search-input').oninput = (e) => {
-        if(document.getElementById('stats-view').style.display === 'block') switchMainMode('souls');
+        if(document.getElementById('stats-view').style.display === 'block' || document.getElementById('videos-view').style.display === 'block') switchMainMode('souls');
         const val = e.target.value.trim().toLowerCase();
         isSearching = val !== "";
         
@@ -433,13 +548,11 @@
         });
     };
 
-    // الخريطة
     async function initMap() {
         map = L.map('map-container').setView([31.3547, 34.3088], 11); 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
     }
 
-    // الصوت
     document.getElementById('music-btn').onclick = function() {
         if (Howler.ctx && Howler.ctx.state === 'suspended') Howler.ctx.resume();
         if (!isPlaying) { sound.play(); this.classList.add('active'); this.innerText = "🔇 كتم الصوت"; } 
@@ -447,7 +560,6 @@
         isPlaying = !isPlaying;
     };
 
-    // التحميل
     window.downloadShareCard = function(name, ageStr, duaa) {
         document.getElementById('card-name').innerText = name;
         document.getElementById('card-age').innerText = ageStr;
@@ -460,7 +572,6 @@
         });
     };
 
-    // العداد
     function animateCounter(target) {
         let cur = 0; const step = Math.ceil(target / 100); 
         const timer = setInterval(() => { 
@@ -471,7 +582,6 @@
         }, 15);
     }
 
-    // تشغيل النظام
     loadDataAndInit();
 </script>
 </body>
