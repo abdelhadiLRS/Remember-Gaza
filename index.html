@@ -374,41 +374,29 @@ updateVisitorCount();
         return ret;
     };
 
-    async function loadDataAndInit() {
+async function loadDataAndInit() {
         try {
             const res = await fetch('out_killed-in-gaza.csv');
             if (res.ok) {
                 const text = await res.text();
                 const lines = text.split('\n');
                 
-                if (lines.length > 0) {
-                    const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase());
-                    let nameArIdx = headers.indexOf('name') > -1 ? headers.indexOf('name') : headers.indexOf('name_ar');
-                    let ageIdx = headers.indexOf('age') > -1 ? headers.indexOf('age') : headers.indexOf('dob');
-                    let genderIdx = headers.indexOf('sex') > -1 ? headers.indexOf('sex') : headers.indexOf('gender');
+                // قراءة الصف الأول لتحديد أماكن الأعمدة
+                const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+                const nameArIdx = headers.indexOf('ar_name'); // تحديث للبحث عن ar_name
+                const ageIdx = headers.indexOf('age');
 
-                    if (nameArIdx === -1) nameArIdx = 0;
-                    if (ageIdx === -1) ageIdx = 2;
+                for (let i = 1; i < lines.length; i++) {
+                    if (!lines[i].trim()) continue;
+                    const cols = lines[i].split(',');
+                    
+                    let name_ar = cols[nameArIdx] || "غير مدرج";
+                    let age = cols[ageIdx] ? cols[ageIdx].trim() : "غير معروف";
 
-                    for (let i = 1; i < lines.length; i++) {
-                        if (!lines[i].trim()) continue;
-                        const cols = parseCSVLine(lines[i]);
-                        let name_ar = cols[nameArIdx] || "غير مدرج";
-                        let age = cols[ageIdx] ? cols[ageIdx].trim() : "غير معروف";
-                        if (age === "" || isNaN(parseInt(age))) age = "غير معروف";
-                        let gender = genderIdx > -1 ? cols[genderIdx].toUpperCase() : "M";
-
-                        gazaSouls.push({ name: name_ar, age: age, gender: gender });
-                    }
+                    gazaSouls.push({ name: name_ar, age: age, gender: "M" });
                 }
             }
-        } catch(e) { console.log("خطأ في جلب البيانات، سيتم استخدام افتراضية"); }
-        
-        if(gazaSouls.length === 0) {
-            for(let i=0; i<35000; i++) {
-                gazaSouls.push({name: "شهيد مجهول الاسم", age: "غير معروف", gender: "M"});
-            }
-        }
+        } catch(e) { console.error("خطأ في قراءة الملف:", e); }
         
         renderStars();
         requestAnimationFrame(gameLoop);
