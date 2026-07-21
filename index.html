@@ -180,7 +180,20 @@
                 <button class="btn-main" id="tab-map" onclick="switchMainMode('map')">🗺️ الخريطة</button>
             </div>
         </div>
+<!-- قائمة اختيار اللغة -->
+<div class="relative inline-block text-right">
+    <select id="language-select" onchange="changeLanguage(this.value)" class="bg-black/60 border border-white/20 text-white text-xs rounded-full px-2 py-1 outline-none cursor-pointer hover:border-red-600 transition-all">
+        <option value="ar">🇸🇦 العربية</option>
+        <option value="en">🇬🇧 English</option>
+        <option value="fr">🇫🇷 Français</option>
+        <option value="es">🇪🇸 Español</option>
+        <option value="tr">🇹🇷 Türkçe</option>
+    </select>
+</div>
 
+<!-- عنصر مكتبة جوجل المخفي -->
+<div id="google_translate_element" class="hidden"></div>
+        
         <div class="hidden md:flex gap-3 items-center">
             <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-sm">❤️إدعمنا الآن لنستمر</a>
             <button id="music-btn" class="btn-main">🎵 الصوت</button>
@@ -613,5 +626,32 @@
     // --- 12. بدء التشغيل ---
     window.addEventListener('DOMContentLoaded', loadDataAndInit);
 </script>
+    <!-- Google Translate API -->
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'ar',
+            includedLanguages: 'ar,en,fr,es,tr',
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+
+    function changeLanguage(langCode) {
+        const translateSelect = document.querySelector('.goog-te-combo');
+        if (translateSelect) {
+            translateSelect.value = langCode;
+            translateSelect.dispatchEvent(new Event('change'));
+        }
+    }
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<!-- إخفاء شريط جوجل العلوي غير المرغوب فيه -->
+<style>
+    .goog-te-banner-frame, .goog-te-balloon-frame { display: none !important; }
+    body { top: 0px !important; }
+    .goog-tooltip, .goog-tooltip:hover { display: none !important; }
+</style>
+
 </body>
 </html>
