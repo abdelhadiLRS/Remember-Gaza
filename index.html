@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link rel="icon" type="image/png" href="favicon.png">
 <title id="page-title">أرواح فلسطين | Palestinian Souls</title>
+<!-- ربط ملف الستايل الخاص بالخط الزمني السينمائي -->
+<link rel="stylesheet" href="timelineCinematic.css">
+<!-- تأكد أيضاً من ربط ملفات التنسيق الداعمة الأخرى الموجودة في قائمتك مثل Bootstrap و Tailwind إن وجدت -->
+<link rel="stylesheet" href="bootstrap.min.css">
+<link rel="stylesheet" href="tailwind-compat.css">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={theme:{extend:{colors:{primary:'#cc0000',blood:'#220000',glass:'rgba(15, 15, 15, 0.8)'}}}}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
@@ -553,5 +558,10 @@ if(ctx)requestAnimationFrame(gameLoop);
 switchMainMode('souls');
 });
 </script>
+  <!-- ملف الجافا سكربت الخاص بالخط الزمني -->
+<script src="timelineCinematic.js.download"></script>
+
+<!-- الملفات التابعة أو الأساسية المطلوبة للتشغيل (مثل JQuery إن وجد في ملفاتك) -->
+<script src="jquery-3.7.1.min.js.download"></script>
 </body>
 </html>
