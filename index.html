@@ -15,6 +15,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <!-- مكتبة WebTorrent لجلب الفيديوهات من الأرشيف -->
 <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
+<!-- مكتبة Leaflet للخرائط التفاعلية -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Amiri:ital@1&display=swap" rel="stylesheet">
 
 <style>
@@ -40,6 +44,7 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
     padding-bottom: 60px;
 }
 #milestones-view { scroll-behavior: smooth; }
+#map-view { padding-top: 100px; padding-bottom: 20px; }
 
 #ui-layer{position:fixed;inset:0;z-index:30;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;}
 .interactive{pointer-events:auto;}
@@ -104,10 +109,28 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
 <!-- الخلفية النجمية -->
 <div id="canvas-layer"><canvas id="stars-canvas" class="w-full h-full block"></canvas></div>
 
-<!-- قسم الخريطة -->
-<main id="map-view" class="flex items-center justify-center">
-<div class="glass-panel p-10 rounded-2xl text-center border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.05)]">
-<h2 class="text-2xl md:text-3xl font-bold text-gray-400">تم إفراغ خانة الخريطة</h2>
+<!-- قسم الخريطة التفاعلية مع الشريط الجانبي والعدادات -->
+<main id="map-view" class="text-white">
+<div class="w-full h-full flex flex-col lg:flex-row px-4 md:px-8 gap-4" style="height: calc(100vh - 140px);">
+    <!-- الشريط الجانبي للبحث والفلترة وقائمة البيانات الجغرافية -->
+    <div class="w-full lg:w-[380px] glass-panel rounded-2xl flex flex-col overflow-hidden border border-white/10 h-[40vh] lg:h-full">
+        <div class="p-4 border-b border-white/10 bg-black/40">
+            <h3 class="font-bold text-lg text-red-500 mb-2">الخريطة التفاعلية والسجل</h3>
+            <input type="text" id="map-search-input" placeholder="بحث بالاسم أو رقم الهوية..." class="w-full bg-black/60 border border-white/20 text-white p-2.5 rounded-xl text-xs outline-none focus:border-red-600 transition-all font-['Cairo']">
+            <div class="flex gap-2 mt-3 text-xs text-gray-300 justify-between bg-black/50 p-2 rounded-lg border border-white/5">
+                <span>المعروض: <strong id="map-total-count" class="text-white">0</strong></span>
+                <span>ذكور: <strong id="map-male-count" class="text-white">0</strong></span>
+                <span>إناث: <strong id="map-female-count" class="text-white">0</strong></span>
+            </div>
+        </div>
+        <div id="map-data-list" class="flex-1 overflow-y-auto p-3 space-y-2.5 no-scrollbar">
+            <!-- قائمة البطاقات تظهر هنا ديناميكياً -->
+        </div>
+    </div>
+    <!-- حاوية الخريطة -->
+    <div class="flex-1 glass-panel rounded-2xl overflow-hidden border border-white/10 h-[50vh] lg:h-full relative shadow-2xl">
+        <div id="map" class="w-full h-full"></div>
+    </div>
 </div>
 </main>
 
@@ -250,7 +273,11 @@ let milestonesRendered = false;
 let torrentsLoaded = false;
 let currentMainMode = 'souls'; 
 
-// تهيئة WebTorrent مع إلغاء الحد الأقصى للمستمعين لتجنب تحذير MaxListeners
+// متغيرات الخريطة التفاعلية
+let map = null;
+let markersLayer = null;
+
+// تهيئة WebTorrent مع إلغاء الحد الأقصى للمستمعين
 const wtClient = new WebTorrent();
 if (wtClient.setMaxListeners) wtClient.setMaxListeners(0); 
 if (wtClient.on) wtClient.on('warning', (err) => console.warn('WebTorrent Warning:', err));
@@ -355,7 +382,7 @@ else{navigator.clipboard.writeText(window.location.href).then(()=>alert(t.copyAl
 };
 
 /* ---------------------------------------------------
-   جلب ملفات التورنت المحددة
+   جلب ملفات التورنت
 --------------------------------------------------- */
 async function fetchTorrentVideos() {
     if (torrentsLoaded) return;
@@ -369,32 +396,21 @@ async function fetchTorrentVideos() {
         </div>
     `;
 
-    const torrentFilesPaths = [
-        "./data/file1.torrent",
-        "./data/file2.torrent"
-    ];
-
+    const torrentFilesPaths = ["./data/file1.torrent", "./data/file2.torrent"];
     let anyLoaded = false;
 
     for (const path of torrentFilesPaths) {
         try {
             const response = await fetch(path);
-            if (!response.ok) continue; 
-
+            if (!response.ok) continue;
             const buffer = await response.arrayBuffer();
 
             wtClient.add(new Uint8Array(buffer), function (torrent) {
-                if (!anyLoaded) {
-                    grid.innerHTML = "";
-                    anyLoaded = true;
-                }
-
+                if (!anyLoaded) { grid.innerHTML = ""; anyLoaded = true; }
                 torrent.files.forEach(function (file) {
                     if (!file.name.match(/\.(mp4|webm|mkv|avi|mov)$/i)) return;
-
                     const sizeMB = (file.length / 1024 / 1024).toFixed(2);
                     const card = document.createElement("div");
-
                     card.className = "bg-black/50 backdrop-blur-md border border-white/10 p-4 rounded-xl flex flex-col shadow-xl hover:border-red-500/40 transition-colors";
                     card.innerHTML = `
                         <div class="mb-3 border-b border-white/10 pb-2">
@@ -407,12 +423,9 @@ async function fetchTorrentVideos() {
                                 <div class="progress-bar bg-red-600 h-full w-0 transition-all duration-300"></div>
                             </div>
                         </div>
-                        <div class="media-container h-[350px] w-full rounded-xl overflow-hidden bg-black flex items-center justify-center relative">
-                        </div>
+                        <div class="media-container h-[350px] w-full rounded-xl overflow-hidden bg-black flex items-center justify-center relative"></div>
                     `;
-
                     grid.appendChild(card);
-
                     const mediaContainer = card.querySelector(".media-container");
                     const progressBar = card.querySelector(".progress-bar");
                     const progressTxt = card.querySelector(".progress-txt");
@@ -423,26 +436,16 @@ async function fetchTorrentVideos() {
                         progressTxt.innerText = progress + "%";
                     });
 
-                    file.appendTo(
-                        mediaContainer,
-                        { controls: true, autoplay: false },
-                        function (err, element) {
-                            if (err) {
-                                mediaContainer.innerHTML = "<p class='text-red-500 font-bold'>فشل تشغيل الفيديو</p>";
-                                return;
-                            }
-                            element.className = "absolute top-0 left-0 w-full h-full object-cover";
-                            progressTxt.innerHTML = "اكتمل ✓";
-                        }
-                    );
+                    file.appendTo(mediaContainer, { controls: true, autoplay: false }, function (err, element) {
+                        if (err) { mediaContainer.innerHTML = "<p class='text-red-500 font-bold'>فشل تشغيل الفيديو</p>"; return; }
+                        element.className = "absolute top-0 left-0 w-full h-full object-cover";
+                        progressTxt.innerHTML = "اكتمل ✓";
+                    });
                 });
             });
-        } catch (err) {
-            console.error("تعذر تحميل التورنت:", path, err);
-        }
+        } catch (err) { console.error("تعذر تحميل التورنت:", path, err); }
     }
 
-    // إظهار رسالة خطأ إذا لم يتم تحميل أي ملف بعد مرور وقت
     setTimeout(() => {
         if (!anyLoaded) {
             grid.innerHTML = `
@@ -453,13 +456,77 @@ async function fetchTorrentVideos() {
             `;
         }
     }, 5000);
-
     torrentsLoaded = true;
 }
 
+/* ---------------------------------------------------
+   تهيئة الخريطة التفاعلية والبيانات
+--------------------------------------------------- */
+function initMapIfNeeded() {
+    if (!map) {
+        map = L.map('map').setView([31.5, 34.46], 10);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+        markersLayer = L.layerGroup().addTo(map);
+    }
+}
+
+function renderMapAndList(dataToRender) {
+    initMapIfNeeded();
+    const listContainer = document.getElementById('map-data-list');
+    if (!listContainer) return;
+    
+    listContainer.innerHTML = '';
+    markersLayer.clearLayers();
+
+    document.getElementById('map-total-count').innerText = dataToRender.length;
+    document.getElementById('map-male-count').innerText = dataToRender.filter(p => (p.gender || 'M').toUpperCase() === 'M').length;
+    document.getElementById('map-female-count').innerText = dataToRender.filter(p => (p.gender || '').toUpperCase() === 'F').length;
+
+    dataToRender.forEach((person, idx) => {
+        const card = document.createElement('div');
+        card.className = "bg-black/40 border border-white/10 p-3 rounded-xl hover:border-red-500/50 transition-all cursor-pointer";
+        card.innerHTML = `
+            <h4 class="font-bold text-sm text-white truncate">${person.name_ar || person.name || 'شهيد'}</h4>
+            <div class="text-[11px] text-gray-400 mt-1 flex justify-between">
+                <span>العمر: ${person.age || 'غير معروف'}</span>
+                <span>الهوية: ${person.id || '-'}</span>
+            </div>
+        `;
+        
+        const lat = person.lat || (31.35 + (idx % 30) * 0.008);
+        const lng = person.lng || (34.30 + (idx % 30) * 0.008);
+
+        card.onclick = () => {
+            if (map) {
+                map.setView([lat, lng], 14);
+            }
+        };
+        listContainer.appendChild(card);
+
+        const marker = L.marker([lat, lng]);
+        marker.bindPopup(`<b>${person.name_ar || person.name || 'شهيد'}</b><br>العمر: ${person.age || 'غير معروف'}<br>رقم الهوية: ${person.id || '-'}`);
+        markersLayer.addLayer(marker);
+    });
+}
+
+const mapSearchInput = document.getElementById('map-search-input');
+if(mapSearchInput) {
+    mapSearchInput.oninput = (e) => {
+        const val = e.target.value.trim().toLowerCase();
+        const filtered = gazaSouls.filter(p => {
+            const nAr = (p.name_ar || p.name || "").toLowerCase();
+            const nEn = (p.name_en || "").toLowerCase();
+            const idStr = (p.id || "").toLowerCase();
+            return nAr.includes(val) || nEn.includes(val) || idStr.includes(val);
+        });
+        renderMapAndList(filtered);
+    };
+}
 
 /* ---------------------------------------------------
-   دوال الخط الزمني (التوليد والاسكرول سباي)
+   دوال الخط الزمني (المحطات)
    --------------------------------------------------- */
 function renderMilestonesCinematic() {
     if (milestonesRendered) return;
@@ -543,14 +610,19 @@ window.switchMainMode = function(mode) {
 
     if(mode === 'souls'){
         document.getElementById('bottom-bar').style.display = 'flex';
+        if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
         fetchAndRenderData('data/Victims.json');
     } else if(mode === 'journalists') {
         document.getElementById('bottom-bar').style.display = 'flex';
+        if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
         fetchAndRenderData('data/press_killed_in_gaza.json');
     } else if(mode === 'westbank') {
         document.getElementById('bottom-bar').style.display = 'flex';
-        // تمرير مسار وهمي أو فارغ لمحاكاة عدم وجود بيانات، أو استبداله بملف الضفة إن وجد
-        fetchAndRenderData('data/empty_file.json'); 
+        if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
+        document.getElementById('no-data-view').style.display = 'flex';
+        points = [];
+        if(ctx) ctx.clearRect(0, 0, width, height);
+        document.getElementById('number').innerText = "0";
     } else if(mode === 'milestones') {
         document.getElementById('milestones-view').style.display = 'block';
         renderMilestonesCinematic();
@@ -561,6 +633,12 @@ window.switchMainMode = function(mode) {
         fetchTorrentVideos();
     } else if(mode === 'map') {
         document.getElementById('map-view').style.display = 'flex';
+        renderMapAndList(gazaSouls.length > 0 ? gazaSouls : [
+            {name_ar: "رأفت امير حمدان عابد", age: 50, id: "999783350", gender: "m"},
+            {name_ar: "ناهض حلمي صالح الميدنه", age: 53, id: "999783079", gender: "m"},
+            {name_ar: "عاطف عليوه عبد القرم", age: 52, id: "999782774", gender: "m"}
+        ]);
+        setTimeout(() => { if (map) map.invalidateSize(); }, 300);
     }
 };
 
@@ -575,18 +653,14 @@ canvas.width=width;canvas.height=height;
 window.addEventListener('resize',resize);
 resize();
 
-/* جلب البيانات الحقيقية من ملفات الـ JSON مع المعالجة الديناميكية للملفات الفارغة */
+/* جلب البيانات الحقيقية من ملفات الـ JSON */
 async function fetchAndRenderData(url){
 gazaSouls=[]; points=[];
 if(ctx) ctx.clearRect(0,0,width,height);
-// إخفاء واجهة "لا توجد بيانات" مبدئياً
-document.getElementById('no-data-view').style.display = 'none';
-
 try{
 const res = await fetch(url, {cache:'no-cache'});
 if(res.ok){
 const text = await res.text();
-// التحقق من أن الملف ليس فارغاً تماماً
 if(text && text.trim().length > 0){
 const data = JSON.parse(text);
 const list = Array.isArray(data) ? data : (data.data || []);
@@ -598,26 +672,9 @@ id: item.id || "", dob: item.dob || "", age: item.age || "غير معروف", ge
 }
 }
 }catch(e){
-console.warn("تعذر جلب البيانات، أو أن الملف غير موجود/فارغ:", e);
+console.error("فشل قراءة ملف البيانات:", e);
 }
-
-// المعالجة الدقيقة: إذا لم يتم العثور على أي بيانات، أظهر الواجهة البديلة
-if(gazaSouls.length === 0){
-    document.getElementById('no-data-view').style.display = 'flex';
-    document.getElementById('number').innerText = "0";
-    const canvasLayer = document.getElementById('canvas-layer');
-    if(canvasLayer) {
-        canvasLayer.style.opacity = '0';
-        canvasLayer.style.pointerEvents = 'none';
-    }
-} else {
-    const canvasLayer = document.getElementById('canvas-layer');
-    if(canvasLayer) {
-        canvasLayer.style.opacity = '1';
-        canvasLayer.style.pointerEvents = 'auto';
-    }
-    renderStars();
-}
+renderStars();
 }
 
 function renderStars(){
@@ -697,7 +754,7 @@ let secondaryName=(d.name_en&&d.name_en!==d.name_ar)?d.name_en:'';
 const safePrimary=primaryName.replace(/'/g,"\\'");
 const safeSecondary=secondaryName?secondaryName.replace(/'/g,"\\'"):'';
 const ageText=d.age==="غير معروف"?"غير معروف":`${d.age} سنة`;
-const duaa=d.gender==="F"?"رحمها الله":"رحمه الله";
+const duaa=(d.gender||'M').toUpperCase()==="F"?"رحمها الله":"رحمه الله";
 let detailsHtml='';
 if(d.id)detailsHtml+=`<div class="text-xs text-gray-300 mb-1">الهوية: <span class="font-bold text-white">${d.id}</span></div>`;
 if(d.dob)detailsHtml+=`<div class="text-xs text-gray-300 mb-1">الميلاد: <span class="font-bold text-white">${d.dob}</span></div>`;
@@ -718,16 +775,13 @@ tooltipTimeout=setTimeout(hideTooltip,6000);
 
 function hideTooltip(){
 const tooltipEl=document.getElementById('tooltip');
-// تحسين الأداء عبر التحقق من حالة العرض قبل التعديل عليها
-if(tooltipEl && tooltipEl.style.display !== 'none'){
-    tooltipEl.style.display='none';
-    if(!isSearching){
-    points.forEach(p=>{p.targetAlpha=p.baseAlpha;p.targetScale=1;p.color='#ffffff';});
-    }else{
-    points.forEach(p=>{
-    if(p.isMatched){p.targetAlpha=1;p.targetScale=3;p.color='#ff0000';}
-    });
-    }
+if(tooltipEl)tooltipEl.style.display='none';
+if(!isSearching){
+points.forEach(p=>{p.targetAlpha=p.baseAlpha;p.targetScale=1;p.color='#ffffff';});
+}else{
+points.forEach(p=>{
+if(p.isMatched){p.targetAlpha=1;p.targetScale=3;p.color='#ff0000';}
+});
 }
 }
 
