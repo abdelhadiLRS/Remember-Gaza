@@ -401,83 +401,146 @@ function fetchTorrentVideos() {
             <div class="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-4"></div>
             <p class="text-lg font-bold">جاري قراءة ملفات الأرشيف من المسار المحدد (data/) ...</p>
         </div>
+----------------
+/* ---------------------------------------------------
+   جلب ملفات التورنت المحددة (نسخة مصححة)
+--------------------------------------------------- */
+async function fetchTorrentVideos() {
+    if (torrentsLoaded) return;
+
+    const grid = document.getElementById('videos-grid');
+    if (!grid) return;
+
+    grid.innerHTML = `
+        <div class="col-span-full flex flex-col items-center justify-center py-16 text-gray-300">
+            <div class="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p class="text-lg font-bold">جاري تحميل الأرشيف...</p>
+        </div>
     `;
-const torrentFilesPaths = [
-    './data/file1.torrent',
-    './data/file2.torrent'
-];
+
+    const torrentFilesPaths = [
+        "./data/file1.torrent",
+        "./data/file2.torrent"
+    ];
+
     let anyLoaded = false;
 
-    torrentFilesPaths.forEach(path => {
-        wtClient.add(path, function (torrent) {
-            if (!anyLoaded) {
-                grid.innerHTML = ''; 
-                anyLoaded = true;
-            }
+    for (const path of torrentFilesPaths) {
 
-            torrent.files.forEach(function (file) {
-                if (file.name.match(/\.(mp4|webm|mkv|avi|mov)$/i)) {
-                    const card = document.createElement('div');
-                    card.className = "bg-black/50 backdrop-blur-md border border-white/10 p-4 rounded-xl flex flex-col shadow-xl hover:border-red-500/40 transition-colors";
-                    const sizeMB = (file.length / (1024 * 1024)).toFixed(2);
-                    
+        try {
+
+            const response = await fetch(path);
+
+            if (!response.ok)
+                throw new Error("تعذر تحميل " + path);
+
+            const buffer = await response.arrayBuffer();
+
+            wtClient.add(new Uint8Array(buffer), function (torrent) {
+
+                if (!anyLoaded) {
+                    grid.innerHTML = "";
+                    anyLoaded = true;
+                }
+
+                torrent.files.forEach(function (file) {
+
+                    if (!file.name.match(/\.(mp4|webm|mkv|avi|mov)$/i))
+                        return;
+
+                    const sizeMB = (file.length / 1024 / 1024).toFixed(2);
+
+                    const card = document.createElement("div");
+
+                    card.className =
+                        "bg-black/50 backdrop-blur-md border border-white/10 p-4 rounded-xl flex flex-col shadow-xl hover:border-red-500/40 transition-colors";
+
                     card.innerHTML = `
                         <div class="mb-3 border-b border-white/10 pb-2">
-                            <h3 class="text-lg font-bold text-red-500 truncate" title="${file.name}">${file.name}</h3>
-                            <div class="text-[10px] text-gray-400 mt-1 flex justify-between items-center">
-                                <span>الحجم: ${sizeMB} MB</span>
-                                <span class="progress-txt text-green-400 font-bold">0%</span>
+                            <h3 class="text-lg font-bold text-red-500">${file.name}</h3>
+
+                            <div class="text-[10px] text-gray-400 mt-1 flex justify-between">
+                                <span>${sizeMB} MB</span>
+                                <span class="progress-txt text-green-400">0%</span>
                             </div>
+
                             <div class="w-full bg-gray-800 h-1 mt-2 rounded-full overflow-hidden">
-                                <div class="progress-bar bg-red-600 h-full w-0 transition-all"></div>
+                                <div class="progress-bar bg-red-600 h-full w-0"></div>
                             </div>
                         </div>
-                        <div class="media-container h-[350px] w-full rounded-xl overflow-hidden relative bg-black/80 border border-white/5 flex items-center justify-center">
+
+                        <div class="media-container h-[350px] rounded-xl overflow-hidden bg-black flex items-center justify-center">
                         </div>
                     `;
-                    
+
                     grid.appendChild(card);
-                    
-                    const mediaContainer = card.querySelector('.media-container');
-                    const progressBar = card.querySelector('.progress-bar');
-                    const progressTxt = card.querySelector('.progress-txt');
 
-                    file.on('download', () => {
-                        const progress = Math.round(file.progress * 100);
-                        progressBar.style.width = progress + '%';
-                        progressTxt.innerText = progress + '%';
+                    const mediaContainer =
+                        card.querySelector(".media-container");
+
+                    const progressBar =
+                        card.querySelector(".progress-bar");
+
+                    const progressTxt =
+                        card.querySelector(".progress-txt");
+
+                    torrent.on("download", () => {
+
+                        const progress =
+                            Math.round(torrent.progress * 100);
+
+                        progressBar.style.width =
+                            progress + "%";
+
+                        progressTxt.innerText =
+                            progress + "%";
+
                     });
 
-                    file.appendTo(mediaContainer, {
-                        autoplay: false,
-                        controls: true,
-                        maxBlobLength: 2 * 1000 * 1000 * 1000
-                    }, function (err, elem) {
-                        if (!err && elem) {
-                            elem.className = "absolute top-0 left-0 w-full h-full object-cover";
-                            progressTxt.innerText = "اكتمل ✓";
+                    file.appendTo(
+                        mediaContainer,
+                        {
+                            controls: true,
+                            autoplay: false
+                        },
+                        function (err, element) {
+
+                            if (err) {
+
+                                mediaContainer.innerHTML =
+                                    "<p class='text-red-500'>فشل تشغيل الفيديو</p>";
+
+                                return;
+                            }
+
+                            element.className =
+                                "w-full h-full object-cover";
+
+                            progressTxt.innerHTML =
+                                "اكتمل ✓";
+
                         }
-                    });
-                }
+                    );
+
+                });
+
             });
-        });
-    });
 
-    wtClient.on('error', function (err) {
-        console.error('خطأ في WebTorrent:', err);
-        if (!anyLoaded) {
-            grid.innerHTML = `
-                <div class="col-span-full text-center text-red-500 p-10 bg-red-900/20 border border-red-500/30 rounded-xl">
-                    <h3 class="font-bold text-xl mb-2">خطأ في قراءة الأرشيف</h3>
-                    <p>تعذر تحميل البيانات. يرجى التأكد من وجود ملفات التورنت في المسار المحدد (./"data/file1.torrent و ./data/file2.torrent).</p>
-                </div>
-            `;
         }
-    });
 
-    torrentsLoaded = true;
-}
+        catch (err) {
 
+            console.error(err);
+
+        }
+
+    }
+
+    if (!anyLoaded) {
+
+        grid.innerHTML = `
+        <div class="col-span-full text-center text-red-500 py-20">
+            <h2 class="text-2xl font-bold
 /* ---------------------------------------------------
    دوال الخط الزمني (التوليد والاسكرول سباي)
    --------------------------------------------------- */
