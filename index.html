@@ -403,7 +403,7 @@ function fetchTorrentVideos() {
         </div>
     `;
 
-    const torrentFilesPaths = ['data/file1.torrent', 'data/file2.torrent'];
+    const torrentFilesPaths = ['./data/file1.torrent', './data/file2.torrent'];
     let anyLoaded = false;
 
     torrentFilesPaths.forEach(path => {
@@ -467,7 +467,7 @@ function fetchTorrentVideos() {
             grid.innerHTML = `
                 <div class="col-span-full text-center text-red-500 p-10 bg-red-900/20 border border-red-500/30 rounded-xl">
                     <h3 class="font-bold text-xl mb-2">خطأ في قراءة الأرشيف</h3>
-                    <p>تعذر تحميل البيانات. يرجى التأكد من وجود ملفات التورنت في المسار المحدد (data/file1.torrent و data/file2.torrent).</p>
+                    <p>تعذر تحميل البيانات. يرجى التأكد من وجود ملفات التورنت في المسار المحدد (./"data/file1.torrent و ./data/file2.torrent).</p>
                 </div>
             `;
         }
