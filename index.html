@@ -13,6 +13,8 @@
 <script>tailwind.config={theme:{extend:{colors:{primary:'#cc0000',blood:'#220000',glass:'rgba(15, 15, 15, 0.8)'}}}}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<!-- مكتبة WebTorrent لجلب الفيديوهات من الأرشيف -->
+<script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Amiri:ital@1&display=swap" rel="stylesheet">
 
 <style>
@@ -102,15 +104,11 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
 <!-- الخلفية النجمية -->
 <div id="canvas-layer"><canvas id="stars-canvas" class="w-full h-full block"></canvas></div>
 
-<!-- قسم الخريطة (تم إفراغه بناءً على طلبك) -->
-<main id="map-view" class="items-center justify-center">
-    <div class="glass-panel p-10 rounded-2xl text-center border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.05)]">
-        <svg class="w-16 h-16 mx-auto text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
-        </svg>
-        <h2 class="text-2xl md:text-3xl font-bold text-gray-300">تم إفراغ بيانات الخريطة</h2>
-        <p class="text-gray-500 mt-2">لا توجد أية بيانات جغرافية للعرض في هذا القسم حالياً.</p>
-    </div>
+<!-- قسم الخريطة (تم حذف البيانات تماماً بناءً على طلبك) -->
+<main id="map-view" class="flex items-center justify-center">
+<div class="glass-panel p-10 rounded-2xl text-center border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.05)]">
+<h2 class="text-2xl md:text-3xl font-bold text-gray-400">تم إفراغ خانة الخريطة</h2>
+</div>
 </main>
 
 <!-- قسم أبرز المحطات (الخط الزمني السينمائي) -->
@@ -155,15 +153,15 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
 </div>
 </main>
 
-<!-- قسم التوثيق المرئي (تحديث: بدون تورنت ليعمل بشكل فوري) -->
+<!-- قسم التوثيق المرئي (مخصص لتحميل ملفات التورنت المحددة) -->
 <main id="videos-view" class="text-white">
 <div class="w-full max-w-7xl mx-auto px-4 md:px-8">
 <div class="mb-8 text-center">
 <h2 id="video-title" class="text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400 drop-shadow-lg">التوثيق المرئي الميداني</h2>
-<p id="video-desc" class="text-gray-400 text-sm md:text-base">فيديوهات حية توثق الكارثة والميدان بشكل مباشر</p>
+<p id="video-desc" class="text-gray-400 text-sm md:text-base">فيديوهات حية توثق الكارثة والميدان من الأرشيف مباشرة</p>
 </div>
 <div id="videos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <!-- يُولد برمجياً عبر الروابط الثابتة -->
+    <!-- سيتم تعبئة الفيديوهات هنا برمجياً من ملفات التورنت -->
 </div>
 </div>
 </main>
@@ -255,7 +253,9 @@ let isPlaying=false,gazaSouls=[],tooltipTimeout=null,isSearching=false;
 let width,height,points=[],mouseX=-1000,mouseY=-1000;
 let sound;
 let milestonesRendered = false; 
+let torrentsLoaded = false;
 let currentMainMode = 'souls'; 
+const wtClient = new WebTorrent();
 
 /* ---------------------------------------------------
    ميزة الشهب المتساقطة (Shooting Stars Effect)
@@ -388,35 +388,93 @@ else{navigator.clipboard.writeText(window.location.href).then(()=>alert(t.copyAl
 };
 
 /* ---------------------------------------------------
-   نظام التوثيق المرئي (توليد الفيديوهات بدون تورنت)
+   جلب ملفات التورنت المحددة (file1.torrent و file2.torrent)
    --------------------------------------------------- */
-const videosData=[
-    {url:"https://t.me/gazaalannet/81461?embed=1",title:"قصف واستهداف أحياء سكنية",date:"توثيق ميداني", type:"iframe"},
-    {url:"https://t.me/gazaalannet/81560?embed=1",title:"عمليات الإنقاذ والدفاع المدني",date:"توثيق ميداني", type:"iframe"},
-    {url:"https://t.me/gazaalannet/81611?embed=1",title:"معاناة النزوح المستمر",date:"توثيق ميداني", type:"iframe"}
-];
+function fetchTorrentVideos() {
+    if (torrentsLoaded) return;
+    
+    const grid = document.getElementById('videos-grid');
+    if (!grid) return;
+    
+    grid.innerHTML = `
+        <div class="col-span-full flex flex-col items-center justify-center py-16 text-gray-300">
+            <div class="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p class="text-lg font-bold">جاري قراءة ملفات الأرشيف من المسار المحدد (../data/) ...</p>
+        </div>
+    `;
 
-function renderVideos(){
-    const grid=document.getElementById('videos-grid');
-    if(!grid)return;
-    grid.innerHTML=videosData.map(v=> {
-        let mediaContent = v.type === "video"
-            ? `<video src="${v.url}" controls class="absolute top-0 left-0 w-full h-full object-cover"></video>`
-            : `<iframe src="${v.url}" class="absolute top-0 left-0 w-full h-full" frameborder="0" scrolling="yes" allow="autoplay; fullscreen"></iframe>`;
+    const torrentFilesPaths = ['../data/file1.torrent', '../data/file2.torrent'];
+    let anyLoaded = false;
 
-        return `
-        <div class="bg-black/50 backdrop-blur-md border border-white/10 p-4 rounded-xl flex flex-col shadow-xl hover:border-red-500/40 transition-colors">
-            <div class="mb-3 border-b border-white/10 pb-2">
-                <h3 class="text-lg font-bold text-red-500">${v.title}</h3>
-                <div class="text-[10px] text-gray-400 mt-1 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-gray-400 rounded-full"></span> ${v.date}</div>
-            </div>
-            <div class="h-[350px] w-full rounded-xl overflow-hidden relative bg-black/80 border border-white/5">
-                ${mediaContent}
-            </div>
-        </div>`;
-    }).join('');
+    torrentFilesPaths.forEach(path => {
+        wtClient.add(path, function (torrent) {
+            if (!anyLoaded) {
+                grid.innerHTML = ''; 
+                anyLoaded = true;
+            }
+
+            torrent.files.forEach(function (file) {
+                if (file.name.match(/\.(mp4|webm|mkv|avi|mov)$/i)) {
+                    const card = document.createElement('div');
+                    card.className = "bg-black/50 backdrop-blur-md border border-white/10 p-4 rounded-xl flex flex-col shadow-xl hover:border-red-500/40 transition-colors";
+                    const sizeMB = (file.length / (1024 * 1024)).toFixed(2);
+                    
+                    card.innerHTML = `
+                        <div class="mb-3 border-b border-white/10 pb-2">
+                            <h3 class="text-lg font-bold text-red-500 truncate" title="${file.name}">${file.name}</h3>
+                            <div class="text-[10px] text-gray-400 mt-1 flex justify-between items-center">
+                                <span>الحجم: ${sizeMB} MB</span>
+                                <span class="progress-txt text-green-400 font-bold">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 h-1 mt-2 rounded-full overflow-hidden">
+                                <div class="progress-bar bg-red-600 h-full w-0 transition-all"></div>
+                            </div>
+                        </div>
+                        <div class="media-container h-[350px] w-full rounded-xl overflow-hidden relative bg-black/80 border border-white/5 flex items-center justify-center">
+                        </div>
+                    `;
+                    
+                    grid.appendChild(card);
+                    
+                    const mediaContainer = card.querySelector('.media-container');
+                    const progressBar = card.querySelector('.progress-bar');
+                    const progressTxt = card.querySelector('.progress-txt');
+
+                    file.on('download', () => {
+                        const progress = Math.round(file.progress * 100);
+                        progressBar.style.width = progress + '%';
+                        progressTxt.innerText = progress + '%';
+                    });
+
+                    file.appendTo(mediaContainer, {
+                        autoplay: false,
+                        controls: true,
+                        maxBlobLength: 2 * 1000 * 1000 * 1000
+                    }, function (err, elem) {
+                        if (!err && elem) {
+                            elem.className = "absolute top-0 left-0 w-full h-full object-cover";
+                            progressTxt.innerText = "اكتمل ✓";
+                        }
+                    });
+                }
+            });
+        });
+    });
+
+    wtClient.on('error', function (err) {
+        console.error('خطأ في WebTorrent:', err);
+        if (!anyLoaded) {
+            grid.innerHTML = `
+                <div class="col-span-full text-center text-red-500 p-10 bg-red-900/20 border border-red-500/30 rounded-xl">
+                    <h3 class="font-bold text-xl mb-2">خطأ في قراءة الأرشيف</h3>
+                    <p>تعذر تحميل البيانات. يرجى التأكد من وجود ملفات التورنت في المسار المحدد (../data/file1.torrent و ../data/file2.torrent).</p>
+                </div>
+            `;
+        }
+    });
+
+    torrentsLoaded = true;
 }
-renderVideos();
 
 /* ---------------------------------------------------
    دوال الخط الزمني (التوليد والاسكرول سباي)
@@ -532,8 +590,9 @@ window.switchMainMode = function(mode) {
         document.getElementById('stats-view').style.display = 'block';
     } else if(mode === 'videos') {
         document.getElementById('videos-view').style.display = 'block';
+        fetchTorrentVideos();
     } else if(mode === 'map') {
-        document.getElementById('map-view').style.display = 'flex'; // استخدام flex لتوسيط رسالة الإفراغ
+        document.getElementById('map-view').style.display = 'flex';
     }
 };
 
@@ -548,77 +607,40 @@ canvas.width=width;canvas.height=height;
 window.addEventListener('resize',resize);
 resize();
 
-/* ---------------------------------------------------
-   جلب وتوليد بيانات الشهداء (مع نظام احتياطي ذكي)
-   --------------------------------------------------- */
-async function fetchAndRenderData(url) {
-    gazaSouls = [];
-    points = [];
-    if (ctx) ctx.clearRect(0, 0, width, height);
-    
-    let isFetchSuccessful = false;
-    
-    try {
-        const res = await fetch(url, { cache: 'no-cache' });
-        if (res.ok) {
-            const data = await res.json();
-            const list = Array.isArray(data) ? data : (data.data || []);
-            
-            if (list.length > 0) {
-                gazaSouls = list.map(item => ({
-                    name_ar: item.name_ar || item.name || "شهيد مجهول",
-                    name_en: item.name_en || "",
-                    id: item.id || "",
-                    dob: item.dob || "",
-                    age: item.age || "غير معروف",
-                    gender: item.gender || "M"
-                }));
-                isFetchSuccessful = true;
-            }
-        }
-    } catch (e) {
-        console.warn("حدث خطأ أثناء جلب الملف، سيتم استخدام قاعدة البيانات الاحتياطية للعرض.");
-    }
-
-    // نظام توليد البيانات الاحتياطية في حال تعذر قراءة الملف (مثل تشغيل الملف محلياً)
-    if (!isFetchSuccessful || gazaSouls.length === 0) {
-        const firstNamesM = ["محمد", "أحمد", "محمود", "علي", "يوسف", "حسن", "إبراهيم", "عمر", "عبد الله", "عبد الرحمن", "طارق", "خالد", "ياسر", "رامي", "سامي", "سعيد", "مصطفى", "حمزة"];
-        const firstNamesF = ["فاطمة", "مريم", "عائشة", "خديجة", "سارة", "نور", "ليلى", "هدى", "آية", "شهد", "ريم", "هند", "شيرين", "إيمان", "ياسمين", "منى", "أمل", "حنين"];
-        const lastNames = ["المصري", "النجار", "الأسطل", "الفرا", "أبو طه", "أبو ستة", "الأغا", "أبو عودة", "الشبكي", "الكفارنة", "حلس", "الدحدوح", "أبو شمالة", "برهوم", "شلوف", "أبو دقة", "أبو ريا", "الشاعر", "قديح", "الرنتيسي", "العرعير"];
-        
-        for (let i = 0; i < 3500; i++) { // توليد 3500 نقطة ببيانات عشوائية لضمان الظهور
-            const isMale = Math.random() > 0.4;
-            const fName = isMale ? firstNamesM[Math.floor(Math.random() * firstNamesM.length)] : firstNamesF[Math.floor(Math.random() * firstNamesF.length)];
-            const lName = lastNames[Math.floor(Math.random() * lastNames.length)];
-            const age = Math.floor(Math.random() * 70) + 1;
-            
-            gazaSouls.push({
-                name_ar: fName + " " + lName,
-                name_en: "",
-                id: "10" + Math.floor(Math.random() * 9000000 + 1000000), // هوية عشوائية
-                dob: (2024 - age) + "-01-01", // تاريخ ميلاد تقريبي
-                age: age,
-                gender: isMale ? "M" : "F"
-            });
-        }
-    }
-    
-    renderStars();
+/* جلب البيانات الحقيقية من ملفات الـ JSON فقط (بدون أي بيانات وهمية) */
+async function fetchAndRenderData(url){
+gazaSouls=[]; points=[];
+if(ctx) ctx.clearRect(0,0,width,height);
+try{
+const res=await fetch(url,{cache:'no-cache'});
+if(res.ok){
+const data=await res.json();
+const list=Array.isArray(data)?data:(data.data||[]);
+gazaSouls=list.map(item=>({
+name_ar:item.name_ar||item.name||"شهيد مجهول الاسم",
+name_en:item.name_en||"",
+id:item.id||"", dob:item.dob||"", age:item.age||"غير معروف", gender:item.gender||"M"
+}));
+}
+}catch(e){
+console.error("فشل قراءة ملف البيانات:", e);
+}
+renderStars();
 }
 
 function renderStars(){
-    points=[];
-    const dotsToRender=Math.min(2500,gazaSouls.length);
-    for(let i=0;i<dotsToRender;i++){
-        const alphaVal=Math.random()*0.5+0.2;
-        points.push({
-            x:Math.random()*width,y:Math.random()*height,
-            vx:(Math.random()-0.5)*0.25,vy:(Math.random()-0.5)*0.25,
-            alpha:alphaVal,baseAlpha:alphaVal,targetAlpha:alphaVal,scale:1,targetScale:1,
-            color:'#ffffff',userData:gazaSouls[i],isMatched:false
-        });
-    }
-    animateCounter(gazaSouls.length>0?gazaSouls.length:0);
+points=[];
+const dotsToRender=Math.min(2500,gazaSouls.length);
+for(let i=0;i<dotsToRender;i++){
+const alphaVal=Math.random()*0.5+0.2;
+points.push({
+x:Math.random()*width,y:Math.random()*height,
+vx:(Math.random()-0.5)*0.25,vy:(Math.random()-0.5)*0.25,
+alpha:alphaVal,baseAlpha:alphaVal,targetAlpha:alphaVal,scale:1,targetScale:1,
+color:'#ffffff',userData:gazaSouls[i],isMatched:false
+});
+}
+animateCounter(gazaSouls.length>0?gazaSouls.length:0);
 }
 
 function gameLoop(){
