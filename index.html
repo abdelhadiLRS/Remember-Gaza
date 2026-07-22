@@ -131,7 +131,7 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
 <button class="btn-main" id="tab-journalists" onclick="switchMainMode('journalists')">شهداء الصحافة</button>
 <button class="btn-main" id="tab-westbank" onclick="switchMainMode('westbank')">شهداء الضفة الغربية</button>
 <button class="btn-main" id="tab-milestones" onclick="switchMainMode('milestones')">أبرز المحطات</button>
-<button class="btn-main" id="tab-stats" onclick="switchMainMode('stats')">الإحصائيات</button>
+  <button class="btn-main" id="tab-stats" onclick="switchMainMode('stats')">الإحصائيات</button>
 <button class="btn-main" id="tab-videos" onclick="switchMainMode('videos')">التوثيق</button>
 <button class="btn-main" id="tab-map" onclick="switchMainMode('map')">الخريطة</button>
 </div>
@@ -558,10 +558,19 @@ if(ctx)requestAnimationFrame(gameLoop);
 switchMainMode('souls');
 });
 </script>
-  <!-- ملف الجافا سكربت الخاص بالخط الزمني -->
-<script src="timelineCinematic.js.download"></script>
+ <!-- ... محتوى الصفحة وباقي السكريبتات ... -->
+<script>
+window.addEventListener('DOMContentLoaded',()=>{
+initLanguage();
+if(ctx)requestAnimationFrame(gameLoop);
+switchMainMode('souls');
+});
+</script>
 
-<!-- الملفات التابعة أو الأساسية المطلوبة للتشغيل (مثل JQuery إن وجد في ملفاتك) -->
+<!-- أضف هذه الملفات هنا قبل نهاية الوسم </body> -->
+<script src="timelineCinematic.js.download"></script>
 <script src="jquery-3.7.1.min.js.download"></script>
+
+
 </body>
 </html>
