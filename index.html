@@ -355,7 +355,7 @@ else{navigator.clipboard.writeText(window.location.href).then(()=>alert(t.copyAl
 };
 
 /* ---------------------------------------------------
-   جلب ملفات التورنت المحددة (تم إصلاح المشكلة بالكامل)
+   جلب ملفات التورنت المحددة
 --------------------------------------------------- */
 async function fetchTorrentVideos() {
     if (torrentsLoaded) return;
@@ -379,7 +379,7 @@ async function fetchTorrentVideos() {
     for (const path of torrentFilesPaths) {
         try {
             const response = await fetch(path);
-            if (!response.ok) continue; // تخطي في حال لم يجد الملف
+            if (!response.ok) continue; 
 
             const buffer = await response.arrayBuffer();
 
@@ -543,19 +543,14 @@ window.switchMainMode = function(mode) {
 
     if(mode === 'souls'){
         document.getElementById('bottom-bar').style.display = 'flex';
-        if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
-        fetchAndRenderData('data/Victims.json'); // مسار الشهداء الذي طلبته
+        fetchAndRenderData('data/Victims.json');
     } else if(mode === 'journalists') {
         document.getElementById('bottom-bar').style.display = 'flex';
-        if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
         fetchAndRenderData('data/press_killed_in_gaza.json');
     } else if(mode === 'westbank') {
         document.getElementById('bottom-bar').style.display = 'flex';
-        if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
-        document.getElementById('no-data-view').style.display = 'flex';
-        points = [];
-        if(ctx) ctx.clearRect(0, 0, width, height);
-        document.getElementById('number').innerText = "0";
+        // تمرير مسار وهمي أو فارغ لمحاكاة عدم وجود بيانات، أو استبداله بملف الضفة إن وجد
+        fetchAndRenderData('data/empty_file.json'); 
     } else if(mode === 'milestones') {
         document.getElementById('milestones-view').style.display = 'block';
         renderMilestonesCinematic();
@@ -580,14 +575,18 @@ canvas.width=width;canvas.height=height;
 window.addEventListener('resize',resize);
 resize();
 
-/* جلب البيانات الحقيقية من ملفات الـ JSON مع التحقق من عدم فراغ الملف لمنع خطأ الـ JSON Syntax */
+/* جلب البيانات الحقيقية من ملفات الـ JSON مع المعالجة الديناميكية للملفات الفارغة */
 async function fetchAndRenderData(url){
 gazaSouls=[]; points=[];
 if(ctx) ctx.clearRect(0,0,width,height);
+// إخفاء واجهة "لا توجد بيانات" مبدئياً
+document.getElementById('no-data-view').style.display = 'none';
+
 try{
 const res = await fetch(url, {cache:'no-cache'});
 if(res.ok){
 const text = await res.text();
+// التحقق من أن الملف ليس فارغاً تماماً
 if(text && text.trim().length > 0){
 const data = JSON.parse(text);
 const list = Array.isArray(data) ? data : (data.data || []);
@@ -599,9 +598,26 @@ id: item.id || "", dob: item.dob || "", age: item.age || "غير معروف", ge
 }
 }
 }catch(e){
-console.error("فشل قراءة ملف البيانات أو أن الملف فارغ:", e);
+console.warn("تعذر جلب البيانات، أو أن الملف غير موجود/فارغ:", e);
 }
-renderStars();
+
+// المعالجة الدقيقة: إذا لم يتم العثور على أي بيانات، أظهر الواجهة البديلة
+if(gazaSouls.length === 0){
+    document.getElementById('no-data-view').style.display = 'flex';
+    document.getElementById('number').innerText = "0";
+    const canvasLayer = document.getElementById('canvas-layer');
+    if(canvasLayer) {
+        canvasLayer.style.opacity = '0';
+        canvasLayer.style.pointerEvents = 'none';
+    }
+} else {
+    const canvasLayer = document.getElementById('canvas-layer');
+    if(canvasLayer) {
+        canvasLayer.style.opacity = '1';
+        canvasLayer.style.pointerEvents = 'auto';
+    }
+    renderStars();
+}
 }
 
 function renderStars(){
@@ -702,13 +718,16 @@ tooltipTimeout=setTimeout(hideTooltip,6000);
 
 function hideTooltip(){
 const tooltipEl=document.getElementById('tooltip');
-if(tooltipEl)tooltipEl.style.display='none';
-if(!isSearching){
-points.forEach(p=>{p.targetAlpha=p.baseAlpha;p.targetScale=1;p.color='#ffffff';});
-}else{
-points.forEach(p=>{
-if(p.isMatched){p.targetAlpha=1;p.targetScale=3;p.color='#ff0000';}
-});
+// تحسين الأداء عبر التحقق من حالة العرض قبل التعديل عليها
+if(tooltipEl && tooltipEl.style.display !== 'none'){
+    tooltipEl.style.display='none';
+    if(!isSearching){
+    points.forEach(p=>{p.targetAlpha=p.baseAlpha;p.targetScale=1;p.color='#ffffff';});
+    }else{
+    points.forEach(p=>{
+    if(p.isMatched){p.targetAlpha=1;p.targetScale=3;p.color='#ff0000';}
+    });
+    }
 }
 }
 
