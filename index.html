@@ -399,11 +399,11 @@ function fetchTorrentVideos() {
     grid.innerHTML = `
         <div class="col-span-full flex flex-col items-center justify-center py-16 text-gray-300">
             <div class="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p class="text-lg font-bold">جاري قراءة ملفات الأرشيف من المسار المحدد (../data/) ...</p>
+            <p class="text-lg font-bold">جاري قراءة ملفات الأرشيف من المسار المحدد (data/) ...</p>
         </div>
     `;
 
-    const torrentFilesPaths = ['../data/file1.torrent', '../data/file2.torrent'];
+    const torrentFilesPaths = ['data/file1.torrent', 'data/file2.torrent'];
     let anyLoaded = false;
 
     torrentFilesPaths.forEach(path => {
@@ -467,7 +467,7 @@ function fetchTorrentVideos() {
             grid.innerHTML = `
                 <div class="col-span-full text-center text-red-500 p-10 bg-red-900/20 border border-red-500/30 rounded-xl">
                     <h3 class="font-bold text-xl mb-2">خطأ في قراءة الأرشيف</h3>
-                    <p>تعذر تحميل البيانات. يرجى التأكد من وجود ملفات التورنت في المسار المحدد (../data/file1.torrent و ../data/file2.torrent).</p>
+                    <p>تعذر تحميل البيانات. يرجى التأكد من وجود ملفات التورنت في المسار المحدد (data/file1.torrent و data/file2.torrent).</p>
                 </div>
             `;
         }
@@ -571,7 +571,7 @@ window.switchMainMode = function(mode) {
     if(mode === 'souls'){
         document.getElementById('bottom-bar').style.display = 'flex';
         if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
-        fetchAndRenderData('./killed-in-gaza.json');
+        fetchAndRenderData('data/Victims.json');
     } else if(mode === 'journalists') {
         document.getElementById('bottom-bar').style.display = 'flex';
         if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
