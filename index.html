@@ -402,8 +402,10 @@ function fetchTorrentVideos() {
             <p class="text-lg font-bold">جاري قراءة ملفات الأرشيف من المسار المحدد (data/) ...</p>
         </div>
     `;
-
-    const torrentFilesPaths = ['./data/file1.torrent', './data/file2.torrent'];
+const torrentFilesPaths = [
+    './data/file1.torrent',
+    './data/file2.torrent'
+];
     let anyLoaded = false;
 
     torrentFilesPaths.forEach(path => {
