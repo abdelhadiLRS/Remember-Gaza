@@ -161,12 +161,12 @@
 
         <div class="tabs-wrapper no-scrollbar interactive w-full sm:w-auto">
             <div class="flex gap-1.5 bg-black/40 p-1 rounded-full border border-white/5 mx-auto md:mx-0">
-                <button class="btn-main active" id="tab-souls" onclick="switchMainMode('souls')">✨ غزة</button>
-                <button class="btn-main" id="tab-journalists" onclick="switchMainMode('journalists')">🎥 صحفي غزة</button>
-                <button class="btn-main" id="tab-westbank" onclick="switchMainMode('westbank')">🕊️ الضفة الغربية</button>
-                <button class="btn-main" id="tab-stats" onclick="switchMainMode('stats')">📊 الإحصائيات</button>
-                <button class="btn-main" id="tab-videos" onclick="switchMainMode('videos')">🎬 التوثيق</button>
-                <button class="btn-main" id="tab-map" onclick="switchMainMode('map')">🗺️ الخريطة</button>
+                <button class="btn-main active" id="tab-souls" onclick="switchMainMode('souls')">شهداء غزة</button>
+                <button class="btn-main" id="tab-journalists" onclick="switchMainMode('journalists')">شهداء الصحافة </button>
+                <button class="btn-main" id="tab-westbank" onclick="switchMainMode('westbank')">شهداء الضفة الغربية</button>
+                <button class="btn-main" id="tab-stats" onclick="switchMainMode('stats')">الإحصائيات</button>
+                <button class="btn-main" id="tab-videos" onclick="switchMainMode('videos')">التوثيق</button>
+                <button class="btn-main" id="tab-map" onclick="switchMainMode('map')">الخريطة</button>
             </div>
         </div>
 
@@ -202,7 +202,7 @@
         <!-- إنزال زر الدعم ليكون بجوار المطور والمشاركة -->
         <div class="interactive glass-panel p-2 px-4 rounded-lg flex items-center gap-4 flex-wrap justify-center order-3 md:order-2 bg-black/60">
             <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-xs bg-red-900 border-red-500 text-white hover:bg-red-700">❤️ إدعمنا لنستمر</a>
-            <span id="dev-text" class="text-xs text-gray-400 font-bold border-l border-white/20 pl-4">تطوير: عبد الهادي</span>
+            <span id="dev-text" class="text-xs text-gray-400 font-bold border-l border-white/20 pl-4">تطوير: </span>
             <div class="social-links flex gap-1.5">
                 <button onclick="shareSite()" class="share-btn flex gap-1 items-center bg-blue-600/50 border-blue-500 font-bold">
                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"></path></svg>
@@ -248,8 +248,8 @@
     const translations = {
         ar: {
             titleMain: "أرواح", logoText: "فلسطين", searchPlaceholder: "ابحث عن اسم الشهيد...",
-            tabSouls: "✨ غزة", tabJournalists: "🎥 صحفي غزة", tabWestBank: "🕊️ الضفة الغربية",
-            tabStats: "📊 الإحصائيات", tabVideos: "🎬 التوثيق", tabMap: "🗺️ الخريطة",
+            tabSouls: " غزة", tabJournalists: " صحفي غزة", tabWestBank: " الضفة الغربية",
+            tabStats:  الإحصائيات", tabVideos: " التوثيق", tabMap: " الخريطة",
             donate: "❤️ إدعمنا لنستمر", musicOn: "🎵 الصوت", musicOff: "🔇 إيقاف", visitorText: "زوار:",
             verse: `"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"`,
             devText: "تطوير: عبد الهادي", shareBtn: "مشاركة", martyrsLabel: "شهيداً وثّقت أسماؤهم",
@@ -260,9 +260,9 @@
         },
         en: {
             titleMain: "Palestinian", logoText: "Souls", searchPlaceholder: "Search a martyr's name...",
-            tabSouls: "✨ Gaza", tabJournalists: "🎥 Gaza Journalists", tabWestBank: "🕊️ West Bank",
-            tabStats: "📊 Statistics", tabVideos: "🎬 Footage", tabMap: "🗺️ Map",
-            donate: "❤️ Support Us", musicOn: "🎵 Audio", musicOff: "🔇 Mute", visitorText: "Visits:",
+            tabSouls: " Gaza", tabJournalists: "ذ Gaza Journalists", tabWestBank: "ذ West Bank",
+            tabStats: " Statistics", tabVideos: " Footage", tabMap: " Map",
+            donate: " Support Us", musicOn: "🎵 Audio", musicOff: "🔇 Mute", visitorText: "Visits:",
             verse: `"Think not of those who are slain in Allah's way as dead. Nay, they live..."`,
             devText: "Dev: Abdelhadi", shareBtn: "Share", martyrsLabel: "Martyrs Documented",
             catchphrase: "Share this platform to document the truth and let their voices be heard.",
@@ -272,8 +272,8 @@
         },
         fr: {
             titleMain: "Âmes", logoText: "Palestiniennes", searchPlaceholder: "Rechercher un martyr...",
-            tabSouls: "✨ Gaza", tabJournalists: "🎥 Journalistes Gaza", tabWestBank: "🕊️ Cisjordanie",
-            tabStats: "📊 Statistiques", tabVideos: "🎬 Vidéos", tabMap: "🗺️ Carte",
+            tabSouls: " Gaza", tabJournalists: " Journalistes Gaza", tabWestBank: " Cisjordanie",
+            tabStats: " Statistiques", tabVideos: " Vidéos", tabMap: " Carte",
             donate: "❤️ Soutenez-nous", musicOn: "🎵 Audio", musicOff: "🔇 Muet", visitorText: "Visites:",
             verse: `"Ne croyez surtout pas que ceux qui sont tués dans le chemin d'Allah sont morts..."`,
             devText: "Dév: Abdelhadi", shareBtn: "Partager", martyrsLabel: "Martyrs Documentés",
@@ -284,8 +284,8 @@
         },
         es: {
             titleMain: "Almas", logoText: "Palestinas", searchPlaceholder: "Buscar un mártir...",
-            tabSouls: "✨ Gaza", tabJournalists: "🎥 Periodistas Gaza", tabWestBank: "🕊️ Cisjordania",
-            tabStats: "📊 Estadísticas", tabVideos: "🎬 Videos", tabMap: "🗺️ Mapa",
+            tabSouls: " Gaza", tabJournalists: " Periodistas Gaza", tabWestBank: " Cisjordania",
+            tabStats: " Estadísticas", tabVideos: " Videos", tabMap: " Mapa",
             donate: "❤️ Apóyanos", musicOn: "🎵 Audio", musicOff: "🔇 Silencio", visitorText: "Visitas:",
             verse: `"No pienses que los que han caído en el camino de Dios están muertos..."`,
             devText: "Desarrollo: Abdelhadi", shareBtn: "Compartir", martyrsLabel: "Mártires Documentados",
@@ -296,8 +296,8 @@
         },
         tr: {
             titleMain: "Filistin", logoText: "Ruhları", searchPlaceholder: "Bir şehit adı arayın...",
-            tabSouls: "✨ Gazze", tabJournalists: "🎥 Gazze Gazetecileri", tabWestBank: "🕊️ Batı Şeria",
-            tabStats: "📊 İstatistikler", tabVideos: "🎬 Videolar", tabMap: "🗺️ Harita",
+            tabSouls: " Gazze", tabJournalists: " Gazze Gazetecileri", tabWestBank: " Batı Şeria",
+            tabStats: " İstatistikler", tabVideos: " Videolar", tabMap: " Harita",
             donate: "❤️ Bizi Destekle", musicOn: "🎵 Ses", musicOff: "🔇 Sessiz", visitorText: "Ziyaretler:",
             verse: `"Allah yolunda öldürülenleri sakın ölü sanmayın..."`,
             devText: "Geliştirici: Abdelhadi", shareBtn: "Paylaş", martyrsLabel: "Belgelenmiş Şehitler",
