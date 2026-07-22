@@ -104,26 +104,22 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
 <!-- الخلفية النجمية -->
 <div id="canvas-layer"><canvas id="stars-canvas" class="w-full h-full block"></canvas></div>
 
-<!-- قسم الخريطة (تم إفراغ البيانات تماماً بناءً على طلبك) -->
+<!-- قسم الخريطة -->
 <main id="map-view" class="flex items-center justify-center">
 <div class="glass-panel p-10 rounded-2xl text-center border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.05)]">
 <h2 class="text-2xl md:text-3xl font-bold text-gray-400">تم إفراغ خانة الخريطة</h2>
 </div>
 </main>
 
-<!-- قسم أبرز المحطات (الخط الزمني السينمائي) -->
+<!-- قسم أبرز المحطات -->
 <main id="milestones-view" class="text-white">
 <div class="tlc-container">
     <nav class="tlc-tracker">
         <div class="tlc-tracker-clip" id="tlc-tracker-clip">
-            <div class="tlc-tracker-track" id="tlc-tracker-bar">
-                <!-- يُولد برمجياً -->
-            </div>
+            <div class="tlc-tracker-track" id="tlc-tracker-bar"></div>
         </div>
     </nav>
-    <div class="tlc-main" id="tlc-scenes-container">
-        <!-- يُولد برمجياً -->
-    </div>
+    <div class="tlc-main" id="tlc-scenes-container"></div>
 </div>
 </main>
 
@@ -153,16 +149,14 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
 </div>
 </main>
 
-<!-- قسم التوثيق المرئي (مخصص لتحميل ملفات التورنت المحددة) -->
+<!-- قسم التوثيق المرئي -->
 <main id="videos-view" class="text-white">
 <div class="w-full max-w-7xl mx-auto px-4 md:px-8">
 <div class="mb-8 text-center">
 <h2 id="video-title" class="text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400 drop-shadow-lg">التوثيق المرئي الميداني</h2>
 <p id="video-desc" class="text-gray-400 text-sm md:text-base">فيديوهات حية توثق الكارثة والميدان من الأرشيف مباشرة</p>
 </div>
-<div id="videos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <!-- سيتم تعبئة الفيديوهات هنا برمجياً من ملفات التورنت -->
-</div>
+<div id="videos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 </div>
 </main>
 
@@ -255,13 +249,16 @@ let sound;
 let milestonesRendered = false; 
 let torrentsLoaded = false;
 let currentMainMode = 'souls'; 
+
+// تهيئة WebTorrent مع إلغاء الحد الأقصى للمستمعين لتجنب تحذير MaxListeners
 const wtClient = new WebTorrent();
+if (wtClient.setMaxListeners) wtClient.setMaxListeners(0); 
+if (wtClient.on) wtClient.on('warning', (err) => console.warn('WebTorrent Warning:', err));
 
 /* ---------------------------------------------------
-   ميزة الشهب المتساقطة (Shooting Stars Effect)
+   ميزة الشهب المتساقطة
    --------------------------------------------------- */
 let shootingStars = [];
-
 function spawnShootingStar() {
     const fromTop = Math.random() > 0.5;
     const x = fromTop ? Math.random() * width * 1.2 : width + 50;
@@ -269,59 +266,29 @@ function spawnShootingStar() {
     const angle = Math.PI * 0.75 + (Math.random() - 0.5) * 0.3; 
     const speed = Math.random() * 10 + 8;
     const length = Math.random() * 120 + 60;
-    
-    shootingStars.push({
-        x: x, y: y,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        length: length,
-        life: 1.0,
-        decay: Math.random() * 0.015 + 0.008
-    });
+    shootingStars.push({x, y, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, length, life: 1.0, decay: Math.random()*0.015+0.008});
 }
 
 function updateAndDrawShootingStars() {
-    if (currentMainMode === 'souls' || currentMainMode === 'journalists' || currentMainMode === 'westbank') {
-        if (Math.random() < 0.035) { 
-            spawnShootingStar();
-        }
+    if (['souls', 'journalists', 'westbank'].includes(currentMainMode)) {
+        if (Math.random() < 0.035) spawnShootingStar();
     }
-
     for (let i = shootingStars.length - 1; i >= 0; i--) {
         let ss = shootingStars[i];
-        ss.x += ss.vx;
-        ss.y += ss.vy;
-        ss.life -= ss.decay;
-
-        if (ss.life <= 0 || ss.x < -150 || ss.y > height + 150) {
-            shootingStars.splice(i, 1);
-            continue;
-        }
-
+        ss.x += ss.vx; ss.y += ss.vy; ss.life -= ss.decay;
+        if (ss.life <= 0 || ss.x < -150 || ss.y > height + 150) { shootingStars.splice(i, 1); continue; }
         const dist = Math.hypot(ss.vx, ss.vy);
         const tailX = ss.x - (ss.vx / dist) * ss.length;
         const tailY = ss.y - (ss.vy / dist) * ss.length;
-
         const grad = ctx.createLinearGradient(ss.x, ss.y, tailX, tailY);
         grad.addColorStop(0, `rgba(255, 255, 255, ${ss.life})`);
         grad.addColorStop(0.25, `rgba(255, 80, 80, ${ss.life * 0.8})`);
         grad.addColorStop(1, `rgba(204, 0, 0, 0)`);
-
-        ctx.beginPath();
-        ctx.moveTo(ss.x, ss.y);
-        ctx.lineTo(tailX, tailY);
-        ctx.strokeStyle = grad;
-        ctx.lineWidth = 2.2;
-        ctx.lineCap = 'round';
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.arc(ss.x, ss.y, 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${ss.life})`;
-        ctx.shadowColor = '#ff3333';
-        ctx.shadowBlur = 10;
-        ctx.fill();
-        ctx.shadowBlur = 0; 
+        ctx.beginPath(); ctx.moveTo(ss.x, ss.y); ctx.lineTo(tailX, tailY);
+        ctx.strokeStyle = grad; ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.stroke();
+        ctx.beginPath(); ctx.arc(ss.x, ss.y, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${ss.life})`; ctx.shadowColor = '#ff3333';
+        ctx.shadowBlur = 10; ctx.fill(); ctx.shadowBlur = 0; 
     }
 }
 
@@ -388,21 +355,17 @@ else{navigator.clipboard.writeText(window.location.href).then(()=>alert(t.copyAl
 };
 
 /* ---------------------------------------------------
-   جلب ملفات التورنت المحددة (file1.torrent و file2.torrent)
-----------------
-/* ---------------------------------------------------
-   جلب ملفات التورنت المحددة (نسخة مصححة)
+   جلب ملفات التورنت المحددة (تم إصلاح المشكلة بالكامل)
 --------------------------------------------------- */
 async function fetchTorrentVideos() {
     if (torrentsLoaded) return;
-
     const grid = document.getElementById('videos-grid');
     if (!grid) return;
 
     grid.innerHTML = `
         <div class="col-span-full flex flex-col items-center justify-center py-16 text-gray-300">
             <div class="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p class="text-lg font-bold">جاري تحميل الأرشيف...</p>
+            <p class="text-lg font-bold">جاري تحميل الأرشيف المرئي...</p>
         </div>
     `;
 
@@ -414,127 +377,92 @@ async function fetchTorrentVideos() {
     let anyLoaded = false;
 
     for (const path of torrentFilesPaths) {
-
         try {
-
             const response = await fetch(path);
-
-            if (!response.ok)
-                throw new Error("تعذر تحميل " + path);
+            if (!response.ok) continue; // تخطي في حال لم يجد الملف
 
             const buffer = await response.arrayBuffer();
 
             wtClient.add(new Uint8Array(buffer), function (torrent) {
-
                 if (!anyLoaded) {
                     grid.innerHTML = "";
                     anyLoaded = true;
                 }
 
                 torrent.files.forEach(function (file) {
-
-                    if (!file.name.match(/\.(mp4|webm|mkv|avi|mov)$/i))
-                        return;
+                    if (!file.name.match(/\.(mp4|webm|mkv|avi|mov)$/i)) return;
 
                     const sizeMB = (file.length / 1024 / 1024).toFixed(2);
-
                     const card = document.createElement("div");
 
-                    card.className =
-                        "bg-black/50 backdrop-blur-md border border-white/10 p-4 rounded-xl flex flex-col shadow-xl hover:border-red-500/40 transition-colors";
-
+                    card.className = "bg-black/50 backdrop-blur-md border border-white/10 p-4 rounded-xl flex flex-col shadow-xl hover:border-red-500/40 transition-colors";
                     card.innerHTML = `
                         <div class="mb-3 border-b border-white/10 pb-2">
-                            <h3 class="text-lg font-bold text-red-500">${file.name}</h3>
-
+                            <h3 class="text-lg font-bold text-red-500 truncate" title="${file.name}">${file.name}</h3>
                             <div class="text-[10px] text-gray-400 mt-1 flex justify-between">
                                 <span>${sizeMB} MB</span>
                                 <span class="progress-txt text-green-400">0%</span>
                             </div>
-
                             <div class="w-full bg-gray-800 h-1 mt-2 rounded-full overflow-hidden">
-                                <div class="progress-bar bg-red-600 h-full w-0"></div>
+                                <div class="progress-bar bg-red-600 h-full w-0 transition-all duration-300"></div>
                             </div>
                         </div>
-
-                        <div class="media-container h-[350px] rounded-xl overflow-hidden bg-black flex items-center justify-center">
+                        <div class="media-container h-[350px] w-full rounded-xl overflow-hidden bg-black flex items-center justify-center relative">
                         </div>
                     `;
 
                     grid.appendChild(card);
 
-                    const mediaContainer =
-                        card.querySelector(".media-container");
-
-                    const progressBar =
-                        card.querySelector(".progress-bar");
-
-                    const progressTxt =
-                        card.querySelector(".progress-txt");
+                    const mediaContainer = card.querySelector(".media-container");
+                    const progressBar = card.querySelector(".progress-bar");
+                    const progressTxt = card.querySelector(".progress-txt");
 
                     torrent.on("download", () => {
-
-                        const progress =
-                            Math.round(torrent.progress * 100);
-
-                        progressBar.style.width =
-                            progress + "%";
-
-                        progressTxt.innerText =
-                            progress + "%";
-
+                        const progress = Math.round(torrent.progress * 100);
+                        progressBar.style.width = progress + "%";
+                        progressTxt.innerText = progress + "%";
                     });
 
                     file.appendTo(
                         mediaContainer,
-                        {
-                            controls: true,
-                            autoplay: false
-                        },
+                        { controls: true, autoplay: false },
                         function (err, element) {
-
                             if (err) {
-
-                                mediaContainer.innerHTML =
-                                    "<p class='text-red-500'>فشل تشغيل الفيديو</p>";
-
+                                mediaContainer.innerHTML = "<p class='text-red-500 font-bold'>فشل تشغيل الفيديو</p>";
                                 return;
                             }
-
-                            element.className =
-                                "w-full h-full object-cover";
-
-                            progressTxt.innerHTML =
-                                "اكتمل ✓";
-
+                            element.className = "absolute top-0 left-0 w-full h-full object-cover";
+                            progressTxt.innerHTML = "اكتمل ✓";
                         }
                     );
-
                 });
-
             });
-
+        } catch (err) {
+            console.error("تعذر تحميل التورنت:", path, err);
         }
-
-        catch (err) {
-
-            console.error(err);
-
-        }
-
     }
 
-    if (!anyLoaded) {
+    // إظهار رسالة خطأ إذا لم يتم تحميل أي ملف بعد مرور وقت
+    setTimeout(() => {
+        if (!anyLoaded) {
+            grid.innerHTML = `
+            <div class="col-span-full text-center text-red-500 py-10 bg-red-900/20 border border-red-500/30 rounded-xl">
+                <h2 class="text-2xl font-bold mb-3">تعذر قراءة ملفات الأرشيف</h2>
+                <p>يرجى التأكد من مسار الملفات: <br><code class="text-gray-300">./data/file1.torrent</code><br><code class="text-gray-300">./data/file2.torrent</code></p>
+            </div>
+            `;
+        }
+    }, 5000);
 
-        grid.innerHTML = `
-        <div class="col-span-full text-center text-red-500 py-20">
-            <h2 class="text-2xl font-bold
+    torrentsLoaded = true;
+}
+
+
 /* ---------------------------------------------------
    دوال الخط الزمني (التوليد والاسكرول سباي)
    --------------------------------------------------- */
 function renderMilestonesCinematic() {
     if (milestonesRendered) return;
-    
     const trackerBar = document.getElementById('tlc-tracker-bar');
     const scenesContainer = document.getElementById('tlc-scenes-container');
     if(!trackerBar || !scenesContainer) return;
@@ -578,13 +506,7 @@ window.scrollToScene = function(e, idx) {
 function initScrollSpy() {
     const scenes = document.querySelectorAll('.tlc-scene');
     const trackerItems = document.querySelectorAll('.tlc-tracker-item');
-
-    const observerOptions = {
-        root: document.getElementById('milestones-view'),
-        rootMargin: "-20% 0px -40% 0px", 
-        threshold: 0
-    };
-
+    const observerOptions = { root: document.getElementById('milestones-view'), rootMargin: "-20% 0px -40% 0px", threshold: 0 };
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -600,14 +522,12 @@ function initScrollSpy() {
             }
         });
     }, observerOptions);
-
     scenes.forEach(scene => observer.observe(scene));
 }
 
 /* التبديل بين الأقسام الرئيسية */
 window.switchMainMode = function(mode) {
     currentMainMode = mode; 
-
     document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
     const activeBtn = document.getElementById(`tab-${mode}`);
     if (activeBtn) activeBtn.classList.add('active');
@@ -624,11 +544,11 @@ window.switchMainMode = function(mode) {
     if(mode === 'souls'){
         document.getElementById('bottom-bar').style.display = 'flex';
         if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
-        fetchAndRenderData('data/Victims.json');
+        fetchAndRenderData('data/Victims.json'); // مسار الشهداء الذي طلبته
     } else if(mode === 'journalists') {
         document.getElementById('bottom-bar').style.display = 'flex';
         if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
-        fetchAndRenderData('./press_killed_in_gaza.json');
+        fetchAndRenderData('data/press_killed_in_gaza.json');
     } else if(mode === 'westbank') {
         document.getElementById('bottom-bar').style.display = 'flex';
         if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
