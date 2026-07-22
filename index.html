@@ -611,11 +611,11 @@ window.switchMainMode = function(mode) {
     if(mode === 'souls'){
         document.getElementById('bottom-bar').style.display = 'flex';
         if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
-        fetchAndRenderData('./data/killed-in-gaza.json');
+        fetchAndRenderData('data/killed-in-gaza.json');
     } else if(mode === 'journalists') {
         document.getElementById('bottom-bar').style.display = 'flex';
         if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
-        fetchAndRenderData('./data/press_killed_in_gaza.json');
+        fetchAndRenderData('data/press_killed_in_gaza.json');
     } else if(mode === 'westbank') {
         document.getElementById('bottom-bar').style.display = 'flex';
         if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
