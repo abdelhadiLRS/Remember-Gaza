@@ -104,7 +104,7 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
 <!-- الخلفية النجمية -->
 <div id="canvas-layer"><canvas id="stars-canvas" class="w-full h-full block"></canvas></div>
 
-<!-- قسم الخريطة (تم حذف البيانات تماماً بناءً على طلبك) -->
+<!-- قسم الخريطة (تم إفراغ البيانات تماماً بناءً على طلبك) -->
 <main id="map-view" class="flex items-center justify-center">
 <div class="glass-panel p-10 rounded-2xl text-center border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.05)]">
 <h2 class="text-2xl md:text-3xl font-bold text-gray-400">تم إفراغ خانة الخريطة</h2>
@@ -607,23 +607,26 @@ canvas.width=width;canvas.height=height;
 window.addEventListener('resize',resize);
 resize();
 
-/* جلب البيانات الحقيقية من ملفات الـ JSON فقط (بدون أي بيانات وهمية) */
+/* جلب البيانات الحقيقية من ملفات الـ JSON مع التحقق من عدم فراغ الملف لمنع خطأ الـ JSON Syntax */
 async function fetchAndRenderData(url){
 gazaSouls=[]; points=[];
 if(ctx) ctx.clearRect(0,0,width,height);
 try{
-const res=await fetch(url,{cache:'no-cache'});
+const res = await fetch(url, {cache:'no-cache'});
 if(res.ok){
-const data=await res.json();
-const list=Array.isArray(data)?data:(data.data||[]);
-gazaSouls=list.map(item=>({
-name_ar:item.name_ar||item.name||"شهيد مجهول الاسم",
-name_en:item.name_en||"",
-id:item.id||"", dob:item.dob||"", age:item.age||"غير معروف", gender:item.gender||"M"
+const text = await res.text();
+if(text && text.trim().length > 0){
+const data = JSON.parse(text);
+const list = Array.isArray(data) ? data : (data.data || []);
+gazaSouls = list.map(item => ({
+name_ar: item.name_ar || item.name || "شهيد مجهول الاسم",
+name_en: item.name_en || "",
+id: item.id || "", dob: item.dob || "", age: item.age || "غير معروف", gender: item.gender || "M"
 }));
 }
+}
 }catch(e){
-console.error("فشل قراءة ملف البيانات:", e);
+console.error("فشل قراءة ملف البيانات أو أن الملف فارغ:", e);
 }
 renderStars();
 }
