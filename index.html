@@ -30,7 +30,7 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
     width: 100%;
     height: 100%;
     z-index: 20;
-    background: rgba(0,0,0,0.9);
+    background: rgba(0,0,0,0.85);
     backdrop-filter: blur(15px);
     overflow-y: auto; 
     pointer-events: auto;
@@ -249,6 +249,78 @@ let isPlaying=false,gazaSouls=[],tooltipTimeout=null,isSearching=false;
 let width,height,points=[],mouseX=-1000,mouseY=-1000;
 let sound;
 let milestonesRendered = false; 
+let currentMainMode = 'souls'; // الحالة الحالية للقسم
+
+/* ---------------------------------------------------
+   ميزة الشهب المتساقطة (Shooting Stars Effect)
+   --------------------------------------------------- */
+let shootingStars = [];
+
+function spawnShootingStar() {
+    const fromTop = Math.random() > 0.5;
+    const x = fromTop ? Math.random() * width * 1.2 : width + 50;
+    const y = fromTop ? -50 : Math.random() * height * 0.6;
+    const angle = Math.PI * 0.75 + (Math.random() - 0.5) * 0.3; // زاوية السقوط نحو الأسفل واليسار
+    const speed = Math.random() * 10 + 8;
+    const length = Math.random() * 120 + 60;
+    
+    shootingStars.push({
+        x: x, y: y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        length: length,
+        life: 1.0,
+        decay: Math.random() * 0.015 + 0.008
+    });
+}
+
+function updateAndDrawShootingStars() {
+    // توليد الشهب فقط عند التواجد في أقسام (غزة، صحفي غزة، والضفة الغربية)
+    if (currentMainMode === 'souls' || currentMainMode === 'journalists' || currentMainMode === 'westbank') {
+        if (Math.random() < 0.035) { // احتمالية توليد شهاب جديد
+            spawnShootingStar();
+        }
+    }
+
+    for (let i = shootingStars.length - 1; i >= 0; i--) {
+        let ss = shootingStars[i];
+        ss.x += ss.vx;
+        ss.y += ss.vy;
+        ss.life -= ss.decay;
+
+        if (ss.life <= 0 || ss.x < -150 || ss.y > height + 150) {
+            shootingStars.splice(i, 1);
+            continue;
+        }
+
+        const dist = Math.hypot(ss.vx, ss.vy);
+        const tailX = ss.x - (ss.vx / dist) * ss.length;
+        const tailY = ss.y - (ss.vy / dist) * ss.length;
+
+        // رسم ذيل الشهاب المتدرج
+        const grad = ctx.createLinearGradient(ss.x, ss.y, tailX, tailY);
+        grad.addColorStop(0, `rgba(255, 255, 255, ${ss.life})`);
+        grad.addColorStop(0.25, `rgba(255, 80, 80, ${ss.life * 0.8})`);
+        grad.addColorStop(1, `rgba(204, 0, 0, 0)`);
+
+        ctx.beginPath();
+        ctx.moveTo(ss.x, ss.y);
+        ctx.lineTo(tailX, tailY);
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 2.2;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+
+        // رسم وهج رأس الشهاب
+        ctx.beginPath();
+        ctx.arc(ss.x, ss.y, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${ss.life})`;
+        ctx.shadowColor = '#ff3333';
+        ctx.shadowBlur = 10;
+        ctx.fill();
+        ctx.shadowBlur = 0; // إعادة ضبط التوهج
+    }
+}
 
 /* بيانات الخط الزمني (المحطات) */
 const milestonesData = [
@@ -425,6 +497,8 @@ function initScrollSpy() {
 
 /* التبديل بين الأقسام الرئيسية */
 window.switchMainMode = function(mode) {
+    currentMainMode = mode; // تحديث السمة الحالية لتوجيه تأثير الشهب
+
     // إزالة التفعيل من جميع الأزرار وتفعيله للزر المطلوب
     document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
     const activeBtn = document.getElementById(`tab-${mode}`);
@@ -450,13 +524,15 @@ window.switchMainMode = function(mode) {
         if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
         fetchAndRenderData('./press_killed_in_gaza.json');
     } else if(mode === 'westbank') {
+        document.getElementById('bottom-bar').style.display = 'flex';
+        if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
         document.getElementById('no-data-view').style.display = 'flex';
         points = [];
         if(ctx) ctx.clearRect(0, 0, width, height);
         document.getElementById('number').innerText = "0";
     } else if(mode === 'milestones') {
         document.getElementById('milestones-view').style.display = 'block';
-        renderMilestonesCinematic(); // بناء وتشغيل الخط الزمني
+        renderMilestonesCinematic();
     } else if(mode === 'stats') {
         document.getElementById('stats-view').style.display = 'block';
     } else if(mode === 'videos') {
@@ -466,7 +542,7 @@ window.switchMainMode = function(mode) {
     }
 };
 
-/* تجهيز لوحة الرسم (Canvas) للنجوم */
+/* تجهيز لوحة الرسم (Canvas) للنجوم والشهب */
 const canvas=document.getElementById('stars-canvas');
 const ctx=canvas?canvas.getContext('2d'):null;
 function resize(){
@@ -516,6 +592,8 @@ animateCounter(gazaSouls.length>0?gazaSouls.length:0);
 function gameLoop(){
 if(!ctx)return;
 ctx.clearRect(0,0,width,height);
+
+// رسم نقاط النجوم للأرواح
 for(let i=0;i<points.length;i++){
 const p=points[i];
 p.x+=p.vx;p.y+=p.vy;
@@ -526,6 +604,10 @@ ctx.beginPath();ctx.arc(p.x,p.y,1.8*p.scale,0,Math.PI*2);
 ctx.fillStyle=p.color;ctx.globalAlpha=p.alpha;ctx.fill();
 }
 ctx.globalAlpha=1;
+
+// تحديث ورسم الشهب
+updateAndDrawShootingStars();
+
 requestAnimationFrame(gameLoop);
 }
 
