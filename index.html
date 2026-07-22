@@ -32,7 +32,7 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
     z-index: 20;
     background: rgba(0,0,0,0.9);
     backdrop-filter: blur(15px);
-    overflow-y: auto; /* يتيح التمرير العمودي داخل القسم */
+    overflow-y: auto;
     pointer-events: auto;
     padding-top: 130px;
     padding-bottom: 60px;
@@ -65,9 +65,7 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
 .font-amiri{font-family:'Amiri',serif;}
 #share-card-template{position:fixed;top:-9999px;left:-9999px;width:450px;min-height:400px;background:#000;color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:30px;border:6px double #cc0000;font-family:'Cairo';z-index:-10;}
 
-/* ---------------------------------------------------
-   تنسيقات الخط الزمني السينمائي (أبرز المحطات)
-   --------------------------------------------------- */
+/* تنسيقات الخط الزمني السينمائي */
 .tlc-container { position: relative; width: 100%; padding-bottom: 80px; }
 .tlc-tracker { position: sticky; top: -2px; z-index: 25; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(204, 0, 0, 0.3); padding: 15px 0; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
 .tlc-tracker-clip { max-width: 1200px; margin: 0 auto; overflow-x: auto; scrollbar-width: none; }
@@ -101,13 +99,20 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
 </head>
 <body>
 
+<!-- شاشة التحميل -->
+<div id="loading-overlay" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black transition-opacity duration-500 pointer-events-none">
+    <div class="w-16 h-16 border-4 border-red-600 border-t-transparent rounded-full animate-spin mx-auto mb-4 shadow-[0_0_15px_rgba(204,0,0,0.5)]"></div>
+    <p class="text-red-500 font-bold tracking-widest animate-pulse font-cairo">جاري إضاءة الأرواح...</p>
+</div>
+
 <!-- الخلفية النجمية -->
 <div id="canvas-layer"><canvas id="stars-canvas" class="w-full h-full block"></canvas></div>
 
 <!-- قسم الخريطة -->
 <main id="map-view">
-<div class="w-full max-w-7xl mx-auto px-4 md:px-8 h-[75vh]">
-<iframe src="https://www.shireen.ps/widget/map/martyrs-by-gov?year_from=2025&year_to=2026&theme=light&lang=ar" width="100%" height="100%" frameborder="0" loading="lazy" class="rounded-xl bg-white shadow-[0_0_20px_rgba(204,0,0,0.3)]"></iframe>
+<div class="w-full max-w-7xl mx-auto px-4 md:px-8 h-[75vh] relative">
+<!-- جاهزة لدمج طبقات GeoJSON التفاعلية عبر مكتبات مثل Leaflet أو Mapbox مستقبلاً -->
+<iframe src="https://www.shireen.ps/widget/map/martyrs-by-gov?year_from=2025&year_to=2026&theme=light&lang=ar" width="100%" height="100%" frameborder="0" loading="lazy" class="rounded-xl bg-white shadow-[0_0_20px_rgba(204,0,0,0.3)] relative z-10"></iframe>
 </div>
 </main>
 
@@ -248,9 +253,9 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
 <script>
 let currentLang='ar';
 let isPlaying=false,gazaSouls=[],tooltipTimeout=null,isSearching=false;
-let width,height,points=[],mouseX=-1000,mouseY=-1000;
+let width,height,points=[],shootingStars=[],mouseX=-1000,mouseY=-1000;
 let sound;
-let milestonesRendered = false; // لمنع تكرار توليد الخط الزمني
+let milestonesRendered = false;
 
 /* بيانات الخط الزمني (المحطات) */
 const milestonesData = [
@@ -337,9 +342,7 @@ grid.innerHTML=videosData.map(v=>`
 }
 renderVideos();
 
-/* ---------------------------------------------------
-   دوال الخط الزمني (التوليد والاسكرول سباي)
-   --------------------------------------------------- */
+/* دوال الخط الزمني */
 function renderMilestonesCinematic() {
     if (milestonesRendered) return;
     
@@ -386,13 +389,7 @@ window.scrollToScene = function(e, idx) {
 function initScrollSpy() {
     const scenes = document.querySelectorAll('.tlc-scene');
     const trackerItems = document.querySelectorAll('.tlc-tracker-item');
-
-    const observerOptions = {
-        root: document.getElementById('milestones-view'),
-        rootMargin: "-20% 0px -40% 0px", 
-        threshold: 0
-    };
-
+    const observerOptions = { root: document.getElementById('milestones-view'), rootMargin: "-20% 0px -40% 0px", threshold: 0 };
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -401,25 +398,20 @@ function initScrollSpy() {
                     if (item.getAttribute('href') === `#${id}`) {
                         item.classList.add('is-current');
                         item.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-                    } else {
-                        item.classList.remove('is-current');
-                    }
+                    } else { item.classList.remove('is-current'); }
                 });
             }
         });
     }, observerOptions);
-
     scenes.forEach(scene => observer.observe(scene));
 }
 
 /* التبديل بين الأقسام الرئيسية */
 window.switchMainMode = function(mode) {
-    // إزالة التفعيل من جميع الأزرار وتفعيله للزر المطلوب
     document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
     const activeBtn = document.getElementById(`tab-${mode}`);
     if (activeBtn) activeBtn.classList.add('active');
     
-    // إخفاء جميع الأقسام
     ['map-view', 'stats-view', 'videos-view', 'no-data-view', 'milestones-view'].forEach(id => {
         document.getElementById(id).style.display = 'none';
     });
@@ -429,7 +421,12 @@ window.switchMainMode = function(mode) {
     if(canvasLayer){canvasLayer.style.opacity = '0'; canvasLayer.style.pointerEvents = 'none';}
     hideTooltip();
 
-    // إظهار القسم المطلوب بناءً على الخيار
+    const loader = document.getElementById('loading-overlay');
+    if (loader) {
+        loader.style.display = 'flex';
+        loader.style.opacity = '1';
+    }
+
     if(mode === 'souls'){
         document.getElementById('bottom-bar').style.display = 'flex';
         if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
@@ -443,15 +440,20 @@ window.switchMainMode = function(mode) {
         points = [];
         if(ctx) ctx.clearRect(0, 0, width, height);
         document.getElementById('number').innerText = "0";
+        if (loader) setTimeout(() => loader.style.opacity = '0', 300);
     } else if(mode === 'milestones') {
         document.getElementById('milestones-view').style.display = 'block';
-        renderMilestonesCinematic(); // بناء وتشغيل الخط الزمني
+        renderMilestonesCinematic();
+        if (loader) setTimeout(() => loader.style.opacity = '0', 300);
     } else if(mode === 'stats') {
         document.getElementById('stats-view').style.display = 'block';
+        if (loader) setTimeout(() => loader.style.opacity = '0', 300);
     } else if(mode === 'videos') {
         document.getElementById('videos-view').style.display = 'block';
+        if (loader) setTimeout(() => loader.style.opacity = '0', 300);
     } else if(mode === 'map') {
         document.getElementById('map-view').style.display = 'block';
+        if (loader) setTimeout(() => loader.style.opacity = '0', 300);
     }
 };
 
@@ -485,6 +487,12 @@ if(gazaSouls.length===0){
 for(let i=0;i<5000;i++)gazaSouls.push({name_ar:"شهيد مجهول الاسم",name_en:"",id:"",dob:"",age:"غير معروف",gender:"M"});
 }
 renderStars();
+
+const loader = document.getElementById('loading-overlay');
+if(loader){
+    loader.style.opacity = '0';
+    setTimeout(() => loader.style.display = 'none', 500);
+}
 }
 
 function renderStars(){
@@ -502,9 +510,25 @@ color:'#ffffff',userData:gazaSouls[i],isMatched:false
 animateCounter(gazaSouls.length>0?gazaSouls.length:0);
 }
 
+/* تأثير الشهب (Shooting Stars) */
+function createShootingStar() {
+    if (Math.random() < 0.02) { 
+        shootingStars.push({
+            x: Math.random() * width,
+            y: 0,
+            len: Math.random() * 80 + 20,
+            speed: Math.random() * 10 + 5,
+            angle: Math.PI / 4 + (Math.random() * 0.2 - 0.1),
+            opacity: 1
+        });
+    }
+}
+
 function gameLoop(){
 if(!ctx)return;
 ctx.clearRect(0,0,width,height);
+
+// رسم الأرواح (النجوم)
 for(let i=0;i<points.length;i++){
 const p=points[i];
 p.x+=p.vx;p.y+=p.vy;
@@ -514,6 +538,23 @@ p.alpha+=(p.targetAlpha-p.alpha)*0.1;p.scale+=(p.targetScale-p.scale)*0.1;
 ctx.beginPath();ctx.arc(p.x,p.y,1.8*p.scale,0,Math.PI*2);
 ctx.fillStyle=p.color;ctx.globalAlpha=p.alpha;ctx.fill();
 }
+
+// رسم الشهب
+createShootingStar();
+for(let i=shootingStars.length-1; i>=0; i--) {
+    let s = shootingStars[i];
+    s.x -= s.speed * Math.cos(s.angle);
+    s.y += s.speed * Math.sin(s.angle);
+    s.opacity -= 0.015;
+    if (s.opacity <= 0) { shootingStars.splice(i, 1); continue; }
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y);
+    ctx.lineTo(s.x + s.len * Math.cos(s.angle), s.y - s.len * Math.sin(s.angle));
+    ctx.strokeStyle = `rgba(255, 255, 255, ${s.opacity})`;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+}
+
 ctx.globalAlpha=1;
 requestAnimationFrame(gameLoop);
 }
