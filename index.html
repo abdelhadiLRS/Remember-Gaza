@@ -389,18 +389,6 @@ else{navigator.clipboard.writeText(window.location.href).then(()=>alert(t.copyAl
 
 /* ---------------------------------------------------
    جلب ملفات التورنت المحددة (file1.torrent و file2.torrent)
-   --------------------------------------------------- */
-function fetchTorrentVideos() {
-    if (torrentsLoaded) return;
-    
-    const grid = document.getElementById('videos-grid');
-    if (!grid) return;
-    
-    grid.innerHTML = `
-        <div class="col-span-full flex flex-col items-center justify-center py-16 text-gray-300">
-            <div class="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p class="text-lg font-bold">جاري قراءة ملفات الأرشيف من المسار المحدد (data/) ...</p>
-        </div>
 ----------------
 /* ---------------------------------------------------
    جلب ملفات التورنت المحددة (نسخة مصححة)
