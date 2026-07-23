@@ -100,7 +100,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .font-amiri{font-family:'Amiri',serif;}
 
 /* تصميم الخط الزمني السينمائي والثابت في الأسفل */
-.tlc-container { position: relative; width: 100%; padding-bottom: 70px; max-width: 1100px; margin: 0 auto; }
+.tlc-container { position: relative; width: 100%; padding-bottom: 90px; max-width: 1100px; margin: 0 auto; }
 .tlc-tracker { 
     position: fixed; 
     bottom: 0; 
@@ -114,6 +114,8 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     pointer-events: auto; 
     transform: translateZ(0);
 }
+.tlc-tracker-current { position: absolute; top: -25px; right: 20px; background: #cc0000; color: #fff; font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: none; }
+.tlc-tracker-current.is-visible { display: block; }
 .tlc-tracker-clip { max-width: 1100px; margin: 0 auto; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .tlc-tracker-clip::-webkit-scrollbar { display: none; }
 .tlc-tracker-track { 
@@ -122,11 +124,11 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     width: max-content; 
     will-change: transform; 
 }
-.tlc-tracker-list { display: flex; gap: 15px; padding: 0 20px; list-style: none; margin: 0; align-items: center; }
-.tlc-tracker-item { color: #888; font-weight: 900; cursor: pointer; white-space: nowrap; font-family: 'Cairo'; font-size: 0.9rem; transition: color 0.2s ease, transform 0.2s ease; }
+.tlc-tracker-list { display: flex; gap: 18px; padding: 0 20px; list-style: none; margin: 0; align-items: center; }
+.tlc-tracker-item { color: #888; font-weight: 900; cursor: pointer; white-space: nowrap; font-family: 'Cairo'; font-size: 0.85rem; transition: color 0.2s ease, transform 0.2s ease; }
 .tlc-tracker-item a { color: inherit; text-decoration: none; }
 .tlc-tracker-item.is-current a, .tlc-tracker-item a:hover { color: #ff4d4d; text-shadow: 0 0 10px rgba(204,0,0,0.6); transform: scale(1.1); }
-.tlc-tracker-decade a { color: #aaa; font-size: 0.85rem; opacity: 0.8; }
+.tlc-tracker-decade a { color: #aaa; font-size: 0.8rem; opacity: 0.8; }
 
 .tlc-decade-section { margin-bottom: 100px; position: relative; text-align: center; }
 
@@ -237,9 +239,13 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 <div class="tlc-container">
     <div id="tlc-scenes-container"></div>
 </div>
-<nav class="tlc-tracker">
+<nav class="tlc-tracker" aria-label="تصفّح الخط الزمني">
+    <span class="tlc-tracker-marker" aria-hidden="true"></span>
+    <span class="tlc-tracker-current is-visible" id="tlc-tracker-current" aria-live="polite">1920s</span>
     <div class="tlc-tracker-clip">
-        <div class="tlc-tracker-track" data-draggable="" style="--tlc-tracker-x: 0px; padding-inline: 0px;" id="tlc-tracker-bar"></div>
+        <div class="tlc-tracker-track" data-draggable="" style="--tlc-tracker-x: 0px; padding-inline: 0px;" id="tlc-tracker-bar">
+            <!-- سيتم تعبئة القائمة بالمعرّفات الدقيقة هنا ديناميكياً -->
+        </div>
     </div>
 </nav>
 </main>
@@ -469,74 +475,86 @@ const torrentConfig = {
 
 const milestonesDecades = [
   {
+    decadeId: "tlc-d1920",
     decade: "1920s",
     items: [
-      {id: "m18", year: "1929", title: "هبّة البراق", subtitle: "ثورة البراق", img: "./images/timeline/18.jpg", desc: "في آب/أغسطس 1929 انتفض الفلسطينيون احتجاجاً على محاولات السيطرة على حائط البراق المحاذي للمسجد الأقصى. اندلعت اشتباكات في القدس والخليل وصفد، وردّ الانتداب البريطاني بالقوة المفرطة، واستشهد أكثر من 116 فلسطينياً، وأُعدم ثلاثة من قادة الثورة لاحقاً.", martyrs: "حوالي 116 شهيد", sourceTitle: "ويكيبيديا - ثورة البراق 1929", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AB%D9%88%D8%B1%D8%A9_%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%82"}
+      {id: "tlc-m18", year: "1929", title: "هبّة البراق", subtitle: "ثورة البراق", img: "./images/timeline/18.jpg", desc: "في آب/أغسطس 1929 انتفض الفلسطينيون احتجاجاً على محاولات السيطرة على حائط البراق المحاذي للمسجد الأقصى. اندلعت اشتباكات في القدس والخليل وصفد، وردّ الانتداب البريطاني بالقوة المفرطة، واستشهد أكثر من 116 فلسطينياً، وأُعدم ثلاثة من قادة الثورة لاحقاً.", martyrs: "حوالي 116 شهيد", sourceTitle: "ويكيبيديا - ثورة البراق 1929", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AB%D9%88%D8%B1%D8%A9_%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%82"}
     ]
   },
   {
+    decadeId: "tlc-d1930",
     decade: "1930s",
     items: [
-      {id: "m19", year: "1936 - 1939", title: "الثورة الفلسطينية الكبرى", subtitle: "ثورة الست أشهر", img: "./images/timeline/19.jpg", desc: "انطلقت الثورة الفلسطينية الكبرى في نيسان/أبريل 1936 بإضراب عام شامل امتد ستة أشهر، ثم تحولت إلى مقاومة مسلحة استمرت حتى 1939 استهدفت الانتداب البريطاني.", martyrs: "5,000 شهيد", sourceTitle: "ويكيبيديا - الثورة الفلسطينية الكبرى", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%A7%D9%84%D8%AB%D9%88%D8%B1%D8%A9_%D8%A7%D9%84%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86%D9%8A%D8%A9_%D8%A7%D9%84%D9%83%D8%A8%D8%B1%D9%89"},
-      {id: "m1", year: "1936 - 1948", title: "مرحلة التطهير العرقي في فلسطين", subtitle: "النكبة", img: "./images/timeline/1.jpg", desc: "بدأت المجازر الإسرائيلية بحق الفلسطينيين قبل الإعلان عن قيام دولة إسرائيل بنحو 11 عاماً، حيث ارتكبت العصابات الصهيونية أكثر من 57 مجزرة ذهب ضحيتها آلاف المدنيين.", martyrs: "حوالي 5000 شهيد", sourceTitle: "مركز الزيتونة للدراسات", sourceUrl: "https://www.alzaytouna.net"}
+      {id: "tlc-m19", year: "1936", title: "الثورة الفلسطينية الكبرى", subtitle: "ثورة الست أشهر", img: "./images/timeline/19.jpg", desc: "انطلقت الثورة الفلسطينية الكبرى في نيسان/أبريل 1936 بإضراب عام شامل امتد ستة أشهر، ثم تحولت إلى مقاومة مسلحة استمرت حتى 1939 استهدفت الانتداب البريطاني.", martyrs: "5,000 شهيد", sourceTitle: "ويكيبيديا - الثورة الفلسطينية الكبرى", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%A7%D9%84%D8%AB%D9%88%D8%B1%D8%A9_%D8%A7%D9%84%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86%D9%8A%D8%A9_%D8%A7%D9%84%D9%83%D8%A8%D8%B1%D9%89"},
+      {id: "tlc-m1", year: "1936", title: "مرحلة التطهير العرقي في فلسطين", subtitle: "النكبة ومقدماتها", img: "./images/timeline/1.jpg", desc: "بدأت المجازر الإسرائيلية بحق الفلسطينيين قبل الإعلان عن قيام دولة إسرائيل بنحو 11 عاماً، حيث ارتكبت العصابات الصهيونية أكثر من 57 مجزرة ذهب ضحيتها آلاف المدنيين.", martyrs: "حوالي 5000 شهيد", sourceTitle: "مركز الزيتونة للدراسات", sourceUrl: "https://www.alzaytouna.net"}
     ]
   },
   {
+    decadeId: "tlc-d1940",
     decade: "1940s",
     items: [
-      {id: "m20", year: "1948", title: "مجزرة دير ياسين", subtitle: "التطهير العرقي", img: "./images/timeline/20.jpg", desc: "في فجر التاسع من نيسان 1948، اقتحمت عصابتا الإرغون وشتيرن قرية دير ياسين وارتكبتا مجزرة وحشية لإرهاب الفلسطينيين ودفعهم للنزوح.", martyrs: "254 - 300 شهيد", sourceTitle: "ويكيبيديا - دير ياسين", sourceUrl: "https://ar.wikipedia.org/wiki/%D9%85%D8%AC%D8%B2%D8%B1%D8%A9_%D8%AF%D9%8A%D8%B0_%D9%8A%D8%A7%D8%B3%D9%8A%D9%86"},
-      {id: "m2", year: "1948", title: "الحرب العربية الإسرائيلية 1948", subtitle: "حرب النكبة", img: "./images/timeline/2.jpg", desc: "دارت عقب إنهاء الانتداب البريطاني وإعلان قيام إسرائيل، وانتهت بتهجير مئات الآلاف واحتلال الأراضي الفلسطينية.", martyrs: "20 - 22 ألف شهيد", sourceTitle: "ويكيبيديا - حرب 1948", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AD%D8%B8_1948"}
+      {id: "tlc-m20", year: "1948", title: "مجزرة دير ياسين", subtitle: "التطهير العرقي", img: "./images/timeline/20.jpg", desc: "في فجر التاسع من نيسان 1948، اقتحمت عصابتا الإرغون وشتيرن قرية دير ياسين وارتكبتا مجزرة وحشية لإرهاب الفلسطينيين ودفعهم للنزوح.", martyrs: "254 - 300 شهيد", sourceTitle: "ويكيبيديا - دير ياسين", sourceUrl: "https://ar.wikipedia.org/wiki/%D9%85%D8%AC%D8%B2%D8%B1%D8%A9_%D8%AF%D9%8A%D8%B0_%D9%8A%D8%A7%D8%B3%D9%8A%D9%86"},
+      {id: "tlc-m2", year: "1948", title: "الحرب العربية الإسرائيلية 1948", subtitle: "حرب النكبة", img: "./images/timeline/2.jpg", desc: "دارت عقب إنهاء الانتداب البريطاني وإعلان قيام إسرائيل، وانتهت بتهجير مئات الآلاف واحتلال الأراضي الفلسطينية.", martyrs: "20 - 22 ألف شهيد", sourceTitle: "ويكيبيديا - حرب 1948", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AD%D8%B8_1948"},
+      {id: "tlc-m3", year: "1949", title: "العودة الفردية للاجئين الفلسطينيين", subtitle: "محاولات التسلل والعودة", img: "./images/timeline/3.jpg", desc: "بدأ اللاجئون الفلسطينيون محاولات العودة الفردية والتسلل إلى قراهم وبلداتهم الأصلية لاستعادة ممتلكاتهم أو تفقدها.", martyrs: "مئات الشهداء", sourceTitle: "الأرشيف الفلسطيني", sourceUrl: "https://www.palquest.org"}
     ]
   },
   {
+    decadeId: "tlc-d1950",
     decade: "1950s",
     items: [
-      {id: "m4", year: "1956", title: "احتلال غزة 1956", subtitle: "خلال العدوان الثلاثي", img: "./images/timeline/4.jpg", desc: "احتل جيش الاحتلال قطاع غزة وارتكب مجازر بشعة في خانيونس ورفح خلال العدوان الثلاثي على مصر.", martyrs: "حوالي 1500 شهيد", sourceTitle: "الموسوعة التفاعلية", sourceUrl: "https://www.palquest.org"},
-      {id: "m21", year: "1956", title: "مجزرة كفر قاسم", subtitle: "حظر التجوال", img: "./images/timeline/21.jpg", desc: "أعدمت قوات حرس الحدود الإسرائيلية 49 فلسطينياً ميدانياً عند مدخل قرية كفر قاسم لخرقهم حظر تجوال لم يُبلّغوا به.", martyrs: "49 شهيداً", sourceTitle: "ويكيبيديا - كفر قاسم", sourceUrl: "https://ar.wikipedia.org/wiki/%D9%85%D8%AC%D8%B2%D8%B1%D8%A9_%D9%83%D9%81%D8%B1_%D9%82%D8%A7%D8%B3%D9%85"}
+      {id: "tlc-m4", year: "1956", title: "احتلال غزة 1956", subtitle: "خلال العدوان الثلاثي", img: "./images/timeline/4.jpg", desc: "احتل جيش الاحتلال قطاع غزة وارتكب مجازر بشعة في خانيونس ورفح خلال العدوان الثلاثي على مصر.", martyrs: "حوالي 1500 شهيد", sourceTitle: "الموسوعة التفاعلية", sourceUrl: "https://www.palquest.org"},
+      {id: "tlc-m21", year: "1956", title: "مجزرة كفر قاسم", subtitle: "حظر التجوال", img: "./images/timeline/21.jpg", desc: "أعدمت قوات حرس الحدود الإسرائيلية 49 فلسطينياً ميدانياً عند مدخل قرية كفر قاسم لخرقهم حظر تجوال لم يُبلّغوا به.", martyrs: "49 شهيداً", sourceTitle: "ويكيبيديا - كفر قاسم", sourceUrl: "https://ar.wikipedia.org/wiki/%D9%85%D8%AC%D8%B2%D8%B1%D8%A9_%D9%83%D9%81%D8%B1_%D9%82%D8%A7%D8%B3%D9%85"}
     ]
   },
   {
+    decadeId: "tlc-d1960",
     decade: "1960s",
     items: [
-      {id: "m5", year: "1967", title: "حرب حزيران 1967", subtitle: "النكسة", img: "./images/timeline/5.jpg", desc: "احتلت إسرائيل كامل فلسطين التاريخية وأراضٍ سورية ومصرية، وضاعفت المساحة بأكثر من ستة أضعاف.", martyrs: "15,000 - 25,000 شهيد", sourceTitle: "ويكيبيديا - حرب 1967", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AD%D8%B1%D8%B8_1967"},
-      {id: "m7", year: "1968", title: "معركة الكرامة", subtitle: "انتصار الإرادة", img: "./images/timeline/7.jpg", desc: "تصدى الجيش الأردني والفدائيون الفلسطينيون لقوات الاحتلال وأجبروها على الانسحاب الكامل من أرض المعركة.", martyrs: "حوالي 242 شهيد", sourceTitle: "مؤسسة ياسر عرفات", sourceUrl: "https://yaf.ps"}
+      {id: "tlc-m5", year: "1967", title: "حرب حزيران 1967", subtitle: "النكسة", img: "./images/timeline/5.jpg", desc: "احتلت إسرائيل كامل فلسطين التاريخية وأراضٍ سورية ومصرية، وضاعفت المساحة بأكثر من ستة أضعاف.", martyrs: "15,000 - 25,000 شهيد", sourceTitle: "ويكيبيديا - حرب 1967", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AD%D8%B1%D8%B8_1967"},
+      {id: "tlc-m7", year: "1968", title: "معركة الكرامة", subtitle: "انتصار الإرادة", img: "./images/timeline/7.jpg", desc: "تصدى الجيش الأردني والفدائيون الفلسطينيون لقوات الاحتلال وأجبروها على الانسحاب الكامل من أرض المعركة.", martyrs: "حوالي 242 شهيد", sourceTitle: "مؤسسة ياسر عرفات", sourceUrl: "https://yaf.ps"}
     ]
   },
   {
+    decadeId: "tlc-d1970",
     decade: "1970s",
     items: [
-      {id: "m22", year: "1976", title: "يوم الأرض", subtitle: "دفاعاً عن الجليل والمثلث", img: "./images/timeline/22.jpg", desc: "خرج فلسطينيو الداخل في إضراب عام رفضاً لمصادرة الأراضي، وواجه الاحتلال المتظاهرين بالرصاص الحي.", martyrs: "6 شهداء", sourceTitle: "ويكيبيديا - يوم الأرض", sourceUrl: "https://ar.wikipedia.org"}
+      {id: "tlc-m22", year: "1976", title: "يوم الأرض", subtitle: "دفاعاً عن الجليل والمثلث", img: "./images/timeline/22.jpg", desc: "خرج فلسطينيو الداخل في إضراب عام رفضاً لمصادرة الأراضي، وواجه الاحتلال المتظاهرين بالرصاص الحي.", martyrs: "6 شهداء", sourceTitle: "ويكيبيديا - يوم الأرض", sourceUrl: "https://ar.wikipedia.org"}
     ]
   },
   {
+    decadeId: "tlc-d1980",
     decade: "1980s",
     items: [
-      {id: "m10", year: "1982", title: "مجزرة صبرا وشاتيلا", subtitle: "تحت أنوار القنابل المضيئة", img: "./images/timeline/10.jpg", desc: "ارتكبت الميليشيات اللبنانية المتحالفة مع الاحتلال مجزرة مروعة بحق المدنيين العزل في مخيم شاتيلا بحماية الجيش الإسرائيلي.", martyrs: "3,000 - 5,000 شهيد", sourceTitle: "الجزيرة نت", sourceUrl: "https://www.aljazeera.net"},
-      {id: "m11", year: "1987", title: "الانتفاضة الفلسطينية الأولى", subtitle: "انتفاضة الحجارة", img: "./images/timeline/11.jpg", desc: "انتفاضة شعبية عارمة انطلقت من قطاع غزة وامتدت لكل فلسطين رفضا للاحتلال والقمع اليومي.", martyrs: "1550 شهيد", sourceTitle: "وكالة وفا", sourceUrl: "https://info.wafa.ps"}
+      {id: "tlc-m10", year: "1982", title: "مجزرة صبرا وشاتيلا", subtitle: "تحت أنوار القنابل المضيئة", img: "./images/timeline/10.jpg", desc: "ارتكبت الميليشيات اللبنانية المتحالفة مع الاحتلال مجزرة مروعة بحق المدنيين العزل في مخيم شاتيلا بحماية الجيش الإسرائيلي.", martyrs: "3,000 - 5,000 شهيد", sourceTitle: "الجزيرة نت", sourceUrl: "https://www.aljazeera.net"},
+      {id: "tlc-m11", year: "1987", title: "الانتفاضة الفلسطينية الأولى", subtitle: "انتفاضة الحجارة", img: "./images/timeline/11.jpg", desc: "انتفاضة شعبية عارمة انطلقت من قطاع غزة وامتدت لكل فلسطين رفضا للاحتلال والقمع اليومي.", martyrs: "1550 شهيد", sourceTitle: "وكالة وفا", sourceUrl: "https://info.wafa.ps"}
     ]
   },
   {
+    decadeId: "tlc-d1990",
     decade: "1990s",
     items: [
-      {id: "m25", year: "1994", title: "مجزرة الحرم الإبراهيمي", subtitle: "مجزرة الفجر في رمضان", img: "./images/timeline/25.jpg", desc: "اقتحم المستوطن باروخ غولدشتاين الحرم الإبراهيمي في الخليل وأمطر المصلين السجود بالرصاص فاستشهد العشرات.", martyrs: "29 شهيداً", sourceTitle: "ويكيبيديا - الحرم الإبراهيمي", sourceUrl: "https://ar.wikipedia.org"}
+      {id: "tlc-m25", year: "1994", title: "مجزرة الحرم الإبراهيمي", subtitle: "مجزرة الفجر في رمضان", img: "./images/timeline/25.jpg", desc: "اقتحم المستوطن باروخ غولدشتاين الحرم الإبراهيمي في الخليل وأمطر المصلين السجود بالرصاص فاستشهد العشرات.", martyrs: "29 شهيداً", sourceTitle: "ويكيبيديا - الحرم الإبراهيمي", sourceUrl: "https://ar.wikipedia.org"}
     ]
   },
   {
+    decadeId: "tlc-d2000",
     decade: "2000s",
     items: [
-      {id: "m12", year: "2000", title: "الانتفاضة الفلسطينية الثانية", subtitle: "انتفاضة الأقصى", img: "./images/timeline/12.jpg", desc: "اندلعت عقب اقتحام أرييل شارون باحات المسجد الأقصى، وتميزت بمواجهات ضارية واجتياحات واسعة لمدن الضفة الغربية.", martyrs: "4412 شهيد", sourceTitle: "الجزيرة نت", sourceUrl: "https://www.aljazeera.net"}
+      {id: "tlc-m12", year: "2000", title: "الانتفاضة الفلسطينية الثانية", subtitle: "انتفاضة الأقصى", img: "./images/timeline/12.jpg", desc: "اندلعت عقب اقتحام أرييل شارون باحات المسجد الأقصى، وتميزت بمواجهات ضارية واجتياحات واسعة لمدن الضفة الغربية.", martyrs: "4412 شهيد", sourceTitle: "الجزيرة نت", sourceUrl: "https://www.aljazeera.net"}
     ]
   },
   {
+    decadeId: "tlc-d2010",
     decade: "2010s",
     items: [
-      {id: "m15", year: "2014", title: "الجرف الصامد", subtitle: "العصف المأكول", img: "./images/timeline/15.jpg", desc: "حرب شرسة استمرت 51 يوماً شن خلالها الاحتلال آلاف الغارات وارتكب مجازر مروعة بحق العائلات الفلسطينية في غزة.", martyrs: "2322 شهيد", sourceTitle: "الجزيرة نت", sourceUrl: "https://www.aljazeera.net"}
+      {id: "tlc-m15", year: "2014", title: "الجرف الصامد", subtitle: "العصف المأكول", img: "./images/timeline/15.jpg", desc: "حرب شرسة استمرت 51 يوماً شن خلالها الاحتلال آلاف الغارات وارتكب مجازر مروعة بحق العائلات الفلسطينية في غزة.", martyrs: "2322 شهيد", sourceTitle: "الجزيرة نت", sourceUrl: "https://www.aljazeera.net"}
     ]
   },
   {
+    decadeId: "tlc-d2020",
     decade: "2020s",
     items: [
-      {id: "m30", year: "2023 - 2026", title: "طوفان الأقصى", subtitle: "حرب الإبادة الجماعية المستمرة", img: "./images/timeline/30.jpg", desc: "ملحمة كبرى وحرب إبادة غير مسبوقة على قطاع غزة والضفة الغربية وسط صمود أسطوري وتوثيق ميداني دائم وملاحقات دولية للمجرمين.", martyrs: "100,000+ شهيد ومفقود", sourceTitle: "مجلة لانسيت والأرشيف الميداني", sourceUrl: "https://www.thelancet.com"}
+      {id: "tlc-m30", year: "2023 - 2026", title: "طوفان الأقصى", subtitle: "حرب الإبادة الجماعية المستمرة", img: "./images/timeline/30.jpg", desc: "ملحمة كبرى وحرب إبادة غير مسبوقة على قطاع غزة والضفة الغربية وسط صمود أسطوري وتوثيق ميداني دائم وملاحقات دولية للمجرمين.", martyrs: "100,000+ شهيد ومفقود", sourceTitle: "مجلة لانسيت والأرشيف الميداني", sourceUrl: "https://www.thelancet.com"}
     ]
   }
 ];
@@ -584,14 +602,15 @@ function renderMilestonesCinematic() {
 
     milestonesDecades.forEach((dec, dIdx) => {
         const yearNum = dec.decade.replace('s', '');
+        
         trackerHTML += `
             <li class="tlc-tracker-item tlc-tracker-decade ${dIdx === 0 ? 'is-current' : ''}">
-                <a href="#decade-${dIdx}" data-tooltip="${dec.decade}">${dec.decade}</a>
+                <a href="#${dec.decadeId}" data-tooltip="${dec.decade}">${dec.decade}</a>
             </li>
         `;
         
         contentHTML += `
-            <div class="tlc-decade-section" id="decade-${dIdx}">
+            <div class="tlc-decade-section" id="${dec.decadeId}">
                 <div class="tlc-giant-year">${yearNum}<span class="s-letter">s</span></div>
                 <div class="tlc-cards-grid">
         `;
@@ -622,6 +641,22 @@ function renderMilestonesCinematic() {
     scenesContainer.innerHTML = contentHTML;
     milestonesRendered = true;
 
+    // ربط النقر بالتمرير السلس للمحطات
+    document.querySelectorAll('.tlc-tracker-item a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetEl = document.querySelector(targetId);
+            const view = document.getElementById('milestones-view');
+            if (targetEl && view) {
+                view.scrollTo({
+                    top: targetEl.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
     const observerOptions = {
         root: document.getElementById('milestones-view'),
         rootMargin: '-20% 0px -50% 0px',
@@ -638,15 +673,24 @@ function renderMilestonesCinematic() {
                         document.querySelectorAll('.tlc-tracker-item').forEach(i => i.classList.remove('is-current'));
                         item.classList.add('is-current');
                         item.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                        
+                        const currentLabel = document.getElementById('tlc-tracker-current');
+                        if (currentLabel) {
+                            currentLabel.innerText = link.getAttribute('data-tooltip') || link.innerText;
+                        }
                     }
                 });
             }
         });
     }, observerOptions);
 
-    milestonesDecades.forEach((dec, dIdx) => {
-        const sectionEl = document.getElementById(`decade-${dIdx}`);
+    milestonesDecades.forEach((dec) => {
+        const sectionEl = document.getElementById(dec.decadeId);
         if (sectionEl) observer.observe(sectionEl);
+        dec.items.forEach(m => {
+            const itemEl = document.getElementById(m.id);
+            if (itemEl) observer.observe(itemEl);
+        });
     });
 }
 
