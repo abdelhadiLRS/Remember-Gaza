@@ -816,7 +816,7 @@ window.switchMainMode = function(mode) {
     if(mode === 'souls'){
         fetchAndRenderData('./data/victims.json');
     } else if(mode === 'journalists') {
-        fetchAndRenderData('./data/press_killed_in_gaza.json');
+        fetchAndRenderData('./data/journalists.json');
     } else if(mode === 'westbank') {
         document.getElementById('no-data-view').style.display = 'flex';
         points = [];
