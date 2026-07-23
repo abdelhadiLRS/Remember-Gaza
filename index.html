@@ -101,19 +101,17 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .share-btn:hover{background:#0056b3;border-color:#007bff;}
 .font-amiri{font-family:'Amiri',serif;}
 
-/* تصميم إبداعي متطور لأبرز المحطات (الخط الزمني العمودي) */
+/* تصميم الخط الزمني العمودي مع إلغاء الخط الأحمر تماماً */
 .vertical-timeline-container { position: relative; max-width: 950px; margin: 0 auto; padding: 30px 15px; font-family: 'Cairo', sans-serif; }
-.vertical-timeline-container::before { content: ''; position: absolute; right: 38px; top: 0; bottom: 0; width: 4px; background: linear-gradient(to bottom, #cc0000, #ff4d4d, rgba(204,0,0,0.05)); box-shadow: 0 0 15px rgba(204,0,0,0.4); }
+.vertical-timeline-container::before { display: none !important; }
 .v-decade-section { margin-bottom: 70px; position: relative; }
-.v-decade-header { font-size: 2.4rem; font-weight: 900; color: #fff; margin-bottom: 30px; padding-right: 65px; position: relative; font-family: 'Cairo', sans-serif; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+.v-decade-header { font-size: 2.4rem; font-weight: 900; color: #fff; margin-bottom: 30px; padding-right: 20px; position: relative; font-family: 'Cairo', sans-serif; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
 .v-decade-header span { color: #ff3333; text-shadow: 0 0 15px rgba(255,51,51,0.6); }
-.v-item-row { position: relative; margin-bottom: 30px; padding-right: 65px; }
-.v-item-dot { position: absolute; right: 29px; top: 22px; width: 20px; height: 20px; background: #cc0000; border-radius: 50%; border: 4px solid #000; box-shadow: 0 0 18px #ff0000; z-index: 3; transition: transform 0.3s ease; }
+.v-item-row { position: relative; margin-bottom: 30px; padding-right: 20px; }
+.v-item-dot { position: absolute; right: -10px; top: 22px; width: 16px; height: 16px; background: #555; border-radius: 50%; border: 3px solid #000; z-index: 3; transition: transform 0.3s ease; }
 .v-card { background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.98) 100%); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 18px 24px; display: flex; align-items: center; gap: 20px; cursor: pointer; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.7); position: relative; overflow: hidden; }
-.v-card::after { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%; background: #cc0000; opacity: 0; transition: opacity 0.3s; }
 .v-card:hover { border-color: rgba(255, 51, 51, 0.6); transform: translateX(-8px) scale(1.01); box-shadow: 0 15px 40px rgba(204,0,0,0.3); }
-.v-card:hover::after { opacity: 1; }
-.v-card:hover .v-item-dot { transform: scale(1.3); }
+.v-card:hover .v-item-dot { transform: scale(1.3); background: #cc0000; }
 .v-card-img { width: 75px; height: 75px; border-radius: 12px; object-fit: cover; background: #1a1a1a; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
 .v-card-info { flex: 1; min-width: 0; text-align: right; }
 .v-card-year { color: #ff4d4d; font-size: 0.85rem; font-weight: 800; margin-bottom: 4px; font-family: 'Cairo', sans-serif; letter-spacing: 0.5px; }
@@ -176,14 +174,13 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 </main>
 
-<!-- واجهة أبرز المحطات الإبداعية بالخط الزمني العمودي (بدون شريط التتبع الأفقي) -->
+<!-- واجهة أبرز المحطات الإبداعية بدون أي خطوط حمراء -->
 <main id="milestones-view" class="text-white">
 <div class="vertical-timeline-container">
     <div class="text-center mb-12">
         <h2 class="text-3xl md:text-4xl font-black mb-3 text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-400 to-white drop-shadow-lg">أبرز المحطات والتوثيق التاريخي</h2>
         <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto">محطات الصمود والنضال الفلسطيني عبر العقود، توثيق حي للأحداث والملاحم الخالدة</p>
     </div>
-    <!-- سيتم حقن الخط الزمني لشيرين هنا -->
     <div id="tlc-scenes-container"></div>
 </div>
 </main>
@@ -349,7 +346,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
 </div>
 
-<!-- نافذة تفاصيل المحطات التاريخية العمودية الإبداعية -->
+<!-- نافذة تفاصيل المحطات التاريخية -->
 <div id="tlc-custom-modal">
     <div class="tlc-modal-box">
         <div class="tlc-modal-header">
@@ -365,7 +362,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
 </div>
 
-<!-- نافذة بطاقة الشهيد الإبداعية مع زر مشاركة أحمر غير فاقع وتحقق اسم اللغة الأخرى -->
+<!-- نافذة بطاقة الشهيد الإبداعية -->
 <div id="martyr-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
     <div class="modal-box" style="max-width: 450px; background: linear-gradient(135deg, #121212 0%, #1a0505 100%); border: 1px solid rgba(204,0,0,0.4); box-shadow: 0 25px 50px rgba(0,0,0,0.9);">
         <div class="modal-header border-b border-red-600/20">
@@ -540,7 +537,7 @@ const text = `توثيق شهيد: ${name} | العمر: ${age} | رقم اله�
 navigator.clipboard.writeText(text).then(()=>alert('تم نسخ بيانات بطاقة الشهيد بنجاح!'));
 };
 
-/* رسم الخط الزمني العمودي للمحطات التاريخية بدون شريط التتبع الأفقي */
+/* رسم المحطات التاريخية بدون أي خطوط حمراء */
 function renderMilestonesCinematic() {
     if (milestonesRendered) return;
     const scenesContainer = document.getElementById('tlc-scenes-container');
@@ -789,12 +786,12 @@ document.getElementById('btn-reset').onclick = () => {
     renderArchiveGallery();
 };
 
-/* تخصيص الخريطة لتقتصر حصرياً على حدود قطاع غزة */
+/* خريطة قطاع غزة حصرياً */
 function initMapIfNeeded() {
     if (!map) {
         const gazaBounds = L.latLngBounds(
-            [31.15, 34.20], // الحد الجنوبي الغربي
-            [31.62, 34.58]  // الحد الشمالي الشرقي
+            [31.15, 34.20],
+            [31.62, 34.58]
         );
         map = L.map('map', {
             center: [31.35, 34.38],
@@ -832,7 +829,6 @@ function renderMapAndList(dataToRender) {
                 <span>الهوية: ${person.id || '-'}</span>
             </div>
         `;
-        // إحداثيات موزعة حصرياً داخل حدود قطاع غزة
         const lat = 31.25 + ((idx * 0.003) % 0.30);
         const lng = 34.25 + ((idx * 0.003) % 0.28);
 
