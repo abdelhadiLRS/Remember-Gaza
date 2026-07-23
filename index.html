@@ -231,7 +231,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 <div class="w-full max-w-7xl mx-auto px-4 md:px-8 mb-4">
     <div class="text-center mb-6">
         <h2 id="video-title" class="text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400 drop-shadow-lg">التوثيق المرئي والأرشيف الميداني</h2>
-        <p id="video-desc" class="text-gray-400 text-sm md:text-base">فيديوهات وأدلة حية وموثقة من قلب الميدان عبر ملفات التورنت (Archive Genocide)</p>
+        <p id="video-desc" class="text-gray-400 text-sm md:text-base">فيديوهات وأدلة حية وموثقة من قلب الميدان عبر ملفات التورنت</p>
     </div>
     
     <div class="p-3 mb-6 bg-red-950/30 border border-red-600/40 rounded-xl text-center text-sm text-gray-200">
@@ -471,7 +471,7 @@ const milestonesData = [
   {year: "1948", title: "النكبة الفلسطينية", subtitle: "التطهير العرقي والمجازر", desc: "عصابات الاحتلال ترتكب أكثر من 57 مجزرة وتدمر المئات من القرى وتطرد أهلها.", martyrs: "آلاف الشهداء"},
   {year: "1987", title: "الانتفاضة الأولى", subtitle: "انتفاضة الحجارة", desc: "احتجاجات واسعة ومواجهة جنود الاحتلال بالحجارة والعصيان المدني.", martyrs: "1550 شهيد"},
   {year: "2000", title: "انتفاضة الأقصى", subtitle: "الانتفاضة الثانية", desc: "اندلعت عقب اقتحام شارون للأقصى وتميزت بمواجهات ضارية واجتياحات.", martyrs: "4412 شهيد"},
-  {year: "2023 - 2026", title: "طوفان الأقصى وحرب الإبادة", subtitle: "الملحمة المستمرة", desc: "حرب إبادة جماعية غير مسبوقة على غزة والضفة وسط صمود أسطوري وتوثيق ميداني دائم[cite: 11].", martyrs: "74,000+ شهيد"}
+  {year: "2023 - 2026", title: "طوفان الأقصى وحرب الإبادة", subtitle: "الملحمة المستمرة", desc: "حرب إبادة جماعية غير مسبوقة على غزة والضفة وسط صمود أسطوري وتوثيق ميداني دائم.", martyrs: "74,000+ شهيد"}
 ];
 
 const translations={
@@ -532,8 +532,8 @@ async function fetchTorrentVideos() {
                 source: "حسام شبات", 
                 archiveName: "Hossam Shbat", 
                 type: "video", 
-                desc: "توثيق ميداني مباشر للاستهدافات والدمار في شمال قطاع غزة وسط ظروف إنسانية بالغة الصعوبة[cite: 13]. التعليق: Archive Genocide",
-                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+                desc: "توثيق ميداني مباشر للاستهدافات والدمار في شمال قطاع غزة وسط ظروف إنسانية بالغة الصعوبة.",
+                videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
             },
             {
                 name: "الأرشيف الطبي ومشاهد المستشفيات.mp4", 
@@ -543,8 +543,8 @@ async function fetchTorrentVideos() {
                 source: "عين على فلسطين", 
                 archiveName: "Eye on Palestine", 
                 type: "video", 
-                desc: "مشاهد توثيقية ترصد الواقع الصحي والدمار الهائل المحيط بالمجمعات الطبية وطواقم الإسعاف[cite: 13]. التعليق: Archive Genocide",
-                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
+                desc: "مشاهد توثيقية ترصد الواقع الصحي والدمار الهائل المحيط بالمجمعات الطبية وطواقم الإسعاف.",
+                videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
             },
             {
                 name: "تقارير مراسل الأرشيف - أنس الشريف.mp4", 
@@ -554,8 +554,8 @@ async function fetchTorrentVideos() {
                 source: "أنس الشريف", 
                 archiveName: "Anas Al Sharif", 
                 type: "video", 
-                desc: "تغطية ميدانية من قلب الأحداث والنزوح القسري في المحافظة الوسطى[cite: 13]. التعليق: Archive Genocide",
-                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
+                desc: "تغطية ميدانية من قلب الأحداث والنزوح القسري في المحافظة الوسطى.",
+                videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
             }
         ];
         torrentsLoaded = true;
@@ -616,12 +616,13 @@ function openMediaModal(item) {
     const container = document.getElementById('modal-media-container');
     document.getElementById('meta-date').innerText = item.date;
     document.getElementById('meta-type').innerText = item.type;
-    document.getElementById('meta-source').innerText = `${item.source || 'أرشيف موثق'} (عبر: ${item.torrentSource || 'التورنت'})`;
+    // تم حذف كلمة عبر بناءً على طلبك
+    document.getElementById('meta-source').innerText = `${item.source || 'أرشيف موثق'} - ${item.torrentSource || ''}`;
     document.getElementById('meta-desc').innerText = item.desc || item.name;
     
     if (item.videoUrl) {
         container.innerHTML = `
-            <video controls autoplay class="w-full h-full object-cover" style="max-height: 350px;">
+            <video controls autoplay playsinline class="w-full h-full object-cover" style="max-height: 350px;">
                 <source src="${item.videoUrl}" type="video/mp4">
                 متصفحك لا يدعم عرض الفيديو.
             </video>
