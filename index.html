@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://code.jquery.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://fonts.googleapis.com https://fonts.gstatic.com https://hitwebcounter.com https://esm.sh; img-src 'self' data: https:; media-src 'self' blob: https:; connect-src 'self' https:;">
 <link rel="icon" type="image/png" href="favicon.png">
 <title id="page-title">أرواح فلسطين | Palestinian Souls</title>
 
@@ -102,7 +101,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .share-btn:hover{background:#0056b3;border-color:#007bff;}
 .font-amiri{font-family:'Amiri',serif;}
 
-/* تصميم إبداعي متطور لأبرز المحطات (الخط الزمني السينمائي) */
+/* تصميم إبداعي متطور لأبرز المحطات (الخط الزمني العمودي) */
 .vertical-timeline-container { position: relative; max-width: 950px; margin: 0 auto; padding: 30px 15px; font-family: 'Cairo', sans-serif; }
 .vertical-timeline-container::before { content: ''; position: absolute; right: 38px; top: 0; bottom: 0; width: 4px; background: linear-gradient(to bottom, #cc0000, #ff4d4d, rgba(204,0,0,0.05)); box-shadow: 0 0 15px rgba(204,0,0,0.4); }
 .v-decade-section { margin-bottom: 70px; position: relative; }
@@ -151,34 +150,6 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 <div id="canvas-layer"><canvas id="stars-canvas" class="w-full h-full block"></canvas></div>
 <canvas id="shooting-stars-canvas"></canvas>
 
-<!-- نافذة تحذير المحتوى (Content Warning) -->
-<div id="content-warning" style="display: none; position: fixed; inset: 0; z-index: 20000; background: rgba(0,0,0,0.92); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
-    <div style="background: linear-gradient(135deg, #161616 0%, #0d0d0d 100%); border: 1px solid #c0392b; border-radius: 16px; padding: 36px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.9);">
-        <div style="font-size: 3rem; margin-bottom: 12px;">⚠️</div>
-        <h1 style="color: #fff; font-size: 1.5rem; font-weight: 900; margin-bottom: 15px;">تحذير محتوى حساس</h1>
-        <p style="color: #ccc; font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px;">
-            هذا الأرشيف يحتوي على <strong>توثيق مصور وفيديوهات حية</strong> لجرائم الحرب في غزة والضفة الغربية — تم جمعها لأغراض التوثيق والمحاسبة القانونية والتاريخية. يُنصح بالحذر.
-        </p>
-        <div style="display: flex; gap: 12px; justify-content: center;">
-            <button id="cw-proceed" class="btn-main" style="background: #c0392b; border-color: #e74c3c; padding: 10px 20px; font-weight: bold; flex: 1;">أتفهم — دخول</button>
-            <button id="cw-leave" class="btn-main" style="background: #222; border-color: #444; padding: 10px 20px; flex: 1;">مغادرة</button>
-        </div>
-    </div>
-</div>
-
-<!-- نافذة تسجيل دخول المشرفين (Admin Login Modal) -->
-<div id="login-overlay" style="display:none; position:fixed; inset:0; z-index:15000; background:rgba(0,0,0,.8); align-items:center; justify-content:center; font-family:'Cairo',sans-serif;">
-    <div style="background:#161616; border:1px solid #c0392b; border-radius:12px; padding:32px; width:340px; max-width:90vw;">
-        <h2 style="margin-bottom:16px; font-size:1.1rem; color:#fff; font-weight: bold;">تسجيل دخول المشرفين</h2>
-        <input type="password" id="login-pw" placeholder="كلمة المرور" autocomplete="current-password" style="width:100%; background:#0d0d0d; border:1px solid #2a2a2a; color:#fff; padding:10px 14px; border-radius:8px; font-size:.95rem; outline:none; margin-bottom:10px; font-family:'Cairo',sans-serif;">
-        <div id="login-error" style="color:#e74c3c; font-size:.82rem; min-height:18px; margin-bottom:10px;"></div>
-        <div style="display:flex; gap:10px;">
-            <button id="login-submit" style="flex:1; background:#c0392b; border:none; color:#fff; padding:10px; border-radius:8px; cursor:pointer; font-family:'Cairo',sans-serif; font-weight:bold;">دخول</button>
-            <button id="login-cancel" style="flex:1; background:#1f1f1f; border:1px solid #2a2a2a; color:#888; padding:10px; border-radius:8px; cursor:pointer; font-family:'Cairo',sans-serif;">إلغاء</button>
-        </div>
-    </div>
-</div>
-
 <div id="star-tooltip">
     <div id="tooltip-name" class="font-bold text-red-500 mb-0.5 truncate text-base"></div>
     <div id="tooltip-name-en" class="text-gray-400 text-[11px] mb-1 truncate font-mono" style="display: none;"></div>
@@ -189,7 +160,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 <div class="w-full h-full flex flex-col lg:flex-row px-4 md:px-8 gap-4" style="height: calc(100vh - 140px);">
     <div class="w-full lg:w-[380px] glass-panel rounded-2xl flex flex-col overflow-hidden border border-white/10 h-[40vh] lg:h-full">
         <div class="p-4 border-b border-white/10 bg-black/40">
-            <h3 class="font-bold text-lg text-red-500 mb-2 font-['Cairo']">الخريطة التفاعلية والسجل</h3>
+            <h3 class="font-bold text-lg text-red-500 mb-2 font-['Cairo']">خريطة وسجل غزة</h3>
             <input type="text" id="map-search-input" placeholder="بحث بالاسم أو رقم الهوية..." class="w-full bg-black/60 border border-white/20 text-white p-2.5 rounded-xl text-xs outline-none focus:border-red-600 transition-all font-['Cairo']">
             <div class="flex gap-2 mt-3 text-xs text-gray-300 justify-between bg-black/50 p-2 rounded-lg border border-white/5 font-['Cairo']">
                 <span>المعروض: <strong id="map-total-count" class="text-white">0</strong></span>
@@ -205,14 +176,14 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 </main>
 
-<!-- واجهة أبرز المحطات الإبداعية بالخط الزمني العمودي -->
+<!-- واجهة أبرز المحطات الإبداعية بالخط الزمني العمودي (بدون شريط التتبع الأفقي) -->
 <main id="milestones-view" class="text-white">
 <div class="vertical-timeline-container">
     <div class="text-center mb-12">
         <h2 class="text-3xl md:text-4xl font-black mb-3 text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-400 to-white drop-shadow-lg">أبرز المحطات والتوثيق التاريخي</h2>
         <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto">محطات الصمود والنضال الفلسطيني عبر العقود، توثيق حي للأحداث والملاحم الخالدة</p>
     </div>
-    <!-- سيتم حقن الخط الزمني هنا -->
+    <!-- سيتم حقن الخط الزمني لشيرين هنا -->
     <div id="tlc-scenes-container"></div>
 </div>
 </main>
@@ -249,7 +220,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
     
     <div class="p-3 mb-6 bg-red-950/30 border border-red-600/40 rounded-xl text-center text-sm text-gray-200">
-        📦 جاري تشغيل وبث الأرشيف المرئي حصرياً من ملفات وروابط التورنت والمصادر المعتمدة — انقر على أي عنصر لبدء العرض.
+        📦 جاري تشغيل وبث الأرشيف المرئي حصرياً من ملفات وروابط التورنت — انقر على أي عنصر لبدء العرض.
     </div>
 </div>
 
@@ -262,50 +233,22 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
         <select class="filter-select" id="filter-type">
             <option value="video">فيديوهات فقط</option>
             <option value="">كافة الوسائط</option>
-            <option value="photo">صور فقط</option>
         </select>
-        <select class="filter-select" id="filter-archive" style="min-width:220px;">
-            <option value="">جميع الأرشيفات والمصادر</option>
+        <select class="filter-select" id="filter-archive" style="min-width:180px;">
+            <option value="">جميع الأرشيفات</option>
             <option value="MagnetGaza5">Gaza Vol 5 (Magnet)</option>
             <option value="LocalTorrent1">file1.torrent</option>
             <option value="LocalTorrent2">file2.torrent</option>
-            <option value="Alnasht">Alnasht</option>
-            <option value="Anas Al Sharif">Anas Al Sharif</option>
-            <option value="Children of Gaza">Children of Gaza</option>
-            <option value="Dr Hashem Al Shehari">Dr Hashem Al Shehari</option>
-            <option value="Evidence Task">Evidence Task</option>
-            <option value="Eye on Palestine">Eye on Palestine</option>
-            <option value="Gaza Notification">Gaza Notification</option>
-            <option value="Gaza Now">Gaza Now</option>
-            <option value="Israel Exposed">Israel Exposed</option>
-            <option value="Israel Genocide Tracker">Israel Genocide Tracker</option>
-            <option value="Journalist Moad Al Hams">Journalist Moad Al Hams</option>
-            <option value="Quds News Network">Quds News Network</option>
-            <option value="Suppressed News">Suppressed News</option>
-            <option value="TikTok Genocide">TikTok Genocide</option>
-            <option value="Times of Gaza">Times of Gaza</option>
-            <option value="Tracking Israel Genocide">Tracking Israel Genocide</option>
         </select>
-        <div class="date-group flex items-center gap-2 text-xs">
-            <label>من</label>
-            <input type="date" class="date-input bg-black/60 border border-white/20 text-white p-1 rounded" id="date-from" min="2023-10-01" max="2026-07-23">
-        </div>
-        <div class="date-group flex items-center gap-2 text-xs">
-            <label>إلى</label>
-            <input type="date" class="date-input bg-black/60 border border-white/20 text-white p-1 rounded" id="date-to" min="2023-10-01" max="2026-07-23">
-        </div>
         <button class="btn-reset" id="btn-reset">إعادة تعيين</button>
     </div>
 </div>
 
 <div class="results-bar">
     <div class="results-count" id="results-count">عرض <strong>0</strong> من أصل أرشيف التوثيق</div>
-    <div style="display:flex; align-items:center; gap:12px;">
-        <button id="admin-login-btn" class="btn-main text-xs" style="background:#222; border-color:#444;">مشرف</button>
-        <div class="view-toggle">
-            <button class="view-btn active" data-view="grid">شبكة (Grid)</button>
-            <button class="view-btn" data-view="list">قائمة (List)</button>
-        </div>
+    <div class="view-toggle">
+        <button class="view-btn active" data-view="grid">شبكة (Grid)</button>
+        <button class="view-btn" data-view="list">قائمة (List)</button>
     </div>
 </div>
 
@@ -328,7 +271,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 <button class="btn-main" id="tab-milestones" onclick="switchMainMode('milestones')">أبرز المحطات</button>
 <button class="btn-main" id="tab-stats" onclick="switchMainMode('stats')">الإحصائيات</button>
 <button class="btn-main" id="tab-videos" onclick="switchMainMode('videos')">التوثيق والأرشيف</button>
-<button class="btn-main" id="tab-map" onclick="switchMainMode('map')">الخريطة</button>
+<button class="btn-main" id="tab-map" onclick="switchMainMode('map')">خريطة غزة</button>
 </div>
 </div>
 <div class="relative inline-block text-right">
@@ -558,8 +501,8 @@ const milestonesDecades = [
 ];
 
 const translations={
-ar:{titleMain:"أرواح",logoText:"فلسطين",searchPlaceholder:"ابحث عن اسم الشهيد...",tabSouls:" شهداء غزة",tabJournalists:" صحفيو غزة",tabWestBank:" الضفة الغربية",tabMilestones:" أبرز المحطات",tabStats:" الإحصائيات",tabVideos:" التوثيق والأرشيف",tabMap:" الخريطة",donate:"❤️ إدعمنا لنستمر",musicOn:"🎵 الصوت",musicOff:"🔇 إيقاف",visitorText:"زوار:",verse:`"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"`,devText:"تطوير: عبد الهادي",shareBtn:"مشاركة",martyrsLabel:"شهيداً وثّقت أسماؤهم"},
-en:{titleMain:"Palestinian",logoText:"Souls",searchPlaceholder:"Search martyr...",tabSouls:" Gaza Souls",tabJournalists:" Gaza Journalists",tabWestBank:" West Bank",tabMilestones:" Milestones",tabStats:" Statistics",tabVideos:" Footage",tabMap:" Map",donate:" Support Us",musicOn:"🎵 Audio",musicOff:"🔇 Mute",visitorText:"Visits:",verse:`"Think not of those who are slain in Allah's way as dead..."`,devTest:"Dev: Abdelhadi",shareBtn:"Share",martyrsLabel:"Martyrs Documented"}
+ar:{titleMain:"أرواح",logoText:"فلسطين",searchPlaceholder:"ابحث عن اسم الشهيد...",tabSouls:" شهداء غزة",tabJournalists:" صحفيو غزة",tabWestBank:" الضفة الغربية",tabMilestones:" أبرز المحطات",tabStats:" الإحصائيات",tabVideos:" التوثيق والأرشيف",tabMap:" خريطة غزة",donate:"❤️ إدعمنا لنستمر",musicOn:"🎵 الصوت",musicOff:"🔇 إيقاف",visitorText:"زوار:",verse:`"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"`,devText:"تطوير: عبد الهادي",shareBtn:"مشاركة",martyrsLabel:"شهيداً وثّقت أسماؤهم"},
+en:{titleMain:"Palestinian",logoText:"Souls",searchPlaceholder:"Search martyr...",tabSouls:" Gaza Souls",tabJournalists:" Gaza Journalists",tabWestBank:" West Bank",tabMilestones:" Milestones",tabStats:" Statistics",tabVideos:" Footage",tabMap:" Gaza Map",donate:" Support Us",musicOn:"🎵 Audio",musicOff:"Mute",visitorText:"Visits:",verse:`"Think not of those who are slain in Allah's way as dead..."`,devTest:"Dev: Abdelhadi",shareBtn:"Share",martyrsLabel:"Martyrs Documented"}
 };
 
 function changeLanguage(langCode){
@@ -597,79 +540,21 @@ const text = `توثيق شهيد: ${name} | العمر: ${age} | رقم اله�
 navigator.clipboard.writeText(text).then(()=>alert('تم نسخ بيانات بطاقة الشهيد بنجاح!'));
 };
 
-/* إدارة نافذة تحذير المحتوى وتسجيل الدخول */
-window.addEventListener('DOMContentLoaded', () => {
-    const hasAgreed = localStorage.getItem('archive_warning_accepted');
-    if (!hasAgreed) {
-        document.getElementById('content-warning').style.display = 'flex';
-    }
-
-    document.getElementById('cw-proceed').onclick = () => {
-        localStorage.setItem('archive_warning_accepted', 'true');
-        document.getElementById('content-warning').style.display = 'none';
-    };
-
-    document.getElementById('cw-leave').onclick = () => {
-        window.location.href = 'about:blank';
-    };
-
-    document.getElementById('admin-login-btn').onclick = () => {
-        document.getElementById('login-overlay').style.display = 'flex';
-    };
-
-    document.getElementById('login-cancel').onclick = () => {
-        document.getElementById('login-overlay').style.display = 'none';
-    };
-
-    document.getElementById('login-submit').onclick = () => {
-        const pw = document.getElementById('login-pw').value;
-        if (pw === 'admin123' || pw === 'palestine') {
-            document.getElementById('login-overlay').style.display = 'none';
-            alert('تم تسجيل الدخول بنجاح كمسؤول أرشيف.');
-        } else {
-            document.getElementById('login-error').innerText = 'كلمة المرور غير صحيحة.';
-        }
-    };
-});
-
-/* رسم الخط الزمني العمودي للمحطات التاريخية متطابقاً مع كلاسات شيرين */
+/* رسم الخط الزمني العمودي للمحطات التاريخية بدون شريط التتبع الأفقي */
 function renderMilestonesCinematic() {
     if (milestonesRendered) return;
     const scenesContainer = document.getElementById('tlc-scenes-container');
     if(!scenesContainer) return;
 
-    let trackerHTML = `
-    <div class="tlc" id="tlc-root">
-        <nav class="tlc-tracker" aria-label="تصفّح الخط الزمني">
-            <span class="tlc-tracker-marker" aria-hidden="true"></span>
-            <span class="tlc-tracker-current is-visible" id="tlc-tracker-current" aria-live="polite">طوفان الأقصى</span>
-            <span class="tlc-tracker-tooltip" id="tlc-tracker-tooltip" aria-hidden="true"></span>
-            <div class="tlc-tracker-clip">
-                <div class="tlc-tracker-track" data-draggable="true">
-                    <ul class="tlc-tracker-list">
-    `;
-
-    let contentHTML = `<div class="tlc-content" style="margin-top: 40px;">`;
+    let contentHTML = `<div class="vertical-timeline-container" style="padding-top: 10px;">`;
 
     milestonesDecades.forEach((dec) => {
-        trackerHTML += `
-            <li class="tlc-tracker-item tlc-tracker-decade">
-                <a href="#${dec.decadeId}" data-tooltip="${dec.decade}">${dec.decade}</a>
-            </li>
-        `;
-        
         contentHTML += `
             <div class="v-decade-section" id="${dec.decadeId}">
                 <div class="v-decade-header">${dec.decade.replace('s', '')}<span>s</span></div>
         `;
 
         dec.items.forEach(m => {
-            trackerHTML += `
-                <li class="tlc-tracker-item">
-                    <a href="#${m.id}" data-tooltip="${m.title}">${m.year}</a>
-                </li>
-            `;
-            
             contentHTML += `
                 <div class="v-item-row" id="${m.id}">
                     <div class="v-item-dot"></div>
@@ -687,16 +572,8 @@ function renderMilestonesCinematic() {
         contentHTML += `</div>`;
     });
 
-    trackerHTML += `
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    `;
-    
-    contentHTML += `</div></div>`;
-
-    scenesContainer.innerHTML = trackerHTML + contentHTML;
+    contentHTML += `</div>`;
+    scenesContainer.innerHTML = contentHTML;
     milestonesRendered = true;
 }
 
@@ -724,7 +601,7 @@ async function fetchTorrentVideos() {
     grid.innerHTML = `
         <div class="col-span-full flex flex-col items-center justify-center py-16 text-gray-300 font-['Cairo']">
             <div class="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p class="text-lg font-bold">جاري تحميل وقراءة أرشيف التورنت والمصادر الميدانية...</p>
+            <p class="text-lg font-bold">جاري تحميل وقراءة أرشيف التورنت وروابط المغناطيس...</p>
         </div>
     `;
 
@@ -733,7 +610,7 @@ async function fetchTorrentVideos() {
             name: "Gaza Vol 5 (رابط مغناطيس مباشر)",
             torrentSource: "magnet:?xt=urn:btih:14d81d460a7de2669e7bb2ac4782cb8e50b07338&dn=Gaza%20Vol%205&tr=udp%3a%2f%2ftracker.opentrackr.org%3a1337%2fannounce",
             size: "رابط مغناطيس",
-            date: "2025-09-22",
+            date: "2026",
             source: "شبكة التورنت المباشرة",
             archiveName: "MagnetGaza5",
             type: "video",
@@ -743,7 +620,7 @@ async function fetchTorrentVideos() {
             name: "ملف التوثيق الميداني الأول (file1.torrent)",
             torrentSource: torrentConfig.file1,
             size: "ملف محلي",
-            date: "2025-09-21",
+            date: "2026",
             source: "أرشيف ملفات التورنت المحلية",
             archiveName: "LocalTorrent1",
             type: "video",
@@ -753,41 +630,11 @@ async function fetchTorrentVideos() {
             name: "ملف التوثيق الميداني الثاني (file2.torrent)",
             torrentSource: torrentConfig.file2,
             size: "ملف محلي",
-            date: "2025-09-20",
+            date: "2026",
             source: "أرشيف ملفات التورنت المحلية",
             archiveName: "LocalTorrent2",
             type: "video",
             desc: "أرشيف توثيقي تم تحميله مباشرة من ملف file2.torrent الموجود في مجلد data."
-        },
-        {
-            name: "توثيق الصحفي أنس الشريف في ميدان غزة",
-            torrentSource: "magnet:?xt=urn:btih:anasalsharif",
-            size: "00:45",
-            date: "2025-09-19",
-            source: "Anas Al Sharif",
-            archiveName: "Anas Al Sharif",
-            type: "video",
-            desc: "تغطية ميدانية حصرية لتوثيق الاعتداءات الأخيرة في شمال غزة."
-        },
-        {
-            name: "أطفال تحت القصف - عيادة الشفاء",
-            torrentSource: "magnet:?xt=urn:btih:childrenofgaza",
-            size: "00:30",
-            date: "2025-09-18",
-            source: "Children of Gaza",
-            archiveName: "Children of Gaza",
-            type: "video",
-            desc: "توثيق مصور لمعاناة الأطفال المصابين داخل مجمع الشفاء الطبي."
-        },
-        {
-            name: "شهادة الدكتور هاشم الشهري من الميدان",
-            torrentSource: "magnet:?xt=urn:btih:hashemal",
-            size: "01:15",
-            date: "2025-09-17",
-            source: "Dr Hashem Al Shehari",
-            archiveName: "Dr Hashem Al Shehari",
-            type: "video",
-            desc: "تقرير طبي موثق عن انهيار القطاع الصحي ونقص المستلزمات الجراحية."
         }
     ];
 
@@ -922,15 +769,12 @@ function applyFilters() {
     const query = document.getElementById('archive-search').value.toLowerCase();
     const typeVal = document.getElementById('filter-type').value;
     const archiveVal = document.getElementById('filter-archive').value;
-    const dateFrom = document.getElementById('date-from').value;
-    const dateTo = document.getElementById('date-to').value;
 
     const filtered = allVideoFiles.filter(item => {
         const matchQuery = (item.name + (item.desc || "") + (item.source || "")).toLowerCase().includes(query);
         const matchType = typeVal === "" || item.type === typeVal;
-        const matchArchive = archiveVal === "" || item.archiveName === archiveVal || item.source === archiveVal;
-        const matchDate = (!dateFrom || item.date >= dateFrom) && (!dateTo || item.date <= dateTo);
-        return matchQuery && matchType && matchArchive && matchDate;
+        const matchArchive = archiveVal === "" || item.archiveName === archiveVal;
+        return matchQuery && matchType && matchArchive;
     });
     renderArchiveGallery(filtered);
 }
@@ -938,22 +782,30 @@ function applyFilters() {
 document.getElementById('archive-search').oninput = applyFilters;
 document.getElementById('filter-type').onchange = applyFilters;
 document.getElementById('filter-archive').onchange = applyFilters;
-document.getElementById('date-from').onchange = applyFilters;
-document.getElementById('date-to').onchange = applyFilters;
 document.getElementById('btn-reset').onclick = () => {
     document.getElementById('archive-search').value = '';
     document.getElementById('filter-type').value = '';
     document.getElementById('filter-archive').value = '';
-    document.getElementById('date-from').value = '';
-    document.getElementById('date-to').value = '';
     renderArchiveGallery();
 };
 
+/* تخصيص الخريطة لتقتصر حصرياً على حدود قطاع غزة */
 function initMapIfNeeded() {
     if (!map) {
-        map = L.map('map').setView([31.5, 34.46], 10);
+        const gazaBounds = L.latLngBounds(
+            [31.15, 34.20], // الحد الجنوبي الغربي
+            [31.62, 34.58]  // الحد الشمالي الشرقي
+        );
+        map = L.map('map', {
+            center: [31.35, 34.38],
+            zoom: 11,
+            minZoom: 10,
+            maxBounds: gazaBounds,
+            maxBoundsViscosity: 1.0
+        });
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap'
+            attribution: '© OpenStreetMap',
+            bounds: gazaBounds
         }).addTo(map);
         markersLayer = L.layerGroup().addTo(map);
     }
@@ -980,8 +832,9 @@ function renderMapAndList(dataToRender) {
                 <span>الهوية: ${person.id || '-'}</span>
             </div>
         `;
-        const lat = 31.35 + (idx % 30) * 0.008;
-        const lng = 34.30 + (idx % 30) * 0.008;
+        // إحداثيات موزعة حصرياً داخل حدود قطاع غزة
+        const lat = 31.25 + ((idx * 0.003) % 0.30);
+        const lng = 34.25 + ((idx * 0.003) % 0.28);
 
         card.onclick = () => { if (map) map.setView([lat, lng], 14); openMartyrCardModal(person); };
         listContainer.appendChild(card);
@@ -1059,7 +912,6 @@ sCanvas.width=window.innerWidth;sCanvas.height=window.innerHeight;
 window.addEventListener('resize',resize);
 resize();
 
-/* إعداد الشهب المتساقطة بشكل إبداعي وبطيء */
 class ShootingStar {
     constructor() {
         this.reset();
@@ -1090,7 +942,6 @@ class ShootingStar {
     draw() {
         if(!sCtx) return;
         sCtx.save();
-        
         const grad = sCtx.createLinearGradient(
             this.x, this.y, 
             this.x + this.len * Math.cos(this.angle), 
@@ -1117,7 +968,6 @@ class ShootingStar {
         sCtx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
         sCtx.fillStyle = `rgba(255, 255, 255, ${this.opacity + 0.2})`;
         sCtx.fill();
-        
         sCtx.restore();
     }
 }
@@ -1325,4 +1175,3 @@ switchMainMode('souls');
 </script>
 </body>
 </html>
-```[cite: 22, 23]
