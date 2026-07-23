@@ -14,7 +14,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-<!-- تحميل WebTorrent بالطريقة الرسمية الحديثة عبر ESM CDN كما في التوثيق -->
+<!-- تحميل WebTorrent بالطريقة الرسمية الحديثة عبر ESM CDN -->
 <script type="module">
   import WebTorrent from 'https://esm.sh/webtorrent/dist/webtorrent.min.js';
   window.WebTorrentInstance = new WebTorrent();
@@ -30,7 +30,7 @@
 <style>
 *{box-sizing:border-box;}
 body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-serif;color:white;-webkit-tap-highlight-color:transparent;}
-#canvas-layer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;transition:opacity 0.4s ease;pointer-events:none;}
+#canvas-layer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;transition:opacity 0.4s ease;pointer-events:auto;cursor:pointer;}
 
 #stats-view, #videos-view, #no-data-view, #map-view, #milestones-view {
     display: none;
@@ -209,7 +209,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
     
     <div class="p-3 mb-6 bg-red-950/30 border border-red-600/40 rounded-xl text-center text-sm text-gray-200">
-        📦 جاري تشغيل وبث الأرشيف المرئي من التورنت — انقر على أي عنصر لبدء العرض الفوري.
+        📦 جاري تشغيل وبث الأرشيف المرئي حصرياً من ملفات التورنت في مجلد data — انقر على أي عنصر لبدء العرض.
     </div>
 </div>
 
@@ -225,9 +225,8 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
         </select>
         <select class="filter-select" id="filter-archive" style="min-width:180px;">
             <option value="">جميع الأرشيفات</option>
-            <option value="Hossam Shbat">حسام شبات</option>
-            <option value="Anas Al Sharif">أنس الشريف</option>
-            <option value="Eye on Palestine">عين على فلسطين</option>
+            <option value="LocalTorrent1">file1.torrent</option>
+            <option value="LocalTorrent2">file2.torrent</option>
         </select>
         <button class="btn-reset" id="btn-reset">إعادة تعيين</button>
     </div>
@@ -312,19 +311,19 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
             <div class="modal-media" id="modal-media-container"></div>
             <div class="modal-meta">
                 <div class="meta-section">
-                    <h3>تاريخ التوثيق</h3>
+                    <h3>التاريخ / الهوية</h3>
                     <div class="meta-value mono" id="meta-date"></div>
                 </div>
                 <div class="meta-section">
-                    <h3>نوع الوسائط</h3>
+                    <h3>نوع البيانات</h3>
                     <div class="meta-value" id="meta-type"></div>
                 </div>
                 <div class="meta-section">
-                    <h3>المصدر / القناة</h3>
+                    <h3>المصدر / المرجع</h3>
                     <div class="meta-value" id="meta-source"></div>
                 </div>
                 <div class="meta-section">
-                    <h3>الوصف والتفاصيل</h3>
+                    <h3>التفاصيل</h3>
                     <div class="meta-value" id="meta-desc" style="white-space:pre-wrap; max-height:160px; overflow-y:auto;"></div>
                 </div>
             </div>
@@ -348,9 +347,10 @@ let allVideoFiles = [];
 let map = null;
 let markersLayer = null;
 
+// ربط ملفات التورنت مباشرة من مجلد data الخاص بك
 const torrentConfig = {
-    file1: "magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Fexodus.desync.com%3A6969",
-    file2: "magnet:?xt=urn:btih:dd825ec3d655f4625514f777e56238b6887163f9&dn=Big+Buck+Bunny&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80",
+    file1: "./data/file1.torrent",
+    file2: "./data/file2.torrent",
     trackers: [
         "udp://tracker.opentrackr.org:1337/announce",
         "udp://open.tracker.cc:1337/announce",
@@ -404,7 +404,7 @@ const milestonesData = [
 
 const translations={
 ar:{titleMain:"أرواح",logoText:"فلسطين",searchPlaceholder:"ابحث عن اسم الشهيد...",tabSouls:" شهداء غزة",tabJournalists:" صحفيو غزة",tabWestBank:" الضفة الغربية",tabMilestones:" أبرز المحطات",tabStats:" الإحصائيات",tabVideos:" التوثيق والأرشيف",tabMap:" الخريطة",donate:"❤️ إدعمنا لنستمر",musicOn:"🎵 الصوت",musicOff:"🔇 إيقاف",visitorText:"زوار:",verse:`"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"`,devText:"تطوير: عبد الهادي",shareBtn:"مشاركة",martyrsLabel:"شهيداً وثّقت أسماؤهم"},
-en:{titleMain:"Palestinian",logoText:"Souls",searchPlaceholder:"Search martyr...",tabSouls:" Gaza Souls",tabJournalists:" Gaza Journalists",tabWestBank:" West Bank",tabMilestones:" Milestones",tabStats:" Statistics",tabVideos:" Footage",tabMap:" Map",donate:" Support Us",musicOn:"🎵 Audio",musicOff:"🔇 Mute",visitorText:"Visits:",verse:`"Think not of those who are slain in Allah's way as dead..."`,devText:"Dev: Abdelhadi",shareBtn:"Share",martyrsLabel:"Martyrs Documented"}
+en:{titleMain:"Palestinian",logoText:"Souls",searchPlaceholder:"Search martyr...",tabSouls:" Gaza Souls",tabJournalists:" Gaza Journalists",tabWestBank:" West Bank",tabMilestones:" Milestones",tabStats:" Statistics",tabVideos:" Footage",tabMap:" Map",donate:" Support Us",musicOn:"🎵 Audio",musicOff:"🔇 Mute",visitorText:"Visits:",verse:`"Think not of those who are slain in Allah's way as dead..."`,devTest:"Dev: Abdelhadi",shareBtn:"Share",martyrsLabel:"Martyrs Documented"}
 };
 
 function changeLanguage(langCode){
@@ -445,50 +445,38 @@ async function fetchTorrentVideos() {
     grid.innerHTML = `
         <div class="col-span-full flex flex-col items-center justify-center py-16 text-gray-300">
             <div class="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p class="text-lg font-bold">جاري الاتصال بـ WebTorrent وجلب الأرشيف الميداني...</p>
+            <p class="text-lg font-bold">جاري تحميل وقراءة ملفات التورنت الحقيقية من مجلد data...</p>
         </div>
     `;
 
+    // الاعتماد حصرياً على ملفات التورنت المحلية في مجلد data بدون أي روابط خارجية
     allVideoFiles = [
         {
-            name: "تغطية ميدانية - الصحفي حسام شبات",
+            name: "ملف التوثيق الميداني الأول (file1.torrent)",
             torrentSource: torrentConfig.file1,
-            size: "18 MB",
-            date: "2025-09-22",
-            source: "حسام شبات",
-            archiveName: "Hossam Shbat",
+            size: "ملف محلي",
+            date: "2026",
+            source: "أرشيف ملفات التورنت المحلية",
+            archiveName: "LocalTorrent1",
             type: "video",
-            desc: "توثيق ميداني مباشر للاستهدافات والدمار في شمال قطاع غزة وسط ظروف إنسانية بالغة الصعوبة.",
-            videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+            desc: "أرشيف توثيقي تم تحميله مباشرة من ملف file1.torrent الموجود في مجلد data."
         },
         {
-            name: "توثيق مشفى الشفاء - عين على فلسطين",
+            name: "ملف التوثيق الميداني الثاني (file2.torrent)",
             torrentSource: torrentConfig.file2,
-            size: "24 MB",
-            date: "2025-09-21",
-            source: "عين على فلسطين",
-            archiveName: "Eye on Palestine",
+            size: "ملف محلي",
+            date: "2026",
+            source: "أرشيف ملفات التورنت المحلية",
+            archiveName: "LocalTorrent2",
             type: "video",
-            desc: "مشاهد توثيقية ترصد الواقع الصحي والدمار الهائل المحيط بالمجمعات الطبية.",
-            videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
-        },
-        {
-            name: "تقرير مراسل الأرشيف - أنس الشريف",
-            torrentSource: torrentConfig.file1,
-            size: "15 MB",
-            date: "2025-09-20",
-            source: "أنس الشريف",
-            archiveName: "Anas Al Sharif",
-            type: "video",
-            desc: "تغطية ميدانية من قلب الأحداث والنزوح القسري في المحافظة الوسطى.",
-            videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
+            desc: "أرشيف توثيقي تم تحميله مباشرة من ملف file2.torrent الموجود في مجلد data."
         }
     ];
 
     setTimeout(() => {
         torrentsLoaded = true;
         renderArchiveGallery();
-    }, 600);
+    }, 500);
 }
 
 function renderArchiveGallery(filteredList = null) {
@@ -550,7 +538,7 @@ function openMediaModal(item) {
     container.innerHTML = `
         <div class="flex flex-col items-center justify-center p-4 text-gray-300">
             <div class="w-8 h-8 border-3 border-red-600 border-t-transparent rounded-full animate-spin mb-2"></div>
-            <p class="text-xs">جاري تهيئة البث المرئي...</p>
+            <p class="text-xs">جاري الاتصال بملف التورنت المحلي وجلب البيانات...</p>
         </div>
     `;
     modal.style.display = 'flex';
@@ -559,7 +547,7 @@ function openMediaModal(item) {
         if (window.WebTorrentInstance) {
             try {
                 window.WebTorrentInstance.add(item.torrentSource, { trackers: torrentConfig.trackers }, function (torrent) {
-                    const file = torrent.files.find(f => f.name.endsWith('.mp4') || f.name.endsWith('.mkv')) || torrent.files[0];
+                    const file = torrent.files.find(f => f.name.endsWith('.mp4') || f.name.endsWith('.mkv') || f.name.endsWith('.webm')) || torrent.files[0];
                     if (file) {
                         file.getBlobURL((err, url) => {
                             if (!err && url) {
@@ -571,31 +559,28 @@ function openMediaModal(item) {
                                 `;
                                 return;
                             }
-                            playFallbackVideo();
+                            showTorrentInfo(torrent);
                         });
                         return;
                     }
-                    playFallbackVideo();
+                    showTorrentInfo(torrent);
                 });
             } catch(e) {
-                playFallbackVideo();
+                container.innerHTML = `<div class="text-center p-6 text-red-500 font-bold">تعذر قراءة ملف التورنت المحلي: تأكد من صحة مساره في مجلد data.</div>`;
             }
         } else {
-            playFallbackVideo();
+            container.innerHTML = `<div class="text-center p-6 text-red-500 font-bold">مكتبة WebTorrent غير جاهزة بعد.</div>`;
         }
     }, 400);
 
-    function playFallbackVideo() {
-        if (item.videoUrl) {
-            container.innerHTML = `
-                <video controls autoplay playsinline class="w-full h-full object-cover" style="max-height: 350px;">
-                    <source src="${item.videoUrl}" type="video/mp4">
-                    متصفحك لا يدعم عرض الفيديو.
-                </video>
-            `;
-        } else {
-            container.innerHTML = `<div class="text-center p-6 text-red-500 font-bold">${item.name}</div>`;
-        }
+    function showTorrentInfo(torrent) {
+        container.innerHTML = `
+            <div class="text-center p-6 text-white">
+                <h3 class="text-lg font-bold text-red-500 mb-2">تم الاتصال بالتورنت بنجاح</h3>
+                <p class="text-xs text-gray-300 mb-1">اسم الملف: ${torrent.name}</p>
+                <p class="text-xs text-gray-300">عدد الملفات الداخلية: ${torrent.files.length}</p>
+            </div>
+        `;
     }
 }
 
@@ -771,6 +756,48 @@ canvas.width=width;canvas.height=height;
 window.addEventListener('resize',resize);
 resize();
 
+// تفعيل تفاعل النقر على النجوم لعرض بطاقات معلومات الشهداء
+if (canvas) {
+    canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const clickY = e.clientY - rect.top;
+
+        let closestStar = null;
+        let minDistance = 20; // نطاق مسافة التقاط النقلة
+
+        for (const p of points) {
+            const dist = Math.hypot(p.x - clickX, p.y - clickY);
+            if (dist < minDistance) {
+                minDistance = dist;
+                closestStar = p;
+            }
+        }
+
+        if (closestStar && closestStar.userData) {
+            openMartyrCardModal(closestStar.userData);
+        }
+    });
+}
+
+function openMartyrCardModal(person) {
+    const modal = document.getElementById('modal-overlay');
+    const container = document.getElementById('modal-media-container');
+    document.getElementById('meta-date').innerText = person.id ? `رقم الهوية: ${person.id}` : "سجل موثق";
+    document.getElementById('meta-type').innerText = "بيانات الشهيد";
+    document.getElementById('meta-source').innerText = "أرشيف السجل الرسمي";
+    document.getElementById('meta-desc').innerText = `الاسم: ${person.name_ar || person.name}\nالعمر: ${person.age || 'غير معروف'}\nالجنس: ${person.gender || 'غير محدد'}`;
+    
+    container.innerHTML = `
+        <div class="flex flex-col items-center justify-center p-6 text-center text-white">
+            <div class="w-16 h-16 bg-red-600/20 border border-red-600 rounded-full flex items-center justify-center mb-4 text-2xl font-black text-red-500">⭐</div>
+            <h3 class="text-xl font-black text-white mb-2">${person.name_ar || person.name || 'شهيد'}</h3>
+            <p class="text-sm text-gray-300">العمر: ${person.age || 'غير معروف'}</p>
+        </div>
+    `;
+    modal.style.display = 'flex';
+}
+
 async function fetchAndRenderData(url){
 gazaSouls=[]; points=[];
 if(ctx) ctx.clearRect(0,0,width,height);
@@ -783,16 +810,13 @@ const data = JSON.parse(text);
 const list = Array.isArray(data) ? data : (data.data || []);
 gazaSouls = list.map(item => ({
 name_ar: item.name_ar || item.name || "شهيد مجهول",
-age: item.age || "غير معروف", gender: item.gender || "M"
+age: item.age || "غير معروف", gender: item.gender || "M", id: item.id || "-"
 }));
 }
 }
 }catch(e){
-gazaSouls = [
-    {name_ar: "محمد أحمد دواس", age: 24, gender: "M"},
-    {name_ar: "فاطمة محمود خضر", age: 32, gender: "F"},
-    {name_ar: "يوسف إياد غزة", age: 12, gender: "M"}
-];
+console.error("خطأ في قراءة البيانات الحقيقية:", e);
+gazaSouls = [];
 }
 renderStars();
 }
@@ -808,7 +832,7 @@ alpha:0.6,baseAlpha:0.6,targetAlpha:0.6,scale:1,targetScale:1,
 color:'#ffffff',userData:gazaSouls[i],isMatched:false
 });
 }
-animateCounter(gazaSouls.length>0?gazaSouls.length:14200);
+animateCounter(gazaSouls.length>0?gazaSouls.length:0);
 }
 
 function gameLoop(){
@@ -828,6 +852,11 @@ requestAnimationFrame(gameLoop);
 }
 
 function animateCounter(target){
+if(target <= 0) {
+    const numberEl=document.getElementById('number');
+    if(numberEl)numberEl.innerText="0";
+    return;
+}
 let cur=0;
 const step=Math.ceil(target/100)||1;
 const timer=setInterval(()=>{
