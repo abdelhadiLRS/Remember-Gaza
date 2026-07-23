@@ -99,7 +99,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .share-btn:hover{background:#0056b3;border-color:#007bff;}
 .font-amiri{font-family:'Amiri',serif;}
 
-/* تصميم الخط الزمني السينمائي الخالي من التعليق */
+/* تصميم الخط الزمني السينمائي والثابت في الأسفل */
 .tlc-container { position: relative; width: 100%; padding-bottom: 70px; max-width: 1100px; margin: 0 auto; }
 .tlc-tracker { 
     position: fixed; 
@@ -109,16 +109,24 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     z-index: 100; 
     background: #080808; 
     border-top: 2px solid rgba(204, 0, 0, 0.8); 
-    padding: 12px 0; 
+    padding: 10px 0; 
     box-shadow: 0 -10px 30px rgba(0,0,0,0.95); 
     pointer-events: auto; 
     transform: translateZ(0);
 }
 .tlc-tracker-clip { max-width: 1100px; margin: 0 auto; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .tlc-tracker-clip::-webkit-scrollbar { display: none; }
-.tlc-tracker-track { display: flex; gap: 20px; padding: 0 20px; white-space: nowrap; width: max-content; margin: 0 auto; }
-.tlc-tracker-item { color: #888; text-decoration: none; font-weight: 900; transition: color 0.2s ease, transform 0.2s ease; cursor: pointer; font-family: 'Cairo'; font-size: 1rem; }
-.tlc-tracker-item.is-current, .tlc-tracker-item:hover { color: #ff4d4d; text-shadow: 0 0 10px rgba(204,0,0,0.6); transform: scale(1.1); }
+.tlc-tracker-track { 
+    display: flex; 
+    transform: translateX(var(--tlc-tracker-x, 0px)); 
+    width: max-content; 
+    will-change: transform; 
+}
+.tlc-tracker-list { display: flex; gap: 15px; padding: 0 20px; list-style: none; margin: 0; align-items: center; }
+.tlc-tracker-item { color: #888; font-weight: 900; cursor: pointer; white-space: nowrap; font-family: 'Cairo'; font-size: 0.9rem; transition: color 0.2s ease, transform 0.2s ease; }
+.tlc-tracker-item a { color: inherit; text-decoration: none; }
+.tlc-tracker-item.is-current a, .tlc-tracker-item a:hover { color: #ff4d4d; text-shadow: 0 0 10px rgba(204,0,0,0.6); transform: scale(1.1); }
+.tlc-tracker-decade a { color: #aaa; font-size: 0.85rem; opacity: 0.8; }
 
 .tlc-decade-section { margin-bottom: 100px; position: relative; text-align: center; }
 
@@ -231,7 +239,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 <nav class="tlc-tracker">
     <div class="tlc-tracker-clip">
-        <div class="tlc-tracker-track" id="tlc-tracker-bar"></div>
+        <div class="tlc-tracker-track" data-draggable="" style="--tlc-tracker-x: 0px; padding-inline: 0px;" id="tlc-tracker-bar"></div>
     </div>
 </nav>
 </main>
@@ -571,12 +579,16 @@ function renderMilestonesCinematic() {
     const scenesContainer = document.getElementById('tlc-scenes-container');
     if(!trackerBar || !scenesContainer) return;
 
-    let trackerHTML = '';
+    let trackerHTML = '<ul class="tlc-tracker-list">';
     let contentHTML = '';
 
     milestonesDecades.forEach((dec, dIdx) => {
         const yearNum = dec.decade.replace('s', '');
-        trackerHTML += `<a href="#decade-${dIdx}" class="tlc-tracker-item ${dIdx === 0 ? 'is-current' : ''}" onclick="scrollToDecade(event, 'decade-${dIdx}')">${dec.decade}</a>`;
+        trackerHTML += `
+            <li class="tlc-tracker-item tlc-tracker-decade ${dIdx === 0 ? 'is-current' : ''}">
+                <a href="#decade-${dIdx}" data-tooltip="${dec.decade}">${dec.decade}</a>
+            </li>
+        `;
         
         contentHTML += `
             <div class="tlc-decade-section" id="decade-${dIdx}">
@@ -585,8 +597,14 @@ function renderMilestonesCinematic() {
         `;
 
         dec.items.forEach(m => {
+            trackerHTML += `
+                <li class="tlc-tracker-item">
+                    <a href="#${m.id}" data-tooltip="${m.subtitle || m.title}">${m.year}</a>
+                </li>
+            `;
+
             contentHTML += `
-                <div class="tlc-card-mini" onclick='openMilestoneModal(${JSON.stringify(m)})'>
+                <div class="tlc-card-mini" id="${m.id}" onclick='openMilestoneModal(${JSON.stringify(m)})'>
                     <img src="${m.img}" class="tlc-card-mini-img" alt="" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2245%22 height=%2245%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23222%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23777%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2210%22>أرشيف</text></svg>'">
                     <div class="tlc-card-mini-info">
                         <div class="tlc-card-mini-year">${m.year}</div>
@@ -599,6 +617,7 @@ function renderMilestonesCinematic() {
         contentHTML += `</div></div>`;
     });
 
+    trackerHTML += '</ul>';
     trackerBar.innerHTML = trackerHTML;
     scenesContainer.innerHTML = contentHTML;
     milestonesRendered = true;
@@ -614,8 +633,9 @@ function renderMilestonesCinematic() {
             if (entry.isIntersecting) {
                 const id = entry.target.id;
                 document.querySelectorAll('.tlc-tracker-item').forEach(item => {
-                    item.classList.remove('is-current');
-                    if (item.getAttribute('href') === '#' + id) {
+                    const link = item.querySelector('a');
+                    if (link && link.getAttribute('href') === '#' + id) {
+                        document.querySelectorAll('.tlc-tracker-item').forEach(i => i.classList.remove('is-current'));
                         item.classList.add('is-current');
                         item.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
                     }
@@ -629,15 +649,6 @@ function renderMilestonesCinematic() {
         if (sectionEl) observer.observe(sectionEl);
     });
 }
-
-window.scrollToDecade = function(e, targetId) {
-    e.preventDefault();
-    const el = document.getElementById(targetId);
-    const view = document.getElementById('milestones-view');
-    if (el && view) {
-        view.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
-    }
-};
 
 window.openMilestoneModal = function(m) {
     document.getElementById('tlc-modal-title').innerText = m.title + (m.subtitle ? ' - ' + m.subtitle : '');
