@@ -233,7 +233,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
     
     <div class="p-3 mb-6 bg-red-950/30 border border-red-600/40 rounded-xl text-center text-sm text-gray-200">
-        📦 جاري تشغيل وبث الأرشيف المرئي حصرياً من ملفات التورنت في مجلد data — انقر على أي عنصر لبدء العرض.
+        📦 جاري تشغيل وبث الأرشيف المرئي حصرياً من ملفات وروابط التورنت — انقر على أي عنصر لبدء العرض.
     </div>
 </div>
 
@@ -249,6 +249,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
         </select>
         <select class="filter-select" id="filter-archive" style="min-width:180px;">
             <option value="">جميع الأرشيفات</option>
+            <option value="MagnetGaza5">Gaza Vol 5 (Magnet)</option>
             <option value="LocalTorrent1">file1.torrent</option>
             <option value="LocalTorrent2">file2.torrent</option>
         </select>
@@ -495,11 +496,22 @@ async function fetchTorrentVideos() {
     grid.innerHTML = `
         <div class="col-span-full flex flex-col items-center justify-center py-16 text-gray-300">
             <div class="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p class="text-lg font-bold">جاري تحميل وقراءة ملفات التورنت الحقيقية من مجلد data...</p>
+            <p class="text-lg font-bold">جاري تحميل وقراءة أرشيف التورنت وروابط المغناطيس...</p>
         </div>
     `;
 
+    // دمج رابط المغناطيس الخاص بك مع الأرشيف
     allVideoFiles = [
+        {
+            name: "Gaza Vol 5 (رابط مغناطيس مباشر)",
+            torrentSource: "magnet:?xt=urn:btih:14d81d460a7de2669e7bb2ac4782cb8e50b07338&dn=Gaza%20Vol%205&tr=udp%3a%2f%2ftracker.publicbt.com%3a6969%2fannounce&tr=udp%3a%2f%2ftracker.torrent.eu.org%3a451%2fannounce&tr=udp%3a%2f%2ftracker.opentrackr.org%3a1337%2fannounce&tr=udp%3a%2f%2ftracker.openbittorrent.com%3a6969%2fannounce&tr=udp%3a%2f%2ftracker.leechers-paradise.org%3a6969%2fannounce&tr=udp%3a%2f%2f9.rarbg.to%3a2920%2fannounce&tr=udp%3a%2f%2fexodus.desync.com%3a6969%2fannounce&tr=udp%3a%2f%2ftracker.cyberia.is%3a6969%2fannounce&tr=udp%3a%2f%2ftracker.moeking.me%3a6969%2fannounce",
+            size: "رابط مغناطيس",
+            date: "2026",
+            source: "شبكة التورنت المباشرة",
+            archiveName: "MagnetGaza5",
+            type: "video",
+            desc: "أرشيف توثيقي مباشر تم ربطه عبر رابط المغناطيس (Gaza Vol 5)."
+        },
         {
             name: "ملف التوثيق الميداني الأول (file1.torrent)",
             torrentSource: torrentConfig.file1,
@@ -587,24 +599,29 @@ async function openMediaModal(item) {
     container.innerHTML = `
         <div class="flex flex-col items-center justify-center p-4 text-gray-300">
             <div class="w-8 h-8 border-3 border-red-600 border-t-transparent rounded-full animate-spin mb-2"></div>
-            <p class="text-xs">جاري جلب وقراءة ملف التورنت من مجلد data...</p>
+            <p class="text-xs">جاري الاتصال بشبكة التورنت وجلب البيانات...</p>
         </div>
     `;
     modal.style.display = 'flex';
 
     try {
-        // تنظيف أي جلسة تورنت سابقة لمنع أخطاء التكرار (Torrent duplicate) واستنزاف الذاكرة
+        // تنظيف أي جلسة تورنت سابقة لمنع أخطاء التكرار واستنزاف الذاكرة
         if (window.WebTorrentInstance && window.WebTorrentInstance.torrents.length > 0) {
             window.WebTorrentInstance.torrents.forEach(t => t.destroy());
         }
 
-        const res = await fetch(item.torrentSource);
-        if (!res.ok) throw new Error("تعذر جلب ملف التورنت");
-        const torrentBuffer = await res.arrayBuffer();
+        let torrentIdentifier = item.torrentSource;
+        
+        // إذا لم يكن رابط مغناطيس، نقوم بجلبه كملف محلي ArrayBuffer
+        if (!torrentIdentifier.startsWith('magnet:')) {
+            const res = await fetch(torrentIdentifier);
+            if (!res.ok) throw new Error("تعذر جلب ملف التورنت");
+            torrentIdentifier = await res.arrayBuffer();
+        }
 
         if (window.WebTorrentInstance) {
-            window.WebTorrentInstance.add(torrentBuffer, { trackers: torrentConfig.trackers }, function (torrent) {
-                // البحث المرن عن ملف الفيديو (يشمل الحروف الكبيرة والصغيرة)
+            window.WebTorrentInstance.add(torrentIdentifier, { trackers: torrentConfig.trackers }, function (torrent) {
+                // البحث المرن عن ملف الفيديو
                 const file = torrent.files.find(f => {
                     const name = f.name.toLowerCase();
                     return name.endsWith('.mp4') || name.endsWith('.mkv') || name.endsWith('.webm') || name.endsWith('.mov');
@@ -639,13 +656,13 @@ async function openMediaModal(item) {
         }
     } catch(e) {
         console.error(e);
-        container.innerHTML = `<div class="text-center p-6 text-red-500 font-bold">تعذر تحميل أو قراءة ملف التورنت من مجلد data. تأكد من صحة مساره.</div>`;
+        container.innerHTML = `<div class="text-center p-6 text-red-500 font-bold">تعذر الاتصال برابط التورنت. تأكد من وجود قرناء (Seeders) نشطين لهذا الرابط.</div>`;
     }
 
     function showTorrentInfo(torrent) {
         container.innerHTML = `
             <div class="text-center p-6 text-white">
-                <h3 class="text-lg font-bold text-red-500 mb-2">تم تحميل ملف التورنت بنجاح</h3>
+                <h3 class="text-lg font-bold text-red-500 mb-2">تم الاتصال بالتورنت بنجاح</h3>
                 <p class="text-xs text-gray-300 mb-1">اسم الملف: ${torrent.name}</p>
                 <p class="text-xs text-gray-300">عدد الملفات الداخلية: ${torrent.files.length}</p>
             </div>
@@ -656,7 +673,6 @@ async function openMediaModal(item) {
 document.getElementById('modal-close').onclick = () => {
     const container = document.getElementById('modal-media-container');
     container.innerHTML = '';
-    // إيقاف وتدمير أي تورنت نشط عند إغلاق النافذة لإيقاف التحميل بالخلفية
     if (window.WebTorrentInstance && window.WebTorrentInstance.torrents.length > 0) {
         window.WebTorrentInstance.torrents.forEach(t => t.destroy());
     }
@@ -958,7 +974,6 @@ for(let i=0;i<points.length;i++){
     ctx.shadowBlur = 0;
 }
 
-// عرض بطاقة المعاينة العائمة مع منع تجاوز إطار/كادر الشاشة (Smart Positioning)
 const tooltip = document.getElementById('star-tooltip');
 if (hoveredStar && hoveredStar.userData) {
     document.getElementById('tooltip-name').innerText = hoveredStar.userData.name_ar || "شهيد مجهول";
@@ -970,11 +985,9 @@ if (hoveredStar && hoveredStar.userData) {
     let tLeft = mouseX + 15;
     let tTop = mouseY + 15;
     
-    // إذا كانت البطاقة ستتجاوز الحافة اليمنى للشاشة، يتم إرجاعها لليسار
     if (tLeft + 250 > width) {
         tLeft = mouseX - 260;
     }
-    // إذا كانت البطاقة ستتجاوز الحافة السفلية للشاشة، يتم إظهارها للأعلى
     if (tTop + 90 > height) {
         tTop = mouseY - 80;
     }
