@@ -101,17 +101,18 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .share-btn:hover{background:#0056b3;border-color:#007bff;}
 .font-amiri{font-family:'Amiri',serif;}
 
-/* تصميم الخط الزمني العمودي مع إلغاء الخط الأحمر تماماً */
+/* تصميم إبداعي متطور لأبرز المحطات (الخط الزمني السينمائي) - تم إزالة الخط الأحمر العمودي */
 .vertical-timeline-container { position: relative; max-width: 950px; margin: 0 auto; padding: 30px 15px; font-family: 'Cairo', sans-serif; }
-.vertical-timeline-container::before { display: none !important; }
 .v-decade-section { margin-bottom: 70px; position: relative; }
-.v-decade-header { font-size: 2.4rem; font-weight: 900; color: #fff; margin-bottom: 30px; padding-right: 20px; position: relative; font-family: 'Cairo', sans-serif; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+.v-decade-header { font-size: 2.4rem; font-weight: 900; color: #fff; margin-bottom: 30px; padding-right: 65px; position: relative; font-family: 'Cairo', sans-serif; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
 .v-decade-header span { color: #ff3333; text-shadow: 0 0 15px rgba(255,51,51,0.6); }
-.v-item-row { position: relative; margin-bottom: 30px; padding-right: 20px; }
-.v-item-dot { position: absolute; right: -10px; top: 22px; width: 16px; height: 16px; background: #555; border-radius: 50%; border: 3px solid #000; z-index: 3; transition: transform 0.3s ease; }
+.v-item-row { position: relative; margin-bottom: 30px; padding-right: 65px; }
+.v-item-dot { position: absolute; right: 29px; top: 22px; width: 20px; height: 20px; background: #cc0000; border-radius: 50%; border: 4px solid #000; box-shadow: 0 0 18px #ff0000; z-index: 3; transition: transform 0.3s ease; }
 .v-card { background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.98) 100%); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 18px 24px; display: flex; align-items: center; gap: 20px; cursor: pointer; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.7); position: relative; overflow: hidden; }
+.v-card::after { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%; background: #cc0000; opacity: 0; transition: opacity 0.3s; }
 .v-card:hover { border-color: rgba(255, 51, 51, 0.6); transform: translateX(-8px) scale(1.01); box-shadow: 0 15px 40px rgba(204,0,0,0.3); }
-.v-card:hover .v-item-dot { transform: scale(1.3); background: #cc0000; }
+.v-card:hover::after { opacity: 1; }
+.v-card:hover .v-item-dot { transform: scale(1.3); }
 .v-card-img { width: 75px; height: 75px; border-radius: 12px; object-fit: cover; background: #1a1a1a; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
 .v-card-info { flex: 1; min-width: 0; text-align: right; }
 .v-card-year { color: #ff4d4d; font-size: 0.85rem; font-weight: 800; margin-bottom: 4px; font-family: 'Cairo', sans-serif; letter-spacing: 0.5px; }
@@ -158,7 +159,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 <div class="w-full h-full flex flex-col lg:flex-row px-4 md:px-8 gap-4" style="height: calc(100vh - 140px);">
     <div class="w-full lg:w-[380px] glass-panel rounded-2xl flex flex-col overflow-hidden border border-white/10 h-[40vh] lg:h-full">
         <div class="p-4 border-b border-white/10 bg-black/40">
-            <h3 class="font-bold text-lg text-red-500 mb-2 font-['Cairo']">خريطة وسجل غزة</h3>
+            <h3 class="font-bold text-lg text-red-500 mb-2 font-['Cairo']">الخريطة التفاعلية والسجل</h3>
             <input type="text" id="map-search-input" placeholder="بحث بالاسم أو رقم الهوية..." class="w-full bg-black/60 border border-white/20 text-white p-2.5 rounded-xl text-xs outline-none focus:border-red-600 transition-all font-['Cairo']">
             <div class="flex gap-2 mt-3 text-xs text-gray-300 justify-between bg-black/50 p-2 rounded-lg border border-white/5 font-['Cairo']">
                 <span>المعروض: <strong id="map-total-count" class="text-white">0</strong></span>
@@ -174,13 +175,14 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 </main>
 
-<!-- واجهة أبرز المحطات الإبداعية بدون أي خطوط حمراء -->
+<!-- واجهة أبرز المحطات الإبداعية بالخط الزمني العمودي -->
 <main id="milestones-view" class="text-white">
 <div class="vertical-timeline-container">
     <div class="text-center mb-12">
         <h2 class="text-3xl md:text-4xl font-black mb-3 text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-400 to-white drop-shadow-lg">أبرز المحطات والتوثيق التاريخي</h2>
         <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto">محطات الصمود والنضال الفلسطيني عبر العقود، توثيق حي للأحداث والملاحم الخالدة</p>
     </div>
+    <!-- سيتم حقن الخط الزمني لشيرين هنا -->
     <div id="tlc-scenes-container"></div>
 </div>
 </main>
@@ -268,7 +270,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 <button class="btn-main" id="tab-milestones" onclick="switchMainMode('milestones')">أبرز المحطات</button>
 <button class="btn-main" id="tab-stats" onclick="switchMainMode('stats')">الإحصائيات</button>
 <button class="btn-main" id="tab-videos" onclick="switchMainMode('videos')">التوثيق والأرشيف</button>
-<button class="btn-main" id="tab-map" onclick="switchMainMode('map')">خريطة غزة</button>
+<button class="btn-main" id="tab-map" onclick="switchMainMode('map')">الخريطة</button>
 </div>
 </div>
 <div class="relative inline-block text-right">
@@ -346,7 +348,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
 </div>
 
-<!-- نافذة تفاصيل المحطات التاريخية -->
+<!-- نافذة تفاصيل المحطات التاريخية العمودية الإبداعية -->
 <div id="tlc-custom-modal">
     <div class="tlc-modal-box">
         <div class="tlc-modal-header">
@@ -362,7 +364,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
 </div>
 
-<!-- نافذة بطاقة الشهيد الإبداعية -->
+<!-- نافذة بطاقة الشهيد الإبداعية مع زر مشاركة أحمر غير فاقع وتحقق اسم اللغة الأخرى -->
 <div id="martyr-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
     <div class="modal-box" style="max-width: 450px; background: linear-gradient(135deg, #121212 0%, #1a0505 100%); border: 1px solid rgba(204,0,0,0.4); box-shadow: 0 25px 50px rgba(0,0,0,0.9);">
         <div class="modal-header border-b border-red-600/20">
@@ -498,8 +500,8 @@ const milestonesDecades = [
 ];
 
 const translations={
-ar:{titleMain:"أرواح",logoText:"فلسطين",searchPlaceholder:"ابحث عن اسم الشهيد...",tabSouls:" شهداء غزة",tabJournalists:" صحفيو غزة",tabWestBank:" الضفة الغربية",tabMilestones:" أبرز المحطات",tabStats:" الإحصائيات",tabVideos:" التوثيق والأرشيف",tabMap:" خريطة غزة",donate:"❤️ إدعمنا لنستمر",musicOn:"🎵 الصوت",musicOff:"🔇 إيقاف",visitorText:"زوار:",verse:`"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"`,devText:"تطوير: عبد الهادي",shareBtn:"مشاركة",martyrsLabel:"شهيداً وثّقت أسماؤهم"},
-en:{titleMain:"Palestinian",logoText:"Souls",searchPlaceholder:"Search martyr...",tabSouls:" Gaza Souls",tabJournalists:" Gaza Journalists",tabWestBank:" West Bank",tabMilestones:" Milestones",tabStats:" Statistics",tabVideos:" Footage",tabMap:" Gaza Map",donate:" Support Us",musicOn:"🎵 Audio",musicOff:"Mute",visitorText:"Visits:",verse:`"Think not of those who are slain in Allah's way as dead..."`,devTest:"Dev: Abdelhadi",shareBtn:"Share",martyrsLabel:"Martyrs Documented"}
+ar:{titleMain:"أرواح",logoText:"فلسطين",searchPlaceholder:"ابحث عن اسم الشهيد...",tabSouls:" شهداء غزة",tabJournalists:" صحفيو غزة",tabWestBank:" الضفة الغربية",tabMilestones:" أبرز المحطات",tabStats:" الإحصائيات",tabVideos:" التوثيق والأرشيف",tabMap:" الخريطة",donate:"❤️ إدعمنا لنستمر",musicOn:"🎵 الصوت",musicOff:"🔇 إيقاف",visitorText:"زوار:",verse:`"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"`,devText:"تطوير: عبد الهادي",shareBtn:"مشاركة",martyrsLabel:"شهيداً وثّقت أسماؤهم"},
+en:{titleMain:"Palestinian",logoText:"Souls",searchPlaceholder:"Search martyr...",tabSouls:" Gaza Souls",tabJournalists:" Gaza Journalists",tabWestBank:" West Bank",tabMilestones:" Milestones",tabStats:" Statistics",tabVideos:" Footage",tabMap:" Map",donate:" Support Us",musicOn:"🎵 Audio",musicOff:"🔇 Mute",visitorText:"Visits:",verse:`"Think not of those who are slain in Allah's way as dead..."`,devTest:"Dev: Abdelhadi",shareBtn:"Share",martyrsLabel:"Martyrs Documented"}
 };
 
 function changeLanguage(langCode){
@@ -537,21 +539,46 @@ const text = `توثيق شهيد: ${name} | العمر: ${age} | رقم اله�
 navigator.clipboard.writeText(text).then(()=>alert('تم نسخ بيانات بطاقة الشهيد بنجاح!'));
 };
 
-/* رسم المحطات التاريخية بدون أي خطوط حمراء */
+/* رسم الخط الزمني العمودي للمحطات التاريخية متطابقاً مع كلاسات شيرين */
 function renderMilestonesCinematic() {
     if (milestonesRendered) return;
     const scenesContainer = document.getElementById('tlc-scenes-container');
     if(!scenesContainer) return;
 
-    let contentHTML = `<div class="vertical-timeline-container" style="padding-top: 10px;">`;
+    let trackerHTML = `
+    <div class="tlc" id="tlc-root">
+        <nav class="tlc-tracker" aria-label="تصفّح الخط الزمني">
+            <span class="tlc-tracker-marker" aria-hidden="true"></span>
+            <span class="tlc-tracker-current is-visible" id="tlc-tracker-current" aria-live="polite">طوفان الأقصى</span>
+            <span class="tlc-tracker-tooltip" id="tlc-tracker-tooltip" aria-hidden="true"></span>
+            <div class="tlc-tracker-clip">
+                <div class="tlc-tracker-track" data-draggable="true">
+                    <ul class="tlc-tracker-list">
+    `;
+
+    let contentHTML = `<div class="tlc-content" style="margin-top: 40px;">`;
 
     milestonesDecades.forEach((dec) => {
+        // شريط التتبع (Tracker)
+        trackerHTML += `
+            <li class="tlc-tracker-item tlc-tracker-decade">
+                <a href="#${dec.decadeId}" data-tooltip="${dec.decade}">${dec.decade}</a>
+            </li>
+        `;
+        
+        // محتوى العقد والتفاصيل
         contentHTML += `
             <div class="v-decade-section" id="${dec.decadeId}">
                 <div class="v-decade-header">${dec.decade.replace('s', '')}<span>s</span></div>
         `;
 
         dec.items.forEach(m => {
+            trackerHTML += `
+                <li class="tlc-tracker-item">
+                    <a href="#${m.id}" data-tooltip="${m.title}">${m.year}</a>
+                </li>
+            `;
+            
             contentHTML += `
                 <div class="v-item-row" id="${m.id}">
                     <div class="v-item-dot"></div>
@@ -569,8 +596,16 @@ function renderMilestonesCinematic() {
         contentHTML += `</div>`;
     });
 
-    contentHTML += `</div>`;
-    scenesContainer.innerHTML = contentHTML;
+    trackerHTML += `
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    `;
+    
+    contentHTML += `</div></div>`; // إغلاق .tlc-content و .tlc
+
+    scenesContainer.innerHTML = trackerHTML + contentHTML;
     milestonesRendered = true;
 }
 
@@ -786,23 +821,11 @@ document.getElementById('btn-reset').onclick = () => {
     renderArchiveGallery();
 };
 
-/* خريطة قطاع غزة حصرياً */
 function initMapIfNeeded() {
     if (!map) {
-        const gazaBounds = L.latLngBounds(
-            [31.15, 34.20],
-            [31.62, 34.58]
-        );
-        map = L.map('map', {
-            center: [31.35, 34.38],
-            zoom: 11,
-            minZoom: 10,
-            maxBounds: gazaBounds,
-            maxBoundsViscosity: 1.0
-        });
+        map = L.map('map').setView([31.5, 34.46], 10);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap',
-            bounds: gazaBounds
+            attribution: '© OpenStreetMap'
         }).addTo(map);
         markersLayer = L.layerGroup().addTo(map);
     }
@@ -829,8 +852,8 @@ function renderMapAndList(dataToRender) {
                 <span>الهوية: ${person.id || '-'}</span>
             </div>
         `;
-        const lat = 31.25 + ((idx * 0.003) % 0.30);
-        const lng = 34.25 + ((idx * 0.003) % 0.28);
+        const lat = 31.35 + (idx % 30) * 0.008;
+        const lng = 34.30 + (idx % 30) * 0.008;
 
         card.onclick = () => { if (map) map.setView([lat, lng], 14); openMartyrCardModal(person); };
         listContainer.appendChild(card);
@@ -908,6 +931,7 @@ sCanvas.width=window.innerWidth;sCanvas.height=window.innerHeight;
 window.addEventListener('resize',resize);
 resize();
 
+/* إعداد الشهب المتساقطة بشكل إبداعي وبطيء */
 class ShootingStar {
     constructor() {
         this.reset();
@@ -915,17 +939,18 @@ class ShootingStar {
     reset() {
         this.x = Math.random() * window.innerWidth;
         this.y = Math.random() * window.innerHeight * 0.4;
-        this.len = Math.random() * 80 + 30;
-        this.speed = Math.random() * 2 + 1.5;
+        this.len = Math.random() * 80 + 30; // طول الذيل
+        this.speed = Math.random() * 2 + 1.5; // السرعة أصبحت أقل بكثير من السابق
         this.opacity = Math.random() * 0.7 + 0.3;
         this.angle = Math.PI / 4;
-        this.glow = Math.random() * 10 + 5;
+        this.glow = Math.random() * 10 + 5; // معامل التوهج
     }
     update() {
         this.x -= this.speed * Math.cos(this.angle);
         this.y += this.speed * Math.sin(this.angle);
         if (this.x < -100 || this.y > window.innerHeight + 100) {
             this.reset();
+            // بدء الشهاب الجديد من الأطراف العلوية أو اليمنى ليعطي تساقطاً طبيعياً
             if (Math.random() > 0.5) {
                 this.x = window.innerWidth + 50;
                 this.y = Math.random() * window.innerHeight * 0.5;
@@ -938,6 +963,8 @@ class ShootingStar {
     draw() {
         if(!sCtx) return;
         sCtx.save();
+        
+        // ذيل متدرج الشفافية والإضاءة (Gradient)
         const grad = sCtx.createLinearGradient(
             this.x, this.y, 
             this.x + this.len * Math.cos(this.angle), 
@@ -945,7 +972,7 @@ class ShootingStar {
         );
         grad.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
         grad.addColorStop(0.2, `rgba(204, 230, 255, ${this.opacity * 0.8})`); 
-        grad.addColorStop(1, `rgba(0, 0, 0, 0)`);
+        grad.addColorStop(1, `rgba(0, 0, 0, 0)`); // التلاشي في نهاية الذيل
         
         sCtx.strokeStyle = grad;
         sCtx.lineWidth = 2.5;
@@ -960,10 +987,12 @@ class ShootingStar {
         );
         sCtx.stroke();
         
+        // رأس مضيء للشهاب
         sCtx.beginPath();
         sCtx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
         sCtx.fillStyle = `rgba(255, 255, 255, ${this.opacity + 0.2})`;
         sCtx.fill();
+        
         sCtx.restore();
     }
 }
@@ -998,6 +1027,7 @@ if (canvas) {
     });
 }
 
+/* فتح بطاقة الشهيد مع التحقق التلقائي لاسم اللغة الأخرى */
 function openMartyrCardModal(person) {
     const modal = document.getElementById('martyr-modal-overlay');
     document.getElementById('martyr-modal-name').innerText = person.name_ar || person.name || 'شهيد مجهول';
@@ -1066,6 +1096,7 @@ color:'#ffffff',userData:gazaSouls[i]
 animateCounter(gazaSouls.length>0?gazaSouls.length:0);
 }
 
+/* تحسين رسم وحركة النجوم، التوهج، ورسم الشهب المتساقطة بالتوازي */
 function gameLoop(){
 if(ctx){
 ctx.clearRect(0,0,width,height);
@@ -1136,6 +1167,7 @@ if (hoveredStar && hoveredStar.userData) {
 ctx.globalAlpha=1;
 }
 
+/* رسم الشهب المتساقطة في الطبقة الخاصة بها */
 if(sCtx){
 sCtx.clearRect(0,0,window.innerWidth,window.innerHeight);
 shootingStarsArr.forEach(star => {
