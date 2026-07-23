@@ -183,7 +183,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
         <h2 class="text-3xl md:text-4xl font-black mb-3 text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-400 to-white drop-shadow-lg">أبرز المحطات والتوثيق التاريخي</h2>
         <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto">محطات الصمود والنضال الفلسطيني عبر العقود، توثيق حي للأحداث والملاحم الخالدة</p>
     </div>
-    <!-- سيتم حقن الخط الزمني هنا -->
+    <!-- سيتم حقن الخط الزمني لشيرين هنا -->
     <div id="tlc-scenes-container"></div>
 </div>
 </main>
@@ -349,7 +349,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
 </div>
 
-<!-- نافذة تفاصيل المحطات التاريخية العمودية -->
+<!-- نافذة تفاصيل المحطات التاريخية العمودية الإبداعية -->
 <div id="tlc-custom-modal">
     <div class="tlc-modal-box">
         <div class="tlc-modal-header">
@@ -365,7 +365,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
 </div>
 
-<!-- نافذة بطاقة الشهيد الإبداعية -->
+<!-- نافذة بطاقة الشهيد الإبداعية مع زر مشاركة أحمر غير فاقع وتحقق اسم اللغة الأخرى -->
 <div id="martyr-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
     <div class="modal-box" style="max-width: 450px; background: linear-gradient(135deg, #121212 0%, #1a0505 100%); border: 1px solid rgba(204,0,0,0.4); box-shadow: 0 25px 50px rgba(0,0,0,0.9);">
         <div class="modal-header border-b border-red-600/20">
@@ -540,7 +540,7 @@ const text = `توثيق شهيد: ${name} | العمر: ${age} | رقم اله�
 navigator.clipboard.writeText(text).then(()=>alert('تم نسخ بيانات بطاقة الشهيد بنجاح!'));
 };
 
-/* رسم الخط الزمني العمودي للمحطات التاريخية */
+/* رسم الخط الزمني العمودي للمحطات التاريخية متطابقاً مع كلاسات شيرين */
 function renderMilestonesCinematic() {
     if (milestonesRendered) return;
     const scenesContainer = document.getElementById('tlc-scenes-container');
@@ -560,12 +560,14 @@ function renderMilestonesCinematic() {
     let contentHTML = `<div class="tlc-content" style="margin-top: 40px;">`;
 
     milestonesDecades.forEach((dec) => {
+        // شريط التتبع (Tracker)
         trackerHTML += `
             <li class="tlc-tracker-item tlc-tracker-decade">
                 <a href="#${dec.decadeId}" data-tooltip="${dec.decade}">${dec.decade}</a>
             </li>
         `;
         
+        // محتوى العقد والتفاصيل
         contentHTML += `
             <div class="v-decade-section" id="${dec.decadeId}">
                 <div class="v-decade-header">${dec.decade.replace('s', '')}<span>s</span></div>
@@ -602,7 +604,7 @@ function renderMilestonesCinematic() {
         </nav>
     `;
     
-    contentHTML += `</div></div>`;
+    contentHTML += `</div></div>`; // إغلاق .tlc-content و .tlc
 
     scenesContainer.innerHTML = trackerHTML + contentHTML;
     milestonesRendered = true;
@@ -938,17 +940,18 @@ class ShootingStar {
     reset() {
         this.x = Math.random() * window.innerWidth;
         this.y = Math.random() * window.innerHeight * 0.4;
-        this.len = Math.random() * 80 + 30;
-        this.speed = Math.random() * 2 + 1.5;
+        this.len = Math.random() * 80 + 30; // طول الذيل
+        this.speed = Math.random() * 2 + 1.5; // السرعة أصبحت أقل بكثير من السابق
         this.opacity = Math.random() * 0.7 + 0.3;
         this.angle = Math.PI / 4;
-        this.glow = Math.random() * 10 + 5;
+        this.glow = Math.random() * 10 + 5; // معامل التوهج
     }
     update() {
         this.x -= this.speed * Math.cos(this.angle);
         this.y += this.speed * Math.sin(this.angle);
         if (this.x < -100 || this.y > window.innerHeight + 100) {
             this.reset();
+            // بدء الشهاب الجديد من الأطراف العلوية أو اليمنى ليعطي تساقطاً طبيعياً
             if (Math.random() > 0.5) {
                 this.x = window.innerWidth + 50;
                 this.y = Math.random() * window.innerHeight * 0.5;
@@ -962,6 +965,7 @@ class ShootingStar {
         if(!sCtx) return;
         sCtx.save();
         
+        // ذيل متدرج الشفافية والإضاءة (Gradient)
         const grad = sCtx.createLinearGradient(
             this.x, this.y, 
             this.x + this.len * Math.cos(this.angle), 
@@ -969,7 +973,7 @@ class ShootingStar {
         );
         grad.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
         grad.addColorStop(0.2, `rgba(204, 230, 255, ${this.opacity * 0.8})`); 
-        grad.addColorStop(1, `rgba(0, 0, 0, 0)`);
+        grad.addColorStop(1, `rgba(0, 0, 0, 0)`); // التلاشي في نهاية الذيل
         
         sCtx.strokeStyle = grad;
         sCtx.lineWidth = 2.5;
@@ -984,6 +988,7 @@ class ShootingStar {
         );
         sCtx.stroke();
         
+        // رأس مضيء للشهاب
         sCtx.beginPath();
         sCtx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
         sCtx.fillStyle = `rgba(255, 255, 255, ${this.opacity + 0.2})`;
@@ -1023,6 +1028,7 @@ if (canvas) {
     });
 }
 
+/* فتح بطاقة الشهيد مع التحقق التلقائي لاسم اللغة الأخرى */
 function openMartyrCardModal(person) {
     const modal = document.getElementById('martyr-modal-overlay');
     document.getElementById('martyr-modal-name').innerText = person.name_ar || person.name || 'شهيد مجهول';
@@ -1091,6 +1097,7 @@ color:'#ffffff',userData:gazaSouls[i]
 animateCounter(gazaSouls.length>0?gazaSouls.length:0);
 }
 
+/* تحسين رسم وحركة النجوم، التوهج، ورسم الشهب المتساقطة بالتوازي */
 function gameLoop(){
 if(ctx){
 ctx.clearRect(0,0,width,height);
@@ -1161,6 +1168,7 @@ if (hoveredStar && hoveredStar.userData) {
 ctx.globalAlpha=1;
 }
 
+/* رسم الشهب المتساقطة في الطبقة الخاصة بها */
 if(sCtx){
 sCtx.clearRect(0,0,window.innerWidth,window.innerHeight);
 shootingStarsArr.forEach(star => {
@@ -1196,3 +1204,4 @@ switchMainMode('souls');
 </script>
 </body>
 </html>
+```[cite: 22]
