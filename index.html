@@ -99,7 +99,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .share-btn:hover{background:#0056b3;border-color:#007bff;}
 .font-amiri{font-family:'Amiri',serif;}
 
-/* تصميم الخط الزمني السينمائي */
+/* تصميم الخط الزمني السينمائي مع تصغير مربع التتبع ليكون أنيقاً وصغيراً ومبدعاً */
 .tlc-container { position: relative; width: 100%; padding-bottom: 90px; max-width: 1100px; margin: 0 auto; }
 .tlc-tracker { 
     position: fixed; 
@@ -114,7 +114,23 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     pointer-events: auto; 
     transform: translateZ(0);
 }
-.tlc-tracker-current { position: absolute; top: -25px; right: 20px; background: #cc0000; color: #fff; font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: none; }
+.tlc-tracker-current { 
+    position: absolute; 
+    top: -26px; 
+    right: 20px; 
+    background: rgba(204, 0, 0, 0.95); 
+    backdrop-filter: blur(4px);
+    color: #fff; 
+    font-size: 0.6rem; 
+    padding: 2px 8px; 
+    border-radius: 20px; 
+    font-weight: 700; 
+    display: none; 
+    box-shadow: 0 3px 10px rgba(204,0,0,0.4);
+    border: 1px solid rgba(255, 77, 77, 0.3);
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+}
 .tlc-tracker-current.is-visible { display: block; }
 .tlc-tracker-clip { max-width: 1100px; margin: 0 auto; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .tlc-tracker-clip::-webkit-scrollbar { display: none; }
@@ -234,14 +250,14 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 </main>
 
-<!-- واجهة أبرز المحطات (خالية من عناصر الـ Fixed الداخلية لمنع التعليق) -->
+<!-- واجهة أبرز المحطات -->
 <main id="milestones-view" class="text-white">
 <div class="tlc-container">
     <div id="tlc-scenes-container"></div>
 </div>
 </main>
 
-<!-- شريط الخط الزمني الثابت في الجذر لمنع أي تقطيع أو بطء -->
+<!-- شريط الخط الزمني الثابت في الجذر مع مربع المؤشر المصغر والأنيق -->
 <nav class="tlc-tracker" id="global-tlc-tracker" aria-label="تصفّح الخط الزمني" style="display: none;">
     <span class="tlc-tracker-marker" aria-hidden="true"></span>
     <span class="tlc-tracker-current is-visible" id="tlc-tracker-current" aria-live="polite">1920s</span>
@@ -960,7 +976,6 @@ window.switchMainMode = function(mode) {
         document.getElementById(id).style.display = 'none';
     });
 
-    // التحكم في ظهور شريط التتبع الثابت في الأسفل بناءً على التبويب
     const globalTracker = document.getElementById('global-tlc-tracker');
     if (globalTracker) {
         globalTracker.style.display = (mode === 'milestones') ? 'block' : 'none';
