@@ -26,9 +26,6 @@
 <link type="text/css" rel="stylesheet" href="./css/simplePagination.css">
 <script type="text/javascript" src="./js/jquery.simplePagination.js"></script>
 
-<!-- خدمة Google reCAPTCHA Enterprise -->
-<script src="https://www.google.com/recaptcha/enterprise.js?render=6LcnLxQlAAAAAKlZXMXQMDvM8eJds6ntV3Fd_1fJ"></script>
-
 <!-- مكتبة jQuery UI وتنسيقاتها المحلية -->
 <script src="./js/jquery-ui.min.js"></script>
 <link type="text/css" rel="stylesheet" href="./css/jquery-ui.min.css?t=2">
@@ -70,7 +67,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     padding-top: 140px;
     padding-bottom: 60px;
 }
-#milestones-view { scroll-behavior: smooth; }
+#milestones-view { scroll-behavior: smooth; padding-top: 180px; }
 #map-view { padding-top: 120px; padding-bottom: 20px; }
 
 #ui-layer{position:fixed;inset:0;z-index:30;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;}
@@ -95,17 +92,17 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .share-btn:hover{background:#0056b3;border-color:#007bff;}
 .font-amiri{font-family:'Amiri',serif;}
 
-/* تخصيص وتعديل أبرز المحطات بصورة ابداعية سينمائية */
+/* تخصيص وتعديل أبرز المحطات بصورة ابداعية سينمائية مع تكبير وتبريز الأعوام */
 .tlc-container { position: relative; width: 100%; padding-bottom: 80px; max-width: 1100px; margin: 0 auto; }
-.tlc-tracker { position: sticky; top: 0px; z-index: 25; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(204, 0, 0, 0.3); padding: 15px 0; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
+.tlc-tracker { position: sticky; top: 10px; z-index: 25; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(15px); border-bottom: 2px solid rgba(204, 0, 0, 0.4); padding: 15px 0; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
 .tlc-tracker-clip { max-width: 1100px; margin: 0 auto; overflow-x: auto; scrollbar-width: none; }
 .tlc-tracker-clip::-webkit-scrollbar { display: none; }
-.tlc-tracker-track { display: flex; gap: 12px; padding: 0 20px; white-space: nowrap; width: max-content; margin: 0 auto; }
-.tlc-tracker-item { color: #94a3b8; text-decoration: none; font-weight: 700; padding: 6px 18px; border-radius: 30px; transition: all 0.3s ease; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); font-family: 'Cairo'; font-size: 0.9rem; }
-.tlc-tracker-item.is-current, .tlc-tracker-item:hover { color: #fff; background-color: #cc0000; border-color: #ff4d4d; box-shadow: 0 0 20px rgba(204,0,0,0.5); transform: scale(1.05); }
+.tlc-tracker-track { display: flex; gap: 15px; padding: 0 20px; white-space: nowrap; width: max-content; margin: 0 auto; }
+.tlc-tracker-item { color: #cbd5e1; text-decoration: none; font-weight: 900; padding: 8px 20px; border-radius: 30px; transition: all 0.3s ease; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); font-family: 'Cairo'; font-size: 1.15rem; letter-spacing: 0.5px; }
+.tlc-tracker-item.is-current, .tlc-tracker-item:hover { color: #fff; background-color: #cc0000; border-color: #ff4d4d; box-shadow: 0 0 25px rgba(204,0,0,0.6); transform: scale(1.08); }
 
-.tlc-decade-section { margin-bottom: 60px; }
-.tlc-decade-title { font-size: 1.8rem; font-weight: 900; color: #ff4d4d; border-bottom: 2px solid rgba(204,0,0,0.4); padding-bottom: 8px; margin-bottom: 30px; display: inline-block; }
+.tlc-decade-section { margin-bottom: 70px; }
+.tlc-decade-title { font-size: 2.7rem; font-weight: 900; color: #ff4d4d; border-bottom: 3px solid rgba(204,0,0,0.6); padding-bottom: 10px; margin-bottom: 35px; display: inline-block; text-shadow: 0 3px 20px rgba(204,0,0,0.5); letter-spacing: 1px; }
 .tlc-scene { position: relative; min-height: 45vh; display: flex; align-items: center; justify-content: center; margin-bottom: 50px; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); background: rgba(15,15,15,0.9); }
 .tlc-bg { position: absolute; inset: 0; z-index: 1; overflow: hidden; }
 .tlc-bg img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.35) blur(3px); transform: scale(1.05); transition: transform 0.6s ease; }
@@ -113,7 +110,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .tlc-bg-tint { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(20,0,0,0.7) 100%); }
 
 .tlc-panel { position: relative; z-index: 2; padding: 35px; width: 100%; }
-.tlc-date { display: inline-block; background: rgba(204,0,0,0.2); color: #ff4d4d; padding: 4px 16px; border-radius: 10px; font-weight: 900; font-size: 1.1rem; margin-bottom: 15px; border: 1px solid rgba(204,0,0,0.4); }
+.tlc-date { display: inline-block; background: rgba(204,0,0,0.25); color: #ff4d4d; padding: 6px 18px; border-radius: 12px; font-weight: 900; font-size: 1.25rem; margin-bottom: 15px; border: 1px solid rgba(204,0,0,0.5); letter-spacing: 0.5px; }
 .tlc-title { font-size: 2rem; font-weight: 900; margin: 0 0 8px 0; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
 .tlc-alt { color: #fca5a5; font-size: 1.1rem; margin-bottom: 20px; font-weight: bold; }
 .tlc-excerpt { font-size: 1.05rem; line-height: 1.8; color: #e2e8f0; margin-bottom: 25px; }
@@ -177,7 +174,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 </main>
 
-<!-- واجهة أبرز المحطات المحدثة بالكامل وبصورة إبداعية شاملة -->
+<!-- واجهة أبرز المحطات المحدثة بالأعوام الكبيرة والبارزة -->
 <main id="milestones-view" class="text-white">
 <div class="tlc-container">
     <nav class="tlc-tracker">
@@ -451,7 +448,7 @@ const milestonesDecades = [
   {
     decade: "1970s",
     items: [
-      {id: "m22", year: "1976", title: "يوم الأرض", subtitle: "دفاعاً عن الجليل والمثلث", img: "./images/timeline/22.jpg", desc: "خرج فلسطينيو الداخل في إضراب عام رفضاً لمصادرة الأراضي، وواجه الاحتلال المتظاهرين بالرصاص الحي[cite: 11].", martyrs: "6 شهداء", sourceTitle: "ويكيبيديا - يوم الأرض", sourceUrl: "https://ar.wikipedia.org/wiki/%D9%8A%D9%88%D9%85_%D8%A7%D9%84%D8%A3%D8%B1%D8%B6_%D8%A7%D9%84%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86%D9%8A"},
+      {id: "m22", year: "1976", title: "يوم الأرض", subtitle: "دفاعاً عن الجليل والمثلث", img: "./images/timeline/22.jpg", desc: "خرج فلسطينيو الداخل في إضراب عام رفضاً لمصادرة الأراضي، وواجه الاحتلال المتظاهرين بالرصاص الحي[cite: 11].", martyrs: "6 شهداء", sourceTitle: "ويكيبيديا - يوم الأرض", sourceUrl: "https://ar.wikipedia.org/wiki/%D9%85%D8%A9_%D8%A7%D9%84%D8%A3%D8%B1%D8%B6_%D8%A7%D9%84%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86%D9%8A"},
       {id: "m23", year: "1976", title: "مجزرة تل الزعتر", subtitle: "حصار مخيمات لبنان", img: "./images/timeline/23.jpg", desc: "حصار ومجزرة مروعة استهدفت اللاجئين الفلسطينيين في مخيم تل الزعتر شرق بيروت خلال الحرب الأهلية اللبنانية[cite: 11].", martyrs: "3,000 - 4,280 شهيد", sourceTitle: "الجزيرة نت", sourceUrl: "https://www.aljazeera.net"}
     ]
   },
@@ -523,7 +520,7 @@ window.shareSite=function(){
 navigator.clipboard.writeText(window.location.href).then(()=>alert('تم نسخ رابط المنصة بنجاح!'));
 };
 
-/* دوال رندر أبرز المحطات بشكل سينمائي ابداعي ومتكامل */
+/* دوال رندر أبرز المحطات بشكل سينمائي ابداعي ومتكامل مع التحديث التلقائي لشريط الأعوام عند التمرير */
 function renderMilestonesCinematic() {
     if (milestonesRendered) return;
     const trackerBar = document.getElementById('tlc-tracker-bar');
@@ -559,7 +556,7 @@ function renderMilestonesCinematic() {
                                 <span class="tlc-stat-label">توثيق الضحايا:</span>
                             </div>
                             <button type="button" class="tlc-more" onclick='openMilestoneModal(${JSON.stringify(m)})'>
-                                <span>اقرأ المزيد التفصيلي</span>
+                                <span>اقرأ المزيد</span>
                                 <span aria-hidden="true">→</span>
                             </button>
                         </div>
@@ -573,6 +570,33 @@ function renderMilestonesCinematic() {
     trackerBar.innerHTML = trackerHTML;
     scenesContainer.innerHTML = contentHTML;
     milestonesRendered = true;
+
+    // مراقبة التمرير لتحديث شريط الأعوام تلقائياً
+    const observerOptions = {
+        root: document.getElementById('milestones-view'),
+        rootMargin: '-20% 0px -50% 0px',
+        threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.id;
+                document.querySelectorAll('.tlc-tracker-item').forEach(item => {
+                    item.classList.remove('is-current');
+                    if (item.getAttribute('href') === '#' + id) {
+                        item.classList.add('is-current');
+                        item.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                    }
+                });
+            }
+        });
+    }, observerOptions);
+
+    milestonesDecades.forEach((dec, dIdx) => {
+        const sectionEl = document.getElementById(`decade-${dIdx}`);
+        if (sectionEl) observer.observe(sectionEl);
+    });
 }
 
 window.scrollToDecade = function(e, targetId) {
@@ -580,7 +604,7 @@ window.scrollToDecade = function(e, targetId) {
     const el = document.getElementById(targetId);
     const view = document.getElementById('milestones-view');
     if (el && view) {
-        view.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+        view.scrollTo({ top: el.offsetTop - 100, behavior: 'smooth' });
     }
 };
 
