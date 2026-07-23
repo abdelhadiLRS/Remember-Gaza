@@ -1,0 +1,831 @@
+@charset "UTF-8";
+/* =========================================================================
+   Stats-header — gradient-Header pattern shared across all data pages.
+   Extracted from css/style-black.css 2026-04-25 (Pass 1).
+
+   Driver: Inc::buildStatsHeader() (core/Inc.php). Live on /demolitions,
+   /detainees/{about,data}, /injuries, /martyrs/{year,held,timeline,idb,
+   search}, /press/* — anywhere a page sets $pageHeaderCards. The original
+   comment header in style-black.css said 'Martyrs Year Page' but the
+   pattern outgrew that scope; renamed honestly here.
+
+   Mobile @media rules live inline alongside their desktop counterparts
+   (co-located convention — modern CSS architecture).
+   ========================================================================= */
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Martyrs Year Page — Glassy Header Cards
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.Header--stats {
+    padding-bottom: 100px;
+    min-height: auto;
+}
+
+.hdr-title {
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    margin-bottom: 4px;
+}
+
+.hdr-subtitle {
+    color: rgba(255,255,255,0.78);
+    font-size: 14px;
+    letter-spacing: 3px;
+    /* margin-bottom: 16px; */
+}
+
+.hdr-groups {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    max-width: 1100px;
+    margin-inline-end: auto;
+    margin-inline-start: auto;
+}
+
+.hdr-group {
+    flex: 1 1 calc(50% - 18px);
+    min-width: 280px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: 18px 18px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+.hdr-group:first-child  { flex: 0 0 calc(55% - 18px); }
+.hdr-group:nth-child(2) { flex: 0 0 calc(45% - 18px); }
+/* Single-group pages take the full row regardless of any earlier
+   first-child / press-tabs override (uses !important to beat the
+   higher-specificity body:has(.press-tabs) rule below). */
+.hdr-group:only-child { flex: 1 1 100% !important; }
+
+.hdr-group .hdr-glassy-cards {
+    width: 100%;
+    margin-top: 4px;
+}
+
+.hdr-group .hdr-glassy-card {
+    flex: 1 1 0;
+    min-width: 80px;
+    padding: 10px 12px;
+}
+
+.hdr-group-label {
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0 0 14px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .hdr-groups { gap: 12px; }
+    .hdr-group,
+    .hdr-group:first-child,
+    .hdr-group:nth-child(2)  { flex: 1 1 100%; padding: 14px 12px 16px; }
+}
+
+.hdr-meta {
+    margin-top: 22px;
+    padding: 12px 6px 0;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+}
+.hdr-meta-item { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.hdr-meta-item i { opacity: .7; }
+.hdr-src-chip {
+    display: inline-block;
+    padding: 3px 10px;
+    margin: 0 3px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    transition: background .2s;
+    font-size: 11px;
+}
+.hdr-src-chip:hover { background: rgba(255,255,255,0.16); color:#fff; text-decoration:none; }
+
+/* Collapsible sources (≥2 sources) — info-icon disclosure */
+.hdr-srcs-details { position: relative; }
+.hdr-srcs-details > summary {
+    list-style: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 4px;
+    border-radius: 6px;
+    user-select: none;
+}
+.hdr-srcs-details > summary::-webkit-details-marker { display: none; }
+.hdr-srcs-details > summary::marker { content: ''; }
+.hdr-srcs-details > summary:hover { color: #fff; background: rgba(255,255,255,0.06); }
+.hdr-srcs-details > summary i { opacity: .75; }
+.hdr-srcs-details[open] > summary i { opacity: 1; color: #fff; }
+
+.hdr-srcs-popover {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: auto;
+    right: 0;
+    background: rgb(20 20 28 / 70%);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 10px;
+    padding: 8px 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    display: flex;
+    /* Wrap by default — 4+ source chips with long Arabic titles overflowed
+       the previous nowrap+420px cap. Bumped 2026-05-10 to fit the detainees-
+       data sources list (now includes HaMoked alongside the existing three). */
+    flex-wrap: wrap;
+    gap: 6px;
+    width: max-content;
+    max-width: min(430px, calc(100vw - 24px));
+    z-index: 7;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+[dir="ltr"] .hdr-srcs-popover {
+    left: 0;
+    right: auto;
+}
+.hdr-srcs-popover .hdr-src-chip { margin: 0; white-space: nowrap; }
+
+.hdr-glassy-cards {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.hdr-glassy-card {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    padding: 12px 22px;
+    text-align: center;
+    min-width: 90px;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.hdr-glassy-card:hover {
+    background: rgba(255,255,255,0.13);
+    transform: translateY(-2px);
+}
+
+.hdr-stat-num {
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1.1;
+}
+
+.hdr-stat-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+    margin-top: 4px;
+}
+
+.hdr-glassy-card.hdr-card-total          { min-width: 140px; }
+.hdr-group .hdr-glassy-card.hdr-card-total { min-width: 140px; }
+.hdr-card-total   .hdr-stat-num { color: #e94560; }
+.hdr-card-kids    .hdr-stat-num { color: #ffb347; }
+.hdr-card-women   .hdr-stat-num { color: #87ceeb; }
+.hdr-card-elderly .hdr-stat-num { color: #90ee90; }
+.hdr-card-admin   .hdr-stat-num { color: #c8a2ff; }
+.hdr-card-arrests .hdr-stat-num { color: #ff8c94; }
+.hdr-card-wbank   .hdr-stat-num { color: #a9d18e; }
+.hdr-card-gaza    .hdr-stat-num { color: #ff6b6b; }
+.hdr-card-p48     .hdr-stat-num { color: #ffd166; }
+.hdr-card-homes   .hdr-stat-num { color: #e8b86c; }
+.hdr-card-other   .hdr-stat-num { color: #9aa5b1; }
+.hdr-card-men     .hdr-stat-num { color: #4db6ac; }
+.hdr-card-outposts .hdr-stat-num { color: #ffa929; }
+
+/* ── Settlements cumulative area chart above slider ──────────────────────── */
+.tick-slider .tick-slider-header {
+    position: relative;
+    height: 42px;
+    padding: 0 calc(var(--slider-handle-size, 14px) / 2);
+    margin-bottom: 6px;
+}
+.cumulativeBars {
+    width: 100%;
+    height: 100%;
+    border-bottom: 1px solid #ddd;
+}
+.cumulativeBars svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+@media (max-width: 600px) {
+    .tick-slider .tick-slider-header { height: 32px; }
+}
+
+/* ── Settlements timeline event marks on slider ──────────────────────────── */
+.tick-slider-events {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 22px;
+    pointer-events: none;
+    z-index: 3;
+    padding: 0 calc(var(--slider-handle-size, 14px) / 2);
+}
+.timelineEvent {
+    position: absolute;
+    bottom: 6px;
+    width: 8px;
+    height: 16px;
+    background: #e94560;
+    border: 1px solid #fff;
+    border-radius: 2px;
+    transform: translateX(-50%);
+    pointer-events: auto;
+    cursor: help;
+    padding: 0;
+    transition: transform .15s, box-shadow .15s;
+}
+.timelineEvent:hover,
+.timelineEvent:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.35);
+    transform: translateX(-50%) scaleY(1.15);
+}
+.timelineEventTip {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #142336;
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 6px;
+    min-width: 220px;
+    max-width: 280px;
+    text-align: start;
+    /* direction: rtl moved to [dir="rtl"] scoping */
+    font-size: 12px;
+    line-height: 1.5;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .18s, visibility 0s linear .18s;
+    pointer-events: none;
+    box-shadow: 0 4px 14px rgba(0,0,0,.35);
+    z-index: 20;
+    white-space: normal;
+}
+[dir="rtl"] .timelineEventTip {
+    direction: rtl;
+}
+.timelineEvent:hover .timelineEventTip,
+.timelineEvent:focus-visible .timelineEventTip,
+.timelineEvent.is-sticky .timelineEventTip {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
+.timelineEvent.is-sticky {
+    box-shadow: 0 0 0 3px rgba(255, 169, 41, 0.45);
+    transform: translateX(-50%) scaleY(1.15);
+}
+.timelineEventTip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #142336;
+}
+.timelineEventTip .tipYear  { font-weight: bold; color: #ffa929; margin-bottom: 2px; }
+.timelineEventTip .tipTitle { font-weight: bold; font-size: 13px; margin-bottom: 4px; }
+.timelineEventTip .tipDesc  { color: #c7cfd9; }
+@media (max-width: 600px) {
+    .timelineEventTip { min-width: 180px; max-width: 220px; font-size: 11px; }
+}
+
+/* ── Settlements fullscreen button + layout override ─────────────────────── */
+.mapFullscreenBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid #2a3d58;
+    border-radius: 6px;
+    cursor: pointer;
+    z-index: 10;
+    color: #2a3d58;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    transition: background .15s;
+}
+.mapFullscreenBtn:hover { background: #fff; }
+.mapFullscreenBtn:focus-visible { outline: 2px solid #ffa929; outline-offset: 2px; }
+.mapFullscreenBtn svg { width: 20px; height: 20px; display: block; }
+.mapFullscreenBtn .iconCollapse { display: none; }
+.mapCont.is-fullscreen .mapFullscreenBtn .iconExpand { display: none; }
+.mapCont.is-fullscreen .mapFullscreenBtn .iconCollapse { display: block; }
+
+.mapCont:fullscreen,
+.mapCont:-webkit-full-screen,
+.mapCont.is-fullscreen {
+    max-width: none !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 14px !important;
+    box-sizing: border-box;
+    background: #777777;
+    display: flex !important;
+    flex-direction: column;
+    gap: 12px;
+    position: static !important;
+    top: auto !important;
+}
+.mapCont:fullscreen #mapdiv,
+.mapCont:-webkit-full-screen #mapdiv,
+.mapCont.is-fullscreen #mapdiv {
+    flex: 1;
+    height: auto !important;
+    min-height: 0;
+}
+.mapCont:fullscreen #SliderRangewrapper,
+.mapCont:-webkit-full-screen #SliderRangewrapper,
+.mapCont.is-fullscreen #SliderRangewrapper {
+    flex-shrink: 0;
+    margin-top: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+}
+
+/* ── Settlements map filter bar ──────────────────────────────────────────── */
+.mapFilters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 28px;
+    padding: 6px 16px 24px;
+    /* direction: rtl moved to [dir="rtl"] scoping */
+}
+[dir="rtl"] .mapFilters {
+    direction: rtl;
+}
+.mapFilters .filterGroup {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #e4e9f2;
+    font-size: 14px;
+}
+.mapFilters .filterGroup > label,
+.mapFilters .filterLabel {
+    margin: 0;
+    font-weight: 600;
+    color: #cfd6e2;
+}
+.mapFilters .filterSelect {
+    background: #1a2738;
+    color: #e4e9f2;
+    border: 1px solid #2a3d58;
+    border-radius: 6px;
+    padding: 6px 12px;
+    min-width: 180px;
+    font: inherit;
+    cursor: pointer;
+}
+.mapFilters .filterSelect:focus { outline: 2px solid #ffa929; outline-offset: 1px; }
+.mapFilters .filterTypes { display: inline-flex; gap: 4px; }
+.mapFilters .filterTypes input[type=radio] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+.mapFilters .filterTypes label {
+    padding: 6px 14px;
+    background: #1a2738;
+    color: #a9b4c2;
+    border: 1px solid #2a3d58;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    margin: 0;
+    transition: background .15s, color .15s, border-color .15s;
+}
+.mapFilters .filterTypes input[type=radio]:checked + label {
+    background: #ffa929;
+    color: #142336;
+    border-color: #ffa929;
+}
+.mapFilters .filterTypes input[type=radio]:focus-visible + label {
+    outline: 2px solid #ffa929;
+    outline-offset: 2px;
+}
+@media (max-width: 600px) {
+    .mapFilters { flex-direction: column; align-items: stretch; gap: 12px; padding: 6px 12px 16px; }
+    .mapFilters .filterGroup { justify-content: space-between; }
+    .mapFilters .filterSelect { min-width: 0; flex: 1; }
+    .mapFilters .filterTypes { flex-wrap: wrap; }
+}
+
+/* ── Settlements map layout + sticky + loader ────────────────────────────── */
+.settlementsSec .mapCont {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    height: 650px;
+    position: relative;
+}
+.settlementsSec #mapdiv {
+    height: 550px;
+    position: relative;
+}
+@media (min-width: 992px) {
+    .settlementsSec .mapCont {
+        position: sticky;
+        top: 70px;
+        align-self: flex-start;
+    }
+}
+@media (max-width: 768px) {
+    .settlementsSec .mapCont { height: auto; margin-bottom: 20px; }
+    .settlementsSec #mapdiv {
+        height: 60vh;
+        min-height: 320px;
+        max-height: 500px;
+    }
+    .settlementsSec .adjContainer { gap: 12px !important; }
+}
+.mapLoader {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(20, 35, 54, 0.65);
+    z-index: 5;
+    pointer-events: none;
+    transition: opacity .3s ease;
+}
+.mapLoader.is-hidden { opacity: 0; visibility: hidden; }
+
+.mapLegend {
+    background: rgba(255, 255, 255, 0.93);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #2a3d58;
+    /* direction: rtl moved to [dir="rtl"] scoping */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+    line-height: 1.5;
+    display: inline-block;
+}
+[dir="rtl"] .mapLegend {
+    direction: rtl;
+}
+.mapLegend .legendItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.mapLegend .legendDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+.mapLegend .legendSettlement { background: #c51010; }
+.mapLegend .legendOutpost    { background: #ffa929; }
+.mapLegend .legendSwatch {
+    width: 14px;
+    height: 10px;
+    background: #aaa;
+    border: 1px solid #888;
+    flex-shrink: 0;
+}
+@media (max-width: 600px) {
+    .mapLegend { font-size: 11px; padding: 6px 10px; }
+}
+.mapLoader .mapSpinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(255,255,255,0.2);
+    border-top-color: #ffa929;
+    border-radius: 50%;
+    animation: spinner 1s linear infinite;
+}
+
+@media (max-width: 600px) {
+    .hdr-glassy-cards { gap: 8px; }
+    .hdr-glassy-card  { padding: 10px 14px; min-width: 70px; }
+    .hdr-stat-num     { font-size: 22px; }
+}
+
+/* ── Light Theme ─────────────────────────────────────────────────────────── */
+.light-theme a:hover { text-decoration: none; /* background: #414141 !important; */ color: #fff; }
+
+/* ── Press Page: Tabs (pill-style, scoped to .press-tabs) ────────────────── */
+
+
+
+
+
+.press-tab-radio:checked + .press-tab-label {
+    background: linear-gradient(135deg, #e94560 0%, #b82d44 100%);
+    color: #fff;
+    box-shadow: 0 6px 14px rgba(233, 69, 96, .28);
+    transform: translateY(-1px);
+}
+.press-tab-radio:focus-visible + .press-tab-label {
+    outline: 2px solid #e94560;
+    outline-offset: 2px;
+}
+
+.press-tab-radio:checked + .press-tab-label .press-tab-icon { opacity: 1; }
+
+@media (max-width: 520px) {
+    .press-tabs {
+        flex-direction: column;
+        max-width: 100%;
+        border-radius: 12px;
+    }
+    .press-tab-label { padding: 14px; }
+}
+
+/* ── Press Page: Chart blocks as fieldsets ──────────────────────────────── */
+fieldset.chart-block {
+    border: 1px solid #d9d9e0;
+    border-radius: 12px;
+    padding: 20px 22px 18px;
+    margin: 28px 0;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,.035);
+    min-width: 0;
+}
+fieldset.chart-block > legend {
+    padding: 4px 14px;
+    font-weight: 700;
+    font-size: 14px;
+    color: #1a1a22;
+    background: linear-gradient(135deg, #e94560 0%, #b82d44 100%);
+    color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(233,69,96,.22);
+    letter-spacing: .2px;
+}
+.chart-block-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: #555;
+}
+.chart-block-controls label { font-weight: 600; }
+.chart-block-controls select {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #d0d0d8;
+    background: #fafafc;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color .2s;
+}
+.chart-block-controls select:hover,
+.chart-block-controls select:focus {
+    border-color: #e94560;
+    outline: none;
+}
+.chart-canvas-wrap {
+    position: relative;
+    height: 320px;
+}
+.chart-canvas-wrap-tall { height: 400px; }
+
+@media (max-width: 600px) {
+    fieldset.chart-block { padding: 16px 14px 14px; }
+    fieldset.chart-block > legend { font-size: 13px; padding: 3px 10px; }
+    .chart-canvas-wrap { height: 260px; }
+    .chart-canvas-wrap-tall { height: 340px; }
+}
+
+/* Split-layout variant: chart on one side, analysis on the other */
+fieldset.chart-block-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: center;
+}
+fieldset.chart-block-split > legend { grid-column: 1 / -1; }
+fieldset.chart-block-split .chart-canvas-wrap { min-width: 0; }
+fieldset.chart-block-split .chart-analysis {
+    margin-top: 0;
+    padding-top: 0;
+    padding-inline-start: 20px;
+    border-top: none;
+    border-inline-end: 1px dashed #e0e0e8;
+}
+@media (max-width: 860px) {
+    /* Collapse back to stacked on narrower screens */
+    fieldset.chart-block-split {
+        display: block;
+    }
+    fieldset.chart-block-split .chart-analysis {
+        padding-inline-start: 0;
+        border-inline-end: none;
+        margin-top: 22px;
+        padding-top: 18px;
+        border-top: 1px dashed #e0e0e8;
+    }
+}
+
+/* Analysis paragraphs under each chart */
+.chart-analysis {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px dashed #e0e0e8;
+    text-align: justify;
+    line-height: 1.8;
+    color: #3a3a44;
+    font-size: 14px;
+}
+.chart-analysis p { margin: 0 0 10px; }
+.chart-analysis p:last-child { margin-bottom: 0; }
+.chart-analysis strong {
+    color: #b83333;
+    font-weight: 700;
+}
+
+/* ── Press martyrs list — pagination ─────────────────────────────────────── */
+.press-pager {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin: 30px auto 10px;
+    /* direction: rtl moved to [dir="rtl"] scoping */
+}
+[dir="rtl"] .press-pager {
+    direction: rtl;
+}
+.press-pager-btn {
+    min-width: 38px;
+    padding: 8px 14px;
+    border: 1px solid #d0d0d8;
+    background: #fff;
+    color: #3a3a44;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease, color .15s ease, transform .1s ease;
+}
+.press-pager-btn:hover:not(:disabled):not(.is-active) {
+    background: #f2f2f5;
+    border-color: #b8b8c0;
+}
+.press-pager-btn:active:not(:disabled) { transform: scale(0.96); }
+.press-pager-btn:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+.press-pager-btn.is-active {
+    background: #b83333;
+    border-color: #b83333;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(184, 51, 51, .25);
+}
+.press-pager-gap {
+    padding: 0 6px;
+    color: #888;
+    user-select: none;
+}
+
+/* Back-navigation bar under a drill-down chart */
+.chart-back-bar {
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+}
+.chart-back-bar[hidden] { display: none; }
+.chart-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 1px solid #d0d0d8;
+    background: #fff;
+    color: #3a3a44;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s;
+}
+.chart-back-btn:hover {
+    background: #b83333;
+    border-color: #b83333;
+    color: #fff;
+}
+.chart-back-btn i.fa { font-size: 0.9em; }
+
+/* Hidden by org filter (takes precedence over pagination display:none) */
+.myrcard.filter-hidden { display: none !important; }
+
+/* Press page: header groups sized 33% / 67% (right box / left box in RTL) */
+body:has(.press-tabs) .hdr-group:first-child  { flex: 1 1 auto; }
+body:has(.press-tabs) .hdr-group:nth-child(2) { flex: 0 0 calc(40% - 12px); }
+@media (max-width: 768px) {
+    body:has(.press-tabs) .hdr-group:first-child,
+    body:has(.press-tabs) .hdr-group:nth-child(2) { flex: 1 1 100%; }
+}
+
+/* Active org-filter breadcrumb bar above the pager */
+.press-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 640px;
+    margin: 18px auto 6px;
+    padding: 10px 14px;
+    background: #faf7f0;
+    border: 1px solid #e4c371;
+    border-radius: 10px;
+    font-size: 14px;
+}
+.press-filter-bar[hidden] { display: none; }
+.press-filter-label { color: #555; font-weight: 600; }
+.press-filter-chip {
+    flex: 1;
+    padding: 4px 12px;
+    background: #b83333;
+    color: #fff;
+    border-radius: 20px;
+    font-weight: 700;
+    text-align: center;
+}
+.press-filter-clear {
+    padding: 6px 12px;
+    border: 1px solid #cbcbd0;
+    background: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+    transition: background .15s;
+}
+.press-filter-clear:hover { background: #f2f2f5; }
+.press-filter-clear i.fa { margin-inline-end: 4px; }
+
+/* Caveat note for charts (footnote-style) */
+.chart-caveat {
+    font-size: 12.5px;
+    color: #777;
+    line-height: 1.6;
+    margin-top: 14px !important;
+    padding: 8px 12px;
+    background: #faf7f0;
+    border-inline-end: 3px solid #e4c371;
+    border-radius: 4px;
+}
+.chart-caveat i.fa {
+    color: #d9964e;
+    margin-inline-end: 6px;
+}
+
+

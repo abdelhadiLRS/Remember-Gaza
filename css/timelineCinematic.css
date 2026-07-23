@@ -1,0 +1,685 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   Martyrs Timeline — Cinematic, "tracker" rev (rev 13)
+   Inspired by https://codepen.io/emrekuarktek/pen/bGOzYKd
+   Free vertical scroll. A fixed top tracker bar holds a stationary marker
+   + a horizontal track of decade chips and year links that translates left
+   as the page scrolls. Drag-to-scrub bidirectional binding handled in JS.
+   Class prefix: .tlc-*
+   2026-04-26
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* ─── Soft proximity snap ──────────────────────────────────────────────
+   `proximity` only engages when scroll comes to rest near a snap point;
+   the wheel can travel freely between panels and the snap acts as a
+   gentle magnet at the centre. Loaded only on the cinematic variant.
+   Scoped to `html:has(.tlc)` so the rule only activates on pages that
+   actually contain a cinematic timeline — previously the bare `html {}`
+   selector hijacked global scroll if this file ever loaded elsewhere. */
+html:has(.tlc) {
+    scroll-snap-type: y proximity;
+    scroll-padding-top: 80px;
+    scroll-behavior: smooth;
+}
+html:has(.tlc) .tlc-scene,
+html:has(.tlc) .tlc-decade {
+    scroll-snap-align: center;
+}
+
+.tlc {
+    --tlc-text:        #ffffff;
+    --tlc-bg:          #0a0a0a;
+    --tlc-glass:       rgba(15, 15, 18, .55);
+    --tlc-glass-hover: rgba(20, 20, 25, .72);
+    --tlc-glass-edge:  rgba(255, 255, 255, .14);
+    --tlc-accent:      #c92a2a;
+    --tlc-accent-glow: rgba(201, 42, 42, .35);
+    /* Sits below the site's floating menu. */
+    --tlc-header-offset: 80px;
+    /* Height of our timeline tracker bar. */
+    --tlc-tracker-h: 64px;
+
+    position: relative;
+    width: 100%;
+    background: var(--tlc-bg);
+    color: var(--tlc-text);
+    border-radius: 12px;
+    /* `overflow: clip` clips the rounded corners visually but does NOT
+       create a scroll container — required so descendant scroll-snap
+       targets snap relative to the viewport rather than relative to .tlc
+       (which doesn't actually scroll). */
+    overflow: clip;
+}
+
+/* ─── Bottom-fixed tracker bar ─────────────────────────────────────────── */
+/* Fixed-positioned (not sticky) for two reasons:
+     1. The user wanted it at the viewport bottom, always visible.
+     2. `.tlc { overflow: hidden; }` breaks `position: sticky` on descendants
+        — overflow:hidden creates a "scroll mechanism" in CSS terms, so a
+        sticky child sticks relative to .tlc (which doesn't scroll) instead
+        of the viewport. Fixed sidesteps that entirely. */
+.tlc-tracker {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    height: var(--tlc-tracker-h);
+    background: rgba(20, 20, 23, .92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, .08);
+    z-index: 30;  /* above content, below the modal (which uses <dialog>'s top layer) */
+    user-select: none;
+    /* No overflow:hidden here — tooltips/labels need to float above the
+       bar. The .tlc-tracker-clip child handles clipping the wide track. */
+}
+.tlc-tracker-clip {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+/* The horizontal line the marker sits on */
+.tlc-tracker::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: calc(var(--tlc-tracker-h) / 2 - 1px);
+    height: 1px;
+    background: rgba(255, 255, 255, .12);
+    pointer-events: none;
+}
+.tlc-tracker-marker {
+    position: absolute;
+    /* Marker sits at horizontal centre of the viewport-wide tracker. The
+       JS computes baselineOffset = markerCentre − firstItemCentre, so the
+       current item naturally lands at the centre of the bar. `left: 50%`
+       (rather than inset-inline-start) keeps it at viewport centre in both
+       LTR and RTL — JS uses getBoundingClientRect so direction is moot. */
+    left: 50%;
+    transform: translateX(-50%);
+    top: 50%;
+    width: 14px; height: 14px;
+    margin-top: -7px;
+    border-radius: 50%;
+    background: var(--tlc-accent);
+    box-shadow: 0 0 0 4px rgba(201, 42, 42, .25), 0 0 20px var(--tlc-accent-glow);
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* The track is wider than the viewport — its overflow is what gets
+   translated. min-width is set so the labels can spread out comfortably
+   regardless of how many entries there are. */
+.tlc-tracker-track {
+    position: relative;
+    height: 100%;
+    width: max-content;
+    min-width: 200%;
+    padding-inline: max(50%, 32rem) max(50%, 32rem);
+    cursor: grab;
+    will-change: transform;
+    /* JS sets --tlc-tracker-x on this element. */
+    transform: translate3d(var(--tlc-tracker-x, 0px), 0, 0);
+    transition: transform 0s; /* JS controls timing precisely; no CSS smoothing */
+}
+.tlc-tracker-track.is-dragging { cursor: grabbing; }
+.tlc-tracker-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2.4rem;
+}
+.tlc-tracker-item {
+    position: relative;
+    flex: 0 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+.tlc-tracker-item a {
+    display: block;
+    padding: 0 .35rem;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, .55);
+    text-decoration: none;
+    letter-spacing: .04em;
+    font-feature-settings: "tnum";
+    transition: color .2s ease, transform .2s ease;
+}
+.tlc-tracker-item a:hover { color: #fff; transform: translateY(-1px); }
+
+/* ─── Persistent "current" label ─────────────────────────────────────────
+   Always-on red pill above the marker showing the current item's title.
+   JS sets its textContent and toggles visibility. */
+.tlc-tracker-current {
+    position: absolute;
+    bottom: calc(100% - 4px);
+    left: 50%;
+    transform: translateX(-50%) translateY(0);
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--tlc-accent);
+    border-radius: 8px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, .45),
+                0 0 24px var(--tlc-accent-glow);
+    white-space: nowrap;
+    max-width: min(420px, 88vw);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .25s ease, transform .25s cubic-bezier(.2, .8, .2, 1);
+    z-index: 4;
+}
+.tlc-tracker-current.is-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-6px);
+}
+/* Little tail under the pill pointing at the marker */
+.tlc-tracker-current::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--tlc-accent);
+}
+
+/* ─── Hover tooltip — JS-positioned above whichever chip is hovered ──── */
+.tlc-tracker-tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 0;          /* JS sets this on hover */
+    transform: translateX(-50%) translateY(4px);
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    background: rgba(15, 15, 18, .96);
+    border: 1px solid rgba(255, 255, 255, .1);
+    border-radius: 6px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .55);
+    white-space: nowrap;
+    max-width: 280px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .15s ease, transform .15s ease;
+    z-index: 5;
+}
+.tlc-tracker-tooltip.is-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+/* Tick mark below each year link, anchored to the centre line */
+.tlc-tracker-item a::after {
+    content: "";
+    position: absolute;
+    top: calc(var(--tlc-tracker-h) / 2 - 1px);
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    width: 1px; height: 8px;
+    background: rgba(255, 255, 255, .25);
+    transition: background .2s ease, height .2s ease;
+}
+.tlc-tracker-item a:hover::after { background: var(--tlc-accent); height: 12px; }
+.tlc-tracker-item.is-current a { color: #fff; }
+.tlc-tracker-item.is-current a::after { background: var(--tlc-accent); height: 14px; }
+
+/* Decade chips are larger + bold to break up the rhythm */
+.tlc-tracker-decade a {
+    font-size: 16px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, .85);
+    letter-spacing: -.01em;
+    padding: 0 .8rem;
+}
+.tlc-tracker-decade { margin-inline-start: .8rem; }
+.tlc-tracker-decade a::after {
+    height: 14px;
+    background: rgba(255, 255, 255, .55);
+}
+.tlc-tracker-decade.is-current a::after {
+    background: var(--tlc-accent);
+    height: 18px;
+}
+
+/* ─── Decade interlude section ─────────────────────────────────────────── */
+.tlc-decade {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    /* Top padding leaves room for the site's floating menu (80px); bottom
+       padding leaves room for the fixed tracker (--tlc-tracker-h). */
+    padding: calc(var(--tlc-header-offset) + 24px) 24px calc(var(--tlc-tracker-h) + 24px);
+    background: radial-gradient(circle at 50% 30%, #2a0a0a 0%, #0a0a0a 70%);
+    text-align: center;
+}
+.tlc-decade-num {
+    margin: 0;
+    font-size: clamp(120px, 22vw, 320px);
+    font-weight: 900;
+    line-height: .9;
+    color: transparent;
+    background: linear-gradient(180deg, rgba(255,255,255,.92) 0%, rgba(255,255,255,.18) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    letter-spacing: -.04em;
+    font-feature-settings: "tnum";
+}
+.tlc-decade-num-suffix {
+    font-size: .35em;
+    font-weight: 700;
+    color: var(--tlc-accent);
+    -webkit-text-fill-color: var(--tlc-accent);
+    margin-inline-start: 6px;
+    vertical-align: top;
+}
+.tlc-decade-line { width: 80px; height: 3px; background: var(--tlc-accent); border-radius: 3px; }
+.tlc-decade-meta {
+    margin: 0 0 28px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    color: rgba(255, 255, 255, .65);
+    text-transform: uppercase;
+}
+
+.tlc-decade-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    max-width: 92%;
+    width: min(900px, 92%);
+}
+.tlc-decade-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px 8px 8px;
+    width: clamp(170px, 22%, 220px);
+    background: rgba(255, 255, 255, .05);
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 10px;
+    color: var(--tlc-text);
+    text-decoration: none;
+    text-align: start;
+    transition: all .25s cubic-bezier(.2, .8, .2, 1);
+}
+.tlc-decade-card:hover {
+    background: rgba(255, 255, 255, .12);
+    border-color: var(--tlc-accent);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, .4), 0 0 24px var(--tlc-accent-glow);
+}
+.tlc-decade-card-img {
+    flex: 0 0 auto;
+    width: 48px; height: 48px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #1a1a1a;
+}
+.tlc-decade-card-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform .35s ease;
+}
+.tlc-decade-card:hover .tlc-decade-card-img img { transform: scale(1.1); }
+.tlc-decade-card-body {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+.tlc-decade-card-year {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--tlc-accent);
+    letter-spacing: .04em;
+    font-feature-settings: "tnum";
+}
+.tlc-decade-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, .92);
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* ─── Milestone scene ──────────────────────────────────────────────────── */
+.tlc-scene {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    isolation: isolate;
+    /* Same top/bottom safe-area logic as .tlc-decade */
+    padding: calc(var(--tlc-header-offset) + 24px) 0 calc(var(--tlc-tracker-h) + 24px);
+}
+.tlc-scene::before {
+    content: "";
+    position: absolute;
+    top: 0; inset-inline: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--tlc-accent) 50%, transparent);
+    z-index: 5;
+    opacity: .8;
+}
+
+.tlc-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    background: #1a1a1a;
+}
+.tlc-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1.05);
+    transition: transform .6s ease, filter .35s ease;
+    filter: saturate(.9);
+}
+.tlc-scene:hover .tlc-bg img {
+    transform: scale(1.09);
+    filter: saturate(1.05) brightness(1.06);
+}
+.tlc-bg-tint {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg,
+            rgba(0, 0, 0, .25) 0%,
+            rgba(0, 0, 0, .55) 60%,
+            rgba(0, 0, 0, .82) 100%);
+}
+
+.tlc-panel {
+    position: relative;
+    z-index: 3;
+    width: min(560px, calc(100% - 80px));
+    margin-inline: 80px;
+    padding: 32px 36px;
+    background: var(--tlc-glass);
+    border: 1px solid var(--tlc-glass-edge);
+    border-radius: 16px;
+    backdrop-filter: blur(18px) saturate(1.2);
+    -webkit-backdrop-filter: blur(18px) saturate(1.2);
+    box-shadow:
+        0 30px 60px rgba(0, 0, 0, .45),
+        0 0 0 1px rgba(255, 255, 255, .04) inset;
+    color: var(--tlc-text);
+    transition:
+        transform .35s cubic-bezier(.2, .8, .2, 1),
+        box-shadow .35s ease,
+        background .35s ease,
+        border-color .35s ease;
+}
+.tlc-panel:hover {
+    background: var(--tlc-glass-hover);
+    border-color: rgba(255, 255, 255, .22);
+    box-shadow:
+        0 40px 90px rgba(0, 0, 0, .55),
+        0 0 0 1px rgba(255, 255, 255, .08) inset,
+        0 0 60px var(--tlc-accent-glow);
+    transform: translateY(-4px);
+}
+
+.tlc-date {
+    display: block;
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--tlc-accent);
+    letter-spacing: .06em;
+    font-feature-settings: "tnum";
+}
+.tlc-title {
+    margin: 0 0 8px;
+    font-size: clamp(28px, 3vw, 42px);
+    line-height: 1.15;
+    font-weight: 800;
+    letter-spacing: -.01em;
+    color: #fff;
+    text-wrap: balance;
+}
+.tlc-alt {
+    margin: 0 0 18px;
+    font-size: 15px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, .65);
+    font-style: italic;
+}
+.tlc-excerpt {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, .88);
+    text-wrap: pretty;
+    text-align: justify;
+}
+
+.tlc-foot {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255, 255, 255, .12);
+}
+.tlc-stat { display: flex; flex-direction: column-reverse; gap: 2px; }
+.tlc-stat-num {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--tlc-accent);
+    line-height: 1;
+    font-feature-settings: "tnum";
+    transition: text-shadow .25s ease;
+}
+.tlc-panel:hover .tlc-stat-num { text-shadow: 0 0 20px var(--tlc-accent-glow); }
+.tlc-stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, .55);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.tlc-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .22);
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: .04em;
+    transition: all .2s cubic-bezier(.2, .8, .2, 1);
+}
+.tlc-more:hover {
+    background: rgba(201, 42, 42, .25);
+    border-color: var(--tlc-accent);
+    box-shadow: 0 8px 24px var(--tlc-accent-glow);
+    transform: translateY(-2px);
+}
+.tlc-more-arrow { display: inline-block; transition: transform .2s ease; }
+.tlc-more:hover .tlc-more-arrow { transform: translateX(3px); }
+[dir="rtl"] .tlc-more-arrow { transform: scaleX(-1); }
+[dir="rtl"] .tlc-more:hover .tlc-more-arrow { transform: scaleX(-1) translateX(3px); }
+
+/* hide template */
+.tlc-data { display: none; }
+
+/* ─── Modal ─────────────────────────────────────────────────────────────── */
+.tlc-modal {
+    width: min(720px, 92vw);
+    max-height: 88vh;
+    padding: 0;
+    border: none;
+    border-radius: 16px;
+    background: #fff;
+    color: #1a1a1a;
+    box-shadow: 0 30px 80px rgba(0,0,0,.5);
+    overflow: hidden;
+}
+.tlc-modal::backdrop {
+    background: rgba(0,0,0,.7);
+    backdrop-filter: blur(6px);
+}
+.tlc-modal-close {
+    position: absolute;
+    top: 12px; inset-inline-end: 12px;
+    width: 36px; height: 36px;
+    font-size: 24px;
+    line-height: 1;
+    color: #fff;
+    background: rgba(0,0,0,.55);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 5;
+}
+.tlc-modal-close:hover { background: rgba(0,0,0,.85); }
+.tlc-modal-content { max-height: 88vh; overflow-y: auto; }
+.tlc-modal-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: #1a1a1a;
+    display: block;
+}
+.tlc-modal-title {
+    margin: 0;
+    padding: 24px 28px 6px;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.25;
+    color: #1a1a1a;
+}
+.tlc-modal-title .tlc-mdl-alt {
+    display: block;
+    margin-top: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #666;
+    font-style: italic;
+}
+.tlc-modal-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    padding: 0 28px 14px;
+    font-size: 14px;
+    color: #666;
+}
+.tlc-modal-meta time { font-weight: 700; color: #1a1a1a; font-feature-settings: "tnum"; }
+
+.tlc-modal-desc {
+    padding: 14px 28px 8px;
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: #2a2a2a;
+}
+.tlc-modal-stat {
+    margin: 14px 28px 8px;
+    padding: 14px 18px;
+    background: #f7f7f7;
+    border-inline-start: 4px solid var(--tlc-accent);
+    border-radius: 8px;
+}
+.tlc-modal-stat .tlc-mdl-stat-label { font-size: 13px; color: #666; margin-inline-end: 8px; }
+.tlc-modal-stat .tlc-mdl-stat-num   { font-size: 18px; font-weight: 800; color: var(--tlc-accent); font-feature-settings: "tnum"; }
+.tlc-modal-stat .tlc-mdl-stat-exp   { margin: 8px 0 0; font-size: 13.5px; color: #555; line-height: 1.5; }
+.tlc-modal-source {
+    padding: 12px 28px 24px;
+    font-size: 14px;
+    color: #666;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 14px;
+}
+.tlc-modal-source a {
+    color: #1a1a1a;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.tlc-modal-source a:hover { color: var(--tlc-accent); }
+
+/* ─── Outro ────────────────────────────────────────────────────────────── */
+.tlc-outro {
+    min-height: 40vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 50%, #2a0a0a 0%, #050505 70%);
+}
+.tlc-outro-text {
+    font-size: clamp(28px, 4vw, 56px);
+    font-weight: 800;
+    text-align: center;
+    letter-spacing: -.01em;
+    color: rgba(255, 255, 255, .9);
+    text-wrap: balance;
+}
+
+/* ─── Reduced motion ───────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    .tlc-bg img, .tlc-panel, .tlc-more,
+    .tlc-decade-card, .tlc-tracker-track {
+        transition: none;
+    }
+    .tlc-bg img { transform: none !important; }
+}
+
+/* ─── Mobile (<= 768px) ────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .tlc { --tlc-tracker-h: 52px; }
+    .tlc-tracker-list { gap: 1.6rem; }
+    .tlc-tracker-item a { font-size: 12px; }
+    .tlc-tracker-decade a { font-size: 14px; }
+    .tlc-panel { width: calc(100% - 32px); margin: 0 16px; padding: 22px; }
+    .tlc-decade { padding: 80px 16px 40px; min-height: 80vh; }
+    .tlc-scene { min-height: 80vh; padding: 80px 0 40px; }
+    .tlc-modal-title  { font-size: 22px; padding: 20px 22px 4px; }
+    .tlc-modal-meta,
+    .tlc-modal-desc,
+    .tlc-modal-source { padding-inline: 22px; }
+    .tlc-modal-stat   { margin-inline: 22px; }
+}
+
+/* ─── Print ────────────────────────────────────────────────────────────── */
+@media print {
+    .tlc-tracker, .tlc-modal, .tlc-bg-tint { display: none; }
+    .tlc { background: #fff; color: #000; }
+    .tlc-scene, .tlc-decade { min-height: auto; padding: 20px 0; page-break-inside: avoid; }
+    .tlc-panel { background: #fff; color: #000; backdrop-filter: none; box-shadow: none; }
+    .tlc-title, .tlc-stat-num { color: #000 !important; }
+}

@@ -1,0 +1,252 @@
+@charset "UTF-8";
+/* =========================================================================
+   Home page header content — 2026-04-14 redesign.
+   Extracted from css/style-black.css 2026-04-25 (Pass 1).
+
+   Hero band on /home only: eyebrow, stats row, war-band updates strip.
+   Selectors used exclusively by pages/home.php — not shared with any
+   other page. Mobile @media blocks (5 of them, 600/768/992/1050 px) live
+   inline alongside their desktop counterparts.
+
+   The .container { z-index: 6 } rule that lived just below this section
+   in the original file was deliberately LEFT in style-black.css — it's a
+   global layout fix (see project_container_zindex_trap memory), not part
+   of the homepage header.
+   ========================================================================= */
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Homepage Header Content — 2026-04-14 redesign
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Container override — mirrors Bootstrap .container breakpoints ── */
+.Header .headerContainer {
+    width: 100%;
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 25px 15px 0px;
+    display: block;
+    font-size: inherit;
+    height: auto;
+    border-radius: 0;
+    text-align: center;
+    pointer-events: auto;
+}
+@media (min-width: 768px)  { .Header .headerContainer { max-width: 720px; } }
+@media (min-width: 992px)  { .Header .headerContainer { max-width: 960px; } }
+@media (min-width: 1050px) { .Header .headerContainer { max-width: 1000px; } }
+
+/* Section 1 — Yearly Stats moved out of the .Header on 2026-05-11 — now
+   rendered inside .rightCont above the updates feed. See rebuilt/css/home.css
+   for the `.home-ytd-*` class set (head, stats grid, card, num, bar, label,
+   update). */
+
+/* Section 2+4 — War + Updates side-by-side row ─────────────────────────── */
+.war-updates-row {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+    margin-bottom: 28px;
+}
+
+/* Section 2 — War Band ─────────────────────────────────────────────────── */
+.war-band {
+    flex: 1;
+    min-width: 0;
+    background: rgba(255,255,255,0.038);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 10px;
+    padding: 16px 20px 16px;
+}
+.war-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.60);
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    text-align: center;
+}
+.war-top strong { color: rgba(255,255,255,0.75); }
+.war-dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #dd3333;
+    animation: war-pulse 1.8s infinite;
+    flex-shrink: 0;
+}
+@keyframes war-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.25; }
+}
+.war-cols {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.war-col {
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 20px 12px 12px;
+}
+.war-col + .war-col {
+    margin-top: 12px;
+}
+.war-col-label {
+    position: absolute;
+    top: -10px;
+    right: 14px;
+    font-size: 12px;
+    font-weight: 700;
+    background: rgba(20,20,30,0.92);
+    padding: 0 8px;
+    line-height: 20px;
+    border-radius: 4px;
+}
+.war-stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px 2px;
+}
+.wn {
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    padding: 6px 4px;
+    display: block;
+    transition: opacity 0.2s;
+}
+.wn:hover { opacity: 0.70; color: #fff; text-decoration: none; }
+.wn-num {
+    display: block;
+    font-size: 20px;
+    font-weight: 900;
+    direction: ltr;
+    line-height: 1.1;
+}
+.wn-num.approx::before { content: "+"; font-size: 11px; opacity: 0.6; }
+.wn-bar {
+    width: 16px;
+    height: 2px;
+    border-radius: 2px;
+    margin: 4px auto;
+    display: block;
+}
+.wn-label {
+    display: block;
+    font-size: 10px;
+    color: rgba(255,255,255,0.60);
+}
+
+/* Section 4 — Updates ──────────────────────────────────────────────────── */
+.updates-wrap {
+    text-align: start;
+    width: 35%;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.038);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 10px;
+    padding: 16px 20px;
+    /* List is position:absolute so the panel's intrinsic height is just the
+       eyebrow — that lets the row size to .war-band and stretch us to match,
+       instead of the other way round. */
+    position: relative;
+}
+.updates-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 10px;
+    text-align: center;
+}
+.updates-list {
+    position: absolute;
+    inset-inline: 10px 5px;
+    /* 16px top padding + ~26px eyebrow + 10px margin */
+    top: 52px;
+    bottom: 16px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.18) transparent;
+}
+.updates-list::-webkit-scrollbar { width: 6px; }
+.updates-list::-webkit-scrollbar-track { background: transparent; }
+.updates-list::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.14);
+    border-radius: 3px;
+}
+.updates-list::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.28); }
+.updates-wrap .update_item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 10px 0 10px 10px !important;
+    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    transition: all 0.2s;
+    cursor: default;
+}
+.updates-wrap .update_item:last-child { border-bottom: none !important; }
+.updates-wrap .update_item:nth-child(n+6) { display: none !important; }
+.updates-wrap .update_item::before {
+    content: "";
+    width: 2px;
+    min-height: 13px;
+    background: rgba(220,80,80,0.50);
+    flex-shrink: 0;
+    border-radius: 2px;
+    display: block;
+    transition: background 0.2s;
+    align-self: stretch;
+}
+.updates-wrap .update_item:hover::before { background: rgba(220,80,80,0.90); }
+.updates-wrap .update_time {
+    font-size: 11px !important;
+    color: #ffd947b0 !important;
+    white-space: nowrap !important;
+    font-weight: 400 !important;
+    min-width: auto !important;
+    order: 1;
+    margin-inline-start: auto;
+}
+.updates-wrap .update_text {
+    flex: 1 !important;
+    font-size: 12px !important;
+    color: rgba(255,255,255,0.88) !important;
+    line-height: 1.5 !important;
+    font-weight: 400 !important;
+    transition: color 0.2s;
+}
+.updates-wrap .update_item:hover .update_text { color: #fff !important; }
+
+/* Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 992px) {
+    .war-updates-row { flex-direction: column; }
+    .updates-wrap { width: 100%; }
+    /* Stacked: no sibling to derive height from — let the list flow naturally */
+    .updates-list {
+        position: static;
+        top: auto;
+        bottom: auto;
+        inset-inline: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .Header .headerContainer { padding: 32px 15px 36px; }
+    .war-stats { grid-template-columns: repeat(3, 1fr); }
+}

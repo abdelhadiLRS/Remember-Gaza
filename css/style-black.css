@@ -1,0 +1,3628 @@
+@charset "UTF-8";
+/* @imports moved to layout/main.php as parallel <link> tags so the browser
+   doesn't wait for style-black.css to download before discovering them. */
+
+@media screen and (min-width: 1400px) {
+    .videoItem {
+        height: 15rem !important;
+    }
+    .videoItem::after {
+        width: 72px;
+        height: 72px;
+        line-height: 72px;
+        font-size: 22px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .container,
+    .container-lg,
+    .container-md,
+    .container-sm,
+    .container-xl,
+    .container-xxl {
+        max-width: 80vw;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .wysiwyg img.right,
+    .wysiwyg img.left {
+        width: 100%;
+        height: auto;
+    }
+    .cov52 {
+        background-position: -405px center !important;
+    }
+    .allCards {
+        width: 105%;
+        margin-inline-start: -5% !important;
+    }
+    .martPic2 {
+        width: 100% !important;
+        height: 120vw !important;
+    }
+
+    .martCont {
+        width: 100% !important;
+        margin-top: -50%;
+        background: white;
+        padding: 0 !important;
+        box-shadow: 0px -5px 30px 0px rgb(0 0 0 / 80%) !important;
+    }
+
+    .filtersPanelArea,
+    .filtersPanelArea_legacy {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        max-width: none !important;
+        z-index: 21 !important;
+        overflow-y: auto !important;
+        background: rgb(0 0 0 / 75%) !important;
+    }
+    /* Overlay sits BEHIND the panel — body class is toggled by the
+       cntrlFilters click handler in pages/martyrs/year.php. */
+    body.filters-open::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: rgb(0 0 0 / 55%);
+        z-index: 20;
+        pointer-events: none;
+    }
+    /* Lock page scroll while the panel is open — only the panel scrolls. */
+    body.filters-open { overflow: hidden; }
+
+    .filtersPanelArea .filtersPanel,
+    .filtersPanelArea_legacy .filtersPanel {
+        height: 100%;
+    }
+
+    /* كسر سياق التراكم من .container حين تكون لوحة الفلاتر مفتوحة على الموبايل
+   (.container فيه z-index:6 يحبس الـ position:fixed بداخله تحت الهيدر) */
+    body.filters-open .container {
+        z-index: auto !important;
+    }
+    body.filters-open .Header {
+        z-index: -1 !important;
+        visibility: hidden;
+    }
+    .filterSelect .ms-drop ul {
+        column-count: 1 !important;
+        max-height: unset !important;
+    }
+    .videoItem {
+        height: 14rem !important;
+    }
+    .videoItem::after {
+        width: 52px;
+        height: 52px;
+        line-height: 52px;
+        font-size: 17px;
+    }
+    .parallax {
+        background-size: auto 100% !important;
+    }
+    .logo img {
+        height: 200px !important;
+    }
+    .chartdiv {
+        width: 110% !important;
+    }
+    div#YrsChartdiv {
+        width: 100% !important;
+        direction: ltr;
+    }
+    img.sideImg {
+        margin: auto;
+    }
+    .homeWrap {
+        flex-direction: column !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        padding: 20px 0px !important;
+    }
+
+    .menu {
+        text-align: unset !important;
+        position: absolute !important;
+        z-index: 1100 !important;
+    }
+    .menu.floating {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        border-radius: 0 !important;
+        background: #0d1117 !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        box-shadow: none !important;
+        height: 80px !important;
+    }
+    .MenuArrow:after {
+        content: " \f0d7";
+        font-family: "fontawesome";
+        padding: 0px 0px 0px 5px;
+        position: absolute;
+        color: white;
+        left: 0;
+        top: -6px;
+        font-size: 30px;
+        height: 100%;
+    }
+
+    .headMenu .MenuArrow {
+        display: block !important;
+        width: 50px;
+        height: 70%;
+        position: absolute;
+        border-inline-end: 1px solid #5d5d5d;
+        margin: 12px;
+        top: -6px;
+        left: 0;
+    }
+    [dir="ltr"] .MenuArrow:after {
+        right: 0;
+        left: unset;
+    }
+    [dir="ltr"] .MenuArrow {
+        right: 0;
+        left: unset;
+        border-inline-start: 1px solid #5d5d5d;
+        border-inline-end: none;
+    }
+    li.active .MenuArrow:after {
+        color: #e63946;
+    }
+    /* Logical-property rewrite: collapses the [dir="ltr"]/[dir="rtl"]
+       paired rules above into one declaration that the browser flips
+       automatically based on the document's writing direction. */
+    .headMenu ul {
+        margin-block: 0 !important;
+        margin-inline-start: 40px !important;
+        margin-inline-end: 0 !important;
+    }
+    .headMenu ul.active {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .headMenu li.active > ul .MenuArrow:after {
+        content: " \f0d8" !important;
+    }
+    .headMenu li:not(.active):hover > ul {
+        display: none !important;
+    }
+    .headMenu li.active:before {
+        left: 0;
+        right: 0;
+        opacity: 1;
+    }
+    .tabs_container .selector {
+        height: 150px !important;
+        font-size: smaller;
+    }
+    .aseerCard {
+        width: 100% !important;
+    }
+    .tabs_container .selector-item_label {
+        height: 100% !important;
+        padding: 0 10px !important;
+        min-width: 100px;
+    }
+
+    .tabs_container .selecotr-item {
+        height: 40% !important;
+    }
+    .mapObDiv {
+        height: 500px !important;
+        border-bottom: 2px solid #4c5b4d;
+        border-top: 2px solid #4c5b4d;
+        background-color: #969da5;
+    }
+    .mapDemContainer .mapObDiv {
+        height: 500px !important;
+        border-bottom: 1px solid #3d2a3e;
+        background-color: #918fa7;
+    }
+    .maptable {
+        text-align: center !important;
+    }
+    .mapAreaHead {
+        margin: auto !important;
+    }
+    .narative {
+        padding: 10px;
+    }
+    .mapContainer {
+        flex-direction: column !important;
+    }
+    .adjContainer {
+        flex-direction: column !important;
+    }
+    .logo {
+        margin-bottom: 20px;
+    }
+    .adj50 {
+        /* width: 100% !important; */
+    }
+    .infoSrcsInline {
+        display: none !important;
+    }
+
+    .martFooter {
+        text-align: center !important;
+    }
+    .sub_number {
+        font-size: 34px !important;
+        width: 110px !important;
+    }
+    .white-title {
+        font-size: 34px !important;
+    }
+    .bigRed {
+        font-size: 60px !important;
+        line-height: 40px !important;
+    }
+    .mTableDiv {
+        display: none !important;
+    }
+    .mTable-mobileDiv {
+        display: block !important;
+    }
+    .wide-bar {
+    }
+
+    #selectordiv {
+        width: 100% !important;
+        margin-inline-start: 0 !important;
+    }
+    .side_chart_controls {
+        display: flex;
+        align-items: stretch;
+        flex-wrap: nowrap;
+        flex-direction: column;
+    }
+
+    /* Mobile: Language switcher sits at the top-end of the bar, opposite
+	   the hamburger (.menuBTN is pinned top-start). The drawer toggle
+	   doesn't affect it — it stays visible on the chrome. */
+    .lang-switcher {
+        position: absolute !important;
+        top: 0 !important;
+        right: 0 !important;
+        left: auto !important;
+        bottom: auto !important;
+        margin: 18px !important;
+        min-width: 0 !important;
+        padding: 0 10px !important;
+        height: 34px !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+        border-radius: 16px !important;
+        justify-content: center !important;
+        z-index: 9999 !important;
+    }
+
+    /* Mobile Menu — Slide-in Drawer */
+    ul.headMenu {
+        position: fixed !important;
+        left: -80% !important;
+        top: 0 !important;
+        width: 75% !important;
+        max-width: 280px !important;
+        height: 100vh !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        background: #0d1117 !important;
+        z-index: 1050 !important;
+        transition: left 0.3s ease !important;
+        padding-top: 70px !important;
+        border-inline-end: 1px solid rgba(255, 255, 255, 0.08) !important;
+        box-shadow: none !important;
+    }
+    ul.headMenu.active {
+        left: 0 !important;
+        box-shadow: 8px 0 24px rgba(0, 0, 0, 0.5) !important;
+    }
+    .headMenu li {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+        width: 100% !important;
+        text-align: start !important;
+    }
+    .headMenu li a {
+        padding: 14px 18px !important;
+        width: 100% !important;
+        height: auto !important;
+        color: #94a3b8 !important;
+        font-size: 12px !important;
+        justify-content: flex-start !important;
+    }
+    .headMenu li.current > a {
+        color: #ffffff !important;
+        border-inline-start: 3px solid #e63946 !important;
+        background: rgba(230, 57, 70, 0.06) !important;
+    }
+    .headMenu > li.current > a::before {
+        display: none !important;
+    }
+    .headMenu li > a:after {
+        display: none !important;
+    }
+    .menuBTN {
+        position: absolute;
+        display: block !important;
+        width: 30px;
+        height: 30px;
+        margin: 18px;
+        top: 0px;
+        left: 0px;
+        z-index: 9999;
+    }
+    .menuBTN span {
+        margin: 0 auto;
+        position: relative;
+        top: 12px;
+    }
+    .menuBTN span:before,
+    .menuBTN span:after {
+        position: absolute;
+        content: "";
+    }
+    .menuBTN span,
+    .menuBTN span:before,
+    .menuBTN span:after {
+        width: 30px;
+        height: 6px;
+        background-color: #fff;
+        display: block;
+    }
+    .menuBTN span:before {
+        margin-top: -12px;
+    }
+    .menuBTN span:after {
+        margin-top: 12px;
+    }
+
+    .menuBTN span {
+        -webkit-transition-duration: 0s;
+        transition-duration: 0s;
+        -webkit-transition-delay: 0.2s;
+        transition-delay: 0.2s;
+    }
+    .menuBTN.opened span {
+        background-color: rgba(0, 0, 0, 0);
+        -webkit-transition-delay: 0.2s;
+        transition-delay: 0.2s;
+    }
+    .menuBTN span:before {
+        -webkit-transition-property:
+            margin,
+            -webkit-transform;
+        transition-property: margin, transform;
+        -webkit-transition-duration: 0.2s;
+        transition-duration: 0.2s;
+        -webkit-transition-delay: 0.2s, 0s;
+        transition-delay: 0.2s, 0s;
+    }
+    .menuBTN.opened span:before {
+        margin-top: 0;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+        -webkit-transition-delay: 0s, 0.2s;
+        transition-delay: 0s, 0.2s;
+    }
+    .menuBTN span:after {
+        -webkit-transition-property:
+            margin,
+            -webkit-transform;
+        transition-property: margin, transform;
+        -webkit-transition-duration: 0.2s;
+        transition-duration: 0.2s;
+        -webkit-transition-delay: 0.2s, 0s;
+        transition-delay: 0.2s, 0s;
+    }
+    .menuBTN.opened span:after {
+        margin-top: 0;
+        -webkit-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        -webkit-transition-delay: 0s, 0.2s;
+        transition-delay: 0s, 0.2s;
+    }
+    /* Mobile Menu */
+
+    .footerCont {
+        flex-direction: column-reverse !important;
+        align-items: center !important;
+        padding: 30px !important;
+    }
+
+    .fmenus {
+        padding-top: 10px !important;
+        padding-inline-start: 10px !important;
+    }
+
+    .footer ul {
+        width: 160px !important;
+        padding: 10px 10px 10px 0 !important;
+        font-size: 14px !important;
+    }
+
+    .footerMsg {
+        border: none !important;
+        padding: 0 !important;
+        font-size: 16px !important;
+        border-bottom: 1px solid !important;
+        padding-bottom: 20px !important;
+    }
+    .martDet {
+        flex-direction: row !important;
+        justify-content: space-around !important;
+        width: 100% !important;
+        padding: 0px 0 0px !important;
+        gap: 5px !important;
+        margin: 0px 0 10px !important;
+        height: 110px;
+        overflow: auto;
+    }
+
+    .martMmodalBodyWrap {
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        margin: 80px 0 0 !important;
+    }
+
+    .martMmodalBody {
+        width: 100% !important;
+        padding: 0 15px !important;
+        height: 72% !important;
+    }
+
+    .martMmodalHead {
+        flex-direction: column-reverse !important;
+        align-items: center !important;
+        text-align: center !important;
+    }
+
+    .martModal {
+    }
+    td.sorting:after,
+    td.sorting:before {
+        display: none !important;
+    }
+
+    td.sorting {
+        padding: 10px 0 !important;
+    }
+
+    .mapAttContainer .mapAreaHead {
+        font-size: 18px !important;
+    }
+}
+
+body,
+html {
+    height: 100%;
+    width: 100%;
+    /* overflow-x: hidden; */
+    /*overflow: hidden;*/
+}
+body {
+    background: #ffffff !important;
+    /* direction:rtl moved to [dir="rtl"] scoping */
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    font-family: "Almarai", sans-serif;
+    text-align: start;
+}
+[dir="rtl"] body {
+    direction: rtl;
+}
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.allPage {
+    min-height: calc(100% - 400px);
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    padding-top: 80px;
+}
+.MenuArrow {
+    display: none;
+}
+.hidden {
+    display: none !important;
+}
+.Header {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    padding-bottom: 100px;
+    min-height: 280px;
+    /* SVG pattern background — white polygons on transparent SVG
+       (gray background rect + radial-gradient vignette stripped from the
+       original source; paths grouped under fill-opacity 0.08 so they read
+       as subtle texture on the dark base).
+       Background-image is split from the solid color so a mouse-driven
+       parallax shift (via --mx / --my, set by the IIFE in layout/main.php)
+       only moves the pattern, not the base. */
+    background-color: #0d1117;
+    /* Layer 1: top-fade overlay — opaque base color at top, fading to
+       transparent so the pattern only appears in the lower portion.
+       Layer 2: the SVG pattern itself. */
+    background-image:
+        linear-gradient(180deg, #0d1117 10%, rgb(13 17 23 / 20%) 100%),
+        url("/images/header-pattern.svg");
+    background-size: 100% 100%, cover;
+    background-position: 0 0, center;
+    background-repeat: no-repeat, no-repeat;
+    /* Subtle arch at the bottom — center dips lowest, edges curve up by ~30px
+       on a typical-height Header. Wide ellipse anchored above the top edge so
+       only the bottom arc shows. */
+    clip-path: ellipse(100% 100% at 50% 0%);
+}
+@media (max-width: 768px) {
+    .Header {
+        clip-path: ellipse(200% 100% at 50% 0%);
+    }
+}
+
+/* .menuBTN + .navbarLogo moved to css/nav-menus.css (2026-05-20 consolidation). */
+
+.adj50.logo {
+    min-width: 30%;
+}
+.logo img {
+    height: 100%;
+}
+.side_chart_controls {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    overflow: hidden;
+    padding: 0 10px;
+}
+
+.pause {
+    animation-play-state: paused;
+}
+
+.img-ticker:not(:hover) .ticker_img {
+    filter: grayscale(1) brightness(0.3) !important;
+}
+.img-ticker:hover .ticker_img:not(:hover) {
+    filter: grayscale(1) brightness(0.3) blur(3px) !important;
+}
+
+[dir="rtl"] .innerBox {
+    direction: rtl;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+.palestine-medal-cont {
+    direction: ltr;
+    position: relative;
+    display: inline;
+    width: 0;
+    z-index: 2;
+    display: block;
+    right: 70px;
+}
+.palestine-medal {
+    margin: 30px 0 0 30px;
+    scale: 0.7;
+}
+
+.palestine-medal {
+    position: absolute;
+    margin-bottom: 16px;
+    top: -75px;
+    right: -50px;
+}
+
+.palestine-medal__circle {
+    font-family: "Roboto", sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    width: 56px;
+    height: 56px;
+    border-radius: 100%;
+    color: white;
+    text-align: center;
+    line-height: 46px;
+    vertical-align: middle;
+    position: relative;
+    border-width: 0.2em;
+    border-style: solid;
+    z-index: 1;
+    box-shadow:
+        inset 0 0 0 #a7b2b8,
+        2px 2px 0 rgba(0, 0, 0, 0.08);
+    border-color: #edeff1;
+    text-shadow: 2px 2px 0 #98a6ad;
+    background: linear-gradient(to bottom right, #d1d7da 50%, #c3cbcf 50%);
+}
+.palestine-medal__circle.palestine-medal__circle--gold {
+    box-shadow:
+        inset 0 0 0 #b67d05,
+        2px 2px 0 rgba(0, 0, 0, 0.08);
+    border-color: #fadd40;
+    text-shadow: 0 0 4px #9d6c04;
+    background: linear-gradient(to bottom right, #f9ad0e 50%, #e89f06 50%);
+}
+
+.palestine-medal__ribbon {
+    content: "";
+    display: block;
+    position: absolute;
+    border-style: solid;
+    border-width: 6px 10px;
+    width: 0;
+    height: 20px;
+    top: 50px;
+}
+
+.palestine-medal__ribbon--left {
+    border-color: #2196f3 #2172a1 transparent #2d89fc;
+    left: 8px;
+    transform: rotate(20deg) translateZ(-32px);
+}
+
+.palestine-medal__ribbon--right {
+    left: 28px;
+    border-color: #2196f3 #1a7bdf transparent #2366ab;
+    transform: rotate(-20deg) translateZ(-48px);
+}
+
+.filter-menu > div {
+    display: inline-block;
+    padding: 0 10px;
+    text-align: start;
+    vertical-align: middle;
+}
+.filter-menu > div:not(:last-child) {
+    border-inline-start: 1px solid #ccc;
+}
+
+.result_stats {
+    display: flex;
+    max-width: 850px;
+    border-radius: 30px;
+    margin: 0 auto;
+    padding: 0 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.result_stats > div {
+    display: flex;
+    position: relative;
+    vertical-align: middle;
+    text-align: center;
+    text-shadow: -3px 4px 3px black;
+    flex-direction: column;
+    height: 110px;
+    justify-content: center;
+}
+
+/* Removed 2026-05-04: dead `.sub_number :after` parent + 9 child icon
+   classes (.femaleBG / .childBG / .eldarlyBG / .target / .demolished /
+   .arrested / .injured / .attacks / .lands). Zero refs in active markup
+   — replaced by .cwe-card (home-onthisday.css) + .hdr-glassy-card
+   (stats-header.css). 38 lines. */
+
+table.dataTable thead th,
+table.dataTable thead td,
+table.dataTable tfoot th,
+table.dataTable tfoot td {
+    text-align: unset !important;
+}
+
+.subInfo > span {
+    background: #eee;
+    padding: 3px 5px;
+    border-radius: 6px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    font-size: 12px;
+    color: gray;
+    white-space: nowrap;
+}
+
+.chartdiv {
+    width: 105%;
+    min-height: 500px;
+    direction: ltr;
+}
+.settlementsChart {
+    width: 100%;
+    min-height: 400px;
+    direction: ltr;
+}
+#selectordiv {
+    padding: 5px;
+    border: #ddd 2px dashed;
+    display: flex;
+    justify-content: space-around;
+    align-items: baseline;
+    align-content: flex-start;
+    border-radius: 10px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    min-width: 240px;
+    width: 240px;
+    z-index: 2;
+}
+
+.radio_container,
+.geolocations,
+.byDates,
+.amcharts-range-selector-wrapper {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: #ddd;
+    padding: 5px;
+    border-radius: 10px;
+    margin: 4px 0;
+    flex-wrap: wrap;
+    align-content: space-around;
+    flex-direction: column;
+    width: 100%;
+}
+
+.radio_container input[type="radio"],
+.byDates input[type="radio"],
+.geolocations input[type="radio"] {
+    appearance: none;
+    display: none;
+}
+
+.radio_container label,
+.byDates label,
+.geolocations label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    transition: linear 0.3s;
+    margin: 5px 5px;
+    width: 90%;
+}
+
+.radio_container input[type="radio"]:checked + label,
+.byDates input[type="radio"]:checked + label,
+.geolocations input[type="radio"]:checked + label {
+    background-color: #1e90ff;
+    color: #f1f3f5;
+    font-weight: 900;
+}
+.amcharts-range-selector-wrapper.amcharts-range-selector-bottom {
+    display: inline-flex;
+    margin-bottom: 0;
+    display: none;
+}
+.summaryTxt {
+    font-size: 18px;
+    font-weight: bold;
+    border: 2px dashed #666;
+    border-radius: 10px;
+    display: inline-block;
+    padding: 10px 20px;
+}
+/* Removed 2026-05-04: dead summary-widget id rules (#totalM, #descM,
+   #resedM, #geoM, #startM, #endM). The amcharts-def.js callbacks still
+   call $("#totalM").text(...) etc., but no current HTML page emits
+   matching id="..." attributes — selectors find no elements, JS is a
+   silent no-op. The summary widget was retired with the legacy summary
+   page; live numbers now come from .hdr-glassy-card / .stats-row. */
+.wide-bar {
+    min-height: 300px;
+    background: #040404;
+}
+
+img.wide-bar-img {
+    filter: grayscale(0.5);
+}
+.wide-bar-content {
+    z-index: 2;
+    position: relative;
+    color: #fff;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+    top: -100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+.white-title {
+    color: #fff;
+    font-size: 28px;
+    font-weight: bold;
+    text-shadow: -3px 4px 3px black;
+    text-align: center;
+}
+.amcharts-range-selector-top input,
+.amcharts-range-selector-bottom input {
+    margin: 0px 1em 3px 0.3em !important;
+}
+
+.scroller .section {
+    scroll-snap-align: start;
+}
+
+.arrow {
+    position: absolute;
+    /* top: 0; */
+    width: 8vmin;
+    height: 8vmin;
+    background: transparent;
+    border-top: 1vmin solid white;
+    border-inline-end: 1vmin solid white;
+    box-shadow: 0 0 0 lightgray;
+    transition: all 200ms ease;
+    opacity: 0.5;
+}
+.arrow.left {
+    left: 30px;
+    transform: translate(0, 100%) rotate(-135deg);
+}
+.arrow.right {
+    right: 30px;
+    transform: translate3d(0, 100%, 0) rotate(45deg);
+}
+.arrow:hover {
+    border-color: orange;
+    box-shadow: 0.5vmin -0.5vmin 0 white;
+    opacity: 1;
+}
+.arrow:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-40%, -60%) rotate(45deg);
+    width: 200%;
+    height: 200%;
+}
+footer.footer {
+    background: #0d1117;
+    color: #98a4b1;
+}
+.footerCont {
+    max-width: 1000px;
+    display: flex;
+    margin: auto;
+    padding: 20px 0;
+    justify-content: space-between;
+    align-content: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+.tooltip-inner {
+    opacity: 0.8;
+}
+
+.mac-scrollbar {
+    position: relative;
+    overflow-y: scroll;
+}
+.mac-scrollbar:hover::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.5);
+}
+.mac-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+.mac-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0);
+}
+
+.martInfo {
+    padding: 10px 20px;
+}
+
+.martDet span {
+    border: 1px dotted #aaa;
+    padding: 4px 10px;
+    border-radius: 10px;
+    background: #eee;
+    letter-spacing: -0.3px;
+    font-size: 14px;
+    text-align: center;
+}
+.martMmodalBody {
+    padding: 0px 30px;
+    height: 100%;
+    overflow: scroll;
+    width: 74%;
+}
+
+/* .martFooter redefined above in new martModal block */
+
+.martDet strong {
+}
+
+/* Removed 2026-05-04: dead #totalDisp / #breakDisp displaced-people
+   summary spans. amcharts-def.js's demolitions branch (which wrote to
+   them) was deleted on 2026-05-04 in fix #3; matching elements never
+   existed in current HTML pages anyway. */
+
+.searchBar-wrapper {
+    width: 100%;
+    max-width: 31.25rem;
+    margin: 0rem auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.searchBar {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#searchQueryInput {
+    width: 100%;
+    height: 2.8rem;
+    background: #dddddd;
+    outline: none;
+    border: none;
+    border-radius: 1.625rem;
+    padding: 0 1.5rem 0 3.5rem;
+    font-size: 1rem;
+    margin: 20px 0;
+}
+
+#searchQuerySubmit {
+    width: 3.5rem;
+    height: 2.8rem;
+    margin-inline-start: -3.5rem;
+    background: none;
+    border: none;
+    outline: none;
+}
+
+#searchQuerySubmit:hover {
+    cursor: pointer;
+}
+
+.myrcardx {
+    display: none !important;
+}
+.tooltip-inner div {
+    padding-top: 5px;
+    font-size: 12px;
+    border-top: dotted 1px;
+    margin-top: 10px;
+}
+.tooltip-inner div a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+div#mapdiv {
+    direction: ltr;
+    display: inline-block;
+    width: 100%;
+    height: 60vh;
+}
+.wide-map-container {
+    background: #a4acb5;
+}
+div#maptable {
+}
+
+div#YrsChartdiv {
+    width: 100%;
+    direction: ltr;
+    margin-top: -20px;
+}
+
+.wide-map-container {
+    background: #a4acb5;
+}
+.distTitle {
+    display: inline-block;
+    padding: 0 5px;
+    font-weight: bold;
+}
+
+.distYearWrapper {
+    display: inline-block;
+    position: relative;
+}
+.distYear {
+    display: inline-block;
+    background: #fff;
+    padding: 0 5px;
+    margin: 0 5px 0 0;
+    color: #394645;
+    font-weight: bold;
+    font-size: larger;
+    border-radius: 5px;
+    cursor: pointer;
+    user-select: none;
+}
+.distYearCaret {
+    font-size: 11px;
+    opacity: 0.6;
+}
+.distYearDropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+    z-index: 999;
+    min-width: 80px;
+    max-height: 220px;
+    overflow-y: auto;
+}
+.distYearDropdown.open {
+    display: block;
+}
+.distYearOption {
+    padding: 7px 18px;
+    cursor: pointer;
+    color: #394645;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
+}
+.distYearOption:hover {
+    background: #394645;
+    color: #fff;
+}
+.distYearOption.active {
+    background: #394645;
+    color: #fff;
+}
+.adj50 {
+    text-align: center;
+    padding: 1px 0;
+}
+
+.adjContainer {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    margin: auto;
+    gap: 20px;
+    align-items: center;
+}
+
+.mapAreaCont {
+    position: absolute;
+    height: 0;
+    width: 0;
+}
+
+.govTbl {
+    position: relative;
+    top: 40px;
+    left: -350px;
+    font-size: 12px;
+}
+blockquote {
+    position: relative;
+    font-weight: 800;
+    font-size: 14px;
+    color: #394645;
+    padding: 20px;
+    width: 100%;
+    max-width: 520px;
+    z-index: 1;
+    margin: 30px auto;
+    align-self: center;
+    border: dashed 2px #78818b;
+    text-align: justify;
+    border-radius: 15px;
+    transition: all 1s;
+    background: #c2c6cb;
+}
+blockquote:after {
+    font: normal normal normal 14px/1 FontAwesome;
+    position: absolute;
+    content: "\f10d";
+    color: #707070;
+    font-size: 3rem;
+    line-height: 0;
+    top: 0px;
+    left: 30px;
+}
+blockquote:before {
+    font: normal normal normal 14px/1 FontAwesome;
+    position: absolute;
+    content: "\f10e";
+    color: #707070;
+    font-size: 3rem;
+    line-height: 0;
+    bottom: 0;
+    right: 30px;
+}
+
+.whiteNumBG {
+    background: #f8fbff;
+    padding: 0 5px;
+    border-radius: 5px;
+    font-size: larger;
+    line-height: normal;
+}
+
+span.narHomes {
+    text-decoration: underline;
+}
+
+span.narDisplaced {
+    background: #ffffff;
+    padding: 0 5px;
+    border-radius: 5px;
+    font-size: larger;
+    line-height: normal;
+}
+
+span.narChildren {
+    text-decoration: underline;
+}
+
+span.narWomen {
+    text-decoration: underline;
+}
+
+span.narNonRes {
+    text-decoration: underline;
+}
+
+.mapDemContainer .govLabels div {
+    color: #ffd589;
+    background: rgb(33 48 34 / 50%);
+}
+.mapDemContainer .govTable {
+    border: solid #4e4456 1px;
+    background: #b3a4b5;
+}
+
+.mapDemContainer .govTable th {
+    font-weight: 400;
+    background: #5e4e5e;
+}
+
+.mapDemContainer .govTable tr {
+    background: #f4f7f8;
+}
+
+.mapDemContainer .govTable tr:nth-child(even) {
+    background: #ede8ef;
+}
+
+.mapDemContainer .govTable tr:nth-child(odd) {
+    background: #c8bdcc;
+}
+
+.mapDemContainer .govTable tfoot td {
+    color: #8a97a0;
+}
+
+.mapDemContainer .transSelect {
+    border: 1px solid #d0d6de;
+}
+.mapDemContainer .transSelect option {
+    color: #fff;
+    background-color: #b4a8bd;
+}
+.transSelect :focus {
+    outline: none;
+}
+.transSelect ::-ms-expand {
+    display: none;
+}
+.mapDemContainer .mapAreaHead {
+    background: #3d2a3e;
+}
+
+.mapDemContainer .adjHead {
+    background: #394645;
+}
+
+.mapDemContainer blockquote {
+    color: #3d2a3e;
+    border: dashed 2px #553a56;
+    background: #e6dfe7;
+}
+.mapDemContainer blockquote:after {
+    color: #513b52;
+}
+.mapDemContainer blockquote:before {
+    color: #513b52;
+}
+
+.rtl {
+    direction: rtl;
+    text-align: center;
+}
+.ltr {
+    direction: ltr;
+    text-align: center;
+}
+.rangeSlider .wrap {
+    padding: 50px 10px;
+}
+/* Removed 2026-05-04: dead `#nlVal` + `#slider` rules. No active page
+   emits these ids. (Note: settler-attacks page has its own `.tick-slider-input`
+   that's independent.) */
+
+.ui-slider-handle.ui-state-default.ui-corner-all {
+    border-radius: 100%;
+    background: black;
+    border: 6px solid red;
+    width: 20px;
+    height: 20px;
+    top: -5px;
+    cursor: grab;
+}
+
+.ui-slider-handle.ui-state-active,
+.ui-slider-handle.ui-state-hover,
+.ui-slider-handle.ui-state-focus {
+    border: none;
+    outline: 0;
+}
+
+.ui-slider-handle.ui-state-active:after {
+    content: attr(data-year);
+    position: absolute;
+    top: -45px;
+    left: -15px;
+    background: #394645;
+    color: white;
+    font-size: 14px;
+    padding: 5px 8px;
+    border-radius: 3px;
+}
+.ui-slider-handle.ui-state-active:before {
+    content: "";
+    background: #394645;
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: -20px;
+    left: -0px;
+    transform: rotate(45deg);
+}
+.ui-slider-handle.ui-state-default.ui-corner-all {
+    border-radius: 100%;
+    background: white;
+    border: 7px solid #394645;
+    width: 25px;
+    height: 25px;
+    top: -8px;
+    cursor: grab;
+}
+span.narTotalMart {
+    background: white;
+    padding: 2px 5px;
+    border-radius: 5px;
+    font-size: larger;
+}
+
+span.narWB {
+    text-decoration: underline;
+}
+
+span.narGaza {
+    text-decoration: underline;
+}
+.wide-map-top {
+    background: #a9a6c7;
+    border-bottom: 1px solid #ffffff;
+    box-shadow: 0px 4px 6px 0px rgb(0 0 0 / 30%);
+    z-index: 1;
+    position: relative;
+}
+.wide-map-top-con {
+    width: 100%;
+    margin: auto;
+    height: 110px;
+    overflow: hidden;
+}
+
+.figure_cont div {
+    display: inline-block;
+    font-size: 50px;
+    height: 50px;
+    color: #ffb100;
+    text-shadow: -2px 2px 2px black;
+}
+.figure_cont span {
+    font-size: 16px;
+    font-weight: lighter;
+    display: block;
+}
+
+.last_update {
+    font-size: 12px;
+    font-weight: normal;
+    font-family: tahoma;
+    visibility: hidden;
+}
+
+span.txt {
+    background: gainsboro;
+    padding: 0px 5px;
+    border-radius: 0 10px 10px 0;
+    white-space: nowrap;
+    border: 1px solid #ccc;
+    margin-inline-end: -5px;
+    display: inline-block;
+}
+
+span.date {
+    padding: 0px 5px;
+    border-radius: 10px 0 0 10px;
+    color: #1d1f20;
+    white-space: nowrap;
+    border: 1px solid #ccc;
+    display: inline-block;
+    background: white;
+}
+
+.footerTitle {
+    color: #ffb000;
+    font-size: 18px;
+    padding: 5px 0;
+}
+
+.hr-text {
+    position: relative;
+    ouline: 0;
+    border: 0;
+    height: 1.5em;
+    opacity: 1;
+}
+.hr-text:before {
+    content: "";
+    position: absolute;
+    background: #ddd;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 2px;
+}
+.hr-text:after {
+    content: attr(data-content);
+    position: relative;
+    display: inline-block;
+    color: #999;
+    padding: 0 10px;
+    line-height: 20px;
+    font-size: 14px;
+    background-color: #dddddd;
+    font-family: inherit;
+    border-radius: 6px;
+}
+
+.searchForm-wrapper .filter-menu {
+    margin: 0 0 20px;
+}
+
+input#searchQueryInput {
+    height: 40px;
+    font-size: 16px;
+    line-height: 14px;
+}
+.searchForm-wrapper .search {
+    width: 200px;
+    padding: 15px;
+}
+
+.searchForm-wrapper .filter-menu {
+    background: inherit;
+}
+input#searchQueryInput.errorInput {
+    border: red 1px solid;
+}
+
+.searchBar-wrapper:has(.errorInput) .errorMSG {
+    display: block;
+    border: 1px solid red;
+}
+
+.searchBar-wrapper:not(:has(.errorInput)) .errorMSG {
+    display: none;
+}
+.grecaptcha-badge {
+    visibility: hidden;
+}
+
+/* Removed 2026-05-04: dead `#searchResStats` (legacy filter-bar-home
+   results banner; no current page emits the id). */
+.martFooter ul {
+    padding: 0;
+    display: inline-block;
+}
+
+.martFooter ul li {
+    display: inline-block;
+    font-size: 12px;
+    padding: 5px;
+    background: lightgray;
+    color: gray;
+    margin: 0 5px;
+    border-radius: 5px;
+}
+.infoSrcsInline {
+    display: inline-block;
+}
+[dir="rtl"] .infoSrcsInline {
+    float: right;
+}
+[dir="ltr"] .infoSrcsInline {
+    float: left;
+}
+.mform {
+    width: 100%;
+    display: flex;
+    text-align: start;
+    flex-direction: column;
+    align-content: flex-start;
+    justify-content: flex-start;
+    overflow: auto;
+    flex-wrap: wrap;
+}
+
+.mform td {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px;
+    text-align: start;
+    gap: 10px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 5px;
+}
+
+.mform td > div:first-child {
+    width: 25%;
+}
+
+.mform td > div {
+    width: 75%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 10px;
+    text-align: start;
+}
+.adj50 .col {
+    width: 100%;
+}
+
+.mform td .adj50 {
+    display: flex;
+    flex-direction: column !important;
+}
+
+.form-control {
+    max-width: 96%;
+}
+
+.itemCardx {
+    display: none !important;
+}
+
+.CardDesc.adj {
+    display: flex;
+    gap: 0px;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 75px;
+    font-size: 13px;
+}
+
+.CounterArea {
+    border-top: 1px solid #ccc;
+    margin-top: 5px;
+    padding-top: 5px;
+}
+
+.counterWrap span.varVal {
+    font-weight: bold;
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    color: #d50000;
+}
+
+.counterWrap span.varName {
+    display: block;
+    padding-inline-end: 5px;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* Removed 2026-05-04: dead `.tabs_container .selector` segmented-picker
+   block (5 rules, ~50 lines). The `.detCharts-tabs` chip-radio pattern
+   replaced it elsewhere. Note: the typo'd class name `.selecotr-item`
+   propagated to .detCharts-tabs (live), so see that file for the live
+   variant. Also removed dead `span.varName` and `span.varVal`. */
+select.select_area {
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    background: #dddddd;
+}
+
+.year-head-info {
+    padding: 20px;
+    color: white;
+    text-align: center;
+}
+.pgWrap {
+    padding: 0;
+    margin: 80px auto;
+    border-radius: 10px;
+}
+.pgWrap > div {
+    padding: 15px 0 0;
+}
+
+.pgcontent {
+    margin: auto;
+    padding: 30px !important;
+    background: white;
+    font-size: 14px;
+    border-radius: 20px;
+    text-align: justify;
+    letter-spacing: -0.2px;
+}
+
+img.sideImg {
+    border-radius: 20px;
+    margin-bottom: 20px;
+    margin-inline-start: 20px;
+}
+.highlightBox {
+    display: block;
+    clear: both;
+    padding: 10px;
+    text-align: center;
+    line-height: 25px;
+    border: 2px dashed;
+    margin: 20px;
+    border-radius: 20px;
+    font-size: 18px;
+}
+
+.highlightBox a {
+    margin: 20px 0;
+    line-height: 50px;
+}
+.dataSrcs > ul > li,
+.sectionTitle {
+    background: #ddd;
+    padding: 15px;
+    display: block;
+    border-radius: 10px;
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.dataSrcs > ul > ul {
+    padding-inline-start: 30px;
+    padding-bottom: 30px;
+}
+
+.dataSrcs > ul > ul li {
+    padding: 10px;
+    list-style-type: disclosure-closed;
+    margin-inline-start: 20px;
+}
+
+.dataSrcs > ul {
+    margin: 20px 0px 0 0;
+    padding: 0;
+}
+/* Reserve space at the bottom of the page so the fixed admin panel
+   doesn't overlap footer content. Uses :has() (modern browsers) plus a
+   class fallback set on <body> in main.php. */
+body:has(> .controlPanOut),
+body.has-ctrl-panel {
+    padding-bottom: 90px;
+}
+body:has(> .controlPanOut) > footer.footer,
+body.has-ctrl-panel > footer.footer {
+    padding-bottom: 20px;
+}
+
+.controlPanOut {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 20;
+    color: #f1f5f9;
+    padding: 8px 14px calc(8px + env(safe-area-inset-bottom, 0));
+    background: linear-gradient(180deg, rgba(17, 24, 39, 0.92) 0%, rgba(2, 6, 23, 0.96) 100%);
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    border-top: 1px solid rgba(148, 163, 184, 0.18);
+    box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.35);
+    font-family: 'Tajawal', sans-serif;
+}
+
+.controlPan {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 16px;
+    justify-content: space-between;
+}
+
+.controlPanOut .btn-outline-light {
+    border-color: rgba(148, 163, 184, 0.35);
+    color: #e2e8f0;
+    background: rgba(148, 163, 184, 0.06);
+    font-weight: 600;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 6px;
+    transition: background .15s, border-color .15s, color .15s;
+}
+.controlPanOut .btn-outline-light:hover {
+    background: rgba(148, 163, 184, 0.18);
+    border-color: rgba(226, 232, 240, 0.55);
+    color: #fff;
+}
+
+/* Maintenance indicator — replaces the old top banner */
+.cntrlMaintChip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: #1f2937;
+    font-weight: 700;
+    font-size: 12px;
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    transition: transform .15s, box-shadow .15s;
+}
+.cntrlMaintChip:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(245, 158, 11, 0.35);
+    color: #1f2937;
+    text-decoration: none;
+}
+.cntrlMaintDot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #1f2937;
+    box-shadow: 0 0 0 0 rgba(31, 41, 55, 0.6);
+    animation: cntrlMaintPulse 1.6s ease-out infinite;
+}
+@keyframes cntrlMaintPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(31, 41, 55, 0.55); }
+    70%  { box-shadow: 0 0 0 7px rgba(31, 41, 55, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(31, 41, 55, 0); }
+}
+
+/* Center column hosts maintenance chip + dbprof inline */
+.cntrlCenter {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1 1 auto;
+    justify-content: center;
+    min-width: 0;
+}
+
+/* Inline-fit the DB profiler inside the panel */
+.cntrlDbprof { display: inline-flex; align-items: center; }
+.cntrlDbprof #dbprof {
+    position: static;
+    bottom: auto; right: auto;
+    z-index: auto;
+}
+.cntrlDbprof #dbprof .dbprof-pill {
+    background: rgba(15, 23, 42, 0.6);
+    border-color: rgba(148, 163, 184, 0.3);
+    padding: 4px 10px;
+    font-size: 11px;
+}
+.cntrlDbprof #dbprof .dbprof-pill:hover {
+    background: rgba(30, 41, 59, 0.85);
+}
+/* Open the body upward so it doesn't fall off the bottom of the screen */
+.cntrlDbprof #dbprof[open] {
+    position: relative;
+}
+.cntrlDbprof #dbprof[open] .dbprof-body {
+    position: absolute;
+    bottom: calc(100% + 4px);
+    right: 0;
+    border-radius: 8px;
+    border-top: 1px solid #374151;
+}
+.cntrlDbprof #dbprof[open] .dbprof-pill {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.dataSrcs a {
+    color: #146eb9;
+}
+
+.dataSrcs a:hover {
+    color: #007dff;
+    text-decoration: underline;
+}
+.note-codable {
+    direction: ltr;
+}
+blockquote.blockquoteLeft {
+    display: inline-block;
+    float: left;
+    margin: 20px 20px 40px;
+    transition: unset;
+    font-size: 16px;
+    width: 50%;
+    min-width: 300px;
+}
+
+blockquote.blockquoteLeft div:last-child {
+    font-size: smaller;
+    text-align: end;
+}
+.subTitle {
+    font-size: larger;
+    margin: 10px 30px;
+    padding: 10px 20px 10px 50px !important;
+    display: inline-block;
+    background: #292929 linear-gradient(0deg, rgb(4 4 4) 0%, rgb(81 81 81) 90%);
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 5px;
+}
+.ulist {
+    list-style: disc;
+    margin: 0 100px 0px 0px;
+}
+
+.ulist li {
+    margin-bottom: 20px;
+}
+
+/* TinyMCE align formats (alignleft/aligncenter/alignright/alignfull) */
+.wysiwyg .left {
+    text-align: left;
+}
+.wysiwyg .center {
+    text-align: center;
+}
+.wysiwyg .right {
+    text-align: right;
+}
+.wysiwyg .full {
+    text-align: justify;
+}
+
+.wysiwyg img.left {
+    float: left;
+    margin: 10px 20px 10px 0;
+}
+.wysiwyg img.right {
+    float: right;
+    margin: 10px 0 10px 20px;
+}
+.wysiwyg img.center {
+    display: block;
+    float: none;
+    margin: 10px auto;
+}
+.wysiwyg img.full {
+    display: block;
+    float: none;
+    width: 100%;
+    height: auto;
+}
+
+.homeWrap {
+    background: white;
+    margin: auto;
+    display: flex;
+    gap: 20px;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    padding: 10px 30px;
+    border-radius: 0 0 10px 10px;
+}
+.rightCont {
+    width: 70%;
+}
+.Title {
+    font-size: 22px;
+    font-weight: bolder;
+    margin: 10px 0;
+}
+
+.tox-textarea {
+    direction: ltr !important;
+    text-align: end !important;
+}
+input[type="url"] {
+    direction: ltr !important;
+}
+.bold {
+    font-weight: bold;
+}
+
+.category_info span {
+    background: #fff;
+    padding: 0px 8px;
+    border-radius: 10px;
+    color: #d30000;
+    border: 1px solid #aaa;
+}
+div#infoBox {
+    width: 100%;
+    border: 3px dashed #6b7583;
+    border-radius: 10px;
+    padding: 0 20px 20px;
+    min-height: 350px;
+    color: #142336;
+    background: #d3dce7;
+}
+div#Gmap {
+    height: 250px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #888;
+    border-radius: 20px;
+    width: 100%;
+}
+.summaryBoxWrap {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    font-size: 14px;
+    border-radius: 10px;
+}
+.summaryBox {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    font-size: 12px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #1a2738;
+    margin: 5px;
+    min-width: 220px;
+}
+[dir="rtl"] .summaryBoxWrap {
+    direction: rtl;
+}
+[dir="rtl"] .summaryBox {
+    direction: rtl;
+}
+
+.summaryBox :nth-of-type(2) {
+    background: #eee;
+    color: #333;
+    width: 45%;
+}
+.summaryBox div {
+    background: #212f42;
+    padding: 0 10px;
+    text-align: start;
+    color: white;
+    min-width: 70px;
+    text-align: center;
+}
+.summaryBox :first-child {
+    width: 75%;
+}
+
+.titleSub {
+    line-height: 18px;
+    font-size: 18px;
+    color: #64758d;
+}
+
+.secTitle {
+    color: white;
+    font-weight: bold;
+    font-size: 30px;
+    padding: 15px 0;
+    text-shadow: -1px 1px 5px black;
+}
+.settlementsSec {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    background-color: #ffffff;
+    border-top: 2px solid #7a8ea9;
+}
+
+/* Settlements page — section bands and layout (extracted from inline styles). */
+.settlementsChartBand {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+}
+.settlementsFilterBand {
+    background: #142336;
+}
+.settlementsMapRow {
+    /* .adjContainer defaults to align-items:center; the map pane wants
+       flex-start so the right-side info column hugs the top. */
+    align-items: flex-start;
+}
+.settlementsInfoPane {
+    margin-top: 20px;
+}
+div#selectordiv * {
+    line-height: 100%;
+    font-size: 12px;
+}
+div#selectordiv label.form-check-label {
+    padding-inline-start: 5px;
+}
+span.amcharts-range-selector-title {
+    width: 35px;
+    display: inline-block;
+}
+
+.form-switch {
+    display: flex;
+    padding: 0;
+    gap: 30px;
+    cursor: pointer;
+    align-items: center;
+}
+
+.form-switch input {
+    height: 20px;
+    padding: 10px 20px;
+    margin: 0;
+}
+
+.cntrlLeft, .cntrlRight {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    align-items: center;
+}
+.cntrlItem {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+}
+/* Golden purge button when manual-cache mode is ON — signals to admins
+   that caches don't auto-invalidate and they have to click this to refresh. */
+.btn.purgeCache--manual,
+.btn.purgeCache--manual:focus {
+    background: linear-gradient(180deg, #ffc02e, #d99100);
+    border-color: #ffd76b;
+    color: #1a1208;
+    font-weight: 700;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 2px 6px rgba(0,0,0,0.25);
+}
+.btn.purgeCache--manual:hover {
+    background: linear-gradient(180deg, #ffd14d, #e89d00);
+    color: #1a1208;
+    border-color: #ffe08a;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 4px 10px rgba(0,0,0,0.30);
+}
+label.form-check-label {
+    padding-inline-start: 15px;
+}
+ul.settList {
+    column-count: 3;
+    padding: 10px 20px;
+    list-style: auto inside;
+    text-align: start;
+    font-size: 14px;
+}
+@media (max-width: 768px) {
+    ul.settList { column-count: 2; }
+}
+@media (min-width: 1800px) {
+    ul.settList { column-count: 4; }
+}
+ul.settList li:hover {
+    font-weight: bold;
+    cursor: pointer;
+    color: #c10009;
+}
+.backBtn {
+    margin-top: 3px;
+    position: absolute;
+    font-size: 28px;
+    right: 10px;
+}
+
+.backBtn:hover {
+    color: steelblue;
+}
+.smallTitle {
+    font-size: 20px;
+    font-weight: bold;
+    border-bottom: 1px solid;
+    margin-top: 10px;
+}
+ul.settList li {
+    margin: -5px 0px;
+}
+
+.GeoSwitchCont .selector {
+    display: flex;
+    height: 40px;
+    width: 500px;
+    align-items: center;
+    justify-content: center;
+}
+.GeoSwitchCont .selector .selection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 100%;
+    width: 100%;
+    margin-inline-end: -1px;
+    background-clip: border-box;
+    transform: scale3d(1, 1, 1);
+    background: rgb(255 255 255);
+    border: 1px solid #979797;
+    color: #818181;
+    transition: 0.15s ease-in-out background-color;
+}
+.GeoSwitchCont .selector .selection.selected {
+    background: rgb(255 255 255) !important;
+    border-color: #333;
+    color: #000 !important;
+    font-weight: bold;
+    z-index: 2;
+    cursor: pointer;
+}
+.GeoSwitchCont .selector .selection:hover {
+    color: #000000;
+    background: rgb(255 255 255 / 78%);
+}
+.GeoSwitchCont .selector .selection:first-child {
+    margin-inline-end: 0;
+    border-radius: 10px 0 0 10px;
+}
+.GeoSwitchCont .selector .selection:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+.GeoSwitchCont .selector.width-per-item {
+    width: auto;
+}
+.GeoSwitchCont .selector.width-per-item .selection {
+    width: 100px;
+    white-space: normal;
+    font-size: 12px;
+}
+.jconfirm-buttons {
+    text-align: center;
+    float: none !important;
+}
+.jconfirm-buttons button {
+    padding: 10px 20px !important;
+    margin: 0 10px !important;
+    font-size: 16px !important;
+}
+
+.wide-Amap-container {
+    background: #cfc9bd;
+}
+
+.mapAttContainer .mapAreaHead {
+    background: #4e442f;
+}
+
+.mapAttContainer blockquote {
+    background: #efede9;
+    border: dashed 2px #856425;
+}
+
+.mapAttContainer blockquote:before {
+    color: #856425;
+}
+
+.mapAttContainer blockquote:after {
+    color: #856425;
+}
+
+.AttacksTxt {
+    text-align: justify;
+    font-weight: bold;
+    padding: 20px;
+}
+.wysiwyg {
+    line-height: 160%;
+    margin: 20px auto;
+    overflow: hidden;
+}
+
+/* Video card — dark-theme, scrim-overlaid, brand play badge.
+   Two pseudo-elements: ::before = scrim (top + bottom dark gradient),
+   ::after = circular play badge with FA glyph centered. */
+.videoItem {
+    position: relative;
+    height: 12rem;
+    background-position: center;
+    background-size: cover;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 4px 14px rgba(0, 0, 0, 0.35);
+    transition:
+        transform 0.35s cubic-bezier(.2, .7, .2, 1),
+        box-shadow 0.35s ease;
+    will-change: transform;
+}
+
+.videoItem:hover,
+.videoItem:focus-visible {
+    transform: translateY(-3px);
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+        0 16px 38px rgba(0, 0, 0, 0.55);
+    outline: none;
+}
+
+.videoItem:focus-visible {
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+        0 16px 38px rgba(0, 0, 0, 0.55),
+        0 0 0 3px rgba(255, 255, 255, 0.55);
+}
+
+/* Top + bottom scrim — top dark fade keeps the date pill legible,
+   bottom dark fade replaces the old solid title bar. */
+.videoItem::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg,
+            rgba(0, 0, 0, 0.55) 0%,
+            rgba(0, 0, 0, 0) 22%,
+            rgba(0, 0, 0, 0) 50%,
+            rgba(0, 0, 0, 0.85) 100%);
+    transition: background 0.35s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.videoItem:hover::before {
+    background:
+        linear-gradient(180deg,
+            rgba(0, 0, 0, 0.65) 0%,
+            rgba(0, 0, 0, 0) 22%,
+            rgba(0, 0, 0, 0) 45%,
+            rgba(0, 0, 0, 0.92) 100%);
+}
+
+/* Play badge — neutral glass: backdrop-blur samples the thumb, soft white
+   wash, top-edge inset highlight simulates light from above, thin white
+   border defines the rim. */
+.videoItem::after {
+    content: "\f04b";
+    font-family: "fontawesome";
+    font-weight: 900;
+    font-size: 24px;
+    color: #fff;
+    text-indent: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 64px;
+    height: 64px;
+    line-height: 64px;
+    text-align: center;
+    border-radius: 50%;
+    background:
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.22) 0%,
+            rgba(255, 255, 255, 0.10) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.30);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.45),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.18),
+        0 6px 18px rgba(0, 0, 0, 0.35),
+        0 2px 6px rgba(0, 0, 0, 0.25);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+    transform: translate(-50%, -50%) scale(1);
+    transition:
+        transform 0.35s cubic-bezier(.2, .7, .2, 1),
+        box-shadow 0.35s ease,
+        background 0.35s ease,
+        filter 0.35s ease;
+    z-index: 2;
+}
+
+.videoItem:hover::after {
+    transform: translate(-50%, -50%) scale(1.08);
+    background:
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.32) 0%,
+            rgba(255, 255, 255, 0.16) 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.55),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.20),
+        0 12px 28px rgba(0, 0, 0, 0.45),
+        0 0 0 8px rgba(255, 255, 255, 0.06);
+    filter: brightness(1.06);
+}
+
+.videoTitle {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    padding: 16px 14px 14px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1.45;
+    background: transparent;
+    /* clamp to 2 lines, no height jump on hover */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    z-index: 2;
+    transition: transform 0.35s ease;
+}
+
+.videoItem:hover .videoTitle {
+    transform: translateY(-2px);
+}
+.iframe-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+}
+.iframe-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.videoDate {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 4px 10px;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    background: rgba(20, 20, 20, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 999px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 2;
+    direction: ltr; /* dates are pure-Latin */
+}
+.DayInfoWrap a:hover {
+    color: #ffe66b;
+}
+
+/* Detainees-data charts share one size across all four tabs (cat1-cat4) so
+   switching tabs doesn't reflow the page or change the chart's visual weight.
+   460×1200 was picked for the HaMoked stacked-composition chart and adopted
+   site-wide for these charts on 2026-05-10. */
+.AsraChartDiv {
+    height: 460px;
+    width: 100%;
+    direction: ltr;
+}
+
+.char_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin: 20px;
+    padding: 10px;
+    max-width: 1200px;
+}
+
+/* The --wide / --tall modifier classes are now no-ops — kept so existing
+   markup on /detainees/data (cat4) doesn't need a follow-up change. */
+.char_container.char_container--wide { max-width: 1200px; }
+.AsraChartDiv.AsraChartDiv--tall     { height: 460px; }
+
+/* Chart + interpretation stacked layout (added 2026-05-10).
+   Chart on top, interp paragraph beneath, full-width across all viewports.
+   Reverted from a side-by-side row layout per editorial preference — the
+   stacked form keeps the chart at maximum readable width and lets the
+   paragraph breathe underneath without competing for horizontal space. */
+.char_with_interp {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+}
+.char_main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.char_interp {
+    width: 100%;
+    color: #444;
+    font-size: 14px;
+    line-height: 1.7;
+    padding: 8px 10px;
+}
+[dir="ltr"] .char_interp { text-align: left; }
+.char_interp p { margin: 0 0 10px; }
+.char_interp p:last-child { margin-bottom: 0; }
+
+/* Per-chart caveat note — currently used under the HaMoked composition chart
+   to flag that IPS-custody numbers don't include army-base detainees. */
+.char_caveat {
+    font-size: 12px;
+    color: #888;
+    font-style: italic;
+    line-height: 1.5;
+    margin-top: 6px;
+    padding: 0 8px;
+    text-align: center;
+}
+.hamoked-source-note {
+    font-size: 12px;
+    color: #777;
+    margin-top: 6px;
+    text-align: center;
+    direction: rtl;
+}
+[dir="ltr"] .hamoked-source-note { direction: ltr; }
+
+.asraCharts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.flex-basis3 {
+    flex-basis: calc(33% - 10px) !important;
+    height: 90% !important;
+}
+.form-check.form-check-inline {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin: 0;
+}
+.mform td .adj {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.mapDiv2 .govLabels div {
+    font-size: 6px;
+}
+
+.mapDiv2 .govLabels {
+    font-size: 5px !important;
+}
+/* Splide arrows — pulled outside the track on both sides, mirrored per dir. */
+.videos .splide__arrow--prev {
+    left: -1em !important;
+    right: auto !important;
+}
+.videos .splide__arrow--next {
+    right: -1em !important;
+    left: auto !important;
+}
+.videos .splide__arrows--rtl .splide__arrow--prev {
+    left: auto !important;
+    right: -1em !important;
+}
+.videos .splide__arrows--rtl .splide__arrow--next {
+    left: -1em !important;
+    right: auto !important;
+}
+.postItem {
+    height: 450px;
+    background: center;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    color: #fff;
+    font-size: 14px;
+    background-color: black;
+}
+
+.postdesc {
+    padding: 30px;
+    margin: 0 auto;
+    text-align: justify;
+}
+
+.postTitle {
+    font-size: 24px;
+    font-weight: 800;
+    text-shadow: -2px 2px 2px black;
+    margin-bottom: 15px;
+    color: #ffb100;
+}
+
+.postPreview {
+    text-shadow: -2px 2px 2px black;
+}
+.postGradiant {
+    background: linear-gradient(
+        0deg,
+        rgb(0 0 0 / 100%) 10%,
+        rgb(0 0 0 / 70%) 30%,
+        rgb(0 0 0 / 20%) 50%
+    );
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+.postdesc a:hover {
+    color: inherit;
+}
+.splide__progress__bar {
+    height: 4px !important;
+    background: #ffbc00 !important;
+}
+
+.figures {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+}
+
+.Header .a {
+    color: #202020;
+    height: 50px;
+}
+.Header a:hover {
+    color: #fff;
+    z-index: 1;
+}
+
+.headerContainer {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    align-items: stretch;
+    font-size: 20px;
+    color: #ffffff;
+    font-weight: normal;
+    padding: 0px 0px 10px;
+    margin: 20px 0 0;
+    text-align: center;
+    border-radius: 20px;
+}
+
+.HeadSplide,
+.subHeader {
+    border: 5px solid #fff;
+    background: white;
+    border-radius: 10px 10px 0 0;
+    overflow: hidden;
+}
+
+.headerContent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    background: rgb(0 0 0 / 30%);
+    flex-direction: column;
+}
+
+.subHeaderBG {
+    width: 100%;
+    background-size: cover;
+    background-position: center center;
+    height: 100%;
+    min-height: 300px;
+}
+
+.tabSwitchCont .selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.tabSwitchCont .selector .selection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-inline-end: -1px;
+    background: rgb(0 0 0 / 55%);
+    border: 1px solid rgb(255 255 255 / 50%);
+    color: #bbbbbb;
+    transition: 0.15s ease-in-out background-color;
+    font-size: 14px;
+    font-weight: bold;
+}
+.tabSwitchCont .selector .selection.selected {
+    background: rgb(255 255 255) !important;
+    border-color: #838383;
+    color: #000 !important;
+    font-weight: bold;
+    z-index: 2;
+    cursor: pointer;
+}
+.tabSwitchCont .selector .selection:hover {
+    color: #000000;
+    background: rgb(255 255 255 / 78%);
+}
+.tabSwitchCont .selector .selection:first-child {
+    margin-inline-end: 0;
+    border-radius: 0 10px 10px 0;
+}
+.tabSwitchCont .selector .selection:last-child {
+    border-radius: 10px 0 0 10px;
+}
+
+.tabSwitchCont .selector.width-per-item {
+    width: auto;
+}
+.tabSwitchCont .selector.width-per-item .selection {
+    min-width: 150px;
+    max-width: 170px;
+    width: 140px;
+    height: 50px;
+    text-align: center;
+}
+
+.mapContainer.inj {
+    background: #a0ada5;
+}
+
+.mapDemContainer {
+    background: #bdb1c1;
+}
+
+.caption:not(.month-wrapper tr) {
+    border: 1px solid #ccc;
+    padding: 5px 20px;
+    background: #eee;
+    border-radius: 10px;
+    display: block;
+    width: 95%;
+    margin: auto;
+    font-weight: bold;
+}
+
+.postContent {
+    padding: 20px 30px;
+    text-align: justify;
+    font-size: 14px;
+    max-width: 900px;
+    margin: auto;
+}
+
+/* Single-report cover header: title overlaid on the post image with gradient. */
+.postHeader {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    min-height: 400px;
+    padding: 50px 0;
+    flex-direction: column;
+}
+
+/* Date strip below the cover. */
+.postdate {
+    text-align: end;
+    margin: 10px 40px;
+    font-size: 12px;
+    border-bottom: 1px solid #ccc;
+    color: #777;
+    font-family: tahoma;
+}
+
+/* Related-reports carousel cards. */
+.postimg {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+}
+.postItemCard {
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid #aaa;
+}
+
+.postCardTitle a {
+    color: #0066bd;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 15px 10px;
+    background: white;
+    display: flex;
+    height: 70px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.postItemCard:hover a {
+    color: #eb7700;
+}
+
+.loader {
+    border-top-color: #3498db;
+    -webkit-animation: spinner 1.5s linear infinite;
+    animation: spinner 1.5s linear infinite;
+}
+
+@-webkit-keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+@media screen and (min-device-width: 1200px) and (max-device-width: 1600px) {
+    .mapCont div#mapdiv {
+        height: 500px !important;
+        top: 0px !important;
+    }
+}
+
+.infographicHeader {
+    font-size: 30px;
+    display: block;
+    text-align: center;
+    padding: 20px;
+    color: white;
+    text-shadow: -1px 2px 4px black;
+    font-weight: bold;
+    background: #61816e;
+}
+
+.inj .infographicHeader {
+    background: #61816e;
+}
+
+.inj .mapAreaHead {
+    background: #244431;
+}
+.inj blockquote {
+    background: #d5ddd8;
+    color: #244431;
+}
+:has(> .govLabels) {
+    position: absolute;
+}
+.amChart {
+    direction: ltr;
+    width: 100%;
+    min-height: 180px;
+}
+
+.wide-map-top.dem {
+    background: #b3b0c7;
+}
+
+/* Demolitions page — section bands and headings (extracted from inline). */
+.demChartBand {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    background-color: #fff;
+}
+.demChartInner {
+    max-width: 1200px;
+    width: 100%;
+    padding: 10px;
+    margin: auto;
+}
+/* Override .chartdiv's default 105% width when sitting next to the
+   240px wide selector column. */
+.side_chart_controls .chartdiv.demChart {
+    width: calc(100% - 240px);
+}
+.demSelectorRow {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+.demHeading {
+    font-size: 34px;
+    display: block;
+    text-align: center;
+    padding: 10px;
+    color: #fff;
+    text-shadow: -1px 2px 4px black;
+    font-weight: bold;
+    background: #646181;
+}
+.demHeadingSub {
+    font-size: small;
+}
+
+/* Injuries page — section bands and selector row (extracted from inline). */
+.injuriesChartBand {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    background-color: #fff;
+}
+.injuriesChartInner {
+    max-width: 1200px;
+    width: 100%;
+    padding: 30px 0;
+    margin: auto;
+}
+.injuriesSelectorRow {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Detainees-data page — moved from inline <style> in pages/detainees-data.php
+   so the CSS gets cached + the page no longer ships 94 lines of style on
+   every load.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Click-to-jump affordance on the header stat cards. */
+.hdr-glassy-card.is-clickable,
+.hdr-group-label.is-clickable { cursor: pointer; }
+.hdr-glassy-card.is-clickable { position: relative; }
+.hdr-glassy-card.is-clickable::after {
+    content: "";
+    position: absolute;
+    inset: auto 50% -6px 50%;
+    width: 0;
+    height: 2px;
+    background: rgba(255,255,255,0.55);
+    border-radius: 2px;
+    transition: inset .25s ease, width .25s ease;
+}
+.hdr-glassy-card.is-clickable:hover::after {
+    inset: auto 14% -6px 14%;
+    width: 72%;
+}
+
+/* Sub-tabs for the 3 chart groups (prisons / arrests / administrative) */
+.detCharts-tabs {
+    margin: 10px auto 26px;
+    max-width: 920px;
+    padding: 8px 10px;
+}
+.detCharts-tabs .selector {
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    border-radius: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    align-items: stretch;
+}
+.detCharts-tabs .selecotr-item {
+    flex: 0 1 auto;
+    height: auto;
+    display: inline-flex;
+}
+.detCharts-tabs .selector-item_radio {
+    appearance: none;
+    display: none;
+}
+.detCharts-tabs .selector-item_label {
+    background: #fff;
+    color: #444;
+    border: 1.5px solid #e2e2e2;
+    padding: 10px 22px;
+    min-height: 0;
+    border-radius: 999px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+    transform: translateY(0);
+    transition: border-color .22s ease, color .22s ease, background .22s ease, box-shadow .22s ease, transform .22s ease;
+}
+.detCharts-tabs .selector-item_label i {
+    font-size: 15px;
+    opacity: .65;
+    transition: opacity .22s ease, color .22s ease;
+}
+.detCharts-tabs .selector-item_label:hover {
+    border-color: #c8c8c8;
+    color: #1a1a1a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+.detCharts-tabs .selector-item_label:hover i { opacity: 1; }
+
+.detCharts-tabs .selector-item_radio:checked + .selector-item_label {
+    background: linear-gradient(135deg, #e63946 0%, #c92333 100%);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 8px 22px rgba(230,57,70,0.32);
+    transform: translateY(-1px);
+}
+.detCharts-tabs .selector-item_radio:checked + .selector-item_label i {
+    opacity: 1;
+    color: #fff;
+}
+
+@media (max-width: 600px) {
+    .detCharts-tabs .selector { flex-direction: column; gap: 8px; }
+    .detCharts-tabs .selecotr-item { width: 100%; }
+    .detCharts-tabs .selector-item_label { width: 100%; justify-content: center; }
+}
+
+/* Section band that holds the chart tabs + chart grid. */
+.detCharts-band {
+    text-align: center;
+    background-color: #fff;
+}
+.detCharts-band-spacer {
+    height: 1px;
+}
+
+.leftCont {
+    width: 400px;
+}
+
+.pieChart {
+    min-height: 180px;
+}
+
+.setAttacks {
+    background: #a7a093;
+}
+
+.tooltip-inner {
+    white-space: pre-wrap;
+}
+
+.eventsContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.eventsLabel.checked {
+    background: #0f62af;
+}
+
+label.eventsLabel {
+    width: auto;
+}
+
+.eventsContainer input[type="radio"] {
+    appearance: none;
+    display: none;
+}
+
+.filterSelect .ms-drop ul {
+    column-count: 3;
+}
+
+.MartPhoto {
+    height: 150px;
+    width: 150px;
+    filter: grayscale(0.3);
+}
+
+.martCompactPhoto {
+    width: 150px;
+}
+
+.myrcard:has(.martBody) {
+    width: 150px;
+    border: 1px solid;
+    overflow: hidden;
+    border-radius: 10px;
+    background: black;
+}
+
+.martBody .martInfo {
+    padding: 5px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.martBody .mname {
+    color: #ffb100;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 0;
+}
+
+.myrcard:hover .martBody .martInfo {
+}
+
+.myrcard:has(.martBody):hover {
+    scale: 1.1;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 1;
+    border: 1px solid #fff;
+}
+
+.martSubInfo {
+    font-size: 13px;
+    color: #adadad;
+}
+.martSubInfoDate {
+    font-size: 10px;
+    color: #adadad;
+}
+
+.myrcard:hover .MartPhoto {
+    filter: grayscale(0);
+}
+
+.martBody {
+    background: #1c1c1c;
+    margin-top: -40px;
+    position: relative;
+    height: 115px;
+    width: 100%;
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 1) 35%
+    );
+}
+
+/* .segmented-picker, .date-picker-wrapper (jquery-date-range-picker), #dpSummary, span.dp-date, .summaryTable, .SummaryTitel — moved 2026-05-12 to date-range-picker.css (loaded on home + /martyrs/year) and home.css. */
+.divTableCell span,
+.note_blue {
+    font-size: 12px;
+    font-weight: normal;
+    color: #9f9f9f;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+.update_item {
+    display: flex;
+    font-size: 12px;
+    font-weight: normal;
+    font-family: tahoma;
+    color: #ffffff9c;
+    /* max-width: 720px; */
+    text-align: start;
+    border-bottom: 1px dashed #ffffff66;
+    padding: 3px;
+}
+
+.update_time {
+    min-width: 100px;
+    color: #ffd42e;
+}
+
+.updates {
+    max-width: 720px;
+    --mask: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 1) 0,
+            rgba(0, 0, 0, 1) 40%,
+            rgba(0, 0, 0, 0) 95%,
+            rgba(0, 0, 0, 0) 0
+        )
+        100% 50% / 100% 100% repeat-x;
+
+    -webkit-mask: var(--mask);
+    mask: var(--mask);
+    background: #0202022e;
+    border-radius: 10px;
+}
+
+.filter_block_options {
+    display: flex;
+    text-align: start;
+    flex-wrap: wrap;
+}
+.filtersAndContent {
+    display: flex;
+}
+
+.filtersPanel {
+    max-width: 300px;
+    background: #ededed;
+    padding: 0px;
+    height: calc(100vh - 65px);
+    overflow-y: auto;
+}
+
+.filter_block {
+    padding: 5px 10px 0;
+}
+.filter_op {
+    display: inline-flex;
+    gap: 2px;
+    width: 50%;
+    cursor: pointer;
+}
+
+.filter_op:hover {
+    background: #dbdbdb;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.filter_op * {
+    cursor: pointer;
+}
+
+.filter_op label {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    padding: 4px 0;
+    line-height: 1.15;
+    font-size: 12px;
+}
+
+.filter_block_title {
+    background: #325b75;
+    color: #fff;
+    padding: 2px 10px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: start;
+}
+.filter_block_title:before {
+    content: "\f078";
+    position: relative;
+    top: 0px;
+    font-family: fontawesome;
+    transition: 0.3s transform;
+}
+[dir="rtl"] .filter_block_title:before {
+    float: left;
+}
+[dir="ltr"] .filter_block_title:before {
+    float: right;
+}
+.collapsed.filter_block_title:before {
+    transform: rotate(-90deg);
+}
+.stickyPanel {
+    position: sticky;
+    top: 80px;
+    z-index: 3;
+}
+.filtersPanelArea,
+.filtersPanelArea_legacy {
+    width: 365px;
+}
+
+.filtersPanelArea:before,
+.filtersPanelArea_legacy:before {
+    position: absolute;
+    right: 100%;
+    background: red;
+    padding: 5px;
+    font-family: fontawesome;
+}
+
+.cntrlFilters {
+    background: #133d57;
+    border: 1px solid #aaaaaa;
+    color: #fff;
+    text-align: start;
+    font-weight: bold;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.cntrlFilters:before {
+    content: "\f101";
+    font-family: fontawesome;
+    margin-inline-end: 5px;
+}
+[dir="rtl"] .cntrlFilters:before {
+    float: left;
+}
+[dir="ltr"] .cntrlFilters:before {
+    float: right;
+    content: "\f100";
+}
+
+.cntrlFilters:after {
+    content: "\f0b0";
+    font-family: fontawesome;
+    margin-inline-end: 5px;
+}
+[dir="rtl"] .cntrlFilters:after {
+    float: right;
+}
+[dir="ltr"] .cntrlFilters:after {
+    float: left;
+}
+.cntrlFiltersBtn {
+    padding: 8px 10px;
+    background: #133d57;
+    color: #fff;
+    border-start-end-radius: 5px;
+    border-end-end-radius: 5px;
+    margin-inline-start: -15px;
+    cursor: pointer;
+    display: block;
+    position: sticky;
+    top: 70px;
+    z-index: 1;
+}
+[dir="rtl"] .cntrlFiltersBtn {
+    float: right;
+}
+[dir="ltr"] .cntrlFiltersBtn {
+    float: left;
+}
+.resetFiltersBtn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    padding: 0 6px;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1;
+}
+[dir="rtl"] .resetFiltersBtn {
+    float: left;
+}
+[dir="ltr"] .resetFiltersBtn {
+    float: right;
+}
+.resetFiltersBtn .fa-undo {
+    padding-top: 3px;
+    display: block;
+}
+.resetFiltersBtn:hover {
+    color: #ffd0d0;
+}
+.resetFiltersBtn.filter-active {
+    color: #ff8a8a;
+}
+.m_event_field,
+.m_cause_of_death_field,
+.m_event_type_field {
+    width: 100% !important;
+}
+.filter_op.geoArea_field {
+    width: 100%;
+    background: #afc4d1;
+    font-weight: bold;
+    /* font-size: 16px !important; */
+}
+
+.filter_op_group,
+.filter_form {
+    width: 100%;
+}
+.range_picker button {
+    margin: 0 5px;
+    background: #fffae2;
+}
+
+.resultsStats {
+    color: #ffb100;
+}
+
+/* === a11y ================================================================= */
+
+/* Visually-hidden utility — present in the accessibility tree but not on
+   screen. Used for the page <h1> on /martyrs/year and the AJAX announcer. */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Keyboard focus indicator (global). Uses !important to win over the many
+   `outline:none` legacy rules on inputs, cards, and chrome. :focus-visible
+   only triggers for keyboard / programmatic focus, so mouse clicks stay
+   visually clean. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible,
+[tabindex="0"]:focus-visible,
+[tabindex="-1"]:focus-visible,
+.myrcard:focus-visible,
+summary:focus-visible {
+    outline: 2px solid #ffa929 !important;
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* The <main> landmark is given tabindex="-1" so the skip-link can move focus.
+   It should never show a focus ring just because the page loaded with the
+   hash target. */
+main#main-content:focus-visible {
+    outline: none !important;
+}
+.summaryNote {
+    font-size: 12px;
+    color: #b9b9b9;
+    font-weight: normal;
+    margin-inline-start: 10px;
+}
+.step {
+    border: 1px solid #034d7d;
+    margin: 10px;
+    border-radius: 10px;
+    padding: 0;
+    overflow: hidden;
+}
+
+.stepTitle {
+    background: #034d7d;
+    padding: 10px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    margin-bottom: 30px;
+}
+
+.stepTitle span {
+    background: white;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    text-align: center;
+    font-size: 20px;
+    color: #034d7d;
+    font-weight: 900;
+}
+
+.stepCont .form-label {
+    background: none;
+}
+.row > * {
+    flex-shrink: unset;
+}
+
+.mhd .martCompactPhoto {
+    width: 250px !important;
+}
+
+.mhd .MartPhoto {
+    background-size: cover;
+    height: 250px;
+    width: 250px;
+    background-position-x: center;
+}
+
+.martDet2 span {
+    text-align: center;
+    font-size: 12px;
+    padding: 5px 8px;
+    /* border-inline-start: 1px solid #bbb; */
+    height: 40px;
+}
+
+.martDet2 strong {
+    display: block;
+    background: #666666;
+    color: white;
+    padding: 2px 15px;
+    border-radius: 5px;
+}
+
+.martDet2 span + span {
+    border-inline-end: 1px solid #d9d9d9;
+}
+.mname a {
+    color: inherit;
+}
+.martPic2 .suggestEdit {
+    display: none;
+    margin: 15px;
+}
+
+.martPic2:hover .suggestEdit {
+    display: block;
+}
+.filtersPanel *:not(.fa) {
+    font-family: inherit;
+}
+img.verified {
+    width: 25px;
+    margin: 3px 5px;
+}
+[dir="rtl"] img.verified {
+    float: right;
+}
+[dir="ltr"] img.verified {
+    float: left;
+}
+
+.embedPreview.compact {
+    height: 120px;
+}
+
+.embedPreview.full {
+    height: 180px;
+}
+
+.transpSelect.selected {
+    border: 3px solid #2787d5;
+}
+.embedcode .input-group {
+    margin-top: 10px;
+    position: relative;
+}
+
+.embedcode .input-group {
+    position: relative;
+}
+
+.embedcode .input-group-addon {
+    border: none;
+}
+
+#copyButton {
+    cursor: pointer;
+    background: #f1bb3a;
+}
+
+#copyTarget {
+    border-inline-start: none;
+    z-index: 1;
+    background: #f3f3f3;
+    box-shadow: none;
+    border: 1px solid #f1bb3a;
+    font-size: 12px;
+}
+
+.embedcode .copied {
+    opacity: 1;
+    position: absolute;
+    left: 55px;
+}
+
+.embedOp:not(:has(.selected)) {
+    filter: grayscale(1);
+}
+.mac-scrollbar .link-info {
+    color: #0058a7 !important;
+}
+/* Mobile overlay */
+/* .mob-overlay + .menu Telegram link moved to css/nav-menus.css (2026-05-20 consolidation). */
+
+/* ─────────────────────────────────────────────────────────────────────────── */
+
+/* --- restored from dead.css 2026-04-25 — photo-ticker rules
+       (user confirmed live: innerBox/dataBox hover overlay used by
+       the homepage photo ticker, even though my static scan missed
+       the JS call site) --- */
+.img-ticker {
+    animation: ticker-kf 50s linear infinite;
+}
+.img-ticker:hover {
+    animation-play-state: paused;
+}
+.ticker_img:hover {
+    filter: grayscale(0) brightness(1) !important;
+}
+.ticker_img {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    object-position: center top;
+    padding: 0;
+    margin: 0;
+    filter: grayscale(1) brightness(0.3);
+    transition: filter 0.5s ease-in-out;
+}
+/* Link wrapper around each ticker photo — keep it transparent to layout
+   (block-level so the inner img doesn't pick up inline baseline gaps;
+   no color/decoration since the visible content is the image). */
+.ticker-link {
+    display: block;
+    line-height: 0;
+    color: inherit;
+    text-decoration: none;
+}
+.ticker-link:hover { text-decoration: none; }
+.dataBox {
+    position: absolute;
+    transition: all 0.5s ease-in-out;
+}
+.innerBox {
+    padding: 10px 30px;
+    position: relative;
+    z-index: 2;
+    background: rgba(255,255,255,0.10);
+    color: rgba(255,255,255,0.95);
+    border: 1px solid rgba(255,255,255,0.20);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    border-radius: 20px;
+    max-width: 400px;
+    text-align: justify;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+    top: 40px;
+    /* direction: rtl moved to [dir="rtl"] scoping */
+    font-family: "Readex Pro", serif;
+    letter-spacing: 0px;
+}
+/* Arrow is a real clip-path triangle (no rotation, no buried half), so
+   it gets its own clean backdrop-filter region with no overlap seam
+   against the bubble body. Each side just flips the triangle. */
+.innerBox:after {
+    content: "";
+    display: block;
+    width: 14px;
+    height: 26px;
+    background: rgb(255 255 255 / 20%);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    position: absolute;
+    top: 50%;
+    margin-top: -13px;
+}
+.innerBox-right, .innerBox-left {
+    place-content: center;
+}
+.innerBox-right:after {
+    right: -15px;
+    clip-path: polygon(0 0, 100% 50%, 0 100%);    /* triangle pointing right → photo */
+}
+.innerBox-left:after {
+    left: -15px;
+    clip-path: polygon(100% 0, 0 50%, 100% 100%); /* triangle pointing left → photo */
+}
+
+/* ── Gaza Destruction Tracker — hdr-card background modifiers ── */
+.hdr-card-destroyed { background: linear-gradient(135deg, #8b1e1e 0%, #5a1212 100%); }
+.hdr-card-severe    { background: linear-gradient(135deg, #c44a3a 0%, #8e2f23 100%); }
+.hdr-card-moderate  { background: linear-gradient(135deg, #e8b86c 0%, #b48a48 100%); }
+
+/* /mdb/add + /mdb/edit/{id} form styles → moved to rebuilt/css/mdb-form.css
+   (loaded conditionally from mdb.php), 2026-05-12. */
+
+/* Not-found notice on /martyrs/show/{unknown_id} — sits above the year
+   listing fallback so the visitor knows their link was invalid rather
+   than wondering why they landed on a random year. */
+.martyr-show-notfound {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 12px auto 18px;
+    max-width: 980px;
+    padding: 10px !important;
+    background: #fff8e6;
+    border: 1px solid #f0c97a;
+    border-inline-start: 4px solid #c08a1a;
+    border-radius: 6px;
+    color: #6b4a08;
+    font-size: 14px;
+    line-height: 1.5;
+}
+.martyr-show-notfound-icon {
+    flex: 0 0 auto;
+    font-size: 18px;
+    color: #c08a1a;
+}
+.martyr-show-notfound-text { flex: 1 1 auto; }
+.martyr-show-notfound-close {
+    flex: 0 0 auto;
+    background: transparent;
+    border: 0;
+    padding: 4px 8px;
+    margin-inline-start: auto;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    color: #6b4a08;
+    opacity: 0.6;
+    border-radius: 4px;
+    transition: opacity .15s, background .15s;
+}
+.martyr-show-notfound-close:hover {
+    opacity: 1;
+    background: rgba(192, 138, 26, 0.12);
+}

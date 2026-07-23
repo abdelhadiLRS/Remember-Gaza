@@ -1,0 +1,500 @@
+/* ============================================================================
+   wysiwyg.css — content-formatting classes for admin-authored page content.
+
+   Loaded at:
+     - layout/main.php as a <link> for public-page rendering
+     - tinymce-pair.js as content_css so the dashboard editor iframe
+       previews look identical to the public output
+     - editor-admin.js (inline mode) inherits via the page's own stylesheet
+
+   Conventions
+   -----------
+   - Every rule is scoped to .wysiwyg so it can't leak into chrome/UI.
+   - Direction-aware: logical properties (margin-inline-*, border-inline-start,
+     padding-inline-*, text-align: start) so a single class works in both AR
+     and EN without per-direction overrides.
+   - Modifiers use BEM-ish "--variant" suffix (e.g. .callout--warning).
+     Pick a base class + modifier together: class="callout callout--warning".
+   - Tokens are local CSS custom properties so admins can theme one-off
+     elements via inline `style="--ws-info:#abc"` without editing this file.
+   ============================================================================ */
+
+
+/* ─── Local design tokens ──────────────────────────────────────────────── */
+
+.wysiwyg {
+    --ws-info:    #2563eb;
+    --ws-info-bg: #eff6ff;
+    --ws-warn:    #d97706;
+    --ws-warn-bg: #fffbeb;
+    --ws-ok:      #16a34a;
+    --ws-ok-bg:   #f0fdf4;
+    --ws-bad:     #dc2626;
+    --ws-bad-bg:  #fef2f2;
+    --ws-note:    #6b7280;
+    --ws-note-bg: #f9fafb;
+    --ws-text:    #1f2937;
+    --ws-muted:   #6b7280;
+    --ws-rule:    #e5e7eb;
+}
+
+
+/* ─── Typography utilities ─────────────────────────────────────────────── */
+
+.wysiwyg .lead {
+    font-size: 1.15em;
+    line-height: 1.7;
+    color: var(--ws-text);
+    margin: 0 0 18px;
+}
+.wysiwyg .muted   { color: var(--ws-muted); }
+.wysiwyg .small   { font-size: 0.85em; }
+.wysiwyg .x-large { font-size: 1.5em;  line-height: 1.4; }
+
+
+/* ─── Links ────────────────────────────────────────────────────────────── */
+
+/* Subtle underline by default (de-emphasizes link visual until hover), then
+   stronger color + thicker underline on hover. Visited stays the same color
+   to keep editorial uniformity (visited purple looks dated in content). */
+.wysiwyg a {
+    color: #2d89cd;
+    text-decoration: underline;
+    text-decoration-color: rgba(45, 137, 205, 0.4);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: color 0.12s ease, text-decoration-color 0.12s ease, text-decoration-thickness 0.12s ease;
+}
+.wysiwyg a:visited {
+    color: #2d89cd;
+}
+.wysiwyg a:hover {
+    color: #1f6eaf;
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 2px;
+}
+.wysiwyg a:focus-visible {
+    outline: 2px solid #2d89cd;
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+/* External link cue — a small ↗ glyph after links that open in a new tab. */
+.wysiwyg a[target="_blank"]::after {
+    content: '\2197'; /* ↗ */
+    font-size: 0.75em;
+    margin-inline-start: 2px;
+    opacity: 0.6;
+    vertical-align: 0.15em;
+}
+/* CTA buttons opt out of link underline / external glyph — they use their
+   own visual styling defined further down in this file. */
+.wysiwyg a.btn-cta,
+.wysiwyg a.btn-cta--primary {
+    text-decoration: none;
+}
+.wysiwyg a.btn-cta::after,
+.wysiwyg a.btn-cta--primary::after {
+    content: none;
+}
+
+
+/* ─── Headings ─────────────────────────────────────────────────────────── */
+
+/* Eyebrow — small uppercase label sitting above a heading. */
+.wysiwyg .heading-eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ws-muted);
+    margin: 0 0 4px;
+}
+
+/* Section banner — full-width gradient card. Drop-in replacement for the
+   legacy .sectionTitle, slightly more refined typography. */
+.wysiwyg .heading-section {
+    display: block;
+    clear: both;
+    background: linear-gradient(135deg, #2c3e50 0%, #4a5568 100%);
+    color: #fff;
+    padding: 14px 22px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 22px 0 14px;
+    line-height: 1.4;
+}
+
+/* Sub-heading — colored bar on the start edge. Direction-aware. */
+.wysiwyg .heading-sub {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ws-text);
+    border-inline-start: 4px solid var(--ws-info);
+    padding-inline-start: 12px;
+    margin: 18px 0 8px;
+    line-height: 1.5;
+}
+
+
+/* ─── Lists ────────────────────────────────────────────────────────────── */
+
+/* Checklist — replace bullets with green checkmarks. */
+.wysiwyg ul.checklist {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+}
+.wysiwyg ul.checklist > li {
+    position: relative;
+    padding-inline-start: 28px;
+    margin: 6px 0;
+    line-height: 1.7;
+}
+.wysiwyg ul.checklist > li::before {
+    content: '✓';
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0;
+    width: 20px;
+    text-align: center;
+    color: var(--ws-ok);
+    font-weight: 700;
+}
+
+/* Numbered circles — for ordered lists where the number deserves emphasis. */
+.wysiwyg ol.numbered-circles {
+    list-style: none;
+    padding: 0;
+    counter-reset: nc;
+    margin: 16px 0;
+}
+.wysiwyg ol.numbered-circles > li {
+    position: relative;
+    padding-inline-start: 46px;
+    margin: 14px 0;
+    counter-increment: nc;
+    line-height: 1.7;
+    min-height: 32px;
+}
+.wysiwyg ol.numbered-circles > li::before {
+    content: counter(nc);
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--ws-info);
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* ─── Callouts (info / warning / success / danger / note) ──────────────── */
+
+/* Base — pick this alongside a modifier:
+   <div class="callout callout--warning">…</div>
+   First child's top margin and last child's bottom margin are zeroed so
+   <p>-only contents don't double-pad. Optional .callout-title for a label. */
+.wysiwyg .callout {
+    border-inline-start: 4px solid var(--ws-note);
+    background: var(--ws-note-bg);
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin: 16px 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ws-text);
+}
+.wysiwyg .callout > :first-child { margin-top: 0; }
+.wysiwyg .callout > :last-child  { margin-bottom: 0; }
+
+.wysiwyg .callout-title {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.wysiwyg .callout--info    { border-color: var(--ws-info); background: var(--ws-info-bg); }
+.wysiwyg .callout--warning { border-color: var(--ws-warn); background: var(--ws-warn-bg); }
+.wysiwyg .callout--success { border-color: var(--ws-ok);   background: var(--ws-ok-bg);   }
+.wysiwyg .callout--danger  { border-color: var(--ws-bad);  background: var(--ws-bad-bg);  }
+.wysiwyg .callout--note    { border-color: var(--ws-note); background: var(--ws-note-bg); }
+
+
+/* ─── Pull quote — large centered quotation ────────────────────────────── */
+
+.wysiwyg .pull-quote {
+    font-size: 1.35em;
+    line-height: 1.55;
+    font-weight: 600;
+    text-align: center;
+    color: var(--ws-text);
+    margin: 32px auto;
+    padding: 24px 40px;
+    max-width: 720px;
+    border-block: 2px solid var(--ws-rule);
+    quotes: '"' '"' "'" "'";
+}
+.wysiwyg .pull-quote::before { content: open-quote;  color: var(--ws-info); margin-inline-end:   4px; }
+.wysiwyg .pull-quote::after  { content: close-quote; color: var(--ws-info); margin-inline-start: 4px; }
+
+.wysiwyg .pull-quote-cite {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.7em;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ws-muted);
+}
+
+
+/* ─── Stat card — big number + label ───────────────────────────────────── */
+
+/* Use individually or in a grid:
+   <div class="stat-grid"><div class="stat-card">…</div>…</div> */
+.wysiwyg .stat-card {
+    display: inline-block;
+    text-align: center;
+    padding: 18px 24px;
+    background: linear-gradient(135deg, #f9fafb, #f3f4f6);
+    border: 1px solid var(--ws-rule);
+    border-radius: 12px;
+    margin: 8px;
+    min-width: 140px;
+    vertical-align: top;
+}
+.wysiwyg .stat-card__value {
+    display: block;
+    font-size: 2em;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--ws-text);
+}
+.wysiwyg .stat-card__label {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.8em;
+    color: var(--ws-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.wysiwyg .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin: 18px 0;
+}
+.wysiwyg .stat-grid .stat-card { display: block; margin: 0; min-width: 0; }
+
+
+/* ─── Figure — image with caption ──────────────────────────────────────── */
+
+.wysiwyg figure.img-caption {
+    margin: 22px auto;
+    text-align: center;
+}
+.wysiwyg figure.img-caption img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto;
+}
+.wysiwyg figure.img-caption figcaption {
+    margin-top: 8px;
+    font-size: 0.85em;
+    color: var(--ws-muted);
+    font-style: italic;
+}
+
+
+/* ─── Two-column layout (stacks on narrow viewports) ───────────────────── */
+
+.wysiwyg .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 16px 0;
+}
+@media (max-width: 600px) {
+    .wysiwyg .two-col { grid-template-columns: 1fr; gap: 16px; }
+}
+
+
+/* ─── Side-floated half-width blocks ───────────────────────────────────── */
+
+/* Half-width blocks that text flows around. Useful for asides, sidebars,
+   definition cards, or composing with .callout (e.g. <div class="block-right
+   callout callout--info">). Direction is intentional — NOT logical-inline —
+   so .block-right always floats visually right in both AR and EN. Stacks
+   full-width below 600px so mobile reading isn't cramped. */
+.wysiwyg .block-right,
+.wysiwyg .block-left {
+    max-width: 45%;
+    box-sizing: border-box;
+}
+.wysiwyg .block-right {
+    float: right;
+    margin: 8px 0 16px 20px;
+}
+.wysiwyg .block-left {
+    float: left;
+    margin: 8px 20px 16px 0;
+}
+@media (max-width: 600px) {
+    .wysiwyg .block-right,
+    .wysiwyg .block-left {
+        float: none;
+        max-width: 100%;
+        margin: 16px 0;
+    }
+}
+/* Drop <div class="clear-floats"></div> inline to break out of a float
+   row before continuing with full-width content. */
+.wysiwyg .clear-floats { clear: both; height: 0; }
+
+/* Shrink-to-content block — useful for tags, badges, callouts, or any
+   element you want sized to its content rather than filling 100% of the
+   parent. The "table" name is the CSS keyword, not an HTML <table>. */
+.wysiwyg .as-table { display: table; }
+
+
+/* ─── Dividers ─────────────────────────────────────────────────────────── */
+
+.wysiwyg .divider {
+    border: none;
+    border-top: 1px solid var(--ws-rule);
+    margin: 28px 0;
+}
+.wysiwyg .divider-ornate {
+    border: none;
+    margin: 32px 0;
+    text-align: center;
+    overflow: visible;
+    height: 0;
+    line-height: 0;
+}
+.wysiwyg .divider-ornate::before {
+    content: '✦';
+    color: var(--ws-rule);
+    font-size: 16px;
+    background: #fff;
+    padding: 0 12px;
+}
+
+
+/* ─── Tables (pick one of -clean / -striped / -bordered) ───────────────── */
+
+.wysiwyg table.table-clean,
+.wysiwyg table.table-striped,
+.wysiwyg table.table-bordered {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+}
+.wysiwyg table.table-clean th,
+.wysiwyg table.table-clean td,
+.wysiwyg table.table-striped th,
+.wysiwyg table.table-striped td {
+    padding: 10px 12px;
+    text-align: start;
+}
+.wysiwyg table.table-clean th,
+.wysiwyg table.table-striped th {
+    border-bottom: 2px solid var(--ws-rule);
+    font-weight: 700;
+}
+.wysiwyg table.table-clean tbody td {
+    border-bottom: 1px solid var(--ws-rule);
+}
+.wysiwyg table.table-striped tbody tr:nth-child(odd) td {
+    background: #f9fafb;
+}
+.wysiwyg table.table-bordered th,
+.wysiwyg table.table-bordered td {
+    border: 1px solid var(--ws-rule);
+    padding: 10px 12px;
+    text-align: start;
+}
+.wysiwyg table.table-bordered th {
+    background: #f3f4f6;
+    font-weight: 700;
+}
+
+
+/* ─── Inline marks ─────────────────────────────────────────────────────── */
+
+.wysiwyg .highlight {
+    background: #fef3c7;
+    padding: 1px 4px;
+    border-radius: 3px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+}
+.wysiwyg .code-inline {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: #f3f4f6;
+    border: 1px solid var(--ws-rule);
+    color: #4b5563;
+    padding: 1px 6px;
+    border-radius: 4px;
+    direction: ltr;
+    unicode-bidi: isolate;
+}
+.wysiwyg .kbd {
+    display: inline-block;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 0.8em;
+    padding: 2px 6px;
+    background: #fff;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    direction: ltr;
+    unicode-bidi: isolate;
+}
+.wysiwyg .badge-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--ws-info-bg);
+    color: var(--ws-info);
+    border-radius: 999px;
+    font-size: 0.8em;
+    font-weight: 600;
+    line-height: 1.6;
+}
+
+
+/* ─── CTA buttons (links styled as buttons) ────────────────────────────── */
+
+.wysiwyg .btn-cta,
+.wysiwyg .btn-cta--primary {
+    display: inline-block;
+    padding: 10px 22px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background 0.15s ease, transform 0.05s ease;
+}
+.wysiwyg .btn-cta {
+    background: #f3f4f6;
+    color: var(--ws-text);
+    border: 1px solid var(--ws-rule);
+}
+.wysiwyg .btn-cta:hover         { background: #e5e7eb; }
+.wysiwyg .btn-cta--primary      { background: var(--ws-info); color: #fff; }
+.wysiwyg .btn-cta--primary:hover{ background: #1d4ed8; }
+.wysiwyg .btn-cta:active,
+.wysiwyg .btn-cta--primary:active { transform: translateY(1px); }

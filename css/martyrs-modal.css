@@ -1,0 +1,478 @@
+@charset "UTF-8";
+/* =========================================================================
+   martPage3 — martyr-detail modal (white card, photo LEFT with diagonal
+   mask, content RIGHT). Extracted from css/style-black.css 2026-04-25
+   (Pass 1).
+
+   Used on every public page that opens a martyr modal — pages/martyrs.php
+   inflates the modal via api/martyrs.php which loads the 'martPage3'
+   template. The legacy older modal styling (.martInfo, .martMmodalBody*)
+   stays in style-black.css for now — it has no clear feature boundary
+   and is part of the deferred Pass 2 (legacy bulk dissection).
+
+   Mobile @media (max-width:600px) co-located inline.
+   ========================================================================= */
+
+/* ══════════════════════════════════════════════════
+   martPage3 — White card: photo LEFT (diagonal mask), content RIGHT
+══════════════════════════════════════════════════ */
+.martModal3 {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 0 3rem #000;
+    display: flex;
+    flex-direction: row-reverse;
+    position: relative;
+    width: 90vw;
+    height: 90vh;
+    overflow: hidden;
+}
+.martModal3 .cardClose {
+    position: absolute;
+    top: 12px; left: 12px;
+    z-index: 30;
+    width: 30px; height: 30px;
+    background: #fff;
+    border: none; /* a11y: was <span>, now <button> — strip default UA border */
+    padding: 0;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; color: #64748b;
+    box-shadow: 0 2px 8px #0004;
+    cursor: pointer;
+    transition: color 0.15s;
+}
+.martModal3 .cardClose:hover { color: #0f172a; }
+.martModal3 .cardClose:focus-visible { outline: 2px solid #ffa929; outline-offset: 2px; }
+
+/* ─── ⋮ Dropdown menu (inline with martName, space-between) ──────────── */
+/* The name + menu trigger share a flex row so the button anchors to the
+   inline-end of the row regardless of name length. The row is the
+   positioned ancestor for the dropdown so the menu drops directly below
+   the ⋮ button rather than the whole name block's corner. */
+.martModal3 .martNameRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    position: relative;
+}
+.martModal3 .mart-menu-btn {
+    flex: 0 0 auto;
+    width: 32px; height: 32px;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    color: #374151;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s, color .15s, border-color .15s;
+}
+.martModal3 .mart-menu-btn:hover {
+    background: #e5e7eb;
+    border-color: #d1d5db;
+    color: #111;
+}
+.martModal3 .mart-menu-btn[aria-expanded="true"] {
+    background: #e0e7ff;
+    border-color: #c7d2fe;
+    color: #1e3a8a;
+}
+.martModal3 .mart-menu-btn:focus-visible { outline: 2px solid #93c5fd; outline-offset: 2px; }
+
+.martModal3 .mart-menu {
+    position: absolute;
+    top: 100%;            /* immediately below the row */
+    inset-inline-end: 0;  /* aligned to the button's edge */
+    margin-top: 4px;
+    min-width: 200px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, .14);
+    padding: 4px;
+    z-index: 25;
+}
+.martModal3 .mart-menu[hidden] { display: none; }
+.martModal3 .mart-menu-item {
+    display: flex; align-items: center; gap: 8px;
+    width: 100%;
+    padding: 8px 12px;
+    background: none;
+    border: 0;
+    color: #1f2937;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: 6px;
+    text-align: start;
+}
+.martModal3 .mart-menu-item:hover { background: #f3f4f6; }
+.martModal3 .mart-menu-item i { width: 16px; text-align: center; color: #6b7280; }
+.martModal3 .mart-menu hr {
+    border: 0;
+    border-top: 1px solid #f3f4f6;
+    margin: 4px 0;
+}
+
+/* Photo wrapper — carries sizing, z-index and drop-shadow */
+.martModal3 .martPhotoWrap {
+    flex: 0 0 50%;
+    max-width: 800px;
+    align-self: stretch;
+    position: relative;
+    order: 1;
+    z-index: 7;
+    filter: drop-shadow(6px 0 16px rgba(0,0,0,0.28));
+}
+/* Photo inner — carries the clip-path (separate from filter so shadow isn't clipped) */
+.martModal3 .martPhotoCol {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: top center;
+    background-repeat: no-repeat;
+    clip-path: ellipse(95% 100% at 0% 50%);
+}
+[dir="ltr"] .martModal3 .martPhotoCol {
+    clip-path: ellipse(95% 100% at 100% 50%);
+}
+.martModal3 .martPhotoSpacer { display: none; }
+.martModal3 .martPhotoFade   { display: none; }
+.martModal3 .martNameFloat   { display: none; }
+
+/* Content — right side */
+.martModal3 .martContent {
+    flex: 1;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* overflow: hidden — children (.martStoryWrap, .m-tributes) carry
+       their own scroll surfaces so the modal can split the middle space
+       between story and tributes without one bleeding out of the modal
+       box. The mobile media queries below restore overflow:visible on
+       narrow screens where the whole modal scrolls with the page. */
+    overflow: hidden;
+    order: 2;
+    z-index: 5;
+}
+.martModal3 .martNameBlock {
+    padding-block: 28px 18px;
+    padding-inline: 20px 5px;
+    border-bottom: 1px solid #f1f5f9;
+    flex-shrink: 0;
+}
+.martModal3 .martPrefix {
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+}
+.martModal3 .martName {
+    font-size: 26px;
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+}
+.martModal3 .martName .verified { width: 18px; margin-inline-start: 6px; vertical-align: middle; }
+.martModal3 .martPills { display: flex; flex-wrap: wrap; gap: 4px; }
+.martModal3 .mart-pill {
+    position: relative;
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: normal;
+    padding: 3px 10px; border-radius: 20px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #334155;
+    cursor: default;
+    transition: filter 0.15s;
+}
+.martModal3 .mart-pill:hover { filter: brightness(0.94); }
+.martModal3 .mart-pill::before {
+    content: attr(data-label);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    right: 50%; transform: translateX(50%);
+    background: #1e293b; color: #f8fafc;
+    font-size: 10px; font-weight: 600;
+    padding: 3px 9px; border-radius: 6px;
+    white-space: nowrap; pointer-events: none;
+    opacity: 0; transition: opacity 0.15s;
+    z-index: 100;
+}
+.martModal3 .mart-pill::after {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 2px);
+    right: 50%; transform: translateX(50%);
+    border: 4px solid transparent;
+    border-top-color: #1e293b;
+    pointer-events: none;
+    opacity: 0; transition: opacity 0.15s;
+    z-index: 100;
+}
+.martModal3 .mart-pill:hover::before,
+.martModal3 .mart-pill:hover::after { opacity: 1; }
+.martModal3 .mart-pill--settlers {
+    background: #fff1f2;
+    border-color: #fecdd3;
+    color: #be123c;
+}
+.martModal3 .mart-pill--held {
+    background: #fefce8;
+    border-color: #fde68a;
+    color: #854d0e;
+}
+.martModal3 .martStory {
+    padding-block: 18px;
+    padding-inline: 24px 10px;
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.85;
+    flex: 1;
+    overflow-y: auto;
+    border-bottom: 1px solid #f1f5f9;
+    text-align: justify;
+}
+/* Vertical rhythm between story paragraphs — handles BOTH formats:
+   - Legacy plain-text stories → nl2br → adjacent <br /> tags.
+   - TinyMCE-saved stories     → adjacent <p>...</p> blocks.
+   Make every <br> emit visible space, and pad every <p> the same amount
+   so both formats look identical visually. */
+.martModal3 .martStory br {
+    display: block;
+    margin-top: 14px;
+    line-height: 0;     /* the <br> itself contributes no line height */
+}
+.martModal3 .martStory p {
+    margin: 0 0 14px;
+}
+.martModal3 .martStory p:last-child {
+    margin-bottom: 0;
+}
+/* Lighter scrollbar across every scroll surface inside the modal
+   (.martContent, .martStory, .martStoryWrap on mobile). Firefox/standard
+   first, WebKit override below. */
+.martModal3 .martContent,
+.martModal3 .martStory,
+.martModal3 .martStoryWrap {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(15,23,42,0.18) transparent;
+}
+.martModal3 .martContent::-webkit-scrollbar,
+.martModal3 .martStory::-webkit-scrollbar,
+.martModal3 .martStoryWrap::-webkit-scrollbar {
+    width: 8px;
+}
+.martModal3 .martContent::-webkit-scrollbar-track,
+.martModal3 .martStory::-webkit-scrollbar-track,
+.martModal3 .martStoryWrap::-webkit-scrollbar-track {
+    background: transparent;
+}
+.martModal3 .martContent::-webkit-scrollbar-thumb,
+.martModal3 .martStory::-webkit-scrollbar-thumb,
+.martModal3 .martStoryWrap::-webkit-scrollbar-thumb {
+    background: rgba(15,23,42,0.18);
+    border-radius: 4px;
+}
+.martModal3 .martContent::-webkit-scrollbar-thumb:hover,
+.martModal3 .martStory::-webkit-scrollbar-thumb:hover,
+.martModal3 .martStoryWrap::-webkit-scrollbar-thumb:hover {
+    background: rgba(15,23,42,0.32);
+}
+/* Embedded media — iframes default to display:inline, so the width="100%"
+   attr renders against the inline-context width (tiny). Force block + full
+   width + 16:9 aspect so YouTube/Telegram embeds use the full story column.
+   Generous top margin + a soft divider sit the embed as a clearly separate
+   block, so the (short) last text line reads as naturally ended — not as a
+   ragged orphan interrupted mid-thought. */
+.martModal3 .martStory iframe {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    margin-block: 24px 14px;
+    border: 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+}
+.martModal3 .martFooterWrap {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+.martModal3 .martFooter {
+    padding: 8px 24px;
+    display: flex; gap: 8px; flex-wrap: wrap;
+    background: #e7e7e7;
+    align-items: center;
+    border-radius: 0 0 20px 20px;
+}
+.martModal3 .martShareUrlRow {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 16px;
+    background: #f1f5f9;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 12px;
+    direction: ltr !important;
+    flex-direction: row !important;
+}
+[dir="rtl"] .martModal3 .martShareUrlRow {
+    flex-direction: row-reverse !important;
+}
+.martModal3 .mart-share-label {
+    color: #64748b;
+    flex-shrink: 0;
+    /* Label text direction follows page locale (Arabic word reads RTL inside
+       the LTR row). */
+    direction: rtl;
+}
+[dir="ltr"] .martModal3 .mart-share-label { direction: ltr; }
+.martModal3 .mart-share-link {
+    width: 285px;
+    flex-shrink: 0;
+    color: #334155;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 10px;
+    background: #fff;
+    padding: 4px 6px;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+    user-select: all;
+}
+.martModal3 .mart-share-copy {
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    padding: 3px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.martModal3 .mart-share-copy:hover { background: #f8fafc; color: #1e293b; }
+.martModal3 .mart-share-copy.copied {
+    background: #dcfce7;
+    color: #166534;
+    border-color: #86efac;
+}
+.martModal3 .martStoryWrap {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 0;
+}
+.martModal3 .martStoryWrap > .martStory {
+    /* Story already had `flex: 1; overflow-y: auto` for its old role as
+       the single middle scroller. Inside the flex-column wrap above
+       that still works — it expands to fill the wrap and scrolls
+       internally. */
+    padding-bottom: 24px;
+}
+.martModal3 .mart-btn {
+    font-size: 10px; padding: 7px 14px;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    color: #374151; cursor: pointer;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 5px;
+    transition: background 0.15s;
+}
+.martModal3 .mart-btn:hover { background: #f1f5f9; color: #0f172a; }
+
+/* Source-link buttons immediately under the martyr's story. The wrap
+   itself flex-aligns to the inline-end (visually = left in RTL, right
+   in LTR) and breaks to multiple rows when there are many URLs. */
+.martModal3 .martStoryUrls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: flex-end;
+    margin-block: 10px 0;
+    padding: 0 10px;
+}
+.martModal3 .martStoryUrls:empty { display: none; }
+
+/* Mobile */
+@media (max-width: 600px) {
+    .martModal3 {
+        flex-direction: column;
+        width: 96%; min-height: unset; border-radius: 16px;
+    }
+    .martModal3 .martContent { margin: -40% 0 0; z-index: 5; }
+    .martModal3 .martFooterWrap { position: static; }
+    .martModal3 .martFooter  { flex-wrap: nowrap; width: 100%; padding: 12px 18px; }
+    .martModal3 .martStoryWrap { padding-bottom: 0; min-height: unset; }
+    .martModal3 .martPhotoWrap { filter: none; z-index: 4; }
+    .martModal3 .martPhotoCol {
+        position: relative;
+        inset: unset;
+        width: 100%;
+        height: 100%;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%) !important;
+    }
+    .martModal3 .martPhotoSpacer {
+        display: block;
+        padding-top: 125%;
+        direction: ltr;
+    }
+    .martModal3 .martPhotoFade {
+        display: block;
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, transparent 35%, rgba(255,255,255,0.55) 55%, #fff 72%);
+    }
+    .martModal3 .martNameFloat { display: none; }
+    .martModal3 .martMobilePills {
+        display: flex !important; flex-wrap: wrap; gap: 8px;
+        padding: 14px 18px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .martModal3 .martStory { flex: none; padding: 14px 18px; }
+    .martStoryWrap {
+        /* height: 280px; */
+        overflow: auto;
+        /* padding-bottom: 60px; */
+    }
+}
+
+/* Phone-narrow: let the modal scroll with the page (not its own internal box).
+   Fixed-position + flex-center pinned the user inside a viewport-tall card
+   and broke vertical scroll on tiny screens. */
+@media (max-width: 680px) {
+    .martModal3 {
+        overflow: visible;
+        position: absolute;
+        top: 60px;
+        max-height: unset;
+        justify-content: flex-start;
+    }
+    .martModal3 .martContent {
+        overflow: visible;
+        background: white;
+        max-width: 100%;
+    }
+    .martStoryWrap           { overflow: visible; }
+    .martModal3 .mart-share-link {
+        max-width: calc(100% - 110px);
+        width: unset;
+    }
+}

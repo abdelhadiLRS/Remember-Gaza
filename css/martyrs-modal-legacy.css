@@ -1,0 +1,289 @@
+@charset "UTF-8";
+/* =========================================================================
+   Legacy martyr modal — extracted from css/style-black.css 2026-04-25
+   (Pass 2). The .martModal / .fullOverlay / .cardClose cluster.
+
+   Used by templates/martPage2.htm (legacy modal template — pages/
+   martyrs.php opens this via `new Page("modal")` for some martyr
+   detail flows). Sibling of the newer martPage3 (.martModal3) which
+   already lives in css/martyrs-modal.css. Both modal patterns coexist
+   in the codebase; class names don't overlap so cascade order between
+   the two files is irrelevant.
+
+   Mobile @media (max-width:600px) co-located inline at the bottom.
+   ========================================================================= */
+
+.fullOverlay
+{
+	display: none;
+	z-index: 0;
+	z-index: 1021 !important;
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	left: 0;
+	top: 0;
+	background: rgb(0 0 0 / 70%);
+	justify-content: center;
+	align-items: center;
+}
+.martModal {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 0 3rem #000;
+    display: flex;
+    flex-direction: row;
+    /* direction: rtl moved to [dir="rtl"] scoping */
+    position: relative;
+    width: 80%;
+    max-width: 1100px;
+    min-height: 75vh;
+    max-height: 90vh;
+    overflow: hidden;
+}
+[dir="rtl"] .martModal {
+    direction: rtl;
+}
+
+/* ── Close button ── */
+.cardClose {
+    position: absolute;
+    top: 12px; left: 12px;
+    z-index: 30;
+    width: 30px; height: 30px;
+    background: #fff;
+    border: none; /* a11y: span→button conversion in martPage3.htm */
+    padding: 0;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: #64748b;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    cursor: pointer;
+    line-height: 1;
+}
+.cardClose:hover { color: #0f172a; }
+.cardClose:focus-visible { outline: 2px solid #ffa929; outline-offset: 2px; }
+
+/* ── Content column (left on desktop) ── */
+.martContent {
+    max-width: 500px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    order: 1;
+    flex-shrink: 0;
+}
+
+/* ── Name block ── */
+.martNameBlock {
+    padding: 24px 24px 18px;
+    border-bottom: 1px solid #f1f5f9;
+    flex-shrink: 0;
+}
+.martPrefix {
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+}
+.martName {
+    font-size: 26px;
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 1.2;
+    margin-bottom: 16px;
+}
+
+/* ── Pills ── */
+.martPills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.mart-pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 13px;
+    border-radius: 20px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #334155;
+    cursor: default;
+    user-select: none;
+    transition: filter 0.15s;
+}
+.mart-pill:hover { filter: brightness(0.93); }
+/* tooltip above on hover */
+.mart-pill::before {
+    content: attr(data-label);
+    position: absolute;
+    bottom: calc(100% + 7px);
+    right: 50%;
+    transform: translateX(50%);
+    background: #1e293b;
+    color: #f8fafc;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    letter-spacing: 0.3px;
+    z-index: 200;
+}
+.mart-pill::after {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 3px);
+    right: 50%;
+    transform: translateX(50%);
+    border: 4px solid transparent;
+    border-top-color: #1e293b;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 200;
+}
+.mart-pill:hover::before,
+.mart-pill:hover::after { opacity: 1; }
+/* settlers pill */
+.mart-pill--settlers {
+    background: #fff1f2;
+    border-color: #fecdd3;
+    color: #be123c;
+}
+/* held body pill */
+.mart-pill--held {
+    background: #fefce8;
+    border-color: #fde047;
+    color: #854d0e;
+}
+
+/* ── Story ── */
+.martStoryWrap {
+    overflow: auto;
+}
+.martStory {
+    padding: 18px 24px;
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.85;
+    flex: 1;
+    overflow-y: auto;
+    border-bottom: 1px solid #f1f5f9;
+    text-align: justify;
+}
+
+/* ── Footer ── */
+.martFooter {
+    padding: 12px 24px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: #fafafa;
+    flex-shrink: 0;
+    align-items: center;
+}
+.mart-btn {
+    font-size: 12px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    color: #374151;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.mart-btn:hover { background: #f1f5f9; color: #0f172a; }
+
+
+
+/* ── Photo column (right on desktop) ── */
+.martPhotoCol {
+    flex: 1;
+    align-self: stretch;
+    position: relative;
+    background-size: cover;
+    background-position: top center;
+    background-repeat: no-repeat;
+    order: 2;
+}
+.martPhotoSpacer { display: none; }
+.martPhotoFade   { display: none; }
+
+/* name float — desktop hidden, mobile shown */
+.martNameFloat { display: none; }
+.martNameFloat .martPrefix { font-size: 11px; color: #6b7280; font-weight: 700; margin-bottom: 2px; }
+.martNameFloat .martName   { font-size: 22px; font-weight: 900; color: #0f172a; line-height: 1.2; }
+
+/* ── Mobile ── */
+@media (max-width: 600px) {
+    .martModal {
+        flex-direction: column;
+        width: 96%;
+        min-height: unset;
+        border-radius: 16px;
+    }
+    .martPhotoCol {
+        flex: none;
+        width: 100%;
+        align-self: auto;
+        order: 1;
+        position: relative;
+    }
+    .martPhotoSpacer {
+        display: block;
+        padding-top: 125%; /* 4:5 */
+    }
+    .martPhotoFade {
+        display: block;
+        position: absolute; inset: 0;
+        background: linear-gradient(to bottom,
+            transparent 35%,
+            rgba(255,255,255,0.55) 55%,
+            #fff 72%
+        );
+    }
+    .martNameFloat {
+        display: block;
+        position: absolute;
+        bottom: 0; right: 0; left: 0;
+        padding: 0 18px 14px;
+    }
+    .martVerified {
+        bottom: auto; left: auto;
+        top: 12px; right: 12px;
+    }
+    .martContent {
+        max-width: 100%;
+        order: 2;
+        overflow-y: auto;
+        flex: 1;
+    }
+    /* mobile meta pills shown separately */
+    .martMobilePills {
+        display: flex !important;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 14px 18px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .martStory {
+        flex: none;
+        overflow-y: visible;
+        padding: 14px 18px;
+    }
+    .martFooter { padding: 12px 18px; }
+}

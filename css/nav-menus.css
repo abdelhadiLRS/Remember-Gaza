@@ -1,0 +1,406 @@
+@charset "UTF-8";
+/* =========================================================================
+   Header + footer navigation menus — extracted from css/style-black.css
+   2026-04-25 (Pass 2).
+
+   .menu / .headMenu (top navbar with hover dropdowns) + .fmenus (footer
+   columns of links). Loaded after the early scattered single-line rules
+   (.MenuArrow / .menuBTN / .logo img / .Header / .navbarLogo) which
+   stayed in style-black.css for now — they're tangled with non-menu
+   utility rules and need a deeper Pass-2 sweep to disentangle.
+
+   Mobile drawer/overlay rules for the menu live in the legacy bulk near
+   the top of style-black.css — those will move here once the legacy bulk
+   is dissected. For now this file holds the desktop menu styling.
+   ========================================================================= */
+
+/*  MENU  */
+
+.menu
+{
+	position: fixed;
+	z-index: 20;
+	top: 0;
+	left: 0;
+	right: 0;
+	text-align: center;
+	background: #0d1117;
+	height: 80px;
+	border-radius: 0;
+	box-shadow: none;
+	transition: top 0.35s ease, left 0.35s ease, right 0.35s ease,
+	            border-radius 0.35s ease, background-color 0.35s ease,
+	            box-shadow 0.35s ease, height 0.35s ease;
+}
+/* Inner wrap — matches Bootstrap .container max-widths so the menu items
+   align with page content. Picks up `.menu` height via height:100%. */
+.menu-inner
+{
+	height: 100%;
+	margin: 0 auto;
+	padding: 0 12px;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	flex-wrap: nowrap;
+	flex-direction: row;
+	width: 100%;
+}
+@media (min-width: 576px)  { .menu-inner { max-width: 540px;  } }
+@media (min-width: 768px)  { .menu-inner { max-width: 720px;  } }
+@media (min-width: 992px)  { .menu-inner { max-width: 960px;  } }
+@media (min-width: 1200px) { .menu-inner { max-width: 1140px; } }
+@media (min-width: 1400px) { .menu-inner { max-width: 80vw;   } }
+
+.menu.floating
+{
+	top: 10px;
+	left: 16px;
+	height: 60px;
+	right: 16px;
+	border-radius: 16px;
+	background: rgba(13, 17, 23, 0.8) !important;
+	backdrop-filter: blur(14px);
+	-webkit-backdrop-filter: blur(14px);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+.menu.floating .headMenu>li>a {
+	height: 60px;
+}
+
+.headMenu {
+  display: inline-flex;
+  text-align: end;
+  text-transform: uppercase;
+  font-weight: bold;
+  padding: 0;
+  margin: 0;
+  transition: height 0.2s linear;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.headMenu *:not(a), .headMenu *:before {
+   -webkit-transition: all 0.3s ease; 
+  transition: all 0.3s ease;
+}
+.headMenu li {
+  display: inline-block;
+  list-style: outside none none;
+  margin: 0;
+  position: relative;
+}
+[dir="rtl"] .headMenu li { float: right; }
+[dir="ltr"] .headMenu li { float: left; font-size: 13px; }
+.headMenu > li {
+  border: none;
+}
+.headMenu > li:first-of-type {
+  border: none;
+}
+.headMenu a {
+  color: #94a3b8;
+  display: flex;
+  padding: 0 10px;
+  position: relative;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  white-space: normal;
+  text-align: center;
+  height: 80px;
+  overflow: hidden;
+  align-content: center;
+  align-items: center;
+  transition: height 0.35s ease;
+  transition: color 0.2s ease;
+  letter-spacing: 0.3px;
+}
+
+.headMenu a:hover {
+  color: #ffffff;
+}
+
+/* "جديد" badge — small inline pill next to a top-nav title to flag
+   newly-launched pages (currently: /volunteer). Pulses gently so it
+   reads as ambient rather than alarming. */
+.headMenu a .nav-new-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #d23a3a, #a02323);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 3px 7px;
+  border-radius: 9px;
+  margin-inline-start: 6px;
+  letter-spacing: .3px;
+  vertical-align: middle;
+  box-shadow: 0 0 0 0 rgba(210, 58, 58, .55);
+  animation: navNewPulse 2.4s ease-in-out infinite;
+}
+@keyframes navNewPulse {
+  0%, 100% { box-shadow: 0 0 0 0   rgba(210, 58, 58, .55); }
+  50%      { box-shadow: 0 0 0 6px rgba(210, 58, 58, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .headMenu a .nav-new-badge { animation: none; }
+}
+.headMenu > li:before,
+.headMenu > li:after {
+  position: absolute;
+  content: '';
+}
+.headMenu li:before {
+  display: none;
+}
+
+.headMenu ul {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: -2px;
+  margin: 0;
+  padding: 6px 0;
+  white-space: nowrap;
+  min-width: 175px;
+  background: #131c2e;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-top: 3px solid #e63946;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  color: #94a3b8;
+  font-weight: 400;
+  z-index: 100;
+}
+.headMenu ul li {
+  display: list-item;
+  float: none;
+  position: relative;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-inline-end: none;
+  border-inline-start: none;
+}
+.headMenu ul li a {
+  display: flex;
+  align-items: center;
+  padding: 9px 18px;
+  color: #94a3b8;
+  text-transform: none;
+  text-align: start;
+  height: auto;
+  min-width: 175px;
+  font-size: 12px;
+  transition: all 0.15s ease;
+  letter-spacing: 0;
+}
+.headMenu ul li a:hover {
+  color: #ffffff;
+  background: rgb(93 153 229 / 18%);
+  padding-inline-start: 22px;
+  cursor: pointer;
+  opacity: 1;
+}
+.headMenu li:hover > ul, .headMenu li.active > ul {
+  display: inherit;
+}
+.headMenu li > a:after {
+  content: ' \f0d7';
+  font-family: "fontawesome";
+  padding-inline-start: 4px;
+  font-size: 10px;
+  opacity: 0.4;
+}
+.headMenu li > a:only-child:after {
+  content: '';
+}
+.headMenu ul ul {
+  background-color: #000000;
+  top: 0px;
+  right: 100%;
+  list-style: none;
+  font-size: 1em;
+}
+.headMenu ul li > a:after {
+  content: '';
+}
+.headMenu > li:hover > a,
+.headMenu > li.current > a {
+  color: #ffffff;
+}
+.headMenu > li:hover:before,.headMenu > li.active:before,.headMenu > li.current:before {
+  opacity: 0;
+}
+.headMenu > li.current > a::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #e63946;
+  border-radius: 2px 2px 0 0;
+}
+
+.wide-map-top.inj {
+    background: #759583;
+    padding: 0;
+}
+.footerMsg {
+    max-width: 350px;
+    text-align: justify;
+    font-size: 12px;
+    color: #ccc;
+    display: block;
+    border-inline-start: 5px solid;
+    padding: 0 10px 0 10px;
+}
+
+.footerLogo {
+    text-align: center;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    align-items: center;
+}
+
+.footerCopyRights {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    padding: 20px 0;
+    border-top: 1px solid #222;
+    max-width: 1000px;
+    margin: 20px auto;
+    color: #FFF;
+}
+.footer-cr-left   { justify-self: start;  }
+.footer-cr-center { justify-self: center; text-align: center; }
+.footer-cr-right  { justify-self: end;    }
+
+.footer-telegram-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; height: 32px;
+    color: #fff;
+    background: transparent;
+    font-size: 22px;
+    text-decoration: none;
+    transition: opacity 0.15s, transform 0.15s;
+}
+.footer-telegram-btn:hover {
+    color: #fff;
+    opacity: 0.75;
+    transform: translateY(-1px);
+}
+
+.footer ul {
+    display: flex;
+    flex-direction: column;
+    width: 230px;
+    gap: 10px;
+    border-inline-end: 1px solid #222;
+    margin: 10px 0 0;
+    padding: 0 20px;
+    list-style: none;
+}
+
+.fmenus {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+}
+
+.fmenus li a:hover {
+    color: white;
+    font-weight: bold;
+}
+
+.fmenus li a:before {
+    content: '\f0d9';
+    font-family: 'FontAwesome';
+    margin-inline-end: 10px;
+}
+[dir="ltr"] .fmenus li a:before { content: '\f0da'; }
+
+/* Tablet-narrow: header above modal stacking + reset alignment. */
+@media screen and (max-width: 768px) {
+    .menu {
+        text-align: unset !important;
+        z-index: 1100 !important;
+    }
+    /* On mobile, the scroll-triggered .floating modifier should NOT give
+       the menu its desktop pill treatment — keep it as a flush full-width
+       opaque top bar, just compacted to 60 px so it doesn't dominate the
+       smaller viewport. */
+    .menu.floating {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        border-radius: 0 !important;
+        background: #0d1117 !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        box-shadow: none !important;
+        height: 60px !important;
+    }
+}
+
+/* =========================================================================
+   Consolidated 2026-05-20 — these rules used to live in style-black.css
+   (lines 581, 591, 3503-3527) and were the leftover scatter from the
+   original Pass-2 extraction. All nav chrome now lives in this file.
+   ========================================================================= */
+
+/* Mobile hamburger toggle — hidden on desktop, shown via the responsive
+   media query inside the nav block above. */
+.menuBTN {
+    display: none;
+}
+
+/* Logo wrapper inside the navbar — sits with z-index above the dropdown
+   menus so the hover flyouts don't paint over the logo. */
+.navbarLogo {
+    z-index: 12;
+    position: relative;
+    display: inline-flex;
+    padding: 0 20px;
+    vertical-align: middle;
+    align-items: center;
+}
+
+/* Backdrop that fades in behind the mobile menu drawer. */
+.mob-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+}
+.mob-overlay.active {
+    display: block;
+}
+
+/* Telegram nav link — slightly dimmed by default, brightens on hover.
+   Targets the social link by URL pattern so it doesn't need a special
+   class on the wpages row. */
+.menu > div > a[href*="t.me"] {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    opacity: 0.75;
+    transition: opacity 0.2s ease;
+}
+.menu > div > a[href*="t.me"]:hover {
+    opacity: 1;
+}

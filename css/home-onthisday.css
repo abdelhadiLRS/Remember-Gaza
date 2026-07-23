@@ -1,0 +1,168 @@
+@charset "UTF-8";
+/* =========================================================================
+   onThisDay (في مثل هذا اليوم) editorial redesign — extracted from
+   css/style-black.css 2026-04-25 (Pass 1).
+
+   Editorial layout for the home-page "on this day" panel:
+   .onThisDayContainer + .otd-col* + .chart-strip + .cwe-cards.
+   Used exclusively by pages/home.php (the body is filled via AJAX from
+   /mSummary?get=onThisDay).
+
+   Mobile @media co-located with desktop rules.
+   ========================================================================= */
+
+/* ═══════════════════════════════════════════════
+   في مثل هذا اليوم — Editorial Redesign
+═══════════════════════════════════════════════ */
+
+.onThisDayContainer {
+    border-radius: 0 0 10px 10px;
+    margin-bottom: 0;
+    display: flex;
+}
+
+.otd-cols {
+    max-width: 400px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+}
+
+.otd-col {
+    padding: 18px 20px;
+    flex: 1;
+}
+
+.otd-col--martyrs {
+    flex: 2;
+    border-inline-start: 1px solid #edf0f5;
+}
+
+
+
+.otd-col-label {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.otd-col-label.martyrs {
+    color: #c0392b;
+    border-bottom: 2px solid #c0392b;
+}
+
+.otd-col-label.left-col {
+    color: #1a5fa0;
+    border-bottom: 2px solid #1a5fa0;
+}
+
+.otd-year-group {
+    margin-bottom: 12px;
+}
+
+.year-tag {
+    display: inline-block;
+    background: #c0392b;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+.otd-entry {
+    font-size: 12px;
+    color: #444;
+    line-height: 1.6;
+    padding-inline-start: 10px;
+    border-inline-start: 2px solid #e8e8e8;
+}
+
+.otd-entry strong { color: #1a2b45; }
+.otd-entry a { color: #1a5fa0; text-decoration: none; }
+.otd-entry a:hover { text-decoration: underline; }
+
+.otd-entry ul {
+    margin-inline-start: 16px;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #666;
+}
+
+/* ── chart strip ── */
+.chart-strip {
+    flex: 1;
+    max-width: calc(100% - 400px);
+    background: #fff;
+    padding: 20px;
+    border-radius: 20px;
+    border-inline-end: 1px solid #edf0f5;
+}
+
+.chart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.chart-heading {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a2b45;
+}
+
+
+
+
+
+.otd-callout.red    { background: #fff0f0; border-color: #e8b4b4; color: #c0392b; font-weight: 700; }
+.otd-callout.orange { background: #fff8f0; border-color: #f5cfa0; color: #e67e22; }
+
+/* ── children / women / elderly summary cards ── */
+.cwe-cards {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0 4px;
+    border-top: 1px solid #edf0f5;
+    margin-top: 16px;
+}
+.cwe-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 18px 12px;
+    border-radius: 10px;
+    border: 1px solid #edf0f5;
+    background: #f9fafb;
+    text-align: center;
+}
+.cwe-num   { font-size: 40px; font-weight: 900; color: #1a2b45; letter-spacing: -1.5px; line-height: 1; }
+.cwe-label { font-size: 12px; color: #666; font-weight: 500; margin-top: 4px; }
+
+.cwe-children { border-color: #fde8e8; background: #fff8f8; }
+.cwe-children .cwe-num { color: #c0392b; }
+.cwe-women   { border-color: #fde8f5; background: #fff8fc; }
+.cwe-women   .cwe-num  { color: #8e44ad; }
+.cwe-elderly { border-color: #e8f0fd; background: #f8fbff; }
+.cwe-elderly .cwe-num  { color: #2471a3; }
+
+/* ── responsive ── */
+@media screen and (max-width: 768px) {
+    .onThisDayContainer { flex-direction: column; }
+    .otd-cols { width: 100%; max-width: 100%; }
+    .chart-strip { max-width: 100%; border-inline-end: none; border-top: 1px solid #edf0f5; }
+    .otd-col--martyrs { border-inline-start: none; border-bottom: 1px solid #edf0f5; }
+    .chart-header { flex-direction: column; align-items: flex-start; }
+    .cwe-cards { flex-direction: column; }
+}
+

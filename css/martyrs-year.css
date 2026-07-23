@@ -1,0 +1,716 @@
+@charset "UTF-8";
+/* =========================================================================
+   /martyrs/year UI styling — extracted from css/style-black.css 2026-04-25
+
+   Three blocks, all scoped to the /martyrs/year listing:
+     1. .filtersPanelArea redesign (sidebar)
+     2. div#pages.simple-pagination.light-theme restyle
+     3. .hdr-year-nav arrow navigation around .hdr-subtitle
+
+   All rules in this file are PURELY ADDITIVE — none modify rules declared
+   earlier in the cascade. They were originally appended to the end of
+   style-black.css; loading this file IMMEDIATELY AFTER style-black.css
+   preserves the original cascade order byte-identically.
+
+   Test extraction (#6 from the deferred-refactors list) — proof that
+   feature-based CSS splitting is safe + tractable on this codebase.
+   ========================================================================= */
+
+/* =========================================================================
+   filtersPanelArea redesign — 2026-04-24
+   Scope: /martyrs/year filter sidebar only. Purely additive (no earlier
+   rule modified), so rolling back = delete everything between these two
+   markers. Functional JS hooks (.cntrlFilters, .filter_block_title,
+   .resetFiltersBtn, .filter_op, #range, .range_picker, .clearSearch,
+   collapsed state, .filter-active state) are all preserved — this only
+   changes look.
+   ========================================================================= */
+.filtersPanelArea {
+    --fp-bg:            linear-gradient(180deg, #f6f8fb 0%, #eaeef5 100%);
+    --fp-border:        #c9d1dc;
+    --fp-shadow:        0 10px 28px rgba(30,41,59,.09), 0 2px 6px rgba(30,41,59,.05);
+    --fp-ink:           #243447;
+    --fp-muted:         #60708a;
+    --fp-accent:        #8e0d25;
+    --fp-accent-soft:   #b7253f;
+    --fp-section-bg:    #ffffff;
+    --fp-section-brd:   #c2c6cb;
+    --fp-hover:         #eff3fb;
+    --fp-header-grad:   linear-gradient(135deg, #1e3a52 0%, #2c4c6d 100%);
+}
+
+.filtersPanelArea .filtersPanel {
+    background: var(--fp-bg);
+    border-radius: 12px;
+    box-shadow: var(--fp-shadow);
+    margin: 0 8px 8px;
+    max-width: 320px;
+}
+.filtersPanelArea .filtersPanelInner {
+    border: 1px solid var(--fp-border);
+    border-radius: 12px;
+}
+
+/* ── sticky header bar ── */
+.filtersPanelArea .filtersTopBar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    margin: 0 0 6px;
+    padding: 0;
+    background: transparent;
+    border-radius: 12px 12px 0 0;
+}
+.filtersPanelArea .filtersPanelBody {
+    padding: 0 5px;
+}
+.filtersPanelArea .cntrlFilters {
+    background: var(--fp-header-grad);
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    font-size: 12.5px;
+    letter-spacing: .3px;
+    padding: 8px 12px;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,.18), 0 2px 6px rgba(30,41,59,.08);
+    cursor: pointer;
+}
+.filtersPanelArea .cntrlFilters > span { flex: 1; }
+.filtersPanelArea .cntrlFilters:before,
+.filtersPanelArea .cntrlFilters:after {
+    float: none !important;
+    margin: 0;
+    opacity: .9;
+    font-size: 13px;
+}
+.filtersPanelArea .cntrlFilters:after { order: 0; font-size: 15px; }
+.filtersPanelArea .cntrlFilters:before { order: 3; }
+
+/* ── reset button ── */
+.filtersPanelArea .resetFiltersBtn {
+    float: none !important;
+    order: 2;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 6px;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .15s, transform .25s ease, color .15s, box-shadow .15s;
+}
+.filtersPanelArea .resetFiltersBtn:hover {
+    background: rgba(255,255,255,.28);
+    transform: rotate(-60deg);
+}
+.filtersPanelArea .resetFiltersBtn.filter-active {
+    background: #e04b62;
+    border-color: #e04b62;
+    box-shadow: 0 0 0 3px rgba(224,75,98,.22);
+    color: #fff;
+}
+.filtersPanelArea .resetFiltersBtn .fa-undo {
+    padding-top: 0;
+    display: inline;
+    font-size: 12px;
+}
+
+/* ── "period" label + year select ── */
+.filtersPanelArea > .filtersPanel > div:nth-of-type(1) {
+    /* the bare "الفترة الزمنية" text node */
+    font-size: 10px;
+    color: var(--fp-muted);
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    padding: 0 2px;
+    margin: 0;
+}
+.filtersPanelArea #range {
+    width: 100% !important;
+    margin: 2px 0 0 !important;
+    padding: 5px 8px !important;
+    border-radius: 6px !important;
+    border: 1px solid var(--fp-border) !important;
+    background: #fff;
+    font-size: 14px;
+    color: var(--fp-ink);
+    cursor: pointer;
+    transition: border-color .15s, box-shadow .15s;
+}
+.filtersPanelArea #range:hover,
+.filtersPanelArea #range:focus {
+    border-color: var(--fp-accent-soft) !important;
+    box-shadow: 0 0 0 3px rgba(183,37,63,.13);
+    outline: none;
+}
+
+/* ── custom date range buttons ──
+   No display override — slideUp/slideDown in martyersjs.js sets inline
+   display, and the initial `style="display:none;"` must win at load. */
+.filtersPanelArea .range_picker {
+    padding: 4px 0 0;
+    text-align: center;
+    font-size: 0; /* remove whitespace between inline-block buttons */
+}
+.filtersPanelArea .range_picker button {
+    display: inline-block;
+    width: calc(50% - 3px);
+    margin: 0 !important;
+    padding: 4px 8px;
+    background: #fff7dc;
+    border: 1px solid #e4c97a;
+    border-radius: 5px;
+    color: #7a5500;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .12s, border-color .12s;
+    vertical-align: top;
+}
+.filtersPanelArea .range_picker button + button { margin-inline-start: 6px !important; }
+.filtersPanelArea .range_picker button:hover {
+    background: #ffedb0;
+    border-color: #caa748;
+}
+
+/* ── name search ── */
+.filtersPanelArea .m_name_field_form .filter_block { padding-bottom: 6px; }
+.filtersPanelArea .m_name_field_form .input-group {
+    margin-top: 2px;
+    position: relative;
+}
+.filtersPanelArea #martyerName {
+    border-radius: 6px;
+    border: 1px solid var(--fp-border);
+    padding: 5px 10px;
+    font-size: 12px;
+    background: #fff;
+    transition: border-color .15s, box-shadow .15s;
+}
+.filtersPanelArea #martyerName:focus {
+    border-color: var(--fp-accent-soft);
+    box-shadow: 0 0 0 3px rgba(183,37,63,.13);
+    outline: none;
+}
+.filtersPanelArea .clearSearch {
+    top: 2px !important;
+    color: var(--fp-muted);
+    transition: color .12s;
+}
+.filtersPanelArea .clearSearch:hover { color: var(--fp-accent); }
+
+/* ── filter sections (cards) ── */
+.filtersPanelArea .filter_block {
+    padding: 0;
+    margin: 4px 0 0;
+    background: var(--fp-section-bg);
+    border: 1px solid var(--fp-section-brd);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color .15s, box-shadow .15s;
+}
+.filtersPanelArea .filter_block:hover {
+    border-color: #b6c0cf;
+    box-shadow: 0 2px 10px rgba(30,41,59,.06);
+}
+
+.filtersPanelArea .filter_block_title {
+    background: linear-gradient(180deg, #738aa136 0%, #61778d0f 100%);
+    color: var(--fp-ink);
+    padding: 5px 10px;
+    margin: 0;
+    border-radius: 0;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--fp-section-brd);
+    text-align: start;
+    user-select: none;
+    line-height: 1.5;
+    display: block;
+}
+.filtersPanelArea .filter_block_title:hover {
+    background: linear-gradient(180deg, #738aa154 0%, #61778d1f 100%);
+}
+.filtersPanelArea .filter_block_title:before {
+    color: var(--fp-accent);
+    font-size: 10px;
+    transition: transform .2s ease;
+    line-height: inherit;
+}
+/* chevron floats to the end side (left in RTL, right in LTR) */
+[dir="rtl"] .filtersPanelArea .filter_block_title:before { float: left; }
+[dir="ltr"] .filtersPanelArea .filter_block_title:before { float: right; }
+.filtersPanelArea .filter_block_title.collapsed {
+    border-bottom-color: transparent;
+}
+.filtersPanelArea .filter_block_title.collapsed:before {
+    transform: rotate(-90deg);
+}
+
+.filtersPanelArea .filter_block_body {
+    padding: 4px 4px 5px;
+}
+.filtersPanelArea .filter_block_options {
+    gap: 0;
+}
+
+/* ── individual options ── */
+.filtersPanelArea .filter_op {
+    width: 50%;
+    padding: 0 3px;
+    border-radius: 4px;
+    align-items: center;
+    transition: background .12s;
+}
+.filtersPanelArea .filter_op:hover {
+    background: var(--fp-hover);
+}
+.filtersPanelArea .filter_op label {
+    font-size: 11px;
+    color: var(--fp-ink);
+    line-height: 1.15;
+    padding: 2px 2px;
+    min-height: 0;
+    gap: 2px;
+}
+.filtersPanelArea .filter_op .form-check-input {
+    margin: 0;
+    border-radius: 4px;
+    border-color: #a7b2c1;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background-color .12s, border-color .12s, box-shadow .12s;
+}
+.filtersPanelArea .filter_op .form-check-input:checked {
+    background-color: var(--fp-accent);
+    border-color: var(--fp-accent);
+}
+.filtersPanelArea .filter_op .form-check-input:focus {
+    box-shadow: 0 0 0 3px rgba(183,37,63,.18);
+    border-color: var(--fp-accent-soft);
+}
+.filtersPanelArea .filter_op .note_blue {
+    color: var(--fp-muted);
+    font-size: 10.5px;
+    font-weight: 500;
+}
+
+/* ── geo area (full-width banner rows, with sub-groups) ── */
+.filtersPanelArea .filter_op.geoArea_field {
+    width: 100%;
+    background: linear-gradient(-90deg, rgb(19 61 87 / 16%), transparent);
+    border-inline-start: 3px solid var(--fp-accent-soft);
+    padding: 0 8px;
+    font-weight: 600;
+    margin: 2px 0 1px;
+    border-radius: 3px;
+}
+[dir="ltr"] .filtersPanelArea .filter_op.geoArea_field {
+    background: linear-gradient(90deg, rgb(19 61 87 / 16%), transparent);
+}
+.filtersPanelArea .gov_sub_group {
+    margin-inline-start: 12px;
+    border-inline-start: 1px dashed #c9d2de;
+    padding-inline-start: 4px;
+    margin-bottom: 2px;
+}
+
+/* ── wide single-column fields ── */
+.filtersPanelArea .filter_op.m_event_field,
+.filtersPanelArea .filter_op.m_cause_of_death_field,
+.filtersPanelArea .filter_op.m_event_type_field {
+    width: 100% !important;
+}
+
+/* ── announced row (pair of options) ── */
+.filtersPanelArea .announced_field_form .filter_block_body { padding: 4px 6px 6px; }
+.filtersPanelArea .filter_op.announced_field { width: 50%; }
+
+/* ── scrollbar ── */
+.filtersPanelArea .filtersPanel::-webkit-scrollbar        { width: 8px; }
+.filtersPanelArea .filtersPanel::-webkit-scrollbar-track  { background: transparent; }
+.filtersPanelArea .filtersPanel::-webkit-scrollbar-thumb  { background: #c5cdda; border-radius: 4px; }
+.filtersPanelArea .filtersPanel::-webkit-scrollbar-thumb:hover { background: #a4aebe; }
+.filtersPanelArea .filtersPanel { scrollbar-width: thin; scrollbar-color: #c5cdda transparent; }
+
+/* ── multi-select dropdown (.ms-drop used by filterSelect) ── */
+.filtersPanelArea .filterSelect .ms-choice {
+    border-radius: 8px;
+    border-color: var(--fp-border);
+}
+
+/* ── mobile overlay polish (narrow screens use .filtersPanelArea fixed) ── */
+@media (max-width: 768px) {
+    .filtersPanelArea .filtersPanel {
+        border-radius: 0;
+        max-width: none;
+        box-shadow: none;
+        background: var(--fp-bg);
+        padding-bottom: 40px;
+    }
+    .filtersPanelArea .filtersTopBar { margin: 0 0 10px; }
+    .filtersPanelArea .cntrlFilters { border-radius: 0; }
+}
+/* === end filtersPanelArea redesign === */
+
+/* =========================================================================
+   /martyrs/year pagination restyle — 2026-04-24
+   Scope: the #pages / .pages.simple-pagination.light-theme block at the
+   bottom of the martyrs year list. Mirrors .press-pager's visual language
+   without touching the simplePagination.js markup. Rollback = delete the
+   block between these two markers.
+   ========================================================================= */
+div#pages.simple-pagination ul {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+div#pages.simple-pagination.light-theme li { margin: 0; }
+div#pages.simple-pagination.light-theme li a,
+div#pages.simple-pagination.light-theme li span {
+    float: none;
+    min-width: 38px;
+    padding: 8px 14px;
+    margin: 0;
+    border: 1px solid #d0d0d8;
+    background: #fff;
+    color: #3a3a44;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+    box-shadow: none;
+    display: inline-block;
+    text-decoration: none;
+    transition: background .15s ease, border-color .15s ease, color .15s ease, transform .1s ease;
+}
+div#pages.simple-pagination.light-theme li:not(.disabled):not(.active) a:hover,
+div#pages.simple-pagination.light-theme li:not(.disabled):not(.active) span:hover {
+    background: #f2f2f5;
+    border-color: #b8b8c0;
+}
+div#pages.simple-pagination.light-theme li a:active,
+div#pages.simple-pagination.light-theme li span:active { transform: scale(0.96); }
+div#pages.simple-pagination.light-theme li.disabled a,
+div#pages.simple-pagination.light-theme li.disabled span {
+    opacity: .45;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+/* active page only — prev/next spans also carry a bare `.current` class
+   when disabled, so we key off the <li class="active"> parent instead */
+div#pages.simple-pagination.light-theme li.active a,
+div#pages.simple-pagination.light-theme li.active a.current,
+div#pages.simple-pagination.light-theme li.active span {
+    background: #b83333;
+    border-color: #b83333;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(184, 51, 51, .25);
+}
+/* ellipsis gap between page groups — flat, no button frame */
+div#pages.simple-pagination.light-theme li.disabled .ellipse,
+div#pages.simple-pagination.light-theme .ellipse {
+    background: none;
+    border: none;
+    box-shadow: none;
+    min-width: 0;
+    padding: 0 6px;
+    color: #888;
+    user-select: none;
+    font-weight: 700;
+}
+/* kill the disabled outer border on the ellipsis <li> wrapper so only the
+   span carries styling (light-theme adds border via its li-level rule) */
+div#pages.simple-pagination.light-theme li.disabled:has(.ellipse) a,
+div#pages.simple-pagination.light-theme li.disabled:has(.ellipse) span:not(.ellipse) {
+    border: none;
+    background: none;
+    box-shadow: none;
+}
+/* === end /martyrs/year pagination restyle === */
+
+/* =========================================================================
+   /martyrs/year — year navigation arrows around .hdr-subtitle — 2026-04-24
+   Injected by the inline injectYearNav() IIFE in martyrs.php year sub-view.
+   Rollback = delete the block between these markers + the IIFE in PHP.
+   ========================================================================= */
+.hdr-year-nav-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+.hdr-year-nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.28);
+    color: #fff;
+    font-size: 11px;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease, transform .1s ease, color .15s ease, opacity .15s;
+    flex-shrink: 0;
+}
+.hdr-year-nav:hover {
+    background: rgba(255,255,255,.32);
+    border-color: rgba(255,255,255,.55);
+    color: #fff;
+    transform: translateY(-1px);
+}
+.hdr-year-nav:active {
+    transform: scale(.95);
+}
+.hdr-year-nav.is-disabled {
+    opacity: .3;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+.hdr-year-nav .fa { line-height: 1; }
+/* === end year navigation arrows === */
+
+/* Hide the "download results" affordance on mobile — too cramped, and the
+   CSV export is rarely needed on small screens. */
+@media (max-width: 768px) {
+    .download_results { display: none; }
+}
+
+/* Applied-filters pills, injected by martyersjs.js into .hdr-meta on
+   /martyrs/year. Each pill represents one filtered section + click-to-clear. */
+.hdr-meta-filters {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: calc(100% - 250px);
+}
+.hdr-pill {
+    background: rgba(255,255,255,0.10);
+    color: rgba(255,255,255,0.92);
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.20),
+        0 2px 8px rgba(0,0,0,0.20);
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    transition: transform .15s ease, box-shadow .15s ease,
+                background .15s ease, border-color .15s ease;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    max-width: 400px;
+    direction: rtl; /* default; LTR locale overrides below */
+}
+[dir="ltr"] .hdr-pill { direction: ltr; }
+.hdr-pill .hdr-pill-label {
+    opacity: .65;
+    font-weight: 500;
+    color: rgba(255,255,255,0.78);
+}
+.hdr-pill .hdr-pill-val {
+    font-weight: 700;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #ffd97a;
+}
+.hdr-pill i.fa-times-circle {
+    opacity: .55;
+    font-size: 12px;
+    color: rgba(255,255,255,0.85);
+}
+.hdr-pill:hover {
+    background: rgba(255,255,255,0.16);
+    border-color: rgba(255,255,255,0.36);
+    transform: translateY(-1px);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.28),
+        0 4px 12px rgba(0,0,0,0.25);
+}
+.hdr-pill:hover i.fa-times-circle { opacity: 1; }
+.hdr-pill:active { transform: translateY(0); }
+
+/* =========================================================================
+   Glassy martyr listing cards — 2026-05-09
+   Scope: .myrcard rendered with the .martBody pattern (year/held/search).
+   Replaces the legacy black-card look (style-black.css L2934-3007) without
+   editing it; the :has() override wins on cascade specificity.
+   ========================================================================= */
+.myrcard:has(.martBody) {
+    width: 150px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(15,15,18,0.55);
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    overflow: hidden;
+    position: relative;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    margin: 7px;
+}
+.myrcard:has(.martBody):hover {
+    /* override legacy `scale: 1.1` lift with a lighter Y-translate */
+    scale: 1;
+    transform: translateY(-4px);
+    border-color: rgba(255,177,0,0.35);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.12),
+        0 0 0 1px rgba(255,177,0,0.15),
+        0 6px 10px rgba(0,0,0,0.45),
+        0 6px 10px rgba(0,0,0,0.15);
+}
+.myrcard:has(.martBody) .martCompactPhoto { width: 100%; }
+.myrcard:has(.martBody) .MartPhoto {
+    width: 100%;
+    height: 220px;
+    position: relative;
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: 100% auto;
+    filter: grayscale(0.20) contrast(1.04) saturate(0.98);
+    transition: filter .35s ease, transform .5s ease;
+}
+/* Mirrored repeat-y: pseudo fills the cell below the natural-height image
+   with a vertically-flipped copy so the photo seamlessly reflects at y=150. */
+.myrcard:has(.martBody) .MartPhoto::after {
+    content: "";
+    position: absolute;
+    inset: 140px 0 0 0;
+    background-image: inherit;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    background-size: 100% auto;
+    transform: scaleY(-1);
+    transform-origin: center;
+    pointer-events: none;
+}
+.myrcard:has(.martBody):hover .MartPhoto {
+    filter: grayscale(0) contrast(1.06) saturate(1.08);
+    transform: scale(1.05);
+}
+/* Black glass body — both background AND backdrop-blur fade in together,
+   driven by a mask-image gradient. Top of the strip is fully transparent
+   (photo sharp + uncovered), bottom is solid dark with full blur. */
+.myrcard:has(.martBody) .martBody {
+    margin-top: -130px;
+    height: 130px;
+    position: relative;
+    background: none;
+    border-top: none;
+}
+/* Glass + blur + mask live on a pseudo-layer so .martInfo stays fully
+   opaque (the mask only fades the glass, not the text). */
+.myrcard:has(.martBody) .martBody::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / 70%);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    mask-image: linear-gradient(180deg,
+        rgba(0,0,0,0)   0%,
+        rgba(0,0,0,0)   20%,
+        rgb(0 0 0 /80%) 50%,
+        rgba(0,0,0,1)   70%);
+    -webkit-mask-image: linear-gradient(180deg,
+        rgba(0,0,0,0)   0%,
+        rgba(0,0,0,0)   20%,
+        rgb(0 0 0 /80%) 50%,
+        rgba(0,0,0,1)   70%);
+    pointer-events: none;
+}
+.myrcard:has(.martBody) .martBody .martInfo {
+    z-index: 1;
+}
+.myrcard:has(.martBody) .martBody .martInfo {
+    color: rgb(235 238 245);
+    padding: 10px 8px 12px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.55);
+}
+.myrcard:has(.martBody) .martBody .martInfo > span:first-child {
+    /* honorific prefix line (الشهيد / Martyr / الأسير الشهيد ...) */
+    font-size: 11px;
+    color: rgb(243 243 243);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+.myrcard:has(.martBody) .martBody .mname {
+    color: #ffb100;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 2px 0 4px;
+    line-height: 1.2;
+}
+.myrcard:has(.martBody) .martBody .mname a {
+    color: inherit;
+    text-decoration: none;
+}
+.myrcard:has(.martBody) .martBody .martSubInfo {
+    color: rgb(200 208 220);
+    font-size: 11px;
+    font-weight: 500;
+}
+.myrcard:has(.martBody) .martBody .martSubInfoDate {
+    color: rgb(150 160 178);
+    font-size: 10px;
+    margin-top: 3px;
+    letter-spacing: 0.02em;
+}
+.myrcard:has(.martBody) .verified {
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.55));
+}
+
+/* === Scroll-to-bloom — inspired by argyleink/wBMvNaN ====================
+   Cards animate from a tiny blurred state to full size as they cross the
+   viewport. Uses individual `scale` + `translate` properties so they don't
+   collide with the hover `transform: translateY(-4px)` rule. Progressive
+   enhancement (Chromium 115+); other browsers see static cards. */
+@supports (animation-timeline: view()) {
+    @keyframes myr-bloom {
+        from {
+            opacity: 0;
+            scale: 0.6;
+            translate: 0 28px;
+            filter: blur(6px);
+        }
+        to {
+            opacity: 1;
+            scale: 1;
+            translate: 0 0;
+            filter: blur(0);
+        }
+    }
+    .myrcard:has(.martBody) {
+        animation: myr-bloom linear both;
+        animation-timeline: view();
+        animation-range: cover 0% contain 15%;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .myrcard:has(.martBody) { animation: none !important; }
+}
+/* === end glassy martyr cards === */

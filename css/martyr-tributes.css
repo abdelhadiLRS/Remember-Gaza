@@ -1,0 +1,441 @@
+/* Martyr-page tributes — compact, minimal.
+   Renders as the first child of martFooterWrap inside the martyr modal.
+   Keep the visual weight low — a quiet guestbook footer to the story,
+   not a competing section. */
+
+.m-tributes {
+    width: 90%;
+    margin: 18px auto;
+    padding: 15px;
+    border: 2px dotted #c9c9c9;
+    /* direction comes from the dir="" attribute set per-locale by api/martyrs.php */
+    font-size: 13px;
+    color: #1f2937;
+    /* Content-sized, capped at 50% of .martContent. With basis=auto
+       and grow=0, the section takes only what its content needs;
+       max-height: 50% prevents it from squeezing the story when
+       there are many comments. When no comments are loaded the
+       section collapses further via .is-empty (below). */
+    flex: 0 1 auto;
+    max-height: 50%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background: #ebebeb;
+    border-radius: 20px;
+}
+/* Empty state — no approved or pending top-level comments. Keep the
+   .m-tributes-title visible (invitational header still reads as a
+   form label), but hide the count + toggle (nothing to count or
+   collapse) and the empty scroll area. JS toggles the .is-empty
+   class after each list mutation. */
+.m-tributes.is-empty .m-tributes-scroll,
+.m-tributes.is-empty .m-tributes-count,
+.m-tributes.is-empty .m-tributes-toggle {
+    display: none;
+}
+.m-tributes.is-collapsed {
+    flex: 0 0 auto;
+    min-height: 0;
+}
+/* Only the comments list collapses — the form stays visible so the
+   visitor can still leave a tribute even when the existing ones are
+   hidden. */
+.m-tributes.is-collapsed .m-tributes-scroll {
+    display: none;
+}
+.m-tributes.is-collapsed .m-tributes-header {
+    margin: 0;
+}
+.m-tributes-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding-inline: 0 10px;
+    /* Lighter scrollbar — matches the modal's existing scrollbar styling. */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(15, 23, 42, .18) transparent;
+}
+.m-tributes-scroll::-webkit-scrollbar       { width: 8px; }
+.m-tributes-scroll::-webkit-scrollbar-track { background: transparent; }
+.m-tributes-scroll::-webkit-scrollbar-thumb {
+    background: rgba(15, 23, 42, .18);
+    border-radius: 4px;
+}
+.m-tributes-header,
+.m-tributes-form { flex: 0 0 auto; }
+
+/* On narrow screens the modal collapses to natural scroll
+   (martyrs-modal.css media queries restore overflow:visible). Drop the
+   flex constraints on tributes too so the section flows as a regular
+   block under the story instead of trying to share a fixed height. */
+@media (max-width: 680px) {
+    .m-tributes {
+        flex: none;
+        min-height: fit-content;
+        display: block;
+        /* Drop the desktop's 84px bottom — on mobile the page scrolls
+           naturally and that extra space just creates a visual gap
+           before the footer. */
+        margin-bottom: 4px;
+    }
+    .m-tributes-scroll {
+        overflow: visible;
+        max-height: none;
+    }
+}
+
+.m-tributes-header {
+    display: flex; align-items: baseline; gap: 8px;
+    margin: 0 0 10px;
+}
+.m-tributes-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+}
+.m-tributes-count {
+    color: #9ca3af;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+}
+.m-tributes-count:empty { display: none; }
+
+.m-tributes-toggle {
+    margin-inline-start: auto;
+    background: white;
+    border: 0;
+    color: #6b7280;
+    font: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+.m-tributes-toggle:hover { color: #1d4ed8; background: #f9fafb; }
+.m-tributes-toggle:focus-visible {
+    outline: 2px solid #93c5fd;
+    outline-offset: 1px;
+}
+
+/* ─── List ──────────────────────────────────────────────────────────── */
+.m-tributes-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex; flex-direction: column;
+    gap: 8px;
+}
+.m-tributes-item {
+    /* Pure spacing host for the bubble + reply button + nested replies.
+       Bubble itself owns the rounded surface + background. */
+}
+.m-tributes-empty {
+    color: #9ca3af;
+    text-align: center;
+    padding: 14px 8px;
+    font-size: 12px;
+    background: #f9fafb;
+    border-radius: 10px;
+}
+
+/* ─── Bubble ────────────────────────────────────────────────────────── */
+.m-tributes-bubble {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 8px 12px;
+    display: inline-block;
+    max-width: 100%;
+    word-break: break-word;
+}
+
+.m-tributes-bubble-head {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    font-size: 11px;
+    color: #6b7280;
+    margin-bottom: 3px;
+}
+.m-tributes-avatar {
+    flex: 0 0 18px; width: 18px; height: 18px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 9px; letter-spacing: .2px;
+}
+.m-tributes-name {
+    font-size: 12px; font-weight: 700; color: #1f2937;
+}
+.m-tributes-name.is-anon { color: #9ca3af; font-weight: 600; }
+.m-tributes-meta-loc::before {
+    content: '·'; color: #d1d5db; margin-inline: 4px;
+}
+.m-tributes-date {
+    color: #9ca3af;
+    font-variant-numeric: tabular-nums;
+    margin-inline-start: auto;
+}
+.m-tributes-pending {
+    display: inline-block;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.m-tributes-message {
+    font-size: 13px; line-height: 1.55;
+    color: #1f2937;
+    white-space: pre-wrap;
+    margin: 0;
+}
+
+/* Reply control — small, muted link below each top-level bubble */
+.m-tributes-reply-btn {
+    background: none; border: 0;
+    color: #6b7280;
+    font: inherit; font-size: 11px; font-weight: 600;
+    cursor: pointer;
+    padding: 2px 6px;
+    margin-top: 2px;
+}
+.m-tributes-reply-btn:hover { color: #1d4ed8; }
+
+/* Replies — indented + lighter bubble, slim guide line */
+.m-tributes-replies {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+    padding-inline-start: 16px;
+    border-inline-start: 2px solid #c9c9c9;
+    margin-inline-start: 10px;
+    display: flex; flex-direction: column;
+    gap: 6px;
+}
+.m-tributes-reply .m-tributes-bubble {
+    background: #f5f5f5;
+    padding: 6px 10px;
+}
+.m-tributes-reply .m-tributes-avatar { width: 16px; height: 16px; font-size: 8px; }
+.m-tributes-reply .m-tributes-message { font-size: 12px; }
+
+/* Hint when a parent has more replies than the preview cap.
+   Plain text, no action — server truncation is intentional. */
+.m-tributes-replies-more {
+    list-style: none;
+    padding: 4px 8px;
+    color: #9ca3af;
+    font-size: 11px;
+    font-style: italic;
+}
+
+/* Load-more */
+.m-tributes-loadmore-wrap {
+    text-align: center;
+    margin: 8px 0 0;
+}
+.m-tributes-loadmore-wrap[hidden] { display: none; }
+.m-tributes-loadmore {
+    background: none; border: 0;
+    color: #1d4ed8;
+    font: inherit; font-size: 12px; font-weight: 600;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+.m-tributes-loadmore:hover { text-decoration: underline; }
+
+/* Skeleton */
+.m-tributes-skeleton {
+    height: 36px;
+    background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%);
+    background-size: 200% 100%;
+    animation: m-tributes-shimmer 1.2s ease-in-out infinite;
+    border-radius: 12px;
+    margin-bottom: 6px;
+}
+@keyframes m-tributes-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ─── Form — collapsed by default, expands on focus ─────────────────── */
+.m-tributes-form {
+    margin-top: 14px;
+    padding: 6px 10px;
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    position: relative;
+    transition: background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.m-tributes-form:hover {
+    border-color: #d1d5db;
+}
+
+.m-tributes-form textarea {
+    width: 100%;
+    /* 1.5 line-height × 13 font + 6+6 padding = ~31.5 → 1 line of text. */
+    min-height: 32px;
+    padding: 6px 8px;
+    border: 0;
+    background: transparent;
+    font: inherit; font-size: 13px;
+    line-height: 1.5;
+    color: #111;
+    /* Collapsed: overflow hidden so excess content stays clipped to a
+       single line. JS auto-grow (inline style.height) handles growth
+       inside the focused state where overflow flips to auto for the
+       max-height scroll. */
+    resize: none;
+    /* direction comes from the dir="" attr on the textarea element */
+    overflow-y: hidden;
+    box-sizing: border-box;
+}
+.m-tributes-form textarea:focus { outline: none; }
+.m-tributes-form textarea::placeholder { color: #9ca3af; }
+
+/* Body row — fields column on one side, submit on the other.
+   align-items: stretch makes submit span the full height of the
+   fields column, so when name+location is hidden submit matches the
+   1-line textarea, and when expanded it grows to span both the
+   name/location row AND the (auto-grown) textarea. */
+.m-tributes-form-body {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+}
+.m-tributes-form-fields {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.m-tributes-form-body .m-tributes-submit {
+    flex: 0 0 auto;
+}
+
+/* Name + location row — hidden by default, slides in on focus. */
+.m-tributes-form-row {
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+}
+.m-tributes-form-meta { display: none; }
+.m-tributes-submit {
+    opacity: 0.5;
+    transition: opacity .15s ease, filter .15s ease;
+}
+
+/* Reply pill: shown only when the form has a parent_id set, regardless of
+   the expanded state — gives clear feedback the click "↩ رد" did
+   something even before the form auto-expands on focus. */
+.m-tributes-form-reply[hidden] { display: none; }
+
+/* ── Expanded ── CSS-only via :focus-within: form opens when the
+   textarea (or any inner control) gains focus, collapses back when
+   focus leaves the entire form. No JS state needed. */
+.m-tributes-form:focus-within {
+    background: #fff;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, .08);
+}
+.m-tributes-form:focus-within textarea {
+    min-height: 56px;
+    max-height: 180px;
+    resize: vertical;
+}
+.m-tributes-form:focus-within .m-tributes-form-row  { display: grid; }
+.m-tributes-form:focus-within .m-tributes-form-meta { display: flex; }
+.m-tributes-form:focus-within .m-tributes-submit    { opacity: 1; }
+
+.m-tributes-form-reply {
+    display: flex; align-items: center; gap: 6px;
+    margin-bottom: 6px;
+    padding: 3px 8px;
+    background: #dbeafe;
+    color: #1d4ed8;
+    border-radius: 6px;
+    font-size: 11px;
+}
+/* Whole label ("الرد على X" / "Replying to X") set by JS as textContent
+   from data-label-reply-target + parent name — no CSS pseudo prefix. */
+.m-tributes-form-reply-target {
+    font-weight: 400;
+}
+.m-tributes-form-reply-cancel {
+    margin-inline-start: auto;
+    background: none; border: 0;
+    color: #1d4ed8;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 0 4px;
+    line-height: 1;
+}
+.m-tributes-form-reply-cancel:hover { color: #1e3a8a; }
+
+/* (Duplicate .m-tributes-form-row rule removed — base layout +
+   grid-template-columns are now declared in a single block above,
+   alongside the focused-state override.) */
+.m-tributes-form input[type="text"] {
+    padding: 6px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font: inherit; font-size: 12px;
+    background: #fff;
+    color: #111;
+}
+.m-tributes-form input[type="text"]:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, .12);
+}
+
+.m-tributes-submit {
+    padding: 6px 16px;
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    color: #fff;
+    border: 0;
+    border-radius: 6px;
+    font: inherit; font-size: 12px; font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.m-tributes-submit:hover  { filter: brightness(1.08); }
+.m-tributes-submit[disabled] {
+    opacity: .55; cursor: not-allowed;
+}
+
+.m-tributes-form-meta {
+    align-items: baseline; justify-content: space-between; gap: 8px;
+    margin-top: 6px;
+    font-size: 11px;
+}
+.field-counter {
+    color: #9ca3af;
+    font-variant-numeric: tabular-nums;
+}
+.field-counter.is-warn { color: #d97706; }
+.field-counter.is-bad  { color: #b91c1c; }
+.m-tributes-form-status:empty { display: none; }
+.m-tributes-form-status.is-ok  { color: #047857; }
+.m-tributes-form-status.is-err { color: #b91c1c; }
+
+/* Honeypot — visually hidden but renders so bots fill it */
+.m-tributes-form .field-honeypot {
+    position: absolute;
+    inset-inline-start: -9999px;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    opacity: 0;
+}
+
+/* Mobile: stack the inline row */
+@media (max-width: 540px) {
+    .m-tributes { padding: 10px 14px 14px; }
+    .m-tributes-form-row {
+        grid-template-columns: 1fr;
+    }
+    .m-tributes-form textarea { min-height: 52px; }
+    .m-tributes-submit { width: 60px; }
+}

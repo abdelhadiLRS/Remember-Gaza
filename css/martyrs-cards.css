@@ -1,0 +1,163 @@
+@charset "UTF-8";
+/* =========================================================================
+   Martyr listing cards — extracted from css/style-black.css 2026-04-25
+   (Pass 2).
+
+   .allCards container + .myrcard / .myrbody / .myrimg / .myrpic /
+   .myrtitle / .myrdescRow — the photo-card grid rendered on
+   /martyrs/year, /martyrs/held, /martyrs/search, and any page that
+   echoes a martyr-card list. martPic styling for the pinned big card.
+
+   Mobile-specific rules for these cards live in the legacy global
+   block at the top of style-black.css (lines 30-450 area) and have not
+   been moved here yet — that's the deeper Pass 2 dissection. Co-located
+   media queries inside this range are bundled.
+   ========================================================================= */
+
+.allCards
+{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: auto;
+}
+
+.myrcard
+{
+  text-align:center;
+  width: 200px;
+  margin: 10px;
+}
+.myrbody:hover
+{
+      box-shadow: rgb(0 0 0 / 19%) 0px 10px 20px, rgb(0 0 0 / 23%) 0px 6px 6px;
+  
+}
+
+.myrbody
+{
+  font-family: 'Almarai', sans-serif;
+  background: #efefef;
+  padding: 20px 10px 5px;
+  border-radius:10px;
+  padding-top: 65px;
+  border: 1px solid #ccc;
+}
+.myrdescRow
+{
+  color: #444444;
+  border-top: 1px dashed #ccc;
+  padding: 8px 3px;
+  font-size:14px;
+  transition: all .2s ease-in-out;
+}
+.myrdescRow:hover
+{
+  background: #fff;
+}
+.myrtitle,
+.myrtitle2
+{
+  font-weight:bold;
+  font-size: 15px;
+  letter-spacing: -0.3px;
+  padding: 15px 0px 0;
+  color:#0f62a9;
+  min-height: 90px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.myrtitle:hover ,
+.myrtitle2:hover 
+{
+    color: #0e315c;
+    cursor: pointer;
+}
+.titleText
+{
+  
+}
+
+.myrpic2
+{
+	z-index:2;
+	margin-bottom:-75px;
+	position: relative;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+}
+.myrpic
+{
+	margin: auto;
+	margin-bottom:-75px;
+	transition: all .2s ease-in-out;
+	height: 146px;
+	width: 146px;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+	overflow:hidden;
+	border: 8px solid #fff;
+	background-size: cover;
+	background-position: center;
+	filter: grayscale(100%);
+}
+
+.myrcard:hover .myrpic {
+    filter: grayscale(0%);
+    transition: all .2s ease-in-out;
+}
+
+
+
+[dir="rtl"] .float-top { float: right; }
+[dir="ltr"] .float-top { float: left; }
+
+
+.float-top:hover .drop-menu {
+    display: block;
+}
+.close
+{
+  border:0;
+}
+.dropdown
+{
+      margin-top: -70px;
+      margin-inline-end: -20px;
+}
+[dir="rtl"] .dropdown { float: right; }
+[dir="ltr"] .dropdown { float: left; }
+.btn
+{
+  outline: 0px;
+   box-shadow: none !important; 
+}
+.CardsContainer
+{
+	text-align: center;
+	text-align: -webkit-center;
+	margin: auto;
+}
+
+
+
+.input-group .form-control:last-child, .input-group-addon:last-child, .input-group-btn:first-child>.btn-group:not(:first-child)>.btn, .input-group-btn:first-child>.btn:not(:first-child), .input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group>.btn, .input-group-btn:last-child>.dropdown-toggle {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+}
+.datepicker {
+    margin-inline-end: 50px !important;
+    margin-top: 13px !important;
+}
+.modal-content
+{
+text-align: start !important;
+}
+
+.myrtitle > span {
+    font-size: smaller;
+    color: #666;
+}

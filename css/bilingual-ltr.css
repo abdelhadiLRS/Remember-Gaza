@@ -1,0 +1,40 @@
+@charset "UTF-8";
+/* =========================================================================
+   Bilingual — LTR-specific visual-regression overrides.
+   Extracted from css/style-black.css 2026-04-25 (Pass 1).
+
+   Rules scoped to [dir="ltr"]: tiny per-component fixes for places
+   where a physical-side property leaked through and breaks under EN.
+   Stays at the END of the cascade — must load after every feature file
+   that defines the rule it overrides (currently martModal3, headMenu,
+   form-switch, calendar-button-group, war-col-label, palestine-medal).
+   ========================================================================= */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Bilingual — LTR-specific overrides (visual-regression fixes)
+   ═══════════════════════════════════════════════════════════════════════════ */
+[dir="ltr"] .martModal3 .cardClose {
+    left: unset;
+    right: 12px;
+}
+[dir="ltr"] .martModal3 .martContent {
+    direction: ltr;
+}
+[dir="ltr"] .headMenu ul {
+    left: -2px;
+}
+[dir="ltr"] .form-switch .form-check-input {
+    margin-right: -2.5em;
+    margin-left: 0;
+}
+/* .calendar-button-group is now forced direction:ltr in calender.css, so
+   no per-locale flex override is needed here. */
+[dir="ltr"] .war-col-label {
+    left: 14px;
+    right: unset;
+}
+[dir="ltr"] .palestine-medal {
+    left: 50px;
+    right: unset;
+}
+
