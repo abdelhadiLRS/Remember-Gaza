@@ -140,11 +140,33 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .tlc-foot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; }
 .tlc-stat-num { display: block; font-size: 1.4rem; font-weight: 900; color: #ff4d4d; }
 .tlc-stat-label { font-size: 0.9rem; color: #94a3b8; font-weight: bold;}
+
+/* بطاقة المعاينة العائمة عند المرور على النجوم */
+#star-tooltip {
+    position: fixed;
+    z-index: 50;
+    pointer-events: none;
+    background: rgba(10, 10, 10, 0.95);
+    border: 1px solid rgba(204, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 8px 14px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(204, 0, 0, 0.3);
+    display: none;
+    font-size: 0.8rem;
+    max-width: 220px;
+}
 </style>
 </head>
 <body>
 
 <div id="canvas-layer"><canvas id="stars-canvas" class="w-full h-full block"></canvas></div>
+
+<!-- بطاقة معاينة عائمة للنجوم عند المرور عليها -->
+<div id="star-tooltip">
+    <div id="tooltip-name" class="font-bold text-red-500 mb-1 truncate"></div>
+    <div id="tooltip-age" class="text-gray-300 text-[11px]"></div>
+</div>
 
 <main id="map-view" class="text-white">
 <div class="w-full h-full flex flex-col lg:flex-row px-4 md:px-8 gap-4" style="height: calc(100vh - 140px);">
@@ -308,7 +330,14 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
             <button class="modal-close" id="modal-close" title="إغلاق">✕</button>
         </div>
         <div class="modal-body">
-            <div class="modal-media" id="modal-media-container"></div>
+            <!-- خانة عرض الصورة أو الوسائط -->
+            <div class="flex flex-col items-center justify-center">
+                <div id="martyr-photo-container" class="w-32 h-32 mb-4 bg-stone-900 border border-white/10 rounded-2xl flex flex-col items-center justify-center text-stone-400 text-xs overflow-hidden shadow-inner relative">
+                    <svg class="w-10 h-10 text-stone-600 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    <span>صورة الشهيد</span>
+                </div>
+                <div class="modal-media w-full" id="modal-media-container"></div>
+            </div>
             <div class="modal-meta">
                 <div class="meta-section">
                     <h3>التاريخ / الهوية</h3>
@@ -346,8 +375,9 @@ let currentMainMode = 'souls';
 let allVideoFiles = [];
 let map = null;
 let markersLayer = null;
+let mouseX = -1000, mouseY = -1000;
 
-// ربط ملفات التورنت مباشرة من مجلد data الخاص بك
+// إعداد مسارات التورنت في مجلد data
 const torrentConfig = {
     file1: "./data/file1.torrent",
     file2: "./data/file2.torrent",
@@ -449,7 +479,6 @@ async function fetchTorrentVideos() {
         </div>
     `;
 
-    // الاعتماد حصرياً على ملفات التورنت المحلية في مجلد data بدون أي روابط خارجية
     allVideoFiles = [
         {
             name: "ملف التوثيق الميداني الأول (file1.torrent)",
@@ -527,7 +556,8 @@ document.querySelectorAll('.view-btn').forEach(btn => {
     };
 });
 
-function openMediaModal(item) {
+// **إصلاح جلب وتشغيل ملفات التورنت الحقيقية عبر fetch و ArrayBuffer**
+async function openMediaModal(item) {
     const modal = document.getElementById('modal-overlay');
     const container = document.getElementById('modal-media-container');
     document.getElementById('meta-date').innerText = item.date;
@@ -538,45 +568,49 @@ function openMediaModal(item) {
     container.innerHTML = `
         <div class="flex flex-col items-center justify-center p-4 text-gray-300">
             <div class="w-8 h-8 border-3 border-red-600 border-t-transparent rounded-full animate-spin mb-2"></div>
-            <p class="text-xs">جاري الاتصال بملف التورنت المحلي وجلب البيانات...</p>
+            <p class="text-xs">جاري جلب وقراءة ملف التورنت من مجلد data...</p>
         </div>
     `;
     modal.style.display = 'flex';
 
-    setTimeout(() => {
+    try {
+        // جلب ملف التورنت كـ ArrayBuffer من مساره الحقيقي
+        const res = await fetch(item.torrentSource);
+        if (!res.ok) throw new Error("تعذر جلب ملف التورنت");
+        const torrentBuffer = await res.arrayBuffer();
+
         if (window.WebTorrentInstance) {
-            try {
-                window.WebTorrentInstance.add(item.torrentSource, { trackers: torrentConfig.trackers }, function (torrent) {
-                    const file = torrent.files.find(f => f.name.endsWith('.mp4') || f.name.endsWith('.mkv') || f.name.endsWith('.webm')) || torrent.files[0];
-                    if (file) {
-                        file.getBlobURL((err, url) => {
-                            if (!err && url) {
-                                container.innerHTML = `
-                                    <video controls autoplay playsinline class="w-full h-full object-cover" style="max-height: 350px;">
-                                        <source src="${url}" type="video/mp4">
-                                        متصفحك لا يدعم عرض الفيديو.
-                                    </video>
-                                `;
-                                return;
-                            }
-                            showTorrentInfo(torrent);
-                        });
-                        return;
-                    }
-                    showTorrentInfo(torrent);
-                });
-            } catch(e) {
-                container.innerHTML = `<div class="text-center p-6 text-red-500 font-bold">تعذر قراءة ملف التورنت المحلي: تأكد من صحة مساره في مجلد data.</div>`;
-            }
+            window.WebTorrentInstance.add(torrentBuffer, { trackers: torrentConfig.trackers }, function (torrent) {
+                const file = torrent.files.find(f => f.name.endsWith('.mp4') || f.name.endsWith('.mkv') || f.name.endsWith('.webm')) || torrent.files[0];
+                if (file) {
+                    file.getBlobURL((err, url) => {
+                        if (!err && url) {
+                            container.innerHTML = `
+                                <video controls autoplay playsinline class="w-full h-full object-cover" style="max-height: 350px;">
+                                    <source src="${url}" type="video/mp4">
+                                    متصفحك لا يدعم عرض الفيديو.
+                                </video>
+                            `;
+                            return;
+                        }
+                        showTorrentInfo(torrent);
+                    });
+                    return;
+                }
+                showTorrentInfo(torrent);
+            });
         } else {
-            container.innerHTML = `<div class="text-center p-6 text-red-500 font-bold">مكتبة WebTorrent غير جاهزة بعد.</div>`;
+            container.innerHTML = `<div class="text-center p-6 text-red-500 font-bold">مكتبة WebTorrent غير جاهزة.</div>`;
         }
-    }, 400);
+    } catch(e) {
+        console.error(e);
+        container.innerHTML = `<div class="text-center p-6 text-red-500 font-bold">تعذر تحميل أو قراءة ملف التورنت من مجلد data. تأكد من صحة مساره.</div>`;
+    }
 
     function showTorrentInfo(torrent) {
         container.innerHTML = `
             <div class="text-center p-6 text-white">
-                <h3 class="text-lg font-bold text-red-500 mb-2">تم الاتصال بالتورنت بنجاح</h3>
+                <h3 class="text-lg font-bold text-red-500 mb-2">تم تحميل ملف التورنت بنجاح</h3>
                 <p class="text-xs text-gray-300 mb-1">اسم الملف: ${torrent.name}</p>
                 <p class="text-xs text-gray-300">عدد الملفات الداخلية: ${torrent.files.length}</p>
             </div>
@@ -756,26 +790,32 @@ canvas.width=width;canvas.height=height;
 window.addEventListener('resize',resize);
 resize();
 
-// تفعيل تفاعل النقر على النجوم لعرض بطاقات معلومات الشهداء
+// **تتبع المؤشر وإبراز النجوم مع عرض بطاقة المعاينة عند المرور (Hover)**
 if (canvas) {
+    canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+        mouseY = e.clientY - rect.top;
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+        mouseX = -1000;
+        mouseY = -1000;
+        const tooltip = document.getElementById('star-tooltip');
+        if (tooltip) tooltip.style.display = 'none';
+    });
+
+    // النقر على النجمة لفتح البطاقة بالكامل
     canvas.addEventListener('click', (e) => {
         const rect = canvas.getBoundingClientRect();
         const clickX = e.clientX - rect.left;
         const clickY = e.clientY - rect.top;
 
-        let closestStar = null;
-        let minDistance = 20; // نطاق مسافة التقاط النقلة
-
         for (const p of points) {
-            const dist = Math.hypot(p.x - clickX, p.y - clickY);
-            if (dist < minDistance) {
-                minDistance = dist;
-                closestStar = p;
+            if (Math.hypot(p.x - clickX, p.y - clickY) < 20) {
+                if (p.userData) openMartyrCardModal(p.userData);
+                break;
             }
-        }
-
-        if (closestStar && closestStar.userData) {
-            openMartyrCardModal(closestStar.userData);
         }
     });
 }
@@ -789,10 +829,9 @@ function openMartyrCardModal(person) {
     document.getElementById('meta-desc').innerText = `الاسم: ${person.name_ar || person.name}\nالعمر: ${person.age || 'غير معروف'}\nالجنس: ${person.gender || 'غير محدد'}`;
     
     container.innerHTML = `
-        <div class="flex flex-col items-center justify-center p-6 text-center text-white">
-            <div class="w-16 h-16 bg-red-600/20 border border-red-600 rounded-full flex items-center justify-center mb-4 text-2xl font-black text-red-500">⭐</div>
-            <h3 class="text-xl font-black text-white mb-2">${person.name_ar || person.name || 'شهيد'}</h3>
-            <p class="text-sm text-gray-300">العمر: ${person.age || 'غير معروف'}</p>
+        <div class="flex flex-col items-center justify-center p-4 text-center text-white">
+            <h3 class="text-lg font-bold text-white mb-1">${person.name_ar || person.name || 'شهيد'}</h3>
+            <p class="text-xs text-gray-400">العمر: ${person.age || 'غير معروف'}</p>
         </div>
     `;
     modal.style.display = 'flex';
@@ -828,8 +867,8 @@ for(let i=0;i<dotsToRender;i++){
 points.push({
 x:Math.random()*width,y:Math.random()*height,
 vx:(Math.random()-0.5)*0.25,vy:(Math.random()-0.5)*0.25,
-alpha:0.6,baseAlpha:0.6,targetAlpha:0.6,scale:1,targetScale:1,
-color:'#ffffff',userData:gazaSouls[i],isMatched:false
+alpha:0.6,baseAlpha:0.6,scale:1,
+color:'#ffffff',userData:gazaSouls[i]
 });
 }
 animateCounter(gazaSouls.length>0?gazaSouls.length:0);
@@ -838,14 +877,52 @@ animateCounter(gazaSouls.length>0?gazaSouls.length:0);
 function gameLoop(){
 if(!ctx)return;
 ctx.clearRect(0,0,width,height);
+
+let hoveredStar = null;
+
 for(let i=0;i<points.length;i++){
-const p=points[i];
-p.x+=p.vx;p.y+=p.vy;
-if(p.x<0)p.x=width;else if(p.x>width)p.x=0;
-if(p.y<0)p.y=height;else if(p.y>height)p.y=0;
-ctx.beginPath();ctx.arc(p.x,p.y,1.8,0,Math.PI*2);
-ctx.fillStyle=p.color;ctx.globalAlpha=p.alpha;ctx.fill();
+    const p=points[i];
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0)p.x=width;else if(p.x>width)p.x=0;
+    if(p.y<0)p.y=height;else if(p.y>height)p.y=0;
+
+    // فحص المسافة بين النجمة ومؤشر الماوس لتطبيق التوهج والتكبير
+    const dist = Math.hypot(p.x - mouseX, p.y - mouseY);
+    let currentRadius = 1.8;
+    let currentAlpha = p.alpha;
+    let currentColor = p.color;
+
+    if (dist < 22) {
+        hoveredStar = p;
+        currentRadius = 4.5;
+        currentAlpha = 1.0;
+        currentColor = '#ff3333';
+        ctx.shadowColor = '#ff0000';
+        ctx.shadowBlur = 15;
+    } else {
+        ctx.shadowBlur = 0;
+    }
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, currentRadius, 0, Math.PI*2);
+    ctx.fillStyle = currentColor;
+    ctx.globalAlpha = currentAlpha;
+    ctx.fill();
+    ctx.shadowBlur = 0;
 }
+
+// عرض بطاقة المعاينة العائمة عند المرور على نجمة
+const tooltip = document.getElementById('star-tooltip');
+if (hoveredStar && hoveredStar.userData) {
+    document.getElementById('tooltip-name').innerText = hoveredStar.userData.name_ar || "شهيد مجهول";
+    document.getElementById('tooltip-age').innerText = `العمر: ${hoveredStar.userData.age || 'غير معروف'}`;
+    tooltip.style.display = 'block';
+    tooltip.style.left = (mouseX + 15) + 'px';
+    tooltip.style.top = (mouseY + 15) + 'px';
+} else {
+    if (tooltip) tooltip.style.display = 'none';
+}
+
 ctx.globalAlpha=1;
 updateAndDrawShootingStars();
 requestAnimationFrame(gameLoop);
