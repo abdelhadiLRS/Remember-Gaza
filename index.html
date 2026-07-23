@@ -6,6 +6,9 @@
 <link rel="icon" type="image/png" href="favicon.png">
 <title id="page-title">أرواح فلسطين | Palestinian Souls</title>
 
+<!-- مكتبة jQuery الأساسية (تمت إضافتها لحل أخطاء $ و jQuery غير المعرفة) -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
 <!-- مكتبات وخطوط خارجية -->
 <link rel="stylesheet" href="bootstrap.min.css">
 <link rel="stylesheet" href="tailwind-compat.css">
@@ -407,7 +410,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
             <button class="modal-close" onclick="closeMilestoneModal()" title="إغلاق">✕</button>
         </div>
         <div class="tlc-modal-body">
-            <img id="tlc-modal-img" class="tlc-modal-img" src="" alt="صورة المحطة">
+            <img id="tlc-modal-img" class="tlc-modal-img" src="" alt="صورة المحطة" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23111%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23666%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2216%22>أرشيف أرواح فلسطين</text></svg>'">
             <div id="tlc-modal-desc" class="text-gray-200 leading-relaxed text-sm"></div>
             <div id="tlc-modal-stat" class="bg-black/50 border border-white/10 p-4 rounded-xl"></div>
             <div id="tlc-modal-source" class="text-xs text-gray-400"></div>
@@ -461,7 +464,6 @@ const torrentConfig = {
     ]
 };
 
-/* بيانات أبرز المحطات التاريخية مصنفة حسب العقود تماماً مثل التصميم المطلوب */
 const milestonesDecades = [
   {
     decade: "1920s",
@@ -568,7 +570,6 @@ window.shareSite=function(){
 navigator.clipboard.writeText(window.location.href).then(()=>alert('تم نسخ رابط المنصة بنجاح!'));
 };
 
-/* رندر المحطات السينمائية تماماً مثل تصميم مرصد شيرين بالأعوام الضخمة البارزة */
 function renderMilestonesCinematic() {
     if (milestonesRendered) return;
     const trackerBar = document.getElementById('tlc-tracker-bar');
@@ -591,7 +592,7 @@ function renderMilestonesCinematic() {
         dec.items.forEach(m => {
             contentHTML += `
                 <div class="tlc-card-mini" onclick='openMilestoneModal(${JSON.stringify(m)})'>
-                    <img src="${m.img}" class="tlc-card-mini-img" alt="" onerror="this.src='./images/og_default.jpg'">
+                    <img src="${m.img}" class="tlc-card-mini-img" alt="" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2245%22 height=%2245%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23222%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23777%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2210%22>أرشيف</text></svg>'">
                     <div class="tlc-card-mini-info">
                         <div class="tlc-card-mini-year">${m.year}</div>
                         <div class="tlc-card-mini-title">${m.title}</div>
