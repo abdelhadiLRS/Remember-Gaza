@@ -13,8 +13,14 @@
 <script>tailwind.config={theme:{extend:{colors:{primary:'#cc0000',blood:'#220000',glass:'rgba(15, 15, 15, 0.8)'}}}}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<!-- مكتبة WebTorrent لجلب الفيديوهات من الأرشيف والتورنت -->
-<script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
+
+<!-- تحميل WebTorrent بالطريقة الرسمية الحديثة عبر ESM CDN كما في التوثيق -->
+<script type="module">
+  import WebTorrent from 'https://esm.sh/webtorrent/dist/webtorrent.min.js';
+  window.WebTorrentInstance = new WebTorrent();
+  window.dispatchEvent(new Event('webtorrent-ready'));
+</script>
+
 <!-- مكتبة Leaflet للخرائط التفاعلية -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -342,18 +348,13 @@ let allVideoFiles = [];
 let map = null;
 let markersLayer = null;
 
-const wtClient = new WebTorrent();
-
 const torrentConfig = {
-    file1: "../data/file1.torrent",
-    file2: "../data/file2.torrent",
+    file1: "magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Fexodus.desync.com%3A6969",
+    file2: "magnet:?xt=urn:btih:dd825ec3d655f4625514f777e56238b6887163f9&dn=Big+Buck+Bunny&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80",
     trackers: [
         "udp://tracker.opentrackr.org:1337/announce",
         "udp://open.tracker.cc:1337/announce",
-        "udp://exodus.desync.com:6969/announce",
-        "udp://tracker.torrent.eu.org:451/announce",
-        "udp://open.demonii.com:1337/announce",
-        "udp://tracker.openbittorrent.com:6969/announce"
+        "udp://exodus.desync.com:6969/announce"
     ]
 };
 
@@ -444,7 +445,7 @@ async function fetchTorrentVideos() {
     grid.innerHTML = `
         <div class="col-span-full flex flex-col items-center justify-center py-16 text-gray-300">
             <div class="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p class="text-lg font-bold">جاري الاتصال بـ WebTorrent وجلب ملفات التورنت الحقيقية...</p>
+            <p class="text-lg font-bold">جاري الاتصال بـ WebTorrent وجلب الأرشيف الميداني...</p>
         </div>
     `;
 
@@ -484,21 +485,10 @@ async function fetchTorrentVideos() {
         }
     ];
 
-    // تفعيل WebTorrent للتحميل الفعلي للملفات
-    [torrentConfig.file1, torrentConfig.file2].forEach(fileTorrent => {
-        try {
-            wtClient.add(fileTorrent, { trackers: torrentConfig.trackers }, function (torrent) {
-                console.log('Torrent added successfully:', torrent.infoHash);
-            });
-        } catch(e) {
-            console.error('Torrent add error:', e);
-        }
-    });
-
     setTimeout(() => {
         torrentsLoaded = true;
         renderArchiveGallery();
-    }, 700);
+    }, 600);
 }
 
 function renderArchiveGallery(filteredList = null) {
@@ -554,40 +544,48 @@ function openMediaModal(item) {
     const container = document.getElementById('modal-media-container');
     document.getElementById('meta-date').innerText = item.date;
     document.getElementById('meta-type').innerText = item.type;
-    // تم حذف كلمة "عبر" بناءً على طلبك
-    document.getElementById('meta-source').innerText = `${item.source || 'أرشيف موثق'} - ${item.torrentSource || ''}`;
+    document.getElementById('meta-source').innerText = `${item.source || 'أرشيف موثق'}`;
     document.getElementById('meta-desc').innerText = item.desc || item.name;
     
     container.innerHTML = `
         <div class="flex flex-col items-center justify-center p-4 text-gray-300">
             <div class="w-8 h-8 border-3 border-red-600 border-t-transparent rounded-full animate-spin mb-2"></div>
-            <p class="text-xs">جاري تهيئة البث عبر WebTorrent...</p>
+            <p class="text-xs">جاري تهيئة البث المرئي...</p>
         </div>
     `;
     modal.style.display = 'flex';
 
-    // محاولة جلب الفيديو الفعلي عبر WebTorrent مع مشغل مباشر
-    wtClient.add(item.torrentSource, { trackers: torrentConfig.trackers }, function (torrent) {
-        const file = torrent.files.find(f => f.name.endsWith('.mp4') || f.name.endsWith('.mkv')) || torrent.files[0];
-        if (file) {
-            file.getBlobURL((err, url) => {
-                if (!err && url) {
-                    container.innerHTML = `
-                        <video controls autoplay playsinline class="w-full h-full object-cover" style="max-height: 350px;">
-                            <source src="${url}" type="video/mp4">
-                            متصفحك لا يدعم عرض الفيديو.
-                        </video>
-                    `;
-                    return;
-                }
-                playDirectVideo();
-            });
+    setTimeout(() => {
+        if (window.WebTorrentInstance) {
+            try {
+                window.WebTorrentInstance.add(item.torrentSource, { trackers: torrentConfig.trackers }, function (torrent) {
+                    const file = torrent.files.find(f => f.name.endsWith('.mp4') || f.name.endsWith('.mkv')) || torrent.files[0];
+                    if (file) {
+                        file.getBlobURL((err, url) => {
+                            if (!err && url) {
+                                container.innerHTML = `
+                                    <video controls autoplay playsinline class="w-full h-full object-cover" style="max-height: 350px;">
+                                        <source src="${url}" type="video/mp4">
+                                        متصفحك لا يدعم عرض الفيديو.
+                                    </video>
+                                `;
+                                return;
+                            }
+                            playFallbackVideo();
+                        });
+                        return;
+                    }
+                    playFallbackVideo();
+                });
+            } catch(e) {
+                playFallbackVideo();
+            }
         } else {
-            playDirectVideo();
+            playFallbackVideo();
         }
-    });
+    }, 400);
 
-    function playDirectVideo() {
+    function playFallbackVideo() {
         if (item.videoUrl) {
             container.innerHTML = `
                 <video controls autoplay playsinline class="w-full h-full object-cover" style="max-height: 350px;">
