@@ -593,14 +593,31 @@ async function openMediaModal(item) {
     modal.style.display = 'flex';
 
     try {
+        // تنظيف أي جلسة تورنت سابقة لمنع أخطاء التكرار (Torrent duplicate) واستنزاف الذاكرة
+        if (window.WebTorrentInstance && window.WebTorrentInstance.torrents.length > 0) {
+            window.WebTorrentInstance.torrents.forEach(t => t.destroy());
+        }
+
         const res = await fetch(item.torrentSource);
         if (!res.ok) throw new Error("تعذر جلب ملف التورنت");
         const torrentBuffer = await res.arrayBuffer();
 
         if (window.WebTorrentInstance) {
             window.WebTorrentInstance.add(torrentBuffer, { trackers: torrentConfig.trackers }, function (torrent) {
-                const file = torrent.files.find(f => f.name.endsWith('.mp4') || f.name.endsWith('.mkv') || f.name.endsWith('.webm')) || torrent.files[0];
+                // البحث المرن عن ملف الفيديو (يشمل الحروف الكبيرة والصغيرة)
+                const file = torrent.files.find(f => {
+                    const name = f.name.toLowerCase();
+                    return name.endsWith('.mp4') || name.endsWith('.mkv') || name.endsWith('.webm') || name.endsWith('.mov');
+                }) || torrent.files[0];
+
                 if (file) {
+                    container.innerHTML = `
+                        <div class="flex flex-col items-center justify-center p-4 text-gray-300">
+                            <div class="w-8 h-8 border-3 border-red-600 border-t-transparent rounded-full animate-spin mb-2"></div>
+                            <p class="text-xs">جاري الاتصال بالقرناء وبدء البث المباشر...</p>
+                        </div>
+                    `;
+
                     file.getBlobURL((err, url) => {
                         if (!err && url) {
                             container.innerHTML = `
@@ -639,6 +656,10 @@ async function openMediaModal(item) {
 document.getElementById('modal-close').onclick = () => {
     const container = document.getElementById('modal-media-container');
     container.innerHTML = '';
+    // إيقاف وتدمير أي تورنت نشط عند إغلاق النافذة لإيقاف التحميل بالخلفية
+    if (window.WebTorrentInstance && window.WebTorrentInstance.torrents.length > 0) {
+        window.WebTorrentInstance.torrents.forEach(t => t.destroy());
+    }
     document.getElementById('modal-overlay').style.display = 'none';
 };
 
