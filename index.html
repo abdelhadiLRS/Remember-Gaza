@@ -99,7 +99,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .share-btn:hover{background:#0056b3;border-color:#007bff;}
 .font-amiri{font-family:'Amiri',serif;}
 
-/* تصميم الخط الزمني السينمائي والثابت في الأسفل */
+/* تصميم الخط الزمني السينمائي */
 .tlc-container { position: relative; width: 100%; padding-bottom: 90px; max-width: 1100px; margin: 0 auto; }
 .tlc-tracker { 
     position: fixed; 
@@ -234,21 +234,21 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 </main>
 
-<!-- واجهة أبرز المحطات والخط الزمني الثابت في الأسفل -->
+<!-- واجهة أبرز المحطات (خالية من عناصر الـ Fixed الداخلية لمنع التعليق) -->
 <main id="milestones-view" class="text-white">
 <div class="tlc-container">
     <div id="tlc-scenes-container"></div>
 </div>
-<nav class="tlc-tracker" aria-label="تصفّح الخط الزمني">
+</main>
+
+<!-- شريط الخط الزمني الثابت في الجذر لمنع أي تقطيع أو بطء -->
+<nav class="tlc-tracker" id="global-tlc-tracker" aria-label="تصفّح الخط الزمني" style="display: none;">
     <span class="tlc-tracker-marker" aria-hidden="true"></span>
     <span class="tlc-tracker-current is-visible" id="tlc-tracker-current" aria-live="polite">1920s</span>
     <div class="tlc-tracker-clip">
-        <div class="tlc-tracker-track" data-draggable="" style="--tlc-tracker-x: 0px; padding-inline: 0px;" id="tlc-tracker-bar">
-            <!-- سيتم تعبئة القائمة بالمعرّفات الدقيقة هنا ديناميكياً -->
-        </div>
+        <div class="tlc-tracker-track" data-draggable="" style="--tlc-tracker-x: 0px; padding-inline: 0px;" id="tlc-tracker-bar"></div>
     </div>
 </nav>
-</main>
 
 <main id="no-data-view" class="flex items-center justify-center">
 <div class="glass-panel p-10 rounded-2xl text-center border border-red-600/30 shadow-[0_0_30px_rgba(204,0,0,0.15)]">
@@ -959,6 +959,12 @@ window.switchMainMode = function(mode) {
     ['map-view', 'stats-view', 'videos-view', 'no-data-view', 'milestones-view'].forEach(id => {
         document.getElementById(id).style.display = 'none';
     });
+
+    // التحكم في ظهور شريط التتبع الثابت في الأسفل بناءً على التبويب
+    const globalTracker = document.getElementById('global-tlc-tracker');
+    if (globalTracker) {
+        globalTracker.style.display = (mode === 'milestones') ? 'block' : 'none';
+    }
     
     const canvasLayer = document.getElementById('canvas-layer');
     if(canvasLayer){canvasLayer.style.opacity = '1';}
