@@ -142,7 +142,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .tlc-stat-num { display: block; font-size: 1.4rem; font-weight: 900; color: #ff4d4d; }
 .tlc-stat-label { font-size: 0.9rem; color: #94a3b8; font-weight: bold;}
 
-/* بطاقة المعاينة العائمة عند المرور على النجوم */
+/* بطاقة المعاينة العائمة عند المرور على النجوم (تتكيّف تلقائياً لعدم تجاوز إطار الشاشة) */
 #star-tooltip {
     position: fixed;
     z-index: 50;
@@ -155,7 +155,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     box-shadow: 0 10px 25px rgba(204, 0, 0, 0.3);
     display: none;
     font-size: 0.8rem;
-    max-width: 220px;
+    max-width: 240px;
 }
 </style>
 </head>
@@ -165,7 +165,8 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 
 <!-- بطاقة معاينة عائمة للنجوم عند المرور عليها -->
 <div id="star-tooltip">
-    <div id="tooltip-name" class="font-bold text-red-500 mb-1 truncate"></div>
+    <div id="tooltip-name" class="font-bold text-red-500 mb-0.5 truncate"></div>
+    <div id="tooltip-name-en" class="text-gray-400 text-[11px] mb-1 truncate font-mono"></div>
     <div id="tooltip-age" class="text-gray-300 text-[11px]"></div>
 </div>
 
@@ -360,7 +361,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
 </div>
 
-<!-- نافذة مستقلة خاصة ببطاقة الشهيد (النجوم والخريطة) -->
+<!-- نافذة مستقلة خاصة ببطاقة الشهيد (بدون جنس ومع الاسم بالإنجليزية) -->
 <div id="martyr-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); align-items: center; justify-content: center; padding: 20px;">
     <div class="modal-box" style="max-width: 450px;">
         <div class="modal-header">
@@ -375,11 +376,10 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
             </div>
             <div>
                 <h3 id="martyr-modal-name" class="text-xl font-black text-white mb-1"></h3>
-                <p class="text-xs text-red-400 font-bold tracking-wider">سجل موثق</p>
+                <p id="martyr-modal-name-en" class="text-xs text-gray-400 font-mono tracking-wider"></p>
             </div>
             <div class="bg-black/50 border border-white/10 p-4 rounded-xl text-right space-y-2.5 text-sm">
                 <div class="flex justify-between border-b border-white/5 pb-1.5"><span class="text-gray-400">العمر:</span> <strong id="martyr-modal-age" class="text-white"></strong></div>
-                <div class="flex justify-between border-b border-white/5 pb-1.5"><span class="text-gray-400">الجنس:</span> <strong id="martyr-modal-gender" class="text-white"></strong></div>
                 <div class="flex justify-between"><span class="text-gray-400">رقم الهوية:</span> <strong id="martyr-modal-id" class="text-white font-mono"></strong></div>
             </div>
         </div>
@@ -576,7 +576,6 @@ document.querySelectorAll('.view-btn').forEach(btn => {
     };
 });
 
-// دالة جلب وتשغيل ملفات التورنت الحقيقية عبر fetch و ArrayBuffer
 async function openMediaModal(item) {
     const modal = document.getElementById('modal-overlay');
     const container = document.getElementById('modal-media-container');
@@ -643,7 +642,6 @@ document.getElementById('modal-close').onclick = () => {
     document.getElementById('modal-overlay').style.display = 'none';
 };
 
-// إغلاق نافذة الشهداء المنبثقة
 document.getElementById('martyr-modal-close').onclick = () => {
     document.getElementById('martyr-modal-overlay').style.display = 'none';
 };
@@ -798,8 +796,8 @@ window.switchMainMode = function(mode) {
     } else if(mode === 'map') {
         document.getElementById('map-view').style.display = 'flex';
         renderMapAndList(gazaSouls.length > 0 ? gazaSouls : [
-            {name_ar: "رأفت امير حمدان عابد", age: 50, id: "999783350"},
-            {name_ar: "ناهض حلمي صالح الميدنه", age: 53, id: "999783079"}
+            {name_ar: "رأفت امير حمدان عابد", name_en: "Raafat A. Abed", age: 50, id: "999783350"},
+            {name_ar: "ناهض حلمي صالح الميدنه", name_en: "Nahed H. Al-Medhaina", age: 53, id: "999783079"}
         ]);
         setTimeout(() => { if (map) map.invalidateSize(); }, 300);
     }
@@ -815,7 +813,6 @@ canvas.width=width;canvas.height=height;
 window.addEventListener('resize',resize);
 resize();
 
-// تتبع المؤشر وإبراز النجوم مع عرض بطاقة المعاينة عند المرور (Hover) ونقره لفتح بطاقة الشهيد
 if (canvas) {
     canvas.addEventListener('mousemove', (e) => {
         const rect = canvas.getBoundingClientRect();
@@ -844,15 +841,13 @@ if (canvas) {
     });
 }
 
-// دالة عرض بطاقة بيانات الشهيد المستقلة مع دعم خانة الصورة
 function openMartyrCardModal(person) {
     const modal = document.getElementById('martyr-modal-overlay');
     document.getElementById('martyr-modal-name').innerText = person.name_ar || person.name || 'شهيد مجهول';
+    document.getElementById('martyr-modal-name-en').innerText = person.name_en || person.english_name || '';
     document.getElementById('martyr-modal-age').innerText = person.age || 'غير معروف';
-    document.getElementById('martyr-modal-gender').innerText = (person.gender === 'F' ? 'أنثى' : (person.gender === 'M' ? 'ذكر' : 'غير محدد'));
     document.getElementById('martyr-modal-id').innerText = person.id || '-';
     
-    // خانة الصورة (تحسباً لوجود صور للشهداء مستقبلاً في البيانات)
     const photoContainer = document.getElementById('martyr-modal-photo');
     if (person.image) {
         photoContainer.innerHTML = `<img src="${person.image}" class="w-full h-full object-cover" alt="صورة الشهيد">`;
@@ -878,7 +873,10 @@ const data = JSON.parse(text);
 const list = Array.isArray(data) ? data : (data.data || []);
 gazaSouls = list.map(item => ({
 name_ar: item.name_ar || item.name || "شهيد مجهول",
-age: item.age || "غير معروف", gender: item.gender || "M", id: item.id || "-", image: item.image || null
+name_en: item.name_en || item.english_name || item.name || "Unknown Martyr",
+age: item.age || "غير معروف", 
+id: item.id || "-", 
+image: item.image || null
 }));
 }
 }
@@ -939,13 +937,29 @@ for(let i=0;i<points.length;i++){
     ctx.shadowBlur = 0;
 }
 
+// عرض بطاقة المعاينة العائمة مع منع تجاوز إطار/كادر الشاشة (Smart Positioning)
 const tooltip = document.getElementById('star-tooltip');
 if (hoveredStar && hoveredStar.userData) {
     document.getElementById('tooltip-name').innerText = hoveredStar.userData.name_ar || "شهيد مجهول";
+    document.getElementById('tooltip-name-en').innerText = hoveredStar.userData.name_en || "";
     document.getElementById('tooltip-age').innerText = `العمر: ${hoveredStar.userData.age || 'غير معروف'}`;
+    
     tooltip.style.display = 'block';
-    tooltip.style.left = (mouseX + 15) + 'px';
-    tooltip.style.top = (mouseY + 15) + 'px';
+    
+    let tLeft = mouseX + 15;
+    let tTop = mouseY + 15;
+    
+    // إذا كانت البطاقة ستتجاوز الحافة اليمنى للشاشة، يتم إرجاعها لليسار
+    if (tLeft + 250 > width) {
+        tLeft = mouseX - 260;
+    }
+    // إذا كانت البطاقة ستتجاوز الحافة السفلية للشاشة، يتم إظهارها للأعلى
+    if (tTop + 90 > height) {
+        tTop = mouseY - 80;
+    }
+    
+    tooltip.style.left = tLeft + 'px';
+    tooltip.style.top = tTop + 'px';
 } else {
     if (tooltip) tooltip.style.display = 'none';
 }
