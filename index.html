@@ -101,7 +101,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .share-btn:hover{background:#0056b3;border-color:#007bff;}
 .font-amiri{font-family:'Amiri',serif;}
 
-/* تصميم إبداعي متطور لأبرز المحطات (الخط الزمني السينمائي لمرصد شيرين) */
+/* تصميم إبداعي متطور لأبرز المحطات (الخط الزمني السينمائي) */
 .vertical-timeline-container { position: relative; max-width: 950px; margin: 0 auto; padding: 30px 15px; font-family: 'Cairo', sans-serif; }
 .vertical-timeline-container::before { content: ''; position: absolute; right: 38px; top: 0; bottom: 0; width: 4px; background: linear-gradient(to bottom, #cc0000, #ff4d4d, rgba(204,0,0,0.05)); box-shadow: 0 0 15px rgba(204,0,0,0.4); }
 .v-decade-section { margin-bottom: 70px; position: relative; }
@@ -146,7 +146,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </head>
 <body>
 
-<!-- طبقات الكانفس للنجوم والشهب المتساقطة المبتكرة -->
+<!-- طبقات الكانفس للنجوم والشهب المتساقطة -->
 <div id="canvas-layer"><canvas id="stars-canvas" class="w-full h-full block"></canvas></div>
 <canvas id="shooting-stars-canvas"></canvas>
 
@@ -176,13 +176,14 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 </main>
 
-<!-- واجهة أبرز المحطات الإبداعية بالخط الزمني العمودي (مرصد شيرين منذ 2000) -->
+<!-- واجهة أبرز المحطات الإبداعية بالخط الزمني العمودي -->
 <main id="milestones-view" class="text-white">
 <div class="vertical-timeline-container">
     <div class="text-center mb-12">
-        <h2 class="text-3xl md:text-4xl font-black mb-3 text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-400 to-white drop-shadow-lg">أبرز المحطات والتوثيق التاريخي (مرصد شيرين)</h2>
-        <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto">محطات الصمود والنضال الفلسطيني منذ عام 2000، توثيق حي للأحداث والملاحم والشهداء</p>
+        <h2 class="text-3xl md:text-4xl font-black mb-3 text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-400 to-white drop-shadow-lg">أبرز المحطات والتوثيق التاريخي</h2>
+        <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto">محطات الصمود والنضال الفلسطيني عبر العقود، توثيق حي للأحداث والملاحم الخالدة</p>
     </div>
+    <!-- سيتم حقن الخط الزمني لشيرين هنا -->
     <div id="tlc-scenes-container"></div>
 </div>
 </main>
@@ -356,7 +357,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
             <button class="modal-close" onclick="closeMilestoneModal()" title="إغلاق">✕</button>
         </div>
         <div class="tlc-modal-body">
-            <img id="tlc-modal-img" class="tlc-modal-img" src="" alt="صورة المحطة" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23111%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23666%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Cairo%22 font-size=%2216%22>مرصد شيرين</text></svg>'">
+            <img id="tlc-modal-img" class="tlc-modal-img" src="" alt="صورة المحطة" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23111%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23666%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Cairo%22 font-size=%2216%22>أرشيف أرواح فلسطين</text></svg>'">
             <div id="tlc-modal-desc" class="text-gray-200 leading-relaxed text-sm"></div>
             <div id="tlc-modal-stat" class="bg-black/50 border border-white/10 p-4 rounded-xl"></div>
             <div id="tlc-modal-source" class="text-xs text-gray-400"></div>
@@ -364,7 +365,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
 </div>
 
-<!-- نافذة بطاقة الشهيد الإبداعية -->
+<!-- نافذة بطاقة الشهيد الإبداعية مع زر مشاركة أحمر غير فاقع وتحقق اسم اللغة الأخرى -->
 <div id="martyr-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
     <div class="modal-box" style="max-width: 450px; background: linear-gradient(135deg, #121212 0%, #1a0505 100%); border: 1px solid rgba(204,0,0,0.4); box-shadow: 0 25px 50px rgba(0,0,0,0.9);">
         <div class="modal-header border-b border-red-600/20">
@@ -413,52 +414,88 @@ const torrentConfig = {
     ]
 };
 
-/* بيانات مرصد شيرين للخط الزمني (منذ عام 2000 وحتى 2026) */
 const milestonesDecades = [
+  {
+    decadeId: "tlc-d1920",
+    decade: "1920s",
+    items: [
+      {id: "tlc-m18", year: "1929", title: "هبّة البراق", subtitle: "ثورة البراق", img: "./images/timeline/18.jpg", desc: "في آب/أغسطس 1929 انتفض الفلسطينيون احتجاجاً على محاولات السيطرة على حائط البراق المحاذي للمسجد الأقصى. اندلعت اشتباكات في القدس والخليل وصفد، وردّ الانتداب البريطاني بالقوة المفرطة، واستشهد أكثر من 116 فلسطينياً، وأُعدم ثلاثة من قادة الثورة لاحقاً.", martyrs: "حوالي 116 شهيد", sourceTitle: "ويكيبيديا - ثورة البراق 1929", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AB%D9%88%D8%B1%D8%A9_%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%82"}
+    ]
+  },
+  {
+    decadeId: "tlc-d1930",
+    decade: "1930s",
+    items: [
+      {id: "tlc-m19", year: "1936", title: "الثورة الفلسطينية الكبرى", subtitle: "ثورة الست أشهر", img: "./images/timeline/19.jpg", desc: "انطلقت الثورة الفلسطينية الكبرى في نيسان/أبريل 1936 بإضراب عام شامل امتد ستة أشهر، ثم تحولت إلى مقاومة مسلحة استمرت حتى 1939 استهدفت الانتداب البريطاني.", martyrs: "5,000 شهيد", sourceTitle: "ويكيبيديا - الثورة الفلسطينية الكبرى", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%A7%D9%84%D8%AB%D9%88%D8%B1%D8%A9_%D8%A7%D9%84%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86%D9%8A%D8%A9_%D8%A7%D9%84%D9%83%D8%A8%D8%B1%D9%89"},
+      {id: "tlc-m1", year: "1936", title: "مرحلة التطهير العرقي في فلسطين", subtitle: "النكبة ومقدماتها", img: "./images/timeline/1.jpg", desc: "بدأت المجازر الإسرائيلية بحق الفلسطينيين قبل الإعلان عن قيام دولة إسرائيل بنحو 11 عاماً، حيث ارتكبت العصابات الصهيونية أكثر من 57 مجزرة ذهب ضحيتها آلاف المدنيين.", martyrs: "حوالي 5000 شهيد", sourceTitle: "مركز الزيتونة للدراسات", sourceUrl: "https://www.alzaytouna.net"}
+    ]
+  },
+  {
+    decadeId: "tlc-d1940",
+    decade: "1940s",
+    items: [
+      {id: "tlc-m20", year: "1948", title: "مجزرة دير ياسين", subtitle: "التطهير العرقي", img: "./images/timeline/20.jpg", desc: "في فجر التاسع من نيسان 1948، اقتحمت عصابتا الإرغون وشتيرن قرية دير ياسين وارتكبتا مجزرة وحشية لإرهاب الفلسطينيين ودفعهم للنزوح.", martyrs: "254 - 300 شهيد", sourceTitle: "ويكيبيديا - دير ياسين", sourceUrl: "https://ar.wikipedia.org/wiki/%D9%85%D8%AC%D8%B2%D8%B1%D8%A9_%D8%AF%D9%8A%D8%B0_%D9%8A%D8%A7%D8%B3%D9%8A%D9%86"},
+      {id: "tlc-m2", year: "1948", title: "الحرب العربية الإسرائيلية 1948", subtitle: "حرب النكبة", img: "./images/timeline/2.jpg", desc: "دارت عقب إنهاء الانتداب البريطاني وإعلان قيام إسرائيل، وانتهت بتهجير مئات الآلاف واحتلال الأراضي الفلسطينية.", martyrs: "20 - 22 ألف شهيد", sourceTitle: "ويكيبيديا - حرب 1948", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AD%D8%B8_1948"},
+      {id: "tlc-m3", year: "1949", title: "العودة الفردية للاجئين الفلسطينيين", subtitle: "محاولات التسلل والعودة", img: "./images/timeline/3.jpg", desc: "بدأ اللاجئون الفلسطينيون محاولات العودة الفردية والتسلل إلى قراهم وبلداتهم الأصلية لاستعادة ممتلكاتهم أو تفقدها.", martyrs: "مئات الشهداء", sourceTitle: "الأرشيف الفلسطيني", sourceUrl: "https://www.palquest.org"}
+    ]
+  },
+  {
+    decadeId: "tlc-d1950",
+    decade: "1950s",
+    items: [
+      {id: "tlc-m4", year: "1956", title: "احتلال غزة 1956", subtitle: "خلال العدوان الثلاثي", img: "./images/timeline/4.jpg", desc: "احتل جيش الاحتلال قطاع غزة وارتكب مجازر بشعة في خانيونس ورفح خلال العدوان الثلاثي على مصر.", martyrs: "حوالي 1500 شهيد", sourceTitle: "الموسوعة التفاعلية", sourceUrl: "https://www.palquest.org"},
+      {id: "tlc-m21", year: "1956", title: "مجزرة كفر قاسم", subtitle: "حظر التجوال", img: "./images/timeline/21.jpg", desc: "أعدمت قوات حرس الحدود الإسرائيلية 49 فلسطينياً ميدانياً عند مدخل قرية كفر قاسم لخرقهم حظر تجوال لم يُبلّغوا به.", martyrs: "49 شهيداً", sourceTitle: "ويكيبيديا - كفر قاسم", sourceUrl: "https://ar.wikipedia.org/wiki/%D9%85%D8%AC%D8%B2%D8%B1%D8%A9_%D9%83%D9%81%D8%B1_%D9%82%D8%A7%D8%B3%D9%85"}
+    ]
+  },
+  {
+    decadeId: "tlc-d1960",
+    decade: "1960s",
+    items: [
+      {id: "tlc-m5", year: "1967", title: "حرب حزيران 1967", subtitle: "النكسة", img: "./images/timeline/5.jpg", desc: "احتلت إسرائيل كامل فلسطين التاريخية وأراضٍ سورية ومصرية، وضاعفت المساحة بأكثر من ستة أضعاف.", martyrs: "15,000 - 25,000 شهيد", sourceTitle: "ويكيبيديا - حرب 1967", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AD%D8%B1%D8%B8_1967"},
+      {id: "tlc-m7", year: "1968", title: "معركة الكرامة", subtitle: "انتصار الإرادة", img: "./images/timeline/7.jpg", desc: "تصدى الجيش الأردني والفدائيون الفلسطينيون لقوات الاحتلال وأجبروها على الانسحاب الكامل من أرض المعركة.", martyrs: "حوالي 242 شهيد", sourceTitle: "مؤسسة ياسر عرفات", sourceUrl: "https://yaf.ps"}
+    ]
+  },
+  {
+    decadeId: "tlc-d1970",
+    decade: "1970s",
+    items: [
+      {id: "tlc-m22", year: "1976", title: "يوم الأرض", subtitle: "دفاعاً عن الجليل والمثلث", img: "./images/timeline/22.jpg", desc: "خرج فلسطينيو الداخل في إضراب عام رفضاً لمصادرة الأراضي، وواجه الاحتلال المتظاهرين بالرصاص الحي.", martyrs: "6 شهداء", sourceTitle: "ويكيبيديا - يوم الأرض", sourceUrl: "https://ar.wikipedia.org"}
+    ]
+  },
+  {
+    decadeId: "tlc-d1980",
+    decade: "1980s",
+    items: [
+      {id: "tlc-m10", year: "1982", title: "مجزرة صبرا وشاتيلا", subtitle: "تحت أنوار القنابل المضيئة", img: "./images/timeline/10.jpg", desc: "ارتكبت الميليشيات اللبنانية المتحالفة مع الاحتلال مجزرة مروعة بحق المدنيين العزل في مخيم شاتيلا بحماية الجيش الإسرائيلي.", martyrs: "3,000 - 5,000 شهيد", sourceTitle: "الجزيرة نت", sourceUrl: "https://www.aljazeera.net"},
+      {id: "tlc-m11", year: "1987", title: "الانتفاضة الفلسطينية الأولى", subtitle: "انتفاضة الحجارة", img: "./images/timeline/11.jpg", desc: "انتفاضة شعبية عارمة انطلقت من قطاع غزة وامتدت لكل فلسطين رفضا للاحتلال والقمع اليومي.", martyrs: "1550 شهيد", sourceTitle: "وكالة وفا", sourceUrl: "https://info.wafa.ps"}
+    ]
+  },
+  {
+    decadeId: "tlc-d1990",
+    decade: "1990s",
+    items: [
+      {id: "tlc-m25", year: "1994", title: "مجزرة الحرم الإبراهيمي", subtitle: "مجزرة الفجر في رمضان", img: "./images/timeline/25.jpg", desc: "اقتحم المستوطن باروخ غولدشتاين الحرم الإبراهيمي في الخليل وأمطر المصلين السجود بالرصاص فاستشهد العشرات.", martyrs: "29 شهيداً", sourceTitle: "ويكيبيديا - الحرم الإبراهيمي", sourceUrl: "https://ar.wikipedia.org"}
+    ]
+  },
   {
     decadeId: "tlc-d2000",
     decade: "2000s",
     items: [
-      {id: "tlc-m2000", year: "2000", title: "اندلاع انتفاضة الأقصى", subtitle: "استشهاد الطفل محمد الدرة", img: "./images/timeline/m2000.jpg", desc: "اندلعت الانتفاضة الفلسطينية الثانية في 28 أيلول/سبتمبر 2000 عقب اقتحام أرييل شارون للمسجد الأقصى. وثقت عدسات الكاميرات جريمة إعدام الطفل محمد الدرة في أحضان أبيه بمدخل غزة الجنوبي، لتشتعل المواجهات في كافة الأراضي الفلسطينية.", martyrs: "4,412 شهيداً", sourceTitle: "مرصد شيرين - أرشيف انتفاضة الأقصى", sourceUrl: "https://www.shireen.ps"},
-      {id: "tlc-m2002", year: "2002", title: "معركة مخيم جنين واجتياح الضفة", subtitle: "عملية السور الواقي", img: "./images/timeline/m2002.jpg", desc: "شن جيش الاحتلال الإسرائيلي عملية واسعة باسم السور الواقي في نيسان 2002 لاحتلال مدن الضفة الغربية. شهد مخيم جنين ملحمة بطولية استمرت أسابيع وتصدى فيها المقاومون للاجتياح بأسلحة خفيفة رغم الحصار والدمار الهائل.", martyrs: "أكثر من 500 شهيد في الاجتياح وعشرات شهداء المخيم", sourceTitle: "مرصد شيرين - أرشيف 2002", sourceUrl: "https://www.shireen.ps"},
-      {id: "tlc-m2004", year: "2004", title: "استشهاد القائد الرمز ياسر عرفات", subtitle: "حصار المقاطعة", img: "./images/timeline/m2004.jpg", desc: "استشهد الرئيس الفلسطيني ياسر عرفات في 11 تشرين الثاني/نوفمبر 2004 في رام الله بعد حصار طويل فرضته قوات الاحتلال على مقر المقاطعة وسط اتقاد الغضب الشعبي الفلسطيني.", martyrs: "رمز وطني جامع", sourceTitle: "مرصد شيرين - توثيق 2004", sourceUrl: "https://www.shireen.ps"}
+      {id: "tlc-m12", year: "2000", title: "الانتفاضة الفلسطينية الثانية", subtitle: "انتفاضة الأقصى", img: "./images/timeline/12.jpg", desc: "اندلعت عقب اقتحام أرييل شارون باحات المسجد الأقصى، وتميزت بمواجهات ضارية واجتياحات واسعة لمدن الضفة الغربية.", martyrs: "4412 شهيد", sourceTitle: "الجزيرة نت", sourceUrl: "https://www.aljazeera.net"}
     ]
   },
   {
-    decadeId: "tlc-d2008",
-    decade: "2008s",
+    decadeId: "tlc-d2010",
+    decade: "2010s",
     items: [
-      {id: "tlc-m2008", year: "2008 - 2009", title: "حرب غزة الأولى (الرصاص المصبوب)", subtitle: "العدوان الشامل على القطاع", img: "./images/timeline/m2008.jpg", desc: "بدأت في 27 كانون الأول/ديسمبر 2008 حرب إسرائيلية واسعة على قطاع غزة استمرت 22 يوماً واستهدفت البنية التحتية والمدنيين ومقار الشرطة، وخلّفت دماراً هائلاً وآلاف الشهداء والجرحى.", martyrs: "1,417 شهيداً", sourceTitle: "مرصد شيرين - حرب 2008", sourceUrl: "https://www.shireen.ps"}
+      {id: "tlc-m15", year: "2014", title: "الجرف الصامد", subtitle: "العصف المأكول", img: "./images/timeline/15.jpg", desc: "حرب شرسة استمرت 51 يوماً شن خلالها الاحتلال آلاف الغارات وارتكب مجازر مروعة بحق العائلات الفلسطينية في غزة.", martyrs: "2322 شهيد", sourceTitle: "الجزيرة نت", sourceUrl: "https://www.aljazeera.net"}
     ]
   },
   {
-    decadeId: "tlc-d2012",
-    decade: "2012s",
+    decadeId: "tlc-d2020",
+    decade: "2020s",
     items: [
-      {id: "tlc-m2012", year: "2012", title: "معركة عمود السحاب", subtitle: "اغتيال أحمد الجعبري", img: "./images/timeline/m2012.jpg", desc: "بدأ العدوان الإسرائيلي في 14 تشرين الثاني 2012 باجتياح جوي واغتيال القيادي أحمد الجعبري، وردّت المقاومة بقصف الصواريخ بعيدة المدى لأول مرة نحو تل أبيب وعسقلان.", martyrs: "174 شهيداً", sourceTitle: "مرصد شيرين - توثيق 2012", sourceUrl: "https://www.shireen.ps"},
-      {id: "tlc-m2014", year: "2014", title: "حرب الجرف الصامد (العصف المأكول)", subtitle: "51 يوماً من الصمود", img: "./images/timeline/m2014.jpg", desc: "أشرس حرب على قطاع غزة استمرت 51 يوماً في صيف 2014، شهدت مجازر مروعة بحق العائلات ومقاومة ضارية كبدت الاحتلال خسائر غير مسبوقة.", martyrs: "2,322 شهيداً", sourceTitle: "مرصد شيرين - توثيق 2014", sourceUrl: "https://www.shireen.ps"}
-    ]
-  },
-  {
-    decadeId: "tlc-d2018",
-    decade: "2018s",
-    items: [
-      {id: "tlc-m2018", year: "2018 - 2019", title: "مسيرات العودة وكسر الحصار", subtitle: "دماء على السواتر الشرقية", img: "./images/timeline/m2018.jpg", desc: "انطلقت في 30 آذار/مارس 2018 مسيرات سلمية جماهيرية على طول السياج الفاصل شرق قطاع غزة للمطالبة بحق العودة وكسر الحصار، وواجهها الاحتلال بقناصة وقمع مفرط خلّف المئات من الشهداء وآلاف الجرحى.", martyrs: "أكثر من 300 شهيد", sourceTitle: "مرصد شيرين - مسيرات العودة", sourceUrl: "https://www.shireen.ps"}
-    ]
-  },
-  {
-    decadeId: "tlc-d2021",
-    decade: "2021s",
-    items: [
-      {id: "tlc-m2021", year: "2021", title: "معركة سيف القدس", subtitle: "توحيد ساحات النضال", img: "./images/timeline/m2021.jpg", desc: "هبة جماهيرية كبرى انطلقت نصرة للقدس وحي الشيخ جراح والمسجد الأقصى في أيار 2021، وامتدت لتشمل كافة مدن الداخل المحتل والضفة الغربية وغزة مع رشقات صاروخية كبرى.", martyrs: "260 شهيداً في غزة ومواجهات الضفة والداخل", sourceTitle: "مرصد شيرين - سيف القدس", sourceUrl: "https://www.shireen.ps"},
-      {id: "tlc-m2022", year: "2022", title: "استشهاد الصحفية شيرين أبو عاقلة", subtitle: "اغتيال الحقيقة في جنين", img: "./images/timeline/m2022.jpg", desc: "في 11 أيار 2022، اغتالت رصاصات الاحتلال الإسرائيلي الصحفية البارزة شيرين أبو عاقلة أثناء تغطيتها اقتحام مخيم جنين، مما أثار صدمة وتنديداً دولياً واسعاً بجريمة استهداف الصحفيين.", martyrs: "أيقونة الصحافة الحرة", sourceTitle: "مرصد شيرين - مرصد الصحفيين", sourceUrl: "https://www.shireen.ps"}
-    ]
-  },
-  {
-    decadeId: "tlc-d2023",
-    decade: "2023s",
-    items: [
-      {id: "tlc-m2023", year: "2023 - 2026", title: "ملحمة طوفان الأقصى وحرب الإبادة", subtitle: "أضخم توثيق ميداني وتاريخي", img: "./images/timeline/m2023.jpg", desc: "انطلقت في 7 تشرين الأول/أكتوبر 2023 معركة طوفان الأقصى، وأعقبتها حرب إبادة جماعية غير مسبوقة استهدفت البشر والشجر والحجر في قطاع غزة والضفة الغربية، قابلها صمود أسطوري وتوثيق دقيق ومستمر لأسماء الشهداء والمفقودين.", martyrs: "100,000+ شهيد ومفقود وجريح", sourceTitle: "مرصد شيرين والأرشيف الميداني", sourceUrl: "https://www.shireen.ps"}
+      {id: "tlc-m30", year: "2023 - 2026", title: "طوفان الأقصى", subtitle: "حرب الإبادة الجماعية المستمرة", img: "./images/timeline/30.jpg", desc: "ملحمة كبرى وحرب إبادة غير مسبوقة على قطاع غزة والضفة الغربية وسط صمود أسطوري وتوثيق ميداني دائم وملاحقات دولية للمجرمين.", martyrs: "100,000+ شهيد ومفقود", sourceTitle: "مجلة لانسيت والأرشيف الميداني", sourceUrl: "https://www.thelancet.com"}
     ]
   }
 ];
@@ -503,30 +540,53 @@ const text = `توثيق شهيد: ${name} | العمر: ${age} | رقم اله�
 navigator.clipboard.writeText(text).then(()=>alert('تم نسخ بيانات بطاقة الشهيد بنجاح!'));
 };
 
-/* رسم الخط الزمني العمودي للمحطات التاريخية (مرصد شيرين) */
+/* رسم الخط الزمني العمودي للمحطات التاريخية متطابقاً مع كلاسات شيرين */
 function renderMilestonesCinematic() {
     if (milestonesRendered) return;
     const scenesContainer = document.getElementById('tlc-scenes-container');
     if(!scenesContainer) return;
 
-    let contentHTML = '';
+    let trackerHTML = `
+    <div class="tlc" id="tlc-root">
+        <nav class="tlc-tracker" aria-label="تصفّح الخط الزمني">
+            <span class="tlc-tracker-marker" aria-hidden="true"></span>
+            <span class="tlc-tracker-current is-visible" id="tlc-tracker-current" aria-live="polite">طوفان الأقصى</span>
+            <span class="tlc-tracker-tooltip" id="tlc-tracker-tooltip" aria-hidden="true"></span>
+            <div class="tlc-tracker-clip">
+                <div class="tlc-tracker-track" data-draggable="true">
+                    <ul class="tlc-tracker-list">
+    `;
+
+    let contentHTML = `<div class="tlc-content" style="margin-top: 40px;">`;
 
     milestonesDecades.forEach((dec) => {
-        const yearNum = dec.decade.replace('s', '');
+        // شريط التتبع (Tracker)
+        trackerHTML += `
+            <li class="tlc-tracker-item tlc-tracker-decade">
+                <a href="#${dec.decadeId}" data-tooltip="${dec.decade}">${dec.decade}</a>
+            </li>
+        `;
         
+        // محتوى العقد والتفاصيل
         contentHTML += `
             <div class="v-decade-section" id="${dec.decadeId}">
-                <div class="v-decade-header">${yearNum}<span>s</span></div>
+                <div class="v-decade-header">${dec.decade.replace('s', '')}<span>s</span></div>
         `;
 
         dec.items.forEach(m => {
+            trackerHTML += `
+                <li class="tlc-tracker-item">
+                    <a href="#${m.id}" data-tooltip="${m.title}">${m.year}</a>
+                </li>
+            `;
+            
             contentHTML += `
                 <div class="v-item-row" id="${m.id}">
                     <div class="v-item-dot"></div>
-                    <div class="v-card" onclick='openMilestoneModal(${JSON.stringify(m)})'>
-                        <img src="${m.img}" class="v-card-img" alt="" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2275%22 height=%2275%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%231a1a1a%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23777%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Cairo%22 font-size=%2211%22>مرصد شيرين</text></svg>'">
+                    <div class="v-card" onclick='openMilestoneModal(${JSON.stringify(m).replace(/'/g, "&#39;")})'>
+                        <img src="${m.img}" class="v-card-img" alt="" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2275%22 height=%2275%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%231a1a1a%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23777%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Cairo%22 font-size=%2211%22>أرشيف</text></svg>'">
                         <div class="v-card-info">
-                            <div class="v-card-year">${m.year}</div>
+                            <div class="v-card-year">${m.year} ${m.subtitle ? ' - ' + m.subtitle : ''}</div>
                             <div class="v-card-title">${m.title}</div>
                         </div>
                     </div>
@@ -537,7 +597,16 @@ function renderMilestonesCinematic() {
         contentHTML += `</div>`;
     });
 
-    scenesContainer.innerHTML = contentHTML;
+    trackerHTML += `
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    `;
+    
+    contentHTML += `</div></div>`; // إغلاق .tlc-content و .tlc
+
+    scenesContainer.innerHTML = trackerHTML + contentHTML;
     milestonesRendered = true;
 }
 
@@ -863,43 +932,54 @@ sCanvas.width=window.innerWidth;sCanvas.height=window.innerHeight;
 window.addEventListener('resize',resize);
 resize();
 
-/* تصميم مبتكر وإبداعي للشهب المتساقطة مع أ ذيل متوهج وجسيمات مضيئة */
+/* إعداد الشهب المتساقطة بشكل إبداعي وبطيء */
 class ShootingStar {
     constructor() {
         this.reset();
     }
     reset() {
-        this.x = Math.random() * window.innerWidth * 1.3;
-        this.y = Math.random() * window.innerHeight * 0.4 - 100;
-        this.len = Math.random() * 140 + 70;
-        this.speed = Math.random() * 18 + 9;
-        this.opacity = Math.random() * 0.9 + 0.3;
-        this.angle = Math.PI / 4 + (Math.random() - 0.5) * 0.15;
-        this.size = Math.random() * 2 + 1.5;
+        this.x = Math.random() * window.innerWidth;
+        this.y = Math.random() * window.innerHeight * 0.4;
+        this.len = Math.random() * 80 + 30; // طول الذيل
+        this.speed = Math.random() * 2 + 1.5; // السرعة أصبحت أقل بكثير من السابق
+        this.opacity = Math.random() * 0.7 + 0.3;
+        this.angle = Math.PI / 4;
+        this.glow = Math.random() * 10 + 5; // معامل التوهج
     }
     update() {
         this.x -= this.speed * Math.cos(this.angle);
         this.y += this.speed * Math.sin(this.angle);
-        if (this.x < -150 || this.y > window.innerHeight + 150) {
+        if (this.x < -100 || this.y > window.innerHeight + 100) {
             this.reset();
+            // بدء الشهاب الجديد من الأطراف العلوية أو اليمنى ليعطي تساقطاً طبيعياً
+            if (Math.random() > 0.5) {
+                this.x = window.innerWidth + 50;
+                this.y = Math.random() * window.innerHeight * 0.5;
+            } else {
+                this.x = Math.random() * window.innerWidth;
+                this.y = -50;
+            }
         }
     }
     draw() {
         if(!sCtx) return;
         sCtx.save();
         
-        let gradient = sCtx.createLinearGradient(
-            this.x, this.y,
-            this.x + this.len * Math.cos(this.angle),
+        // ذيل متدرج الشفافية والإضاءة (Gradient)
+        const grad = sCtx.createLinearGradient(
+            this.x, this.y, 
+            this.x + this.len * Math.cos(this.angle), 
             this.y - this.len * Math.sin(this.angle)
         );
-        gradient.addColorStop(0, `rgba(255, 80, 80, ${this.opacity})`);
-        gradient.addColorStop(0.4, `rgba(255, 255, 255, ${this.opacity * 0.8})`);
-        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-
-        sCtx.strokeStyle = gradient;
-        sCtx.lineWidth = this.size * 2;
-        sCtx.lineCap = 'round';
+        grad.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
+        grad.addColorStop(0.2, `rgba(204, 230, 255, ${this.opacity * 0.8})`); 
+        grad.addColorStop(1, `rgba(0, 0, 0, 0)`); // التلاشي في نهاية الذيل
+        
+        sCtx.strokeStyle = grad;
+        sCtx.lineWidth = 2.5;
+        sCtx.shadowBlur = this.glow;
+        sCtx.shadowColor = "rgba(255, 255, 255, 0.8)";
+        
         sCtx.beginPath();
         sCtx.moveTo(this.x, this.y);
         sCtx.lineTo(
@@ -907,20 +987,18 @@ class ShootingStar {
             this.y - this.len * Math.sin(this.angle)
         );
         sCtx.stroke();
-
-        // رأس الشهاب المتوهج
-        sCtx.fillStyle = '#ffffff';
-        sCtx.shadowColor = '#ff0000';
-        sCtx.shadowBlur = 18;
+        
+        // رأس مضيء للشهاب
         sCtx.beginPath();
-        sCtx.arc(this.x, this.y, this.size * 1.4, 0, Math.PI * 2);
+        sCtx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
+        sCtx.fillStyle = `rgba(255, 255, 255, ${this.opacity + 0.2})`;
         sCtx.fill();
-
+        
         sCtx.restore();
     }
 }
 
-const shootingStarsArr = Array.from({ length: 20 }, () => new ShootingStar());
+const shootingStarsArr = Array.from({ length: 12 }, () => new ShootingStar());
 
 if (canvas) {
     canvas.addEventListener('mousemove', (e) => {
@@ -950,6 +1028,7 @@ if (canvas) {
     });
 }
 
+/* فتح بطاقة الشهيد مع التحقق التلقائي لاسم اللغة الأخرى */
 function openMartyrCardModal(person) {
     const modal = document.getElementById('martyr-modal-overlay');
     document.getElementById('martyr-modal-name').innerText = person.name_ar || person.name || 'شهيد مجهول';
@@ -1018,6 +1097,7 @@ color:'#ffffff',userData:gazaSouls[i]
 animateCounter(gazaSouls.length>0?gazaSouls.length:0);
 }
 
+/* تحسين رسم وحركة النجوم، التوهج، ورسم الشهب المتساقطة بالتوازي */
 function gameLoop(){
 if(ctx){
 ctx.clearRect(0,0,width,height);
@@ -1088,7 +1168,7 @@ if (hoveredStar && hoveredStar.userData) {
 ctx.globalAlpha=1;
 }
 
-/* رسم الشهب المبتكرة في الطبقة الخاصة بها */
+/* رسم الشهب المتساقطة في الطبقة الخاصة بها */
 if(sCtx){
 sCtx.clearRect(0,0,window.innerWidth,window.innerHeight);
 shootingStarsArr.forEach(star => {
