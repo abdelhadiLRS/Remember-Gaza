@@ -172,13 +172,15 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
 </div>
 </main>
 
-<!-- قسم التوثيق المرئي -->
+<!-- قسم التوثيق المرئي مع نظام القوائم وأزرار التنقل الأفقي -->
 <main id="videos-view" class="text-white">
 <div class="w-full max-w-7xl mx-auto px-4 md:px-8">
 <div class="mb-8 text-center">
 <h2 id="video-title" class="text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400 drop-shadow-lg">التوثيق المرئي الميداني</h2>
 <p id="video-desc" class="text-gray-400 text-sm md:text-base">فيديوهات حية توثق الكارثة والميدان من الأرشيف مباشرة</p>
 </div>
+<!-- شريط أزرار التنقل الأفقي بين القوائم (عشرة فيديوهات لكل قائمة) -->
+<div id="videos-pagination" class="flex flex-wrap justify-center gap-2 mb-6"></div>
 <div id="videos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 </div>
 </main>
@@ -272,6 +274,11 @@ let sound;
 let milestonesRendered = false; 
 let torrentsLoaded = false;
 let currentMainMode = 'souls'; 
+
+// متغيرات نظام تقسيم الفيديوهات (10 فيديوهات لكل قائمة)
+let allVideoFiles = [];
+let currentVideoPage = 1;
+const videosPerPage = 10;
 
 // متغيرات الخريطة التفاعلية
 let map = null;
@@ -382,11 +389,15 @@ else{navigator.clipboard.writeText(window.location.href).then(()=>alert(t.copyAl
 };
 
 /* ---------------------------------------------------
-   جلب ملفات التورنت
---------------------------------------------------- */
+   جلب ملفات التورنت مع دعم التقسيم (10 فيديوهات لكل قائمة)
+   --------------------------------------------------- */
 async function fetchTorrentVideos() {
-    if (torrentsLoaded) return;
+    if (torrentsLoaded) {
+        renderVideoPage(1);
+        return;
+    }
     const grid = document.getElementById('videos-grid');
+    const paginationContainer = document.getElementById('videos-pagination');
     if (!grid) return;
 
     grid.innerHTML = `
@@ -395,68 +406,118 @@ async function fetchTorrentVideos() {
             <p class="text-lg font-bold">جاري تحميل الأرشيف المرئي...</p>
         </div>
     `;
+    if (paginationContainer) paginationContainer.innerHTML = '';
 
     const torrentFilesPaths = ["./data/file1.torrent", "./data/file2.torrent"];
-    let anyLoaded = false;
+    let loadedCount = 0;
 
     for (const path of torrentFilesPaths) {
         try {
             const response = await fetch(path);
-            if (!response.ok) continue;
+            if (!response.ok) {
+                loadedCount++;
+                continue;
+            }
             const buffer = await response.arrayBuffer();
 
             wtClient.add(new Uint8Array(buffer), function (torrent) {
-                if (!anyLoaded) { grid.innerHTML = ""; anyLoaded = true; }
                 torrent.files.forEach(function (file) {
-                    if (!file.name.match(/\.(mp4|webm|mkv|avi|mov)$/i)) return;
-                    const sizeMB = (file.length / 1024 / 1024).toFixed(2);
-                    const card = document.createElement("div");
-                    card.className = "bg-black/50 backdrop-blur-md border border-white/10 p-4 rounded-xl flex flex-col shadow-xl hover:border-red-500/40 transition-colors";
-                    card.innerHTML = `
-                        <div class="mb-3 border-b border-white/10 pb-2">
-                            <h3 class="text-lg font-bold text-red-500 truncate" title="${file.name}">${file.name}</h3>
-                            <div class="text-[10px] text-gray-400 mt-1 flex justify-between">
-                                <span>${sizeMB} MB</span>
-                                <span class="progress-txt text-green-400">0%</span>
-                            </div>
-                            <div class="w-full bg-gray-800 h-1 mt-2 rounded-full overflow-hidden">
-                                <div class="progress-bar bg-red-600 h-full w-0 transition-all duration-300"></div>
-                            </div>
-                        </div>
-                        <div class="media-container h-[350px] w-full rounded-xl overflow-hidden bg-black flex items-center justify-center relative"></div>
-                    `;
-                    grid.appendChild(card);
-                    const mediaContainer = card.querySelector(".media-container");
-                    const progressBar = card.querySelector(".progress-bar");
-                    const progressTxt = card.querySelector(".progress-txt");
-
-                    torrent.on("download", () => {
-                        const progress = Math.round(torrent.progress * 100);
-                        progressBar.style.width = progress + "%";
-                        progressTxt.innerText = progress + "%";
-                    });
-
-                    file.appendTo(mediaContainer, { controls: true, autoplay: false }, function (err, element) {
-                        if (err) { mediaContainer.innerHTML = "<p class='text-red-500 font-bold'>فشل تشغيل الفيديو</p>"; return; }
-                        element.className = "absolute top-0 left-0 w-full h-full object-cover";
-                        progressTxt.innerHTML = "اكتمل ✓";
-                    });
+                    if (file.name.match(/\.(mp4|webm|mkv|avi|mov)$/i)) {
+                        file._torrent = torrent;
+                        allVideoFiles.push(file);
+                    }
                 });
+                loadedCount++;
+                if (loadedCount === torrentFilesPaths.length) {
+                    torrentsLoaded = true;
+                    if (allVideoFiles.length > 0) {
+                        renderVideoPage(1);
+                    } else {
+                        grid.innerHTML = `
+                        <div class="col-span-full text-center text-red-500 py-10 bg-red-900/20 border border-red-500/30 rounded-xl">
+                            <h2 class="text-2xl font-bold mb-3">لا توجد ملفات فيديو مطابقة في الأرشيف</h2>
+                        </div>`;
+                    }
+                }
             });
-        } catch (err) { console.error("تعذر تحميل التورنت:", path, err); }
+        } catch (err) {
+            console.error("تعذر تحميل التورنت:", path, err);
+            loadedCount++;
+            if (loadedCount === torrentFilesPaths.length && allVideoFiles.length === 0) {
+                grid.innerHTML = `
+                <div class="col-span-full text-center text-red-500 py-10 bg-red-900/20 border border-red-500/30 rounded-xl">
+                    <h2 class="text-2xl font-bold mb-3">تعذر قراءة ملفات الأرشيف</h2>
+                    <p>يرجى التأكد من مسار الملفات: <br><code class="text-gray-300">./data/file1.torrent</code><br><code class="text-gray-300">./data/file2.torrent</code></p>
+                </div>`;
+            }
+        }
+    }
+}
+
+function renderVideoPage(page) {
+    currentVideoPage = page;
+    const grid = document.getElementById('videos-grid');
+    const paginationContainer = document.getElementById('videos-pagination');
+    if (!grid) return;
+
+    grid.innerHTML = '';
+    
+    const totalPages = Math.ceil(allVideoFiles.length / videosPerPage);
+    
+    // رسم أزرار التنقل الأفقي بين القوائم
+    if (paginationContainer) {
+        paginationContainer.innerHTML = '';
+        if (totalPages > 1) {
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.className = `btn-main px-3 py-1.5 text-xs rounded-full ${i === page ? 'active' : ''}`;
+                btn.innerText = `قائمة ${i}`;
+                btn.onclick = () => renderVideoPage(i);
+                paginationContainer.appendChild(btn);
+            }
+        }
     }
 
-    setTimeout(() => {
-        if (!anyLoaded) {
-            grid.innerHTML = `
-            <div class="col-span-full text-center text-red-500 py-10 bg-red-900/20 border border-red-500/30 rounded-xl">
-                <h2 class="text-2xl font-bold mb-3">تعذر قراءة ملفات الأرشيف</h2>
-                <p>يرجى التأكد من مسار الملفات: <br><code class="text-gray-300">./data/file1.torrent</code><br><code class="text-gray-300">./data/file2.torrent</code></p>
+    const start = (page - 1) * videosPerPage;
+    const end = start + videosPerPage;
+    const pageFiles = allVideoFiles.slice(start, end);
+
+    pageFiles.forEach(function (file) {
+        const sizeMB = (file.length / 1024 / 1024).toFixed(2);
+        const card = document.createElement("div");
+        card.className = "bg-black/50 backdrop-blur-md border border-white/10 p-4 rounded-xl flex flex-col shadow-xl hover:border-red-500/40 transition-colors";
+        card.innerHTML = `
+            <div class="mb-3 border-b border-white/10 pb-2">
+                <h3 class="text-lg font-bold text-red-500 truncate" title="${file.name}">${file.name}</h3>
+                <div class="text-[10px] text-gray-400 mt-1 flex justify-between">
+                    <span>${sizeMB} MB</span>
+                    <span class="progress-txt text-green-400">0%</span>
+                </div>
+                <div class="w-full bg-gray-800 h-1 mt-2 rounded-full overflow-hidden">
+                    <div class="progress-bar bg-red-600 h-full w-0 transition-all duration-300"></div>
+                </div>
             </div>
-            `;
+            <div class="media-container h-[350px] w-full rounded-xl overflow-hidden bg-black flex items-center justify-center relative"></div>
+        `;
+        grid.appendChild(card);
+        const mediaContainer = card.querySelector(".media-container");
+        const progressBar = card.querySelector(".progress-bar");
+        const progressTxt = card.querySelector(".progress-txt");
+
+        if (file._torrent) {
+            file._torrent.on("download", () => {
+                const progress = Math.round(file._torrent.progress * 100);
+                progressBar.style.width = progress + "%";
+                progressTxt.innerText = progress + "%";
+            });
         }
-    }, 5000);
-    torrentsLoaded = true;
+
+        file.appendTo(mediaContainer, { controls: true, autoplay: false }, function (err, element) {
+            if (err) { mediaContainer.innerHTML = "<p class='text-red-500 font-bold'>فشل تشغيل الفيديو</p>"; return; }
+            element.className = "absolute top-0 left-0 w-full h-full object-cover";
+            progressTxt.innerHTML = "اكتمل ✓";
+        });
+    });
 }
 
 /* ---------------------------------------------------
@@ -611,11 +672,11 @@ window.switchMainMode = function(mode) {
     if(mode === 'souls'){
         document.getElementById('bottom-bar').style.display = 'flex';
         if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
-        fetchAndRenderData('./data/victims.json');
+        fetchAndRenderData('data/Victims.json');
     } else if(mode === 'journalists') {
         document.getElementById('bottom-bar').style.display = 'flex';
         if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
-        fetchAndRenderData('./data/press_killed_in_gaza.json');
+        fetchAndRenderData('data/press_killed_in_gaza.json');
     } else if(mode === 'westbank') {
         document.getElementById('bottom-bar').style.display = 'flex';
         if(canvasLayer){canvasLayer.style.opacity = '1'; canvasLayer.style.pointerEvents = 'auto';}
