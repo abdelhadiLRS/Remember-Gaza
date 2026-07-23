@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="bootstrap.min.css">
 <link rel="stylesheet" href="tailwind-compat.css">
 <script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={theme:{extend:{colors:{primary:'#cc0000',blood:'#220000',glass:'rgba(15, 15, 15, 0.8)'}}}}</script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#cc0000',blood:'#220000',glass:'rgba(15, 15, 15, 0.9)'}}}}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
@@ -63,71 +63,84 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     width: 100%;
     height: 100%;
     z-index: 20;
-    background: rgba(0,0,0,0.92);
-    backdrop-filter: blur(15px);
+    background: rgba(0,0,0,0.95);
     overflow-y: auto; 
     pointer-events: auto;
-    padding-top: 140px;
-    padding-bottom: 120px; /* مساحة كافية بالأسفل لتفادي تداخل المحتوى مع الخط الزمني الثابت */
+    padding-top: 130px;
+    padding-bottom: 110px;
     -webkit-overflow-scrolling: touch;
 }
-#milestones-view { scroll-behavior: smooth; padding-top: 160px; will-change: scroll-position; }
+#milestones-view { 
+    padding-top: 150px; 
+    will-change: transform, scroll-position;
+    transform: translateZ(0);
+}
 #map-view { padding-top: 120px; padding-bottom: 20px; }
 
 #ui-layer{position:fixed;inset:0;z-index:30;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;}
 .interactive{pointer-events:auto;}
-.glass-panel{background:rgba(15, 15, 15, 0.85);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);}
+.glass-panel{background:rgba(15, 15, 15, 0.92);border:1px solid rgba(255,255,255,0.08);}
 .no-scrollbar::-webkit-scrollbar{display:none;}
 .no-scrollbar{-ms-overflow-style:none;scrollbar-width:none;}
 ::-webkit-scrollbar{width:6px;}
 ::-webkit-scrollbar-track{background:rgba(0,0,0,0.5);}
 ::-webkit-scrollbar-thumb{background:#cc0000;border-radius:4px;}
 
-#header{display:flex;justify-content:space-between;align-items:center;padding:8px 15px;flex-wrap:wrap;gap:8px;border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(10,10,10,0.9);position:relative;z-index:40;}
+#header{display:flex;justify-content:space-between;align-items:center;padding:8px 15px;flex-wrap:wrap;gap:8px;border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(10,10,10,0.95);position:relative;z-index:40;}
 #search-input{background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.2);color:white;padding:5px 12px;border-radius:20px;width:150px;min-width:120px;font-size:0.75rem;outline:none;transition:0.4s;font-family:'Cairo';}
 #search-input:focus{border-color:#cc0000;background:rgba(0,0,0,0.9);box-shadow:0 0 10px rgba(204,0,0,0.3);width:180px;}
 .btn-main{background:rgba(255,255,255,0.05);color:white;border:1px solid rgba(255,255,255,0.1);padding:5px 12px;border-radius:20px;cursor:pointer;transition:all 0.3s ease;font-size:0.75rem;white-space:nowrap;font-family:'Cairo';}
 .btn-main:hover{background:rgba(204,0,0,0.3);border-color:rgba(204,0,0,0.5);}
 .btn-main.active{background:#cc0000;border-color:#ff4d4d;font-weight:bold;box-shadow:0 0 10px rgba(204,0,0,0.4);}
 #bottom-bar{display:flex;justify-content:space-between;align-items:flex-end;padding:10px 20px;pointer-events:none;flex-wrap:wrap;gap:10px;position:relative;z-index:40;}
-#counter-box{text-align:center;padding:8px 20px;border-radius:15px;border-bottom:3px solid #cc0000;min-width:120px;background:rgba(0,0,0,0.7);}
+#counter-box{text-align:center;padding:8px 20px;border-radius:15px;border-bottom:3px solid #cc0000;min-width:120px;background:rgba(0,0,0,0.85);}
 .social-links a,.share-btn{color:#fff;background:rgba(255,255,255,0.05);padding:5px 12px;border-radius:20px;font-size:0.75rem;text-decoration:none;transition:0.3s;white-space:nowrap;border:1px solid rgba(255,255,255,0.1);cursor:pointer;}
 .social-links a:hover{background:#cc0000;border-color:#ff4d4d;}
 .share-btn:hover{background:#0056b3;border-color:#007bff;}
 .font-amiri{font-family:'Amiri',serif;}
 
-/* تصميم استعراض المحطات السينمائي والخط الزمني الثابت تماماً في الأسفل */
-.tlc-container { position: relative; width: 100%; padding-bottom: 60px; max-width: 1100px; margin: 0 auto; }
-.tlc-tracker { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(15px); border-top: 2px solid rgba(204, 0, 0, 0.6); padding: 12px 0; box-shadow: 0 -15px 35px rgba(0,0,0,0.9); pointer-events: auto; }
+/* تصميم الخط الزمني السينمائي الخالي من التعليق */
+.tlc-container { position: relative; width: 100%; padding-bottom: 70px; max-width: 1100px; margin: 0 auto; }
+.tlc-tracker { 
+    position: fixed; 
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
+    z-index: 100; 
+    background: #080808; 
+    border-top: 2px solid rgba(204, 0, 0, 0.8); 
+    padding: 12px 0; 
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.95); 
+    pointer-events: auto; 
+    transform: translateZ(0);
+}
 .tlc-tracker-clip { max-width: 1100px; margin: 0 auto; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .tlc-tracker-clip::-webkit-scrollbar { display: none; }
 .tlc-tracker-track { display: flex; gap: 20px; padding: 0 20px; white-space: nowrap; width: max-content; margin: 0 auto; }
-.tlc-tracker-item { color: #888; text-decoration: none; font-weight: 900; transition: all 0.3s ease; cursor: pointer; font-family: 'Cairo'; font-size: 1rem; }
+.tlc-tracker-item { color: #888; text-decoration: none; font-weight: 900; transition: color 0.2s ease, transform 0.2s ease; cursor: pointer; font-family: 'Cairo'; font-size: 1rem; }
 .tlc-tracker-item.is-current, .tlc-tracker-item:hover { color: #ff4d4d; text-shadow: 0 0 10px rgba(204,0,0,0.6); transform: scale(1.1); }
 
-.tlc-decade-section { margin-bottom: 120px; position: relative; text-align: center; contain: content; }
+.tlc-decade-section { margin-bottom: 100px; position: relative; text-align: center; }
 
 /* الأعوام الضخمة البارزة في الخلفية */
 .tlc-giant-year {
-    font-size: clamp(6rem, 16vw, 13rem);
+    font-size: clamp(5rem, 15vw, 12rem);
     font-weight: 900;
     line-height: 1;
-    color: rgba(255, 255, 255, 0.88);
+    color: rgba(255, 255, 255, 0.85);
     font-family: 'Cairo', sans-serif;
     letter-spacing: -2px;
     margin-bottom: 20px;
-    text-shadow: 0 10px 40px rgba(0,0,0,0.9);
     user-select: none;
 }
 .tlc-giant-year .s-letter {
     color: #ff3333;
-    text-shadow: 0 0 25px rgba(255,0,0,0.6);
 }
 
 .tlc-cards-grid {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 18px;
     flex-wrap: wrap;
     padding: 0 15px;
     max-width: 900px;
@@ -136,23 +149,22 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 
 /* بطاقة المعاينة المصغرة للعقود */
 .tlc-card-mini {
-    background: rgba(18, 18, 18, 0.85);
+    background: #141414;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 14px;
+    border-radius: 12px;
     padding: 12px 16px;
     display: flex;
     align-items: center;
     gap: 15px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: border-color 0.2s ease, transform 0.2s ease;
     width: 280px;
     text-align: right;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
 }
 .tlc-card-mini:hover {
     border-color: #ff3333;
-    transform: translateY(-4px);
-    box-shadow: 0 15px 35px rgba(204,0,0,0.3);
+    transform: translateY(-3px);
 }
 .tlc-card-mini-info { flex: 1; min-width: 0; }
 .tlc-card-mini-year { color: #ff4d4d; font-size: 0.75rem; font-weight: bold; margin-bottom: 2px; }
@@ -160,23 +172,22 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .tlc-card-mini-img { width: 45px; height: 45px; border-radius: 8px; object-fit: cover; background: #222; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.1); }
 
 /* نافذة التفاصيل المنبثقة للمحطات التاريخية */
-#tlc-custom-modal { display: none; position: fixed; inset: 0; z-index: 1050; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); align-items: center; justify-content: center; padding: 20px; }
-.tlc-modal-box { background: #111; border: 1px solid rgba(204,0,0,0.5); border-radius: 16px; width: 100%; max-width: 850px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.9); }
-.tlc-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.6); }
+#tlc-custom-modal { display: none; position: fixed; inset: 0; z-index: 1050; background: rgba(0,0,0,0.92); align-items: center; justify-content: center; padding: 20px; }
+.tlc-modal-box { background: #121212; border: 1px solid rgba(204,0,0,0.5); border-radius: 16px; width: 100%; max-width: 800px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.9); }
+.tlc-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); background: #0a0a0a; }
 .tlc-modal-body { padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; text-align: right; }
-.tlc-modal-img { width: 100%; max-height: 320px; object-fit: cover; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
+.tlc-modal-img { width: 100%; max-height: 300px; object-fit: cover; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); }
 
 /* بطاقة المعاينة العائمة للنجوم */
 #star-tooltip {
     position: fixed;
     z-index: 50;
     pointer-events: none;
-    background: rgba(10, 10, 10, 0.95);
+    background: #0f0f0f;
     border: 1px solid rgba(204, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
     padding: 8px 14px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(204, 0, 0, 0.3);
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(204, 0, 0, 0.2);
     display: none;
     font-size: 0.8rem;
     max-width: 240px;
@@ -239,12 +250,12 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 <p id="stats-desc" class="text-gray-400 text-sm md:text-base">توثيق مستمر لحجم الدمار والفقد في فلسطين</p>
 </div>
 <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
-<div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الشهداء والمفقودون</h3><p class="text-2xl md:text-4xl font-black text-white">~100,000+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
-<div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الأطفال والنساء</h3><p class="text-2xl md:text-4xl font-black text-white">70%</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
-<div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">النازحون قسراً</h3><p class="text-2xl md:text-4xl font-black text-white">2M+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
-<div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الجرحى والمصابون</h3><p class="text-2xl md:text-4xl font-black text-white">100,000+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
-<div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">المنازل المدمرة</h3><p class="text-2xl md:text-4xl font-black text-white">75%</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
-<div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الكوادر الطبية والصحفية</h3><p class="text-2xl md:text-4xl font-black text-white">1,000+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
+<div class="relative overflow-hidden bg-black/40 border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الشهداء والمفقودون</h3><p class="text-2xl md:text-4xl font-black text-white">~100,000+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
+<div class="relative overflow-hidden bg-black/40 border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الأطفال والنساء</h3><p class="text-2xl md:text-4xl font-black text-white">70%</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
+<div class="relative overflow-hidden bg-black/40 border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">النازحون قسراً</h3><p class="text-2xl md:text-4xl font-black text-white">2M+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
+<div class="relative overflow-hidden bg-black/40 border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الجرحى والمصابون</h3><p class="text-2xl md:text-4xl font-black text-white">100,000+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
+<div class="relative overflow-hidden bg-black/40 border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">المنازل المدمرة</h3><p class="text-2xl md:text-4xl font-black text-white">75%</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
+<div class="relative overflow-hidden bg-black/40 border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الكوادر الطبية والصحفية</h3><p class="text-2xl md:text-4xl font-black text-white">1,000+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
 </div>
 </div>
 </main>
@@ -328,10 +339,10 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 </header>
 <div id="bottom-bar">
-<div id="verse-container" class="interactive glass-panel p-3 px-6 rounded-lg border-r-4 border-r-red-600 order-2 md:order-1 hidden md:block bg-black/70 max-w-lg shadow-[0_0_15px_rgba(204,0,0,0.2)]">
+<div id="verse-container" class="interactive glass-panel p-3 px-6 rounded-lg border-r-4 border-r-red-600 order-2 md:order-1 hidden md:block bg-black/80 max-w-lg shadow-[0_0_15px_rgba(204,0,0,0.2)]">
 <p id="verse-text" class="font-amiri text-gray-200 text-base md:text-xl font-bold leading-relaxed text-center">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</p>
 </div>
-<div class="interactive glass-panel p-2 px-4 rounded-lg flex items-center gap-4 flex-wrap justify-center order-3 md:order-2 bg-black/60" style="margin-right: auto;">
+<div class="interactive glass-panel p-2 px-4 rounded-lg flex items-center gap-4 flex-wrap justify-center order-3 md:order-2 bg-black/80" style="margin-right: auto;">
 <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-xs bg-red-900 border-red-500 text-white hover:bg-red-700">❤️ إدعمنا لنستمر</a>
 <span id="dev-text" class="text-xs text-gray-400 font-bold border-l border-white/20 pl-4">تطوير: عبد الهادي</span>
 <div class="social-links flex gap-1.5">
@@ -351,7 +362,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 
 <!-- نافذة عرض الفيديوهات والأرشيف المرئي -->
-<div id="modal-overlay" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.85); backdrop-filter:blur(15px); align-items:center; justify-content:center; padding:20px;">
+<div id="modal-overlay" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.85); align-items:center; justify-content:center; padding:20px;">
     <div class="modal-box">
         <div class="modal-header">
             <h2 id="modal-title" class="font-bold text-lg text-red-500">تفاصيل التوثيق الميداني</h2>
@@ -403,7 +414,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 
 <!-- نافذة مستقلة لبطاقة الشهيد -->
-<div id="martyr-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); align-items: center; justify-content: center; padding: 20px;">
+<div id="martyr-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px;">
     <div class="modal-box" style="max-width: 450px;">
         <div class="modal-header">
             <h2 class="font-bold text-lg text-red-500">بطاقة توثيق الشهيد</h2>
