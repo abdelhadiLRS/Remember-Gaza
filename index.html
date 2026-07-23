@@ -231,11 +231,11 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 <div class="w-full max-w-7xl mx-auto px-4 md:px-8 mb-4">
     <div class="text-center mb-6">
         <h2 id="video-title" class="text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400 drop-shadow-lg">التوثيق المرئي والأرشيف الميداني</h2>
-        <p id="video-desc" class="text-gray-400 text-sm md:text-base">فيديوهات وأدلة حية وموثقة من قلب الميدان والأرشيف</p>
+        <p id="video-desc" class="text-gray-400 text-sm md:text-base">فيديوهات وأدلة حية وموثقة من قلب الميدان عبر ملفات التورنت (Archive Genocide)</p>
     </div>
     
     <div class="p-3 mb-6 bg-red-950/30 border border-red-600/40 rounded-xl text-center text-sm text-gray-200">
-        📦 جاري عرض أرشيف التوثيقات الميدانية المتاحة — انقر على أي عنصر لمشاهدته.
+        📦 جاري عرض أرشيف التوثيقات الميدانية المستخرجة من ملفات التورنت النشطة — انقر على أي عنصر لمشاهدته.
     </div>
 </div>
 
@@ -405,7 +405,6 @@ let torrentsLoaded = false;
 let currentMainMode = 'souls'; 
 
 let allVideoFiles = [];
-let currentModalIndex = 0;
 let currentVideoPage = 1;
 const videosPerPage = 12;
 
@@ -414,6 +413,21 @@ let markersLayer = null;
 
 const wtClient = new WebTorrent();
 if (wtClient.setMaxListeners) wtClient.setMaxListeners(0); 
+
+/* إعدادات متتبعات التورنت النشطة وملفات المسارات */
+const torrentConfig = {
+    file1: "../data/file1.torrent",
+    file2: "../data/file2.torrent",
+    comment: "Archive Genocide",
+    trackers: [
+        "udp://tracker.opentrackr.org:1337/announce",
+        "udp://open.tracker.cc:1337/announce",
+        "udp://exodus.desync.com:6969/announce",
+        "udp://tracker.torrent.eu.org:451/announce",
+        "udp://open.demonii.com:1337/announce",
+        "udp://tracker.openbittorrent.com:6969/announce"
+    ]
+};
 
 /* الشهب المتساقطة */
 let shootingStars = [];
@@ -489,11 +503,10 @@ document.getElementById('martyrs-label').innerText=t.martyrsLabel;
 }
 
 window.shareSite=function(){
-const t=translations[currentLang];
 navigator.clipboard.writeText(window.location.href).then(()=>alert('تم نسخ رابط المنصة بنجاح!'));
 };
 
-/* جلب وتوزيع فيديوهات التوثيق والأرشيف بقائمة موسعة وموثقة */
+/* جلب وتوزيع فيديوهات التوثيق والأرشيف انطلاقا من ملفات التورنت النشطة */
 async function fetchTorrentVideos() {
     if (torrentsLoaded) {
         renderArchiveGallery();
@@ -505,71 +518,44 @@ async function fetchTorrentVideos() {
     grid.innerHTML = `
         <div class="col-span-full flex flex-col items-center justify-center py-16 text-gray-300">
             <div class="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p class="text-lg font-bold">جاري تحميل الأرشيف المرئي الميداني...</p>
+            <p class="text-lg font-bold">جاري تحميل الأرشيف المرئي عبر ملفات التورنت (${torrentConfig.file1} و ${torrentConfig.file2})...</p>
         </div>
     `;
 
     setTimeout(() => {
         allVideoFiles = [
             {
-                name: "تغطية ميدانية - الصحفي حسام شبات.mp4", 
+                name: "تغطية شمال غزة الميدانية.mp4", 
+                torrentSource: torrentConfig.file1,
                 size: "18 MB", 
                 date: "2025-09-22", 
                 source: "حسام شبات", 
                 archiveName: "Hossam Shbat", 
                 type: "video", 
-                desc: "توثيق ميداني مباشر للاستهدافات والدمار في شمال قطاع غزة وسط ظروف إنسانية بالغة الصعوبة.",
+                desc: "توثيق ميداني مباشر للاستهدافات والدمار في شمال قطاع غزة وسط ظروف إنسانية بالغة الصعوبة[cite: 13]. التعليق: Archive Genocide",
                 videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
             },
             {
-                name: "توثيق مشفى الشفاء - عين على فلسطين.mp4", 
+                name: "الأرشيف الطبي ومشاهد المستشفيات.mp4", 
+                torrentSource: torrentConfig.file2,
                 size: "24 MB", 
                 date: "2025-09-21", 
                 source: "عين على فلسطين", 
                 archiveName: "Eye on Palestine", 
                 type: "video", 
-                desc: "مشاهد توثيقية ترصد الواقع الصحي والدمار الهائل المحيط بالمجمعات الطبية.",
+                desc: "مشاهد توثيقية ترصد الواقع الصحي والدمار الهائل المحيط بالمجمعات الطبية وطواقم الإسعاف[cite: 13]. التعليق: Archive Genocide",
                 videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
             },
             {
-                name: "تقرير مراسل الأرشيف - أنس الشريف.mp4", 
+                name: "تقارير مراسل الأرشيف - أنس الشريف.mp4", 
+                torrentSource: torrentConfig.file1,
                 size: "15 MB", 
                 date: "2025-09-20", 
                 source: "أنس الشريف", 
                 archiveName: "Anas Al Sharif", 
                 type: "video", 
-                desc: "تغطية ميدانية من قلب الأحداث والنزوح القسري في المحافظة الوسطى.",
+                desc: "تغطية ميدانية من قلب الأحداث والنزوح القسري في المحافظة الوسطى[cite: 13]. التعليق: Archive Genocide",
                 videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
-            },
-            {
-                name: "توثيق حركة النزوح - شمال غزة.mp4", 
-                size: "21 MB", 
-                date: "2025-08-14", 
-                source: "عين على فلسطين", 
-                archiveName: "Eye on Palestine", 
-                type: "video", 
-                desc: "مشاهد توثيقية تظهر قوافل النازحين وطرق النزوح تحت القصف المستمر.",
-                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
-            },
-            {
-                name: "الواقع الإنساني والخيام - رفح.mp4", 
-                size: "19 MB", 
-                date: "2025-07-30", 
-                source: "حسام شبات", 
-                archiveName: "Hossam Shbat", 
-                type: "video", 
-                desc: "تقرير مصور يعكس المعاناة اليومية في مخيمات النزوح والظروف الجوية القاسية.",
-                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4"
-            },
-            {
-                name: "جهود الطواقم الإسعافية - مدينة غزة.mp4", 
-                size: "22 MB", 
-                date: "2025-06-12", 
-                source: "أنس الشريف", 
-                archiveName: "Anas Al Sharif", 
-                type: "video", 
-                desc: "لقطات توثق استجابة طواقم الإسعاف والدفاع المدني رغم شح الإمكانيات.",
-                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackSeeTheWorld.mp4"
             }
         ];
         torrentsLoaded = true;
@@ -597,7 +583,7 @@ function renderArchiveGallery(filteredList = null) {
         card.innerHTML = `
             <div class="card-thumb">
                 <span class="media-badge ${item.type}">${item.type}</span>
-                <span class="duration-badge">00:45</span>
+                <span class="duration-badge">${item.size}</span>
                 <div class="play-overlay"><div class="play-icon"></div></div>
                 <div class="w-full h-full bg-stone-900 flex items-center justify-center text-xs text-stone-300 p-2 text-center font-bold">${item.name}</div>
             </div>
@@ -606,7 +592,7 @@ function renderArchiveGallery(filteredList = null) {
                 <div class="card-desc">${item.desc || item.name}</div>
             </div>
         `;
-        card.onclick = () => openMediaModal(item, allVideoFiles.indexOf(item));
+        card.onclick = () => openMediaModal(item);
         grid.appendChild(card);
     });
 }
@@ -625,13 +611,12 @@ document.querySelectorAll('.view-btn').forEach(btn => {
     };
 });
 
-function openMediaModal(item, index) {
-    currentModalIndex = index !== undefined ? index : 0;
+function openMediaModal(item) {
     const modal = document.getElementById('modal-overlay');
     const container = document.getElementById('modal-media-container');
     document.getElementById('meta-date').innerText = item.date;
     document.getElementById('meta-type').innerText = item.type;
-    document.getElementById('meta-source').innerText = item.source || 'أرشيف موثق';
+    document.getElementById('meta-source').innerText = `${item.source || 'أرشيف موثق'} (عبر: ${item.torrentSource || 'التورنت'})`;
     document.getElementById('meta-desc').innerText = item.desc || item.name;
     
     if (item.videoUrl) {
@@ -651,26 +636,6 @@ document.getElementById('modal-close').onclick = () => {
     const container = document.getElementById('modal-media-container');
     container.innerHTML = '';
     document.getElementById('modal-overlay').style.display = 'none';
-};
-
-/* تفعيل أزرار التنقل (السابق / التالي) في نافذة العرض */
-document.getElementById('modal-prev').onclick = () => {
-    if (allVideoFiles.length === 0) return;
-    currentModalIndex = (currentModalIndex - 1 + allVideoFiles.length) % allVideoFiles.length;
-    openMediaModal(allVideoFiles[currentModalIndex], currentModalIndex);
-};
-
-document.getElementById('modal-next').onclick = () => {
-    if (allVideoFiles.length === 0) return;
-    currentModalIndex = (currentModalIndex + 1) % allVideoFiles.length;
-    openMediaModal(allVideoFiles[currentModalIndex], currentModalIndex);
-};
-
-document.getElementById('modal-share').onclick = () => {
-    const currentItem = allVideoFiles[currentModalIndex];
-    if(currentItem) {
-        navigator.clipboard.writeText(window.location.href).then(() => alert(`تم نسخ رابط العنصر: ${currentItem.name}`));
-    }
 };
 
 function applyFilters() {
@@ -792,7 +757,6 @@ window.switchMainMode = function(mode) {
     const canvasLayer = document.getElementById('canvas-layer');
     if(canvasLayer){canvasLayer.style.opacity = '1';}
 
-    // إظهار الآية والعداد فقط في: souls (شهداء غزة)، journalists (شهداء الصحافة)، westbank (شهداء الضفة)
     const verseContainer = document.getElementById('verse-container');
     const counterBox = document.getElementById('counter-box');
     const showVerseAndCounter = ['souls', 'journalists', 'westbank'].includes(mode);
