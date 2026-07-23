@@ -119,6 +119,64 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .v-card-year { color: #ff4d4d; font-size: 0.85rem; font-weight: 800; margin-bottom: 4px; font-family: 'Cairo', sans-serif; letter-spacing: 0.5px; }
 .v-card-title { color: #fff; font-size: 1.15rem; font-weight: 900; font-family: 'Cairo', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+/* تحويل شريط التتبع (Tracker) الأفقي إلى عمودي */
+.tlc-tracker {
+    position: fixed !important;
+    left: 20px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    background: rgba(15, 15, 15, 0.95);
+    border: 1px solid rgba(204, 0, 0, 0.4);
+    border-radius: 15px;
+    padding: 20px 15px;
+    z-index: 60;
+    box-shadow: 0 0 25px rgba(204, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+.tlc-tracker-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    align-items: center;
+}
+.tlc-tracker-item {
+    margin: 0 !important;
+    writing-mode: horizontal-tb;
+}
+.tlc-tracker-item a {
+    color: #999;
+    font-size: 0.85rem;
+    font-family: 'Cairo', sans-serif;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: block;
+    padding: 5px;
+}
+.tlc-tracker-item a:hover {
+    color: #ff4d4d;
+    transform: scale(1.1);
+}
+.tlc-tracker-current {
+    display: none !important; /* إخفاء النص العائم القديم لترتيب الشكل العمودي */
+}
+/* إعطاء مساحة للمحتوى حتى لا يتداخل مع الشريط العمودي */
+.tlc-content {
+    margin-left: 90px;
+}
+@media (max-width: 768px) {
+    .tlc-tracker {
+        left: 5px !important;
+        padding: 15px 10px;
+    }
+    .tlc-content {
+        margin-left: 50px;
+    }
+}
+
 /* نافذة التفاصيل المنبثقة للمحطات التاريخية */
 #tlc-custom-modal { display: none; position: fixed; inset: 0; z-index: 1050; background: rgba(0,0,0,0.94); align-items: center; justify-content: center; padding: 20px; font-family: 'Cairo', sans-serif; backdrop-filter: blur(8px); }
 .tlc-modal-box { background: linear-gradient(135deg, #141414 0%, #0a0505 100%); border: 1px solid rgba(204,0,0,0.5); border-radius: 20px; width: 100%; max-width: 820px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.95); }
