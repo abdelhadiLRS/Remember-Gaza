@@ -14,6 +14,29 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
+<!-- مكتبة Moment.js وتنسيق اللغة العربية -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/ar.min.js"></script>
+
+<!-- مكتبة Bootstrap Datepicker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css" rel="stylesheet" type="text/css">
+
+<!-- مكتبة Simple Pagination -->
+<link type="text/css" rel="stylesheet" href="./css/simplePagination.css">
+<script type="text/javascript" src="./js/jquery.simplePagination.js"></script>
+
+<!-- خدمة Google reCAPTCHA Enterprise -->
+<script src="https://www.google.com/recaptcha/enterprise.js?render=6LcnLxQlAAAAAKlZXMXQMDvM8eJds6ntV3Fd_1fJ"></script>
+
+<!-- مكتبة jQuery UI وتنسيقاتها المحلية -->
+<script src="./js/jquery-ui.min.js"></script>
+<link type="text/css" rel="stylesheet" href="./css/jquery-ui.min.css?t=2">
+
+<!-- ملفات وسوم الشهداء وتنسيق الخط الزمني السينمائي -->
+<link rel="stylesheet" href="./css/timelineCinematic.css">
+<link rel="stylesheet" href="./css/martyr-tributes.css">
+
 <!-- تحميل WebTorrent بالطريقة الرسمية الحديثة عبر ESM CDN -->
 <script type="module">
   import WebTorrent from 'https://esm.sh/webtorrent/dist/webtorrent.min.js';
@@ -40,11 +63,11 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     width: 100%;
     height: 100%;
     z-index: 20;
-    background: rgba(0,0,0,0.85);
+    background: rgba(0,0,0,0.88);
     backdrop-filter: blur(15px);
     overflow-y: auto; 
     pointer-events: auto;
-    padding-top: 150px;
+    padding-top: 140px;
     padding-bottom: 60px;
 }
 #milestones-view { scroll-behavior: smooth; }
@@ -52,7 +75,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 
 #ui-layer{position:fixed;inset:0;z-index:30;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;}
 .interactive{pointer-events:auto;}
-.glass-panel{background:var(--glass);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);}
+.glass-panel{background:rgba(15, 15, 15, 0.85);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);}
 .no-scrollbar::-webkit-scrollbar{display:none;}
 .no-scrollbar{-ms-overflow-style:none;scrollbar-width:none;}
 ::-webkit-scrollbar{width:6px;}
@@ -72,76 +95,42 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .share-btn:hover{background:#0056b3;border-color:#007bff;}
 .font-amiri{font-family:'Amiri',serif;}
 
-.filters-bar { background: rgba(15,15,15,0.9); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 12px 20px; position: sticky; top: 0; z-index: 25; backdrop-filter: blur(10px); }
-.filters-inner { max-width: 1300px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
-.search-wrap { position: relative; flex: 1; min-width: 220px; }
-.search-wrap input { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 8px 12px 8px 35px; border-radius: 8px; font-size: 0.85rem; font-family: 'Cairo'; outline: none; }
-.search-wrap input:focus { border-color: #cc0000; box-shadow: 0 0 8px rgba(204,0,0,0.3); }
-.search-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 0.85rem; }
-.filter-select { background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.15); color: #e2e8f0; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-family: 'Cairo'; outline: none; cursor: pointer; }
-.btn-reset { background: rgba(204,0,0,0.2); border: 1px solid rgba(204,0,0,0.4); color: #ff4d4d; padding: 7px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
-.btn-reset:hover { background: #cc0000; color: #fff; }
-
-.results-bar { max-width: 1300px; margin: 15px auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 0.9rem; color: #94a3b8; }
-.results-count strong { color: #fff; }
-.view-toggle { display: flex; gap: 5px; background: rgba(255,255,255,0.05); padding: 3px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); }
-.view-btn { background: transparent; border: none; color: #94a3b8; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-family: 'Cairo'; font-weight: bold; transition: 0.3s; }
-.view-btn.active { background: #cc0000; color: #fff; box-shadow: 0 0 10px rgba(204,0,0,0.4); }
-
-.grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1300px; margin: 0 auto 40px; padding: 0 20px; }
-.list-view { display: flex; flex-direction: column; gap: 12px; max-width: 1000px; margin: 0 auto 40px; padding: 0 20px; }
-.list-view .card { display: flex; flex-direction: row; height: 130px; align-items: center; }
-.list-view .card-thumb { width: 180px; height: 100%; flex-shrink: 0; }
-.list-view .card-info { flex: 1; padding: 10px 15px; }
-
-.card { background: rgba(15,15,15,0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; position: relative; }
-.card:hover { transform: translateY(-4px); border-color: rgba(204,0,0,0.6); box-shadow: 0 10px 25px rgba(204,0,0,0.2); }
-.card-thumb { position: relative; width: 100%; height: 160px; background: #000; overflow: hidden; }
-.media-badge { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); }
-.media-badge.video { border-color: rgba(204,0,0,0.5); color: #ff4d4d; }
-.duration-badge { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.8); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-family: monospace; }
-.play-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.3s; }
-.card:hover .play-overlay { opacity: 1; }
-.play-icon { width: 40px; height: 40px; background: #cc0000; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(204,0,0,0.8); }
-.play-icon::after { content: ''; width: 0; height: 0; border-style: solid; border-width: 6px 0 6px 10px; border-color: transparent transparent transparent #fff; margin-right: -2px; }
-.card-info { padding: 12px 15px; }
-.card-date { font-size: 0.75rem; color: #a1a1aa; margin-bottom: 5px; font-family: monospace; }
-.card-desc { font-size: 0.85rem; color: #e2e8f0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; }
-
-/* Modal المشترك والفيديوهات */
-#modal-overlay { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); align-items: center; justify-content: center; padding: 20px; }
-.modal-box { background: #111; border: 1px solid rgba(204,0,0,0.4); border-radius: 16px; width: 100%; max-width: 900px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.9); }
-.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.5); }
-.modal-close { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; padding: 5px; }
-.modal-body { padding: 20px; overflow-y: auto; display: grid; grid-template-columns: 1fr; gap: 20px; }
-@media(min-width: 768px) { .modal-body { grid-template-columns: 1.2fr 1fr; } }
-.modal-media { background: #000; border-radius: 12px; overflow: hidden; min-height: 300px; display: flex; align-items: center; justify-content: center; position: relative; }
-.modal-meta { display: flex; flex-direction: column; gap: 12px; font-size: 0.85rem; }
-.meta-section h3 { font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; margin-bottom: 4px; font-weight: bold; }
-.meta-value { color: #f8fafc; line-height: 1.6; }
-.modal-nav { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-top: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.5); }
-.nav-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-family: 'Cairo'; transition: 0.3s; }
-.nav-btn:hover { background: #cc0000; border-color: #ff4d4d; }
-
-.tlc-container { position: relative; width: 100%; padding-bottom: 80px; }
-.tlc-tracker { position: sticky; top: -2px; z-index: 25; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(204, 0, 0, 0.3); padding: 15px 0; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
-.tlc-tracker-clip { max-width: 1200px; margin: 0 auto; overflow-x: auto; scrollbar-width: none; }
+/* تخصيص وتعديل أبرز المحطات بصورة ابداعية سينمائية */
+.tlc-container { position: relative; width: 100%; padding-bottom: 80px; max-width: 1100px; margin: 0 auto; }
+.tlc-tracker { position: sticky; top: 0px; z-index: 25; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(204, 0, 0, 0.3); padding: 15px 0; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
+.tlc-tracker-clip { max-width: 1100px; margin: 0 auto; overflow-x: auto; scrollbar-width: none; }
 .tlc-tracker-clip::-webkit-scrollbar { display: none; }
-.tlc-tracker-track { display: flex; gap: 15px; padding: 0 20px; white-space: nowrap; width: max-content; margin: 0 auto; }
-.tlc-tracker-item { color: #94a3b8; text-decoration: none; font-weight: 700; padding: 8px 20px; border-radius: 30px; transition: all 0.3s ease; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); font-family: 'Cairo'; font-size: 1rem; }
+.tlc-tracker-track { display: flex; gap: 12px; padding: 0 20px; white-space: nowrap; width: max-content; margin: 0 auto; }
+.tlc-tracker-item { color: #94a3b8; text-decoration: none; font-weight: 700; padding: 6px 18px; border-radius: 30px; transition: all 0.3s ease; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); font-family: 'Cairo'; font-size: 0.9rem; }
 .tlc-tracker-item.is-current, .tlc-tracker-item:hover { color: #fff; background-color: #cc0000; border-color: #ff4d4d; box-shadow: 0 0 20px rgba(204,0,0,0.5); transform: scale(1.05); }
-.tlc-main { max-width: 850px; margin: 0 auto; padding: 0 20px; }
-.tlc-scene { position: relative; min-height: 50vh; display: flex; align-items: center; justify-content: center; margin-bottom: 80px; }
-.tlc-panel { position: relative; z-index: 2; background: rgba(15, 15, 15, 0.9); backdrop-filter: blur(12px); border: 1px solid rgba(204, 0, 0, 0.2); padding: 40px; border-radius: 20px; width: 100%; box-shadow: 0 20px 50px rgba(0,0,0,0.5); transition: transform 0.4s, border-color 0.4s; }
-.tlc-panel:hover { transform: translateY(-5px); border-color: rgba(204, 0, 0, 0.6); }
-.tlc-date { display: inline-block; background: rgba(204,0,0,0.15); color: #ff4d4d; padding: 5px 20px; border-radius: 12px; font-weight: 900; font-size: 1.2rem; margin-bottom: 20px; border: 1px solid rgba(204,0,0,0.3); }
-.tlc-title { font-size: 2.2rem; font-weight: 900; margin: 0 0 10px 0; color: #fff; }
-.tlc-alt { color: #94a3b8; font-size: 1.2rem; margin-bottom: 25px; font-weight: bold; }
-.tlc-excerpt { font-size: 1.15rem; line-height: 1.8; color: #e2e8f0; margin-bottom: 30px; }
-.tlc-foot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; }
-.tlc-stat-num { display: block; font-size: 1.4rem; font-weight: 900; color: #ff4d4d; }
-.tlc-stat-label { font-size: 0.9rem; color: #94a3b8; font-weight: bold;}
 
+.tlc-decade-section { margin-bottom: 60px; }
+.tlc-decade-title { font-size: 1.8rem; font-weight: 900; color: #ff4d4d; border-bottom: 2px solid rgba(204,0,0,0.4); padding-bottom: 8px; margin-bottom: 30px; display: inline-block; }
+.tlc-scene { position: relative; min-height: 45vh; display: flex; align-items: center; justify-content: center; margin-bottom: 50px; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); background: rgba(15,15,15,0.9); }
+.tlc-bg { position: absolute; inset: 0; z-index: 1; overflow: hidden; }
+.tlc-bg img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.35) blur(3px); transform: scale(1.05); transition: transform 0.6s ease; }
+.tlc-scene:hover .tlc-bg img { transform: scale(1); }
+.tlc-bg-tint { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(20,0,0,0.7) 100%); }
+
+.tlc-panel { position: relative; z-index: 2; padding: 35px; width: 100%; }
+.tlc-date { display: inline-block; background: rgba(204,0,0,0.2); color: #ff4d4d; padding: 4px 16px; border-radius: 10px; font-weight: 900; font-size: 1.1rem; margin-bottom: 15px; border: 1px solid rgba(204,0,0,0.4); }
+.tlc-title { font-size: 2rem; font-weight: 900; margin: 0 0 8px 0; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+.tlc-alt { color: #fca5a5; font-size: 1.1rem; margin-bottom: 20px; font-weight: bold; }
+.tlc-excerpt { font-size: 1.05rem; line-height: 1.8; color: #e2e8f0; margin-bottom: 25px; }
+.tlc-foot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 15px; flex-wrap: wrap; gap: 15px; }
+.tlc-stat-num { display: block; font-size: 1.3rem; font-weight: 900; color: #ff4d4d; }
+.tlc-stat-label { font-size: 0.85rem; color: #94a3b8; font-weight: bold;}
+.tlc-more { background: #cc0000; color: #fff; border: none; padding: 8px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: 'Cairo'; display: flex; align-items: center; gap: 8px; }
+.tlc-more:hover { background: #ff1a1a; box-shadow: 0 0 15px rgba(204,0,0,0.6); }
+
+/* نافذة التفاصيل المنبثقة للمحطات التاريخية */
+#tlc-custom-modal { display: none; position: fixed; inset: 0; z-index: 1050; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); align-items: center; justify-content: center; padding: 20px; }
+.tlc-modal-box { background: #111; border: 1px solid rgba(204,0,0,0.5); border-radius: 16px; width: 100%; max-width: 850px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.9); }
+.tlc-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.6); }
+.tlc-modal-body { padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+.tlc-modal-img { width: 100%; max-height: 320px; object-fit: cover; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
+
+/* بطاقة المعاينة العائمة للنجوم */
 #star-tooltip {
     position: fixed;
     z-index: 50;
@@ -188,15 +177,15 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 </main>
 
-<!-- قسم أبرز المحطات المحدث والسينمائي الشامل -->
+<!-- واجهة أبرز المحطات المحدثة بالكامل وبصورة إبداعية شاملة -->
 <main id="milestones-view" class="text-white">
 <div class="tlc-container">
     <nav class="tlc-tracker">
-        <div class="tlc-tracker-clip" id="tlc-tracker-clip">
+        <div class="tlc-tracker-clip">
             <div class="tlc-tracker-track" id="tlc-tracker-bar"></div>
         </div>
     </nav>
-    <div class="tlc-main" id="tlc-scenes-container"></div>
+    <div id="tlc-scenes-container"></div>
 </div>
 </main>
 
@@ -211,15 +200,15 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 <div class="w-full max-w-7xl mx-auto px-4 md:px-8">
 <div class="mb-8 text-center">
 <h2 id="stats-title" class="text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400 drop-shadow-lg">السجل الإحصائي الشامل</h2>
-<p id="stats-desc" class="text-gray-400 text-sm md:text-base">توثيق مستمر لحجم الدمار والفقد في قطاع غزة</p>
+<p id="stats-desc" class="text-gray-400 text-sm md:text-base">توثيق مستمر لحجم الدمار والفقد في فلسطين</p>
 </div>
 <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
-<div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الشهداء والمفقودون</h3><p class="text-2xl md:text-4xl font-black text-white">~50,000</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
-<div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الأطفال والنساء</h3><p class="text-2xl md:text-4xl font-black text-white">68%</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
+<div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الشهداء والمفقودون</h3><p class="text-2xl md:text-4xl font-black text-white">~100,000+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
+<div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الأطفال والنساء</h3><p class="text-2xl md:text-4xl font-black text-white">70%</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
 <div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">النازحون قسراً</h3><p class="text-2xl md:text-4xl font-black text-white">2M+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
-<div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الجرحى والمصابون</h3><p class="text-2xl md:text-4xl font-black text-white">85,000+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
-<div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">المنازل المدمرة</h3><p class="text-2xl md:text-4xl font-black text-white">70%</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
-<div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الطواقم الطبية والصحفية</h3><p class="text-2xl md:text-4xl font-black text-white">650+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
+<div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الجرحى والمصابون</h3><p class="text-2xl md:text-4xl font-black text-white">100,000+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
+<div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">المنازل المدمرة</h3><p class="text-2xl md:text-4xl font-black text-white">75%</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
+<div class="relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الكوادر الطبية والصحفية</h3><p class="text-2xl md:text-4xl font-black text-white">1,000+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
 </div>
 </div>
 </main>
@@ -325,7 +314,8 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 </div>
 
-<div id="modal-overlay">
+<!-- نافذة عرض الفيديوهات والأرشيف المرئي -->
+<div id="modal-overlay" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.85); backdrop-filter:blur(15px); align-items:center; justify-content:center; padding:20px;">
     <div class="modal-box">
         <div class="modal-header">
             <h2 id="modal-title" class="font-bold text-lg text-red-500">تفاصيل التوثيق الميداني</h2>
@@ -360,6 +350,23 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
 </div>
 
+<!-- نافذة تفاصيل أبرز المحطات التاريخية السينمائية -->
+<div id="tlc-custom-modal">
+    <div class="tlc-modal-box">
+        <div class="tlc-modal-header">
+            <h2 id="tlc-modal-title" class="font-bold text-lg text-red-500">تفاصيل المحطة التاريخية</h2>
+            <button class="modal-close" onclick="closeMilestoneModal()" title="إغلاق">✕</button>
+        </div>
+        <div class="tlc-modal-body">
+            <img id="tlc-modal-img" class="tlc-modal-img" src="" alt="صورة المحطة">
+            <div id="tlc-modal-desc" class="text-gray-200 leading-relaxed text-sm"></div>
+            <div id="tlc-modal-stat" class="bg-black/50 border border-white/10 p-4 rounded-xl"></div>
+            <div id="tlc-modal-source" class="text-xs text-gray-400"></div>
+        </div>
+    </div>
+</div>
+
+<!-- نافذة مستقلة لبطاقة الشهيد -->
 <div id="martyr-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); align-items: center; justify-content: center; padding: 20px;">
     <div class="modal-box" style="max-width: 450px;">
         <div class="modal-header">
@@ -405,70 +412,83 @@ const torrentConfig = {
     ]
 };
 
-let shootingStars = [];
-function spawnShootingStar() {
-    const fromTop = Math.random() > 0.5;
-    const x = fromTop ? Math.random() * width * 1.2 : width + 50;
-    const y = fromTop ? -50 : Math.random() * height * 0.6;
-    const angle = Math.PI * 0.75 + (Math.random() - 0.5) * 0.3; 
-    const speed = Math.random() * 10 + 8;
-    const length = Math.random() * 120 + 60;
-    shootingStars.push({x, y, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, length, life: 1.0, decay: Math.random()*0.015+0.008});
-}
-
-function updateAndDrawShootingStars() {
-    if (['souls', 'journalists', 'westbank'].includes(currentMainMode)) {
-        if (Math.random() < 0.035) spawnShootingStar();
-    }
-    for (let i = shootingStars.length - 1; i >= 0; i--) {
-        let ss = shootingStars[i];
-        ss.x += ss.vx; ss.y += ss.vy; ss.life -= ss.decay;
-        if (ss.life <= 0 || ss.x < -150 || ss.y > height + 150) { shootingStars.splice(i, 1); continue; }
-        const dist = Math.hypot(ss.vx, ss.vy);
-        const tailX = ss.x - (ss.vx / dist) * ss.length;
-        const tailY = ss.y - (ss.vy / dist) * ss.length;
-        const grad = ctx.createLinearGradient(ss.x, ss.y, tailX, tailY);
-        grad.addColorStop(0, `rgba(255, 255, 255, ${ss.life})`);
-        grad.addColorStop(0.25, `rgba(255, 80, 80, ${ss.life * 0.8})`);
-        grad.addColorStop(1, `rgba(204, 0, 0, 0)`);
-        ctx.beginPath(); ctx.moveTo(ss.x, ss.y); ctx.lineTo(tailX, tailY);
-        ctx.strokeStyle = grad; ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.stroke();
-        ctx.beginPath(); ctx.arc(ss.x, ss.y, 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${ss.life})`; ctx.shadowColor = '#ff3333';
-        ctx.shadowBlur = 10; ctx.fill(); ctx.shadowBlur = 0; 
-    }
-}
-
-/* بيانات أبرز المحطات الكاملة والمحدثة بناءً على السجل الموثق[cite: 6] */
-const milestonesData = [
-  {year: "1929", title: "هبّة البراق", subtitle: "ثورة البراق", desc: "في آب/أغسطس 1929 انتفض الفلسطينيون احتجاجاً على محاولات السيطرة على حائط البراق المحاذي للمسجد الأقصى. اندلعت اشتباكات في القدس والخليل وصفد، وردّ الانتداب البريطاني بالقوة المفرطة، وأُعدم ثلاثة من قادة الثورة لاحقاً (محمد جمجوم، فؤاد حجازي، عطا الزير) فخلّدتهم الذاكرة الوطنية[cite: 6].", martyrs: "حوالي 116 شهيد[cite: 6]"},
-  {year: "1936 - 1939", title: "الثورة الفلسطينية الكبرى", subtitle: "ثورة الست أشهر", desc: "انطلقت الثورة الفلسطينية الكبرى في نيسان/أبريل 1936 بإضراب عام شامل امتد ستة أشهر، ثم تحولت إلى مقاومة مسلحة استمرت حتى 1939. استهدفت الانتداب البريطاني والمشروع الصهيوني، وقمعتها بريطانيا بعنف عبر قانون الطوارئ ونسف القرى والإعدامات[cite: 6].", martyrs: "5,000 شهيد[cite: 6]"},
-  {year: "1936 - 1948", title: "مرحلة التطهير العرقي في فلسطين", subtitle: "النكبة المبكرة والمجازر", desc: "بدأت المجازر الإسرائيلية بحق الفلسطينيين قبل الإعلان عن قيام دولة الاحتلال بنحو 11 عاماً، حيث ارتكبت العصابات الصهيونية (الإتسل، ليحي، الهاجاناه، البالماخ، وشتيرن) أكثر من 57 مجزرة ذهب ضحيتها آلاف الفلسطينيين[cite: 6].", martyrs: "حوالي 5000 شهيد[cite: 6]"},
-  {year: "1948", title: "مجزرة دير ياسين", subtitle: "مفترق طرق النكبة", desc: "في فجر التاسع من نيسان 1948، اقتحمت عصابتا الإرغون وشتيرن قرية دير ياسين غرب القدس وارتكبتا مجزرة وحشية شملت إعدامات ميدانية وتهجيراً، وبُثت أنباؤها عمداً لإرهاب الفلسطينيين[cite: 6].", martyrs: "254 - 300 شهيد[cite: 6]"},
-  {year: "1948", title: "الحرب العربية الإسرائيلية 1948", subtitle: "حرب النكبة", desc: "أول حروب العرب مع إسرائيل عقب إنهاء الانتداب البريطاني وإعلان قيام إسرائيل منتصف مايو 1948، وارتقى خلالها آلاف الشهداء من الفلسطينيين والجيوش العربية وانتهت بهزيمة العرب[cite: 6].", martyrs: "20 - 22 ألف شهيد[cite: 6]"},
-  {year: "1949 - 1956", title: "العودة الفردية للاجئين الفلسطينيين", subtitle: "عمليات التسلل والعبور", desc: "عاد ما بين 30 ألفاً و90 ألف لاجئ فلسطيني لاستعادة ممتلكاتهم وجمع محاصيلهم، فواجه الاحتلال ذلك بوحشية وارتكب مجازر ارتقى خلالها آلاف الشهداء[cite: 6].", martyrs: "2,700 - 5,000 شهيد[cite: 6]"},
-  {year: "1956", title: "احتلال غزة ومجازر 1956", subtitle: "خلال العدوان الثلاثي", desc: "احتلال جيش الاحتلال لقطاع غزة وارتكاب مجازر بشعة أبرزها مجزرتي خان يونس ورفح، إضافة لعمليات القتل والإعدام الميداني في شوارع القطاع[cite: 6].", martyrs: "حوالي 1500 شهيد[cite: 6]"},
-  {year: "1956", title: "مجزرة كفر قاسم", subtitle: "جرح الداخل الفلسطيني", desc: "فرضت قوات الاحتلال حظر تجوّل مفاجئ على قرية كفر قاسم العربية، وأعدمت وحدة من حرس الحدود 49 فلسطينياً ميدانياً عند مدخل القرية بينهم نساء وأطفال[cite: 6].", martyrs: "49 شهيداً[cite: 6]"},
-  {year: "1967", title: "حرب حزيران 1967", subtitle: "النكسة", desc: "احتلت إسرائيل كامل فلسطين التاريخية وأراضٍ سورية ومصرية، وضاعفت المساحة المخصصة لها بأكثر من ستة أضعاف، وسط خسائر جسيمة في صفوف الجيوش العربية والفلسطينيين[cite: 6].", martyrs: "15,000 - 25,000 شهيد[cite: 6]"},
-  {year: "1967 - 1970", title: "بدايات الكفاح المسلح", subtitle: "بالتزامن مع حرب الاستنزاف", desc: "إعلان حركة فتح وبقية فصائل المقاومة بدء العمليات القتالية في الضفة الغربية وخارجها، قابلتها سلطات الاحتلال بحملات أمنية ومربعات عسكرية واعتقالات واسعة[cite: 6].", martyrs: "حوالي 1,828 شهيد[cite: 6]"},
-  {year: "1968", title: "معركة الكرامة", subtitle: "صمود الأردن وفلسطين", desc: "تصدى الجيش الأردني والفدائيون الفلسطينيون وسكان قرية الكرامة لمحاولة احتلال الضفة الشرقية لنهر الأردن، وأجبروا الاحتلال على الانسحاب الكامل بعد 16 ساعة من القتال[cite: 6].", martyrs: "حوالي 242 شهيد[cite: 6]"},
-  {year: "1976", title: "يوم الأرض", subtitle: "يوم وطني فلسطيني جامع", desc: "خرج فلسطينيو الداخل في إضراب عام واحتجاجات واسعة في الجليل والمثلث رفضاً لقرار مصادرة آلاف الدونمات، واستشهد 6 مواطنين برصاص الاحتلال[cite: 6].", martyrs: "6 شهداء[cite: 6]"},
-  {year: "1976", title: "مجزرة تل الزعتر", subtitle: "حصار المخيمات في لبنان", desc: "حصار دام 53 روزاً لمخيم تل الزعتر شرق بيروت خلال الحرب الأهلية اللبنانية، وانتهى بسقوط المخيم وارتكاب مذبحة مروعة أثناء الإجلاء[cite: 6].", martyrs: "3,000 - 4,280 شهيد[cite: 6]"},
-  {year: "1982", title: "حرب لبنان 1982", subtitle: "اجتياح بيروت", desc: "اتخذت إسرائيل من محاولة اغتيال سفيرها في لندن ذريعة لاجتياح لبنان وفرض حصار مدمر على بيروت الغربية دام طوال الصيف قبل إخلاء منظمة التحرير[cite: 6].", martyrs: "17,000 - 19,000 شهيد[cite: 6]"},
-  {year: "1982", title: "مجزرة صبرا وشاتيلا", subtitle: "جرح في الذاكرة العربية", desc: "سمحت قوات الاحتلال لميليشيات القوات اللبنانية بدخول مخيم شاتيلا وحي صبرا وارتكاب مجزرة مروعة بحق المدنيين العزل بينما كانت قوات الاحتلال تحاصر المخيم وتنير السماء بالقنابل المضيئة[cite: 6].", martyrs: "أكثر من 3,000 - 5,000 شهيد[cite: 6]"},
-  {year: "1987", title: "الانتفاضة الفلسطينية الأولى", subtitle: "انتفاضة الحجارة", desc: "انتفاضة شعبية عارمة انطلقت إثر استشهاد 4 عمال فلسطينيين على حاجز بيت حانون، واستخدم فيها الفلسطينيون الحجارة والإضرابات في مواجهة الاحتلال[cite: 6].", martyrs: "1550 شهيد[cite: 6]"},
-  {year: "1990", title: "مجزرة الأقصى الأولى", subtitle: "مجزرة الحرم القدسي", desc: "اقتحمت قوات الاحتلال باحات المسجد الأقصى وأطلقت النار على المصلين المتصدين لمحاولة جماعة أمناء الهيكل اقتحام الحرم، مما أسفر عن عشرات الشهداء والجرحى[cite: 6].", martyrs: "21 شهيداً[cite: 6]"},
-  {year: "1994", title: "مجزرة الحرم الإبراهيمي", subtitle: "مجزرة فجر رمضان", desc: "اقتحم المستوطن باروخ غولدشتاين الحرم الإبراهيمي بالخليل أثناء صلاة الفجر وأمطر المصلين السجود بالرصاص، ورد الاحتلال بتقسيم الحرم بدلاً من معاقبة الاستيطان[cite: 6].", martyrs: "29 شهيداً[cite: 6]"},
-  {year: "2000", title: "الانتفاضة الفلسطينية الثانية", subtitle: "انتفاضة الأقصى", desc: "اندلعت عقب اقتحام أرييل شارون باحات المسجد الأقصى المبارك، وتميزت بكثافة المواجهات والعمليات العسكرية وتوسعت لتشمل كافة مدن الضفة والقطاع[cite: 6].", martyrs: "4412 شهيد[cite: 6]"},
-  {year: "2002", title: "اجتياح مخيم جنين", subtitle: "عملية السور الواقي", desc: "حصار واجتياح واسع لمدن الضفة، وبرزت ملحمة مخيم جنين حيث اشتبك المقاومون بأسلحة خفيفة ضد الدبابات والطائرات ودُمر حي الحواشين بالكامل[cite: 6].", martyrs: "60 شهيداً في جنين[cite: 6]"},
-  {year: "2008 - 2009", title: "عملية الرصاص المصبوب", subtitle: "معركة الفرقان", desc: "أول حرب واسعة على قطاع غزة استخدم فيها الاحتلال أسلحة محرمة دولياً كالفسفور الأبيض، وأسفرت عن آلاف الشهداء والجرحى وتدمير هائل للمنازل[cite: 6].", martyrs: "1430 شهيد[cite: 6]"},
-  {year: "2012", title: "عامود السحاب", subtitle: "حجارة السجيل", desc: "عدوان إسرائيلي على قطاع غزة استمر 8 أيام بدأ باغتيال القائد أحمد الجعبري وردت المقاومة بمعركة حجارة السجيل[cite: 6].", martyrs: "180 شهيد[cite: 6]"},
-  {year: "2014", title: "الجرف الصامد", subtitle: "العصف المأكول", desc: "حرب ضارية استمرت 51 يوماً شن خلالها جيش الاحتلال أكثر من 60 ألف غارة وارتكب مجازر بحق مئات العائلات الفلسطينية في غزة[cite: 6].", martyrs: "2322 شهيد[cite: 6]"},
-  {year: "2015 - 2016", title: "هبّة القدس", subtitle: "انتفاضة السكاكين", desc: "هبّة جماهيرية واسعة تركزت في القدس والضفة الغربية شملت عمليات طعن ودهس ومواجهات على نقاط التماس دفاعاً عن المسجد الأقصى[cite: 6].", martyrs: "250+ شهيداً[cite: 6]"},
-  {year: "2018 - 2019", title: "مسيرات العودة الكبرى", subtitle: "كسر الحصار عن غزة", desc: "مسيرات شعبية سلمية أسبوعية على طول السياج الحدودي لقطاع غزة تطالب بحق العودة وكسر الحصار، واجهها قناصة الاحتلال بالرصاص الحي[cite: 6].", martyrs: "223 شهيداً[cite: 6]"},
-  {year: "2021", title: "حارس الأسوار", subtitle: "سيف القدس", desc: "معركة شاملة انتصارة للقدس والشيخ جراح، أطلقت خلالها المقاومة آلاف الصواريخ وتوحدت الجبهات الفلسطينية في الداخل والضفة وغزة[cite: 6].", martyrs: "250 شهيد[cite: 6]"},
-  {year: "2022", title: "الفجر الصادق", subtitle: "وحدة الساحات", desc: "تصعيد وعمليات عسكرية استهدفت قيادات سرايا القدس في قطاع غزة وواجهتها فصائل المقاومة برشقات صاروخية وتصدٍ بطولي[cite: 6].", martyrs: "50 شهيد[cite: 6]"},
-  {year: "2023 - 2026", title: "طوفان الأقصى", subtitle: "حرب الإبادة الجماعية", desc: "معركة كبرى انطلقت في السابع من أكتوبر 2023 واجهها الاحتلال بحرب إبادة وتدمير وتجويع غير مسبوق في قطاع غزة والضفة، وسط صمود أسطوري وتوثيق عالمي ودولي غير مسبوق[cite: 6].", martyrs: "74,000+ شهيد موثّق[cite: 6]"}
+/* بيانات أبرز المحطات التاريخية الكاملة والمحدثة استناداً إلى مرصد شيرين والأرشيف التاريخي */
+const milestonesDecades = [
+  {
+    decade: "1920s",
+    items: [
+      {id: "m18", year: "1929", title: "هبّة البراق", subtitle: "ثورة البراق", img: "./images/timeline/18.jpg", desc: "في آب/أغسطس 1929 انتفض الفلسطينيون احتجاجاً على محاولات السيطرة على حائط البراق المحاذي للمسجد الأقصى. اندلعت اشتباكات في القدس والخليل وصفد، وردّ الانتداب البريطاني بالقوة المفرطة، واستشهد أكثر من 116 فلسطينياً، وأُعدم ثلاثة من قادة الثورة لاحقاً (محمد جمجوم، فؤاد حجازي، عطا الزير) فخلّدتهم الذاكرة الوطنية[cite: 11].", martyrs: "حوالي 116 شهيد", sourceTitle: "ويكيبيديا - ثورة البراق 1929", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AB%D9%88%D8%B1%D8%A9_%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%82"}
+    ]
+  },
+  {
+    decade: "1930s",
+    items: [
+      {id: "m19", year: "1936 - 1939", title: "الثورة الفلسطينية الكبرى", subtitle: "ثورة الست أشهر", img: "./images/timeline/19.jpg", desc: "انطلقت الثورة الفلسطينية الكبرى في نيسان/أبريل 1936 بإضراب عام شامل امتد ستة أشهر، ثم تحولت إلى مقاومة مسلحة استمرت حتى 1939. استهدفت الانتداب البريطاني والمشروع الصهيوني[cite: 11].", martyrs: "5,000 شهيد", sourceTitle: "ويكيبيديا - الثورة الفلسطينية الكبرى", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%A7%D9%84%D8%AB%D9%88%D8%B1%D8%A9_%D8%A7%D9%84%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86%D9%8A%D8%A9_%D8%A7%D9%84%D9%83%D8%A8%D8%B1%D9%89"},
+      {id: "m1", year: "1936 - 1948", title: "مرحلة التطهير العرقي في فلسطين", subtitle: "النكبة", img: "./images/timeline/1.jpg", desc: "بدأت المجازر الإسرائيلية بحق الفلسطينيين قبل الإعلان عن قيام دولة إسرائيل بنحو 11 عاماً، حيث ارتكبت العصابات الصهيونية أكثر من 57 مجزرة ذهب ضحيتها آلاف المدنيين[cite: 11].", martyrs: "حوالي 5000 شهيد", sourceTitle: "مركز الزيتونة للدراسات", sourceUrl: "https://www.alzaytouna.net"}
+    ]
+  },
+  {
+    decade: "1940s",
+    items: [
+      {id: "m20", year: "1948", title: "مجزرة دير ياسين", subtitle: "التطهير العرقي", img: "./images/timeline/20.jpg", desc: "في فجر التاسع من نيسان 1948، اقتحمت عصابتا الإرغون وشتيرن قرية دير ياسين وارتكبتا مجزرة وحشية لإرهاب الفلسطينيين ودفعهم للنزوح[cite: 11].", martyrs: "254 - 300 شهيد", sourceTitle: "ويكيبيديا - دير ياسين", sourceUrl: "https://ar.wikipedia.org/wiki/%D9%85%D8%AC%D8%B2%D8%B1%D8%A9_%D8%AF%D9%8A%D8%B0_%D9%8A%D8%A7%D8%B3%D9%8A%D9%86"},
+      {id: "m2", year: "1948", title: "الحرب العربية الإسرائيلية 1948", subtitle: "حرب النكبة", img: "./images/timeline/2.jpg", desc: "دارت عقب إنهاء الانتداب البريطاني وإعلان قيام إسرائيل، وانتهت بتهجير مئات الآلاف واحتلال الأراضي الفلسطينية[cite: 11].", martyrs: "20 - 22 ألف شهيد", sourceTitle: "ويكيبيديا - حرب 1948", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AD%D8%B1%D8%A8_1948"}
+    ]
+  },
+  {
+    decade: "1950s",
+    items: [
+      {id: "m4", year: "1956", title: "احتلال غزة 1956", subtitle: "خلال العدوان الثلاثي", img: "./images/timeline/4.jpg", desc: "احتل جيش الاحتلال قطاع غزة وارتكب مجازر بشعة في خانيونس ورفح خلال العدوان الثلاثي على مصر[cite: 11].", martyrs: "حوالي 1500 شهيد", sourceTitle: "الموسوعة التفاعلية", sourceUrl: "https://www.palquest.org"},
+      {id: "m21", year: "1956", title: "مجزرة كفر قاسم", subtitle: "حظر التجوال", img: "./images/timeline/21.jpg", desc: "أعدمت قوات حرس الحدود الإسرائيلية 49 فلسطينياً ميدانياً عند مدخل قرية كفر قاسم لخرقهم حظر تجوال لم يُبلّغوا به[cite: 11].", martyrs: "49 شهيداً", sourceTitle: "ويكيبيديا - كفر قاسم", sourceUrl: "https://ar.wikipedia.org/wiki/%D9%85%D8%AC%D8%B2%D8%B1%D8%A9_%D9%83%D9%81%D8%B1_%D9%82%D8%A7%D8%B3%D9%85"}
+    ]
+  },
+  {
+    decade: "1960s",
+    items: [
+      {id: "m5", year: "1967", title: "حرب حزيران 1967", subtitle: "النكسة", img: "./images/timeline/5.jpg", desc: "احتلت إسرائيل كامل فلسطين التاريخية وأراضٍ سورية ومصرية، وضاعفت المساحة بأكثر من ستة أضعاف[cite: 11].", martyrs: "15,000 - 25,000 شهيد", sourceTitle: "ويكيبيديا - حرب 1967", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AD%D8%B1%D8%A8_1967"},
+      {id: "m7", year: "1968", title: "معركة الكرامة", subtitle: "انتصار الإرادة", img: "./images/timeline/7.jpg", desc: "تصدى الجيش الأردني والفدائيون الفلسطينيون لقوات الاحتلال وأجبروها على الانسحاب الكامل من أرض المعركة[cite: 11].", martyrs: "حوالي 242 شهيد", sourceTitle: "مؤسسة ياسر عرفات", sourceUrl: "https://yaf.ps"}
+    ]
+  },
+  {
+    decade: "1970s",
+    items: [
+      {id: "m22", year: "1976", title: "يوم الأرض", subtitle: "دفاعاً عن الجليل والمثلث", img: "./images/timeline/22.jpg", desc: "خرج فلسطينيو الداخل في إضراب عام رفضاً لمصادرة الأراضي، وواجه الاحتلال المتظاهرين بالرصاص الحي[cite: 11].", martyrs: "6 شهداء", sourceTitle: "ويكيبيديا - يوم الأرض", sourceUrl: "https://ar.wikipedia.org/wiki/%D9%8A%D9%88%D9%85_%D8%A7%D9%84%D8%A3%D8%B1%D8%B6_%D8%A7%D9%84%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86%D9%8A"},
+      {id: "m23", year: "1976", title: "مجزرة تل الزعتر", subtitle: "حصار مخيمات لبنان", img: "./images/timeline/23.jpg", desc: "حصار ومجزرة مروعة استهدفت اللاجئين الفلسطينيين في مخيم تل الزعتر شرق بيروت خلال الحرب الأهلية اللبنانية[cite: 11].", martyrs: "3,000 - 4,280 شهيد", sourceTitle: "الجزيرة نت", sourceUrl: "https://www.aljazeera.net"}
+    ]
+  },
+  {
+    decade: "1980s",
+    items: [
+      {id: "m10", year: "1982", title: "مجزرة صبرا وشاتيلا", subtitle: "تحت أنوار القنابل المضيئة", img: "./images/timeline/10.jpg", desc: "ارتكبت الميليشيات اللبنانية المتحالفة مع الاحتلال مجزرة مروعة بحق المدنيين العزل في مخيم شاتيلا وحي صبرا بحماية الجيش الإسرائيلي[cite: 11].", martyrs: "3,000 - 5,000 شهيد", sourceTitle: "الجزيرة نت", sourceUrl: "https://www.aljazeera.net"},
+      {id: "m11", year: "1987", title: "الانتفاضة الفلسطينية الأولى", subtitle: "انتفاضة الحجارة", img: "./images/timeline/11.jpg", desc: "انتفاضة شعبية عارمة انطلقت من قطاع غزة وامتدت لكل فلسطين رفضا للاحتلال والقمع اليومي[cite: 11].", martyrs: "1550 شهيد", sourceTitle: "وكالة وفا", sourceUrl: "https://info.wafa.ps"}
+    ]
+  },
+  {
+    decade: "1990s",
+    items: [
+      {id: "m25", year: "1994", title: "مجزرة الحرم الإبراهيمي", subtitle: "مجزرة الفجر في رمضان", img: "./images/timeline/25.jpg", desc: "اقتحم المستوطن باروخ غولدشتاين الحرم الإبراهيمي في الخليل وأمطر المصلين السجود بالرصاص فاستشهد العشرات[cite: 11].", martyrs: "29 شهيداً", sourceTitle: "ويكيبيديا - الحرم الإبراهيمي", sourceUrl: "https://ar.wikipedia.org/wiki/%D9%85%D8%AC%D8%B2%D8%B1%D8%A9_%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D8%A5%D8%B1%D8%A7%D9%87%D9%8A%D9%85%D9%8A"}
+    ]
+  },
+  {
+    decade: "2000s",
+    items: [
+      {id: "m12", year: "2000", title: "الانتفاضة الفلسطينية الثانية", subtitle: "انتفاضة الأقصى", img: "./images/timeline/12.jpg", desc: "اندلعت عقب اقتحام أرييل شارون باحات المسجد الأقصى، وتميزت بمواجهات ضارية واجتياحات واسعة لمدن الضفة الغربية[cite: 11].", martyrs: "4412 شهيد", sourceTitle: "الجزيرة نت", sourceUrl: "https://www.aljazeera.net"},
+      {id: "m13", year: "2008 – 2009", title: "عملية الرصاص المصبوب", subtitle: "معركة الفرقان", img: "./images/timeline/13.jpg", desc: "عدوان إسرائيلي واسع على قطاع غزة استمر 23 يوماً واستُخدمت فيه أسلحة محرمة دولياً كالفوسفور الأبيض[cite: 11].", martyrs: "1430 شهيد", sourceTitle: "الجزيرة نت", sourceUrl: "https://www.aljazeera.net"}
+    ]
+  },
+  {
+    decade: "2010s",
+    items: [
+      {id: "m15", year: "2014", title: "الجرف الصامد", subtitle: "العصف المأكول", img: "./images/timeline/15.jpg", desc: "حرب شرسة استمرت 51 يوماً شن خلالها الاحتلال آلاف الغارات وارتكب مجازر مروعة بحق العائلات الفلسطينية في غزة[cite: 11].", martyrs: "2322 شهيد", sourceTitle: "الجزيرة نت", sourceUrl: "https://www.aljazeera.net"},
+      {id: "m29", year: "2018 - 2019", title: "مسيرات العودة الكبرى", subtitle: "كسر الحصار", img: "./images/timeline/29.jpg", desc: "مسيرات شعبية سلمية على السياج الحدودي لغزة قوبلت بقناصة الاحتلال الذين استهدفوا المتظاهرين السلميين[cite: 11].", martyrs: "223 شهيداً", sourceTitle: "ويكيبيديا - مسيرات العودة", sourceUrl: "https://ar.wikipedia.org"}
+    ]
+  },
+  {
+    decade: "2020s",
+    items: [
+      {id: "m16", year: "2021", title: "حارس الأسوار", subtitle: "سيف القدس", img: "./images/timeline/16.jpg", desc: "هبة دفاعاً عن حي الشيخ جراح والأقصى، تلتها جولة مواجهة أطلقت خلالها المقاومة مئات الصواريخ نصرة للقدس[cite: 11].", martyrs: "250 شهيد", sourceTitle: "الجزيرة نت", sourceUrl: "https://www.aljazeera.net"},
+      {id: "m30", year: "2023 - 2026", title: "طوفان الأقصى", subtitle: "حرب الإبادة الجماعية المستمرة", img: "./images/timeline/30.jpg", desc: "ملحمة كبرى وحرب إبادة غير مسبوقة على قطاع غزة والضفة الغربية وسط صمود أسطوري وتوثيق ميداني دائم وملاحقات دولية للمجرمين[cite: 11].", martyrs: "100,000+ شهيد ومفقود", sourceTitle: "مجلة لانسيت والأرشيف الميداني", sourceUrl: "https://www.thelancet.com"}
+    ]
+  }
 ];
 
 const translations={
@@ -503,6 +523,80 @@ window.shareSite=function(){
 navigator.clipboard.writeText(window.location.href).then(()=>alert('تم نسخ رابط المنصة بنجاح!'));
 };
 
+/* دوال رندر أبرز المحطات بشكل سينمائي ابداعي ومتكامل */
+function renderMilestonesCinematic() {
+    if (milestonesRendered) return;
+    const trackerBar = document.getElementById('tlc-tracker-bar');
+    const scenesContainer = document.getElementById('tlc-scenes-container');
+    if(!trackerBar || !scenesContainer) return;
+
+    let trackerHTML = '';
+    let contentHTML = '';
+
+    milestonesDecades.forEach((dec, dIdx) => {
+        trackerHTML += `<a href="#decade-${dIdx}" class="tlc-tracker-item ${dIdx === 0 ? 'is-current' : ''}" onclick="scrollToDecade(event, 'decade-${dIdx}')">${dec.decade}</a>`;
+        
+        contentHTML += `
+            <div class="tlc-decade-section" id="decade-${dIdx}">
+                <h2 class="tlc-decade-title">${dec.decade}</h2>
+        `;
+
+        dec.items.forEach(m => {
+            contentHTML += `
+                <section class="tlc-scene" id="${m.id}">
+                    <div class="tlc-bg" aria-hidden="true">
+                        <img src="${m.img}" alt="" loading="lazy" onerror="this.src='./images/og_default.jpg'">
+                        <div class="tlc-bg-tint"></div>
+                    </div>
+                    <article class="tlc-panel">
+                        <time class="tlc-date">${m.year}</time>
+                        <h2 class="tlc-title">${m.title}</h2>
+                        <p class="tlc-alt">${m.subtitle}</p>
+                        <p class="tlc-excerpt">${m.desc}</p>
+                        <div class="tlc-foot">
+                            <div class="tlc-stat">
+                                <span class="tlc-stat-num">${m.martyrs}</span>
+                                <span class="tlc-stat-label">توثيق الضحايا:</span>
+                            </div>
+                            <button type="button" class="tlc-more" onclick='openMilestoneModal(${JSON.stringify(m)})'>
+                                <span>اقرأ المزيد التفصيلي</span>
+                                <span aria-hidden="true">→</span>
+                            </button>
+                        </div>
+                    </article>
+                </section>
+            `;
+        });
+        contentHTML += `</div>`;
+    });
+
+    trackerBar.innerHTML = trackerHTML;
+    scenesContainer.innerHTML = contentHTML;
+    milestonesRendered = true;
+}
+
+window.scrollToDecade = function(e, targetId) {
+    e.preventDefault();
+    const el = document.getElementById(targetId);
+    const view = document.getElementById('milestones-view');
+    if (el && view) {
+        view.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+    }
+};
+
+window.openMilestoneModal = function(m) {
+    document.getElementById('tlc-modal-title').innerText = m.title + (m.subtitle ? ' - ' + m.subtitle : '');
+    document.getElementById('tlc-modal-img').src = m.img;
+    document.getElementById('tlc-modal-desc').innerText = m.desc;
+    document.getElementById('tlc-modal-stat').innerHTML = `<strong class="text-red-500 block mb-1">عدد الضحايا المقدر:</strong> <span class="text-white text-base font-bold">${m.martyrs}</span>`;
+    document.getElementById('tlc-modal-source').innerHTML = `<span>المصدر الموثق: </span><a href="${m.sourceUrl}" target="_blank" rel="noopener" class="text-blue-400 underline">${m.sourceTitle}</a>`;
+    document.getElementById('tlc-custom-modal').style.display = 'flex';
+};
+
+window.closeMilestoneModal = function() {
+    document.getElementById('tlc-custom-modal').style.display = 'none';
+};
+
 async function fetchTorrentVideos() {
     if (torrentsLoaded) {
         renderArchiveGallery();
@@ -521,7 +615,7 @@ async function fetchTorrentVideos() {
     allVideoFiles = [
         {
             name: "Gaza Vol 5 (رابط مغناطيس مباشر)",
-            torrentSource: "magnet:?xt=urn:btih:14d81d460a7de2669e7bb2ac4782cb8e50b07338&dn=Gaza%20Vol%205&tr=udp%3a%2f%2ftracker.publicbt.com%3a6969%2fannounce&tr=udp%3a%2f%2ftracker.torrent.eu.org%3a451%2fannounce&tr=udp%3a%2f%2ftracker.opentrackr.org%3a1337%2fannounce&tr=udp%3a%2f%2ftracker.openbittorrent.com%3a6969%2fannounce&tr=udp%3a%2f%2ftracker.leechers-paradise.org%3a6969%2fannounce&tr=udp%3a%2f%2f9.rarbg.to%3a2920%2fannounce&tr=udp%3a%2f%2fexodus.desync.com%3a6969%2fannounce&tr=udp%3a%2f%2ftracker.cyberia.is%3a6969%2fannounce&tr=udp%3a%2f%2ftracker.moeking.me%3a6969%2fannounce",
+            torrentSource: "magnet:?xt=urn:btih:14d81d460a7de2669e7bb2ac4782cb8e50b07338&dn=Gaza%20Vol%205&tr=udp%3a%2f%2ftracker.opentrackr.org%3a1337%2fannounce",
             size: "رابط مغناطيس",
             date: "2026",
             source: "شبكة التورنت المباشرة",
@@ -641,19 +735,11 @@ async function openMediaModal(item) {
                 }) || torrent.files[0];
 
                 if (file) {
-                    container.innerHTML = `
-                        <div class="flex flex-col items-center justify-center p-4 text-gray-300">
-                            <div class="w-8 h-8 border-3 border-red-600 border-t-transparent rounded-full animate-spin mb-2"></div>
-                            <p class="text-xs">جاري الاتصال بالقرناء وبدء البث المباشر...</p>
-                        </div>
-                    `;
-
                     file.getBlobURL((err, url) => {
                         if (!err && url) {
                             container.innerHTML = `
                                 <video controls autoplay playsinline class="w-full h-full object-cover" style="max-height: 350px;">
                                     <source src="${url}" type="video/mp4">
-                                    متصفحك لا يدعم عرض الفيديو.
                                 </video>
                             `;
                             return;
@@ -666,24 +752,16 @@ async function openMediaModal(item) {
             });
         }
     } catch(e) {
-        console.error(e);
-        container.innerHTML = `<div class="text-center p-6 text-red-500 font-bold">تعذر الاتصال برابط التورنت. تأكد من وجود قرناء (Seeders) نشطين لهذا الرابط.</div>`;
+        container.innerHTML = `<div class="text-center p-6 text-red-500 font-bold">تعذر الاتصال برابط التورنت. تأكد من وجود قرناء نشطين.</div>`;
     }
 
     function showTorrentInfo(torrent) {
-        container.innerHTML = `
-            <div class="text-center p-6 text-white">
-                <h3 class="text-lg font-bold text-red-500 mb-2">تم الاتصال بالتورنت بنجاح</h3>
-                <p class="text-xs text-gray-300 mb-1">اسم الملف: ${torrent.name}</p>
-                <p class="text-xs text-gray-300">عدد الملفات الداخلية: ${torrent.files.length}</p>
-            </div>
-        `;
+        container.innerHTML = `<div class="text-center p-6 text-white"><h3 class="text-lg font-bold text-red-500">تم الاتصال بنجاح</h3><p class="text-xs">اسم الملف: ${torrent.name}</p></div>`;
     }
 }
 
 document.getElementById('modal-close').onclick = () => {
-    const container = document.getElementById('modal-media-container');
-    container.innerHTML = '';
+    document.getElementById('modal-media-container').innerHTML = '';
     if (window.WebTorrentInstance && window.WebTorrentInstance.torrents.length > 0) {
         window.WebTorrentInstance.torrents.forEach(t => t.destroy());
     }
@@ -762,44 +840,6 @@ function renderMapAndList(dataToRender) {
     });
 }
 
-function renderMilestonesCinematic() {
-    if (milestonesRendered) return;
-    const trackerBar = document.getElementById('tlc-tracker-bar');
-    const scenesContainer = document.getElementById('tlc-scenes-container');
-    if(!trackerBar || !scenesContainer) return;
-
-    trackerBar.innerHTML = milestonesData.map((m, idx) => `
-        <a href="#scene-${idx}" class="tlc-tracker-item ${idx === 0 ? 'is-current' : ''}" onclick="scrollToScene(event, ${idx})">${m.year}</a>
-    `).join('');
-
-    scenesContainer.innerHTML = milestonesData.map((m, idx) => `
-        <section class="tlc-scene" id="scene-${idx}">
-            <article class="tlc-panel">
-                <time class="tlc-date">${m.year}</time>
-                <h2 class="tlc-title">${m.title}</h2>
-                <p class="tlc-alt">${m.subtitle}</p>
-                <p class="tlc-excerpt">${m.desc}</p>
-                <div class="tlc-foot">
-                    <div class="tlc-stat">
-                        <span class="tlc-stat-num">${m.martyrs}</span>
-                        <span class="tlc-stat-label">توثيق الضحايا:</span>
-                    </div>
-                </div>
-            </article>
-        </section>
-    `).join('');
-    milestonesRendered = true;
-}
-
-window.scrollToScene = function(e, idx) {
-    e.preventDefault();
-    const scene = document.getElementById(`scene-${idx}`);
-    const view = document.getElementById('milestones-view');
-    if (scene && view) {
-        view.scrollTo({ top: scene.offsetTop - 100, behavior: 'smooth' });
-    }
-};
-
 window.switchMainMode = function(mode) {
     currentMainMode = mode; 
     document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
@@ -817,12 +857,8 @@ window.switchMainMode = function(mode) {
     const counterBox = document.getElementById('counter-box');
     const showVerseAndCounter = ['souls', 'journalists', 'westbank'].includes(mode);
 
-    if (verseContainer) {
-        verseContainer.style.display = showVerseAndCounter ? '' : 'none';
-    }
-    if (counterBox) {
-        counterBox.style.display = showVerseAndCounter ? 'block' : 'none';
-    }
+    if (verseContainer) verseContainer.style.display = showVerseAndCounter ? '' : 'none';
+    if (counterBox) counterBox.style.display = showVerseAndCounter ? 'block' : 'none';
 
     if(mode === 'souls'){
         fetchAndRenderData('./data/victims.json');
@@ -928,7 +964,6 @@ image: item.image || null
 }
 }
 }catch(e){
-console.error("خطأ في قراءة البيانات الحقيقية:", e);
 gazaSouls = [];
 }
 renderStars();
@@ -994,13 +1029,8 @@ if (hoveredStar && hoveredStar.userData) {
     
     let tLeft = mouseX + 15;
     let tTop = mouseY + 15;
-    
-    if (tLeft + 250 > width) {
-        tLeft = mouseX - 260;
-    }
-    if (tTop + 90 > height) {
-        tTop = mouseY - 80;
-    }
+    if (tLeft + 250 > width) tLeft = mouseX - 260;
+    if (tTop + 90 > height) tTop = mouseY - 80;
     
     tooltip.style.left = tLeft + 'px';
     tooltip.style.top = tTop + 'px';
@@ -1009,7 +1039,6 @@ if (hoveredStar && hoveredStar.userData) {
 }
 
 ctx.globalAlpha=1;
-updateAndDrawShootingStars();
 requestAnimationFrame(gameLoop);
 }
 
