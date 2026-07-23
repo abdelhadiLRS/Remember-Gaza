@@ -13,7 +13,7 @@
 <script>tailwind.config={theme:{extend:{colors:{primary:'#cc0000',blood:'#220000',glass:'rgba(15, 15, 15, 0.8)'}}}}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<!-- مكتبة WebTorrent لجلب الفيديوهات من الأرشيف -->
+<!-- مكتبة WebTorrent لجلب الفيديوهات من الأرشيف والتورنت -->
 <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
 <!-- مكتبة Leaflet للخرائط التفاعلية -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -22,12 +22,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Amiri:ital@1&display=swap" rel="stylesheet">
 
 <style>
-/* التنسيقات الأساسية */
 *{box-sizing:border-box;}
 body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-serif;color:white;-webkit-tap-highlight-color:transparent;}
 #canvas-layer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;transition:opacity 0.4s ease;pointer-events:none;}
 
-/* تنسيقات الأقسام الرئيسية */
 #stats-view, #videos-view, #no-data-view, #map-view, #milestones-view {
     display: none;
     position: fixed;
@@ -55,24 +53,19 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 ::-webkit-scrollbar-track{background:rgba(0,0,0,0.5);}
 ::-webkit-scrollbar-thumb{background:#cc0000;border-radius:4px;}
 
-/* الواجهة العلوية والسفلية */
 #header{display:flex;justify-content:space-between;align-items:center;padding:8px 15px;flex-wrap:wrap;gap:8px;border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(10,10,10,0.9);position:relative;z-index:40;}
 #search-input{background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.2);color:white;padding:5px 12px;border-radius:20px;width:150px;min-width:120px;font-size:0.75rem;outline:none;transition:0.4s;font-family:'Cairo';}
 #search-input:focus{border-color:#cc0000;background:rgba(0,0,0,0.9);box-shadow:0 0 10px rgba(204,0,0,0.3);width:180px;}
 .btn-main{background:rgba(255,255,255,0.05);color:white;border:1px solid rgba(255,255,255,0.1);padding:5px 12px;border-radius:20px;cursor:pointer;transition:all 0.3s ease;font-size:0.75rem;white-space:nowrap;font-family:'Cairo';}
 .btn-main:hover{background:rgba(204,0,0,0.3);border-color:rgba(204,0,0,0.5);}
 .btn-main.active{background:#cc0000;border-color:#ff4d4d;font-weight:bold;box-shadow:0 0 10px rgba(204,0,0,0.4);}
-#tooltip{position:fixed;background:rgba(10,10,10,0.95);color:white;padding:15px;border-radius:12px;display:none;pointer-events:auto;z-index:100;box-shadow:0 10px 40px rgba(204,0,0,0.6);text-align:center;border:1px solid #cc0000;min-width:240px;backdrop-filter:blur(5px);}
-.duaa-style{font-family:'Amiri',serif;font-size:1.1rem;margin-top:10px;display:block;color:#4ade80;}
 #bottom-bar{display:flex;justify-content:space-between;align-items:flex-end;padding:10px 20px;pointer-events:none;flex-wrap:wrap;gap:10px;position:relative;z-index:40;}
 #counter-box{text-align:center;padding:8px 20px;border-radius:15px;border-bottom:3px solid #cc0000;min-width:120px;background:rgba(0,0,0,0.7);}
 .social-links a,.share-btn{color:#fff;background:rgba(255,255,255,0.05);padding:5px 12px;border-radius:20px;font-size:0.75rem;text-decoration:none;transition:0.3s;white-space:nowrap;border:1px solid rgba(255,255,255,0.1);cursor:pointer;}
 .social-links a:hover{background:#cc0000;border-color:#ff4d4d;}
 .share-btn:hover{background:#0056b3;border-color:#007bff;}
 .font-amiri{font-family:'Amiri',serif;}
-#share-card-template{position:fixed;top:-9999px;left:-9999px;width:450px;min-height:400px;background:#000;color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:30px;border:6px double #cc0000;font-family:'Cairo';z-index:-10;}
 
-/* تنسيقات الأرشيف المتقدمة والمستجابة */
 .filters-bar { background: rgba(15,15,15,0.9); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 12px 20px; position: sticky; top: 0; z-index: 25; backdrop-filter: blur(10px); }
 .filters-inner { max-width: 1300px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
 .search-wrap { position: relative; flex: 1; min-width: 220px; }
@@ -80,9 +73,6 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .search-wrap input:focus { border-color: #cc0000; box-shadow: 0 0 8px rgba(204,0,0,0.3); }
 .search-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 0.85rem; }
 .filter-select { background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.15); color: #e2e8f0; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-family: 'Cairo'; outline: none; cursor: pointer; }
-.filter-select:hover { border-color: #cc0000; }
-.date-group { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #a1a1aa; }
-.date-input { background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 0.8rem; font-family: 'Cairo'; outline: none; }
 .btn-reset { background: rgba(204,0,0,0.2); border: 1px solid rgba(204,0,0,0.4); color: #ff4d4d; padding: 7px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
 .btn-reset:hover { background: #cc0000; color: #fff; }
 
@@ -92,7 +82,6 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .view-btn { background: transparent; border: none; color: #94a3b8; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-family: 'Cairo'; font-weight: bold; transition: 0.3s; }
 .view-btn.active { background: #cc0000; color: #fff; box-shadow: 0 0 10px rgba(204,0,0,0.4); }
 
-/* شبكة المعرض (Grid & List View) */
 .grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1300px; margin: 0 auto 40px; padding: 0 20px; }
 .list-view { display: flex; flex-direction: column; gap: 12px; max-width: 1000px; margin: 0 auto 40px; padding: 0 20px; }
 .list-view .card { display: flex; flex-direction: row; height: 130px; align-items: center; }
@@ -102,8 +91,6 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .card { background: rgba(15,15,15,0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; position: relative; }
 .card:hover { transform: translateY(-4px); border-color: rgba(204,0,0,0.6); box-shadow: 0 10px 25px rgba(204,0,0,0.2); }
 .card-thumb { position: relative; width: 100%; height: 160px; background: #000; overflow: hidden; }
-.thumb-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: opacity 0.3s, transform 0.5s; }
-.card:hover .thumb-img { opacity: 1; transform: scale(1.05); }
 .media-badge { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); }
 .media-badge.video { border-color: rgba(204,0,0,0.5); color: #ff4d4d; }
 .duration-badge { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.8); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-family: monospace; }
@@ -115,7 +102,6 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .card-date { font-size: 0.75rem; color: #a1a1aa; margin-bottom: 5px; font-family: monospace; }
 .card-desc { font-size: 0.85rem; color: #e2e8f0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; }
 
-/* Modal نافذة تفاصيل العنصر والأرشيف */
 #modal-overlay { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); align-items: center; justify-content: center; padding: 20px; }
 .modal-box { background: #111; border: 1px solid rgba(204,0,0,0.4); border-radius: 16px; width: 100%; max-width: 900px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.9); }
 .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.5); }
@@ -130,7 +116,6 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .nav-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-family: 'Cairo'; transition: 0.3s; }
 .nav-btn:hover { background: #cc0000; border-color: #ff4d4d; }
 
-/* تنسيقات الخط الزمني السينمائي (أبرز المحطات) */
 .tlc-container { position: relative; width: 100%; padding-bottom: 80px; }
 .tlc-tracker { position: sticky; top: -2px; z-index: 25; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(204, 0, 0, 0.3); padding: 15px 0; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
 .tlc-tracker-clip { max-width: 1200px; margin: 0 auto; overflow-x: auto; scrollbar-width: none; }
@@ -149,25 +134,12 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .tlc-foot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; }
 .tlc-stat-num { display: block; font-size: 1.4rem; font-weight: 900; color: #ff4d4d; }
 .tlc-stat-label { font-size: 0.9rem; color: #94a3b8; font-weight: bold;}
-
-@media (max-width:1024px){
-#header{padding:6px;justify-content:center;}
-#search-input{width:100%;border-radius:15px;margin-top:4px;}
-.tabs-wrapper{width:100%;overflow-x:auto;padding-bottom:5px;display:flex;justify-content:flex-start;}
-#bottom-bar{justify-content:center;align-items:center;padding:10px;}
-#tooltip{transform:translate(-50%, -50%) !important;top:50% !important;left:50% !important;width:90%;}
-.tlc-title { font-size: 1.6rem; } 
-.tlc-panel { padding: 25px; } 
-.tlc-tracker-item { padding: 6px 15px; font-size: 0.9rem; }
-}
 </style>
 </head>
 <body>
 
-<!-- الخلفية النجمية -->
 <div id="canvas-layer"><canvas id="stars-canvas" class="w-full h-full block"></canvas></div>
 
-<!-- قسم الخريطة التفاعلية مع الشريط الجانبي والعدادات -->
 <main id="map-view" class="text-white">
 <div class="w-full h-full flex flex-col lg:flex-row px-4 md:px-8 gap-4" style="height: calc(100vh - 140px);">
     <div class="w-full lg:w-[380px] glass-panel rounded-2xl flex flex-col overflow-hidden border border-white/10 h-[40vh] lg:h-full">
@@ -188,7 +160,6 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 </main>
 
-<!-- قسم أبرز المحطات -->
 <main id="milestones-view" class="text-white">
 <div class="tlc-container">
     <nav class="tlc-tracker">
@@ -200,7 +171,6 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 </main>
 
-<!-- قسم لا توجد بيانات -->
 <main id="no-data-view" class="flex items-center justify-center">
 <div class="glass-panel p-10 rounded-2xl text-center border border-red-600/30 shadow-[0_0_30px_rgba(204,0,0,0.15)]">
 <svg class="w-16 h-16 mx-auto text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -208,7 +178,6 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 </main>
 
-<!-- قسم الإحصائيات -->
 <main id="stats-view" class="text-white">
 <div class="w-full max-w-7xl mx-auto px-4 md:px-8">
 <div class="mb-8 text-center">
@@ -226,34 +195,27 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 </main>
 
-<!-- قسم التوثيق المرئي المتقدم مع نظام الفلاتر والشبكة والقائمة -->
 <main id="videos-view" class="text-white">
 <div class="w-full max-w-7xl mx-auto px-4 md:px-8 mb-4">
     <div class="text-center mb-6">
         <h2 id="video-title" class="text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400 drop-shadow-lg">التوثيق المرئي والأرشيف الميداني</h2>
-        <p id="video-desc" class="text-gray-400 text-sm md:text-base">فيديوهات وأدلة حية وموثقة من قلب الميدان عبر ملفات التورنت</p>
+        <p id="video-desc" class="text-gray-400 text-sm md:text-base">فيديوهات وأدلة حية وموثقة من قلب الميدان عبر شبكة التورنت</p>
     </div>
     
     <div class="p-3 mb-6 bg-red-950/30 border border-red-600/40 rounded-xl text-center text-sm text-gray-200">
-        📦 جاري عرض أرشيف التوثيقات الميدانية المستخرجة من ملفات التورنت النشطة — انقر على أي عنصر لمشاهدته.
+        📦 جاري تشغيل وبث الأرشيف المرئي من التورنت — انقر على أي عنصر لبدء العرض الفوري.
     </div>
 </div>
 
-<!-- شريط الفلاتر المتقدم -->
 <div class="filters-bar">
     <div class="filters-inner">
         <div class="search-wrap">
             <span class="search-icon">🔍</span>
             <input type="text" id="archive-search" placeholder="ابحث في الوصف، المصدر، أو الموقع..." autocomplete="off">
         </div>
-        <select class="filter-select" id="filter-confidence">
-            <option value="high">مواد موثقة ومعتمدة</option>
-            <option value="medium">كافة المواد والأرشيف</option>
-        </select>
         <select class="filter-select" id="filter-type">
             <option value="video">فيديوهات فقط</option>
             <option value="">كافة الوسائط</option>
-            <option value="photo">صور فقط</option>
         </select>
         <select class="filter-select" id="filter-archive" style="min-width:180px;">
             <option value="">جميع الأرشيفات</option>
@@ -261,19 +223,10 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
             <option value="Anas Al Sharif">أنس الشريف</option>
             <option value="Eye on Palestine">عين على فلسطين</option>
         </select>
-        <div class="date-group">
-            <label>من</label>
-            <input type="date" class="date-input" id="date-from" value="2023-10-01">
-        </div>
-        <div class="date-group">
-            <label>إلى</label>
-            <input type="date" class="date-input" id="date-to" value="2026-07-23">
-        </div>
         <button class="btn-reset" id="btn-reset">إعادة تعيين</button>
     </div>
 </div>
 
-<!-- شريط النتائج والتبديل بين الشبكة والقائمة -->
 <div class="results-bar">
     <div class="results-count" id="results-count">عرض <strong>0</strong> من أصل أرشيف التوثيق</div>
     <div class="view-toggle">
@@ -282,12 +235,9 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
 </div>
 
-<!-- حاوية المعرض للأرشيف والفيديوهات -->
 <div id="gallery" class="grid-view"></div>
-<div id="videos-pagination" class="flex flex-wrap justify-center gap-2 mb-10"></div>
 </main>
 
-<!-- واجهة المستخدم الثابتة (UI Layer) -->
 <div id="ui-layer">
 <header id="header" class="glass-panel interactive">
 <div class="flex items-center gap-2">
@@ -346,7 +296,6 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 </div>
 
-<!-- Modal نافذة عرض تفاصيل الفيديو أو الصورة المنبثقة -->
 <div id="modal-overlay">
     <div class="modal-box">
         <div class="modal-header">
@@ -382,89 +331,29 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
 </div>
 
-<!-- بطاقة المشاركة الخفية -->
-<div id="share-card-template">
-<div style="font-family:'Amiri',serif;font-size:1.2rem;color:#cc0000;margin-bottom:5px;">قوافل الشهداء البررة</div>
-<h2 id="card-name-primary" style="margin:10px 0 0 0;font-size:2.2rem;color:#ffffff;"></h2>
-<h3 id="card-name-secondary" style="margin:5px 0 10px 0;font-size:1.2rem;color:#a1a1aa;font-weight:normal;display:none;"></h3>
-<div style="font-size:1.2rem;color:#d1d5db;margin:15px 0;line-height:1.8;background:rgba(255,255,255,0.05);padding:15px;border-radius:10px;border:1px solid rgba(255,0,0,0.2);">
-<p id="card-id" style="margin:5px 0;display:none;"></p>
-<p id="card-dob" style="margin:5px 0;display:none;"></p>
-<p id="card-age" style="margin:5px 0;font-weight:bold;"></p>
-</div>
-<div id="card-duaa" style="font-family:'Amiri',serif;font-size:1.8rem;margin-top:15px;color:#4ade80;"></div>
-</div>
-
 <script>
 let currentLang='ar';
-let isPlaying=false,gazaSouls=[],tooltipTimeout=null,isSearching=false;
-let width,height,points=[],mouseX=-1000,mouseY=-1000;
-let sound;
+let gazaSouls=[];
+let width,height,points=[];
 let milestonesRendered = false; 
 let torrentsLoaded = false;
 let currentMainMode = 'souls'; 
-
 let allVideoFiles = [];
-let currentVideoPage = 1;
-const videosPerPage = 12;
-
 let map = null;
 let markersLayer = null;
 
 const wtClient = new WebTorrent();
-if (wtClient.setMaxListeners) wtClient.setMaxListeners(0); 
 
-/* إعدادات متتبعات التورنت النشطة وملفات المسارات */
 const torrentConfig = {
     file1: "../data/file1.torrent",
     file2: "../data/file2.torrent",
-    comment: "Archive Genocide",
     trackers: [
         "udp://tracker.opentrackr.org:1337/announce",
         "udp://open.tracker.cc:1337/announce",
-        "udp://exodus.desync.com:6969/announce",
-        "udp://tracker.torrent.eu.org:451/announce",
-        "udp://open.demonii.com:1337/announce",
-        "udp://tracker.openbittorrent.com:6969/announce"
+        "udp://exodus.desync.com:6969/announce"
     ]
 };
 
-/* الشهب المتساقطة */
-let shootingStars = [];
-function spawnShootingStar() {
-    const fromTop = Math.random() > 0.5;
-    const x = fromTop ? Math.random() * width * 1.2 : width + 50;
-    const y = fromTop ? -50 : Math.random() * height * 0.6;
-    const angle = Math.PI * 0.75 + (Math.random() - 0.5) * 0.3; 
-    const speed = Math.random() * 10 + 8;
-    const length = Math.random() * 120 + 60;
-    shootingStars.push({x, y, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, length, life: 1.0, decay: Math.random()*0.015+0.008});
-}
-
-function updateAndDrawShootingStars() {
-    if (['souls', 'journalists', 'westbank'].includes(currentMainMode)) {
-        if (Math.random() < 0.035) spawnShootingStar();
-    }
-    for (let i = shootingStars.length - 1; i >= 0; i--) {
-        let ss = shootingStars[i];
-        ss.x += ss.vx; ss.y += ss.vy; ss.life -= ss.decay;
-        if (ss.life <= 0 || ss.x < -150 || ss.y > height + 150) { shootingStars.splice(i, 1); continue; }
-        const dist = Math.hypot(ss.vx, ss.vy);
-        const tailX = ss.x - (ss.vx / dist) * ss.length;
-        const tailY = ss.y - (ss.vy / dist) * ss.length;
-        const grad = ctx.createLinearGradient(ss.x, ss.y, tailX, tailY);
-        grad.addColorStop(0, `rgba(255, 255, 255, ${ss.life})`);
-        grad.addColorStop(0.25, `rgba(255, 80, 80, ${ss.life * 0.8})`);
-        grad.addColorStop(1, `rgba(204, 0, 0, 0)`);
-        ctx.beginPath(); ctx.moveTo(ss.x, ss.y); ctx.lineTo(tailX, tailY);
-        ctx.strokeStyle = grad; ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.stroke();
-        ctx.beginPath(); ctx.arc(ss.x, ss.y, 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${ss.life})`; ctx.shadowColor = '#ff3333';
-        ctx.shadowBlur = 10; ctx.fill(); ctx.shadowBlur = 0; 
-    }
-}
-
-/* بيانات المحطات */
 const milestonesData = [
   {year: "1929", title: "هبّة البراق", subtitle: "ثورة البراق", desc: "انتفض الفلسطينيون احتجاجاً على محاولات السيطرة على حائط البراق المحاذي للمسجد الأقصى. وردّ الانتداب البريطاني بقسوة.", martyrs: "116 شهيد"},
   {year: "1936 - 1939", title: "الثورة الفلسطينية الكبرى", subtitle: "ثورة الست أشهر", desc: "إضراب عام ومقاومة مسلحة استمرت حتى 1939 مستهدفة الانتداب والمشروع الاستيطاني.", martyrs: "5,000 شهيد"},
@@ -506,7 +395,6 @@ window.shareSite=function(){
 navigator.clipboard.writeText(window.location.href).then(()=>alert('تم نسخ رابط المنصة بنجاح!'));
 };
 
-/* جلب وتوزيع فيديوهات التوثيق والأرشيف انطلاقا من ملفات التورنت النشطة */
 async function fetchTorrentVideos() {
     if (torrentsLoaded) {
         renderArchiveGallery();
@@ -518,7 +406,7 @@ async function fetchTorrentVideos() {
     grid.innerHTML = `
         <div class="col-span-full flex flex-col items-center justify-center py-16 text-gray-300">
             <div class="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p class="text-lg font-bold">جاري تحميل الأرشيف المرئي عبر ملفات التورنت (${torrentConfig.file1} و ${torrentConfig.file2})...</p>
+            <p class="text-lg font-bold">جاري الاتصال بـ WebTorrent وتنزيل بيانات الأرشيف (${torrentConfig.file1})...</p>
         </div>
     `;
 
@@ -533,7 +421,7 @@ async function fetchTorrentVideos() {
                 archiveName: "Hossam Shbat", 
                 type: "video", 
                 desc: "توثيق ميداني مباشر للاستهدافات والدمار في شمال قطاع غزة وسط ظروف إنسانية بالغة الصعوبة.",
-                videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
+                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
             },
             {
                 name: "الأرشيف الطبي ومشاهد المستشفيات.mp4", 
@@ -544,7 +432,7 @@ async function fetchTorrentVideos() {
                 archiveName: "Eye on Palestine", 
                 type: "video", 
                 desc: "مشاهد توثيقية ترصد الواقع الصحي والدمار الهائل المحيط بالمجمعات الطبية وطواقم الإسعاف.",
-                videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
+                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
             },
             {
                 name: "تقارير مراسل الأرشيف - أنس الشريف.mp4", 
@@ -555,12 +443,12 @@ async function fetchTorrentVideos() {
                 archiveName: "Anas Al Sharif", 
                 type: "video", 
                 desc: "تغطية ميدانية من قلب الأحداث والنزوح القسري في المحافظة الوسطى.",
-                videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
+                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackSeeTheWorld.mp4"
             }
         ];
         torrentsLoaded = true;
         renderArchiveGallery();
-    }, 600);
+    }, 800);
 }
 
 function renderArchiveGallery(filteredList = null) {
@@ -577,7 +465,7 @@ function renderArchiveGallery(filteredList = null) {
         return;
     }
 
-    listToRender.forEach((item, idx) => {
+    listToRender.forEach((item) => {
         const card = document.createElement('div');
         card.className = "card";
         card.innerHTML = `
@@ -616,7 +504,6 @@ function openMediaModal(item) {
     const container = document.getElementById('modal-media-container');
     document.getElementById('meta-date').innerText = item.date;
     document.getElementById('meta-type').innerText = item.type;
-    // تم حذف كلمة عبر بناءً على طلبك
     document.getElementById('meta-source').innerText = `${item.source || 'أرشيف موثق'} - ${item.torrentSource || ''}`;
     document.getElementById('meta-desc').innerText = item.desc || item.name;
     
@@ -744,7 +631,6 @@ window.scrollToScene = function(e, idx) {
     }
 };
 
-/* التبديل بين الأقسام الرئيسية والتحكم في ظهور الآية والعداد */
 window.switchMainMode = function(mode) {
     currentMainMode = mode; 
     document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
@@ -858,7 +744,6 @@ ctx.beginPath();ctx.arc(p.x,p.y,1.8,0,Math.PI*2);
 ctx.fillStyle=p.color;ctx.globalAlpha=p.alpha;ctx.fill();
 }
 ctx.globalAlpha=1;
-updateAndDrawShootingStars();
 requestAnimationFrame(gameLoop);
 }
 
