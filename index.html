@@ -183,7 +183,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
         <h2 class="text-3xl md:text-4xl font-black mb-3 text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-400 to-white drop-shadow-lg">أبرز المحطات والتوثيق التاريخي</h2>
         <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto">محطات الصمود والنضال الفلسطيني عبر العقود، توثيق حي للأحداث والملاحم الخالدة</p>
     </div>
-    <!-- سيتم حقن الخط الزمني لشيرين هنا -->
+    <!-- سيتم حقن الخط الزمني هنا -->
     <div id="tlc-scenes-container"></div>
 </div>
 </main>
@@ -199,7 +199,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 <div class="w-full max-w-7xl mx-auto px-4 md:px-8 font-['Cairo']">
 <div class="mb-8 text-center">
 <h2 id="stats-title" class="text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400 drop-shadow-lg">السجل الإحصائي الشامل</h2>
-<p id="stats-desc" class="text-gray-400 text-sm md:text-base">توثيق مستمر لحجم الدمار والفقد في فلسطين[cite: 13]</p>
+<p id="stats-desc" class="text-gray-400 text-sm md:text-base">توثيق مستمر لحجم الدمار والفقد في فلسطين</p>
 </div>
 <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
 <div class="relative overflow-hidden bg-black/40 border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الشهداء والمفقودون</h3><p class="text-2xl md:text-4xl font-black text-white">~100,000+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
@@ -349,7 +349,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
 </div>
 
-<!-- نافذة تفاصيل المحطات التاريخية العمودية الإبداعية -->
+<!-- نافذة تفاصيل المحطات التاريخية العمودية -->
 <div id="tlc-custom-modal">
     <div class="tlc-modal-box">
         <div class="tlc-modal-header">
@@ -365,7 +365,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
 </div>
 
-<!-- نافذة بطاقة الشهيد الإبداعية مع زر مشاركة أحمر غير فاقع وتحقق اسم اللغة الأخرى -->
+<!-- نافذة بطاقة الشهيد الإبداعية -->
 <div id="martyr-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
     <div class="modal-box" style="max-width: 450px; background: linear-gradient(135deg, #121212 0%, #1a0505 100%); border: 1px solid rgba(204,0,0,0.4); box-shadow: 0 25px 50px rgba(0,0,0,0.9);">
         <div class="modal-header border-b border-red-600/20">
@@ -540,7 +540,7 @@ const text = `توثيق شهيد: ${name} | العمر: ${age} | رقم اله�
 navigator.clipboard.writeText(text).then(()=>alert('تم نسخ بيانات بطاقة الشهيد بنجاح!'));
 };
 
-/* رسم الخط الزمني العمودي للمحطات التاريخية متطابقاً مع كلاسات شيرين */
+/* رسم الخط الزمني العمودي للمحطات التاريخية */
 function renderMilestonesCinematic() {
     if (milestonesRendered) return;
     const scenesContainer = document.getElementById('tlc-scenes-container');
@@ -930,6 +930,7 @@ sCanvas.width=window.innerWidth;sCanvas.height=window.innerHeight;
 window.addEventListener('resize',resize);
 resize();
 
+/* إعداد الشهب المتساقطة بشكل إبداعي وبطيء */
 class ShootingStar {
     constructor() {
         this.reset();
