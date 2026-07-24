@@ -70,22 +70,41 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
     font-family: 'Cairo', sans-serif;
 }
 
-/* تنسيق الخط الزمني للمحطات التاريخية مع الصور الكبيرة البارزة */
-.timeline-container { max-width: 800px; margin: 0 auto; position: relative; padding: 20px 0; }
-.timeline-container::before { content: ''; position: absolute; right: 50%; top: 0; bottom: 0; width: 2px; background: rgba(204, 0, 0, 0.4); transform: translateX(50%); }
-.timeline-item { position: relative; margin-bottom: 40px; width: 50%; padding: 0 20px; box-sizing: border-box; }
-.timeline-item:nth-child(odd) { right: 0; text-align: right; }
-.timeline-item:nth-child(even) { right: 50%; text-align: right; }
-.timeline-dot { position: absolute; top: 15px; width: 14px; height: 14px; background: #cc0000; border: 3px solid #000; border-radius: 50%; box-shadow: 0 0 10px #ff3333; z-index: 2; }
-.timeline-item:nth-child(odd) .timeline-dot { left: -7px; }
-.timeline-item:nth-child(even) .timeline-dot { right: -7px; }
-.timeline-card { background: rgba(20, 20, 25, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 18px; backdrop-filter: blur(10px); }
+/* تنسيق الخط الزمني السينمائي المستوحى من مرصد شيرين */
+.tlc { position: relative; width: 100%; color: #fff; font-family: 'Cairo', sans-serif; }
+.tlc-tracker { position: sticky; top: 0; z-index: 40; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 12px 20px; display: flex; align-items: center; justify-content: flex-start; gap: 15px; overflow-x: auto; }
+.tlc-tracker-list { display: flex; gap: 12px; list-style: none; margin: 0; padding: 0; white-space: nowrap; }
+.tlc-tracker-item a { color: #aaa; text-decoration: none; font-size: 0.8rem; padding: 5px 12px; border-radius: 20px; transition: all 0.3s; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); }
+.tlc-tracker-item a:hover, .tlc-tracker-item.is-current a { color: #fff; background: #cc0000; border-color: #ff4d4d; font-weight: bold; }
+.tlc-tracker-decade a { border: 1px dashed rgba(255,255,255,0.3); color: #ff9998; }
 
-@media (max-width: 768px) {
-    .timeline-container::before { right: 20px; }
-    .timeline-item { width: 100% !important; right: 0 !important; padding-right: 40px !important; padding-left: 10px !important; }
-    .timeline-item .timeline-dot { right: 13px !important; left: auto !important; }
-}
+.tlc-main { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+.tlc-decade { margin-bottom: 50px; }
+.tlc-decade-num { font-size: 2.2rem; font-weight: 900; color: #cc0000; margin-bottom: 8px; }
+.tlc-decade-line { width: 80px; height: 3px; background: #cc0000; margin-bottom: 20px; }
+.tlc-decade-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; }
+.tlc-decade-card { background: rgba(20,20,25,0.85); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; overflow: hidden; text-decoration: none; color: #fff; display: flex; flex-direction: column; transition: transform 0.3s, border-color 0.3s; }
+.tlc-decade-card:hover { transform: translateY(-4px); border-color: #cc0000; }
+.tlc-decade-card-img { height: 150px; overflow: hidden; position: relative; }
+.tlc-decade-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+.tlc-decade-card:hover .tlc-decade-card-img img { transform: scale(1.05); }
+.tlc-decade-card-body { padding: 14px; }
+.tlc-decade-card-year { font-size: 0.75rem; color: #cc0000; font-weight: bold; display: block; margin-bottom: 4px; }
+.tlc-decade-card-title { font-size: 0.95rem; font-weight: bold; }
+
+.tlc-scene { position: relative; min-height: 520px; border-radius: 18px; overflow: hidden; margin-bottom: 50px; display: flex; align-items: flex-end; padding: 35px; box-shadow: 0 15px 35px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); }
+.tlc-bg { position: absolute; inset: 0; z-index: 1; }
+.tlc-bg img { width: 100%; height: 100%; object-fit: cover; }
+.tlc-bg-tint { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.3) 100%); }
+.tlc-panel { position: relative; z-index: 2; background: rgba(15,15,15,0.88); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 25px; width: 100%; }
+.tlc-date { display: inline-block; background: #cc0000; color: #fff; font-size: 0.75rem; font-weight: bold; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+.tlc-title { font-size: 1.6rem; font-weight: 900; color: #fff; margin-bottom: 6px; }
+.tlc-alt { font-size: 0.9rem; color: #ff4d4d; margin-bottom: 10px; font-weight: 600; }
+.tlc-excerpt { font-size: 0.85rem; color: #ddd; line-height: 1.8; margin-bottom: 15px; }
+.tlc-foot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px; flex-wrap: wrap; gap: 10px; }
+.tlc-stat { display: flex; gap: 8px; align-items: baseline; }
+.tlc-stat-label { font-size: 0.75rem; color: #aaa; }
+.tlc-stat-num { font-size: 0.95rem; font-weight: bold; color: #ff4d4d; }
 </style>
 </head>
 <body>
@@ -146,38 +165,224 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
                 <p class="text-xs text-gray-400 line-clamp-2">ملخص لأبرز الوثائق والمقاطع المرئية المؤرشفة التي ترصد تفاصيل الحدث بمهنية عالية.</p>
             </div>
         </div>
-        <div class="glass-panel rounded-2xl overflow-hidden border border-white/10 group hover:border-red-500/50 transition-all">
-            <div class="h-44 bg-gradient-to-tr from-stone-900 to-red-950/40 relative flex items-center justify-center">
-                <div class="w-12 h-12 rounded-full bg-red-600/80 flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform cursor-pointer">▶</div>
-                <span class="absolute bottom-2 right-2 bg-black/70 text-[10px] px-2 py-0.5 rounded text-gray-300 font-mono">12:10</span>
-            </div>
-            <div class="p-4 space-y-2">
-                <span class="text-[10px] text-red-400 font-bold uppercase tracking-wider">تقارير إخبارية</span>
-                <h3 class="font-bold text-sm text-white line-clamp-1">سجل توثيق الصحافة والشهداء الإعلاميين</h3>
-                <p class="text-xs text-gray-400 line-clamp-2">قراءة تحليلية في الأرشيف المرئي لحياة ومسيرة الصحفيين والأرواح الموثقة.</p>
-            </div>
-        </div>
-        <div class="glass-panel rounded-2xl overflow-hidden border border-white/10 group hover:border-red-500/50 transition-all">
-            <div class="h-44 bg-gradient-to-tr from-stone-900 to-red-950/40 relative flex items-center justify-center">
-                <div class="w-12 h-12 rounded-full bg-red-600/80 flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform cursor-pointer">▶</div>
-                <span class="absolute bottom-2 right-2 bg-black/70 text-[10px] px-2 py-0.5 rounded text-gray-300 font-mono">08:40</span>
-            </div>
-            <div class="p-4 space-y-2">
-                <span class="text-[10px] text-red-400 font-bold uppercase tracking-wider">أرشيف المحطات</span>
-                <h3 class="font-bold text-sm text-white line-clamp-1">محطات الذاكرة الوطنية والتاريخية</h3>
-                <p class="text-xs text-gray-400 line-clamp-2">توثيق بصري تفصيلي لمحطات النضال والصمود عبر العقود الماضية.</p>
-            </div>
-        </div>
     </div>
 </div>
 </main>
 
-<!-- قسم أبرز المحطات التاريخية مع الصور الكبيرة البارزة (مرصد شيرين) -->
+<!-- قسم أبرز المحطات التاريخية السينمائي المطابق تماماً لمرصد شيرين -->
 <main id="milestones-view" class="text-white">
-<div class="max-w-4xl mx-auto px-4 py-10 font-['Cairo']">
-    <h2 class="text-3xl font-bold mb-2 text-center text-red-500">أبرز المحطات التاريخية في فلسطين</h2>
-    <p class="text-center text-xs text-gray-400 mb-10">محطات بارزة في تاريخ القضية الفلسطينية وقوافل الشهداء عبر العقود</p>
-    <div class="timeline-container" id="tlc-scenes-container"></div>
+<div class="tlc" id="tlc-root">
+    <nav class="tlc-tracker" aria-label="تصفّح الخط الزمني">
+        <ul class="tlc-tracker-list">
+            <li class="tlc-tracker-item tlc-tracker-decade"><a href="#tlc-d1920">1920s</a></li>
+            <li class="tlc-tracker-item"><a href="#tlc-m18">هبّة البراق</a></li>
+            <li class="tlc-tracker-item tlc-tracker-decade"><a href="#tlc-d1930">1930s</a></li>
+            <li class="tlc-tracker-item"><a href="#tlc-m19">الثورة الكبرى</a></li>
+            <li class="tlc-tracker-item"><a href="#tlc-m1">التطهير العرقي</a></li>
+            <li class="tlc-tracker-item tlc-tracker-decade"><a href="#tlc-d1940">1940s</a></li>
+            <li class="tlc-tracker-item"><a href="#tlc-m20">دير ياسين</a></li>
+            <li class="tlc-tracker-item"><a href="#tlc-m2">حرب 1948</a></li>
+            <li class="tlc-tracker-item"><a href="#tlc-m3">العودة الفردية</a></li>
+            <li class="tlc-tracker-item tlc-tracker-decade"><a href="#tlc-d1950">1950s</a></li>
+            <li class="tlc-tracker-item"><a href="#tlc-m4">احتلال غزة 1956</a></li>
+            <li class="tlc-tracker-item"><a href="#tlc-m21">كفر قاسم</a></li>
+            <li class="tlc-tracker-item tlc-tracker-decade"><a href="#tlc-d1960">1960s</a></li>
+            <li class="tlc-tracker-item"><a href="#tlc-m5">حرب حزيران 1967</a></li>
+            <li class="tlc-tracker-item"><a href="#tlc-m6">الكفاح المسلح</a></li>
+            <li class="tlc-tracker-item"><a href="#tlc-m7">معركة الكرامة</a></li>
+        </ul>
+    </nav>
+
+    <main class="tlc-main">
+        <!-- 1920s -->
+        <section class="tlc-decade" id="tlc-d1920">
+            <h2 class="tlc-decade-num">1920<span class="tlc-decade-num-suffix">s</span></h2>
+            <div class="tlc-decade-line"></div>
+            <div class="tlc-decade-cards">
+                <a class="tlc-decade-card" href="#tlc-m18">
+                    <span class="tlc-decade-card-img"><img src="images/timeline/18.jpg" alt="" loading="lazy"></span>
+                    <span class="tlc-decade-card-body">
+                        <span class="tlc-decade-card-year">1929</span>
+                        <span class="tlc-decade-card-title">هبّة البراق</span>
+                    </span>
+                </a>
+            </div>
+        </section>
+
+        <section class="tlc-scene" id="tlc-m18">
+            <div class="tlc-bg"><img src="images/timeline/18.jpg" alt="" loading="lazy"><div class="tlc-bg-tint"></div></div>
+            <article class="tlc-panel">
+                <time class="tlc-date">1929</time>
+                <h2 class="tlc-title">هبّة البراق</h2>
+                <p class="tlc-alt">ثورة البراق</p>
+                <p class="tlc-excerpt">في آب/أغسطس 1929 انتفض الفلسطينيون احتجاجاً على محاولات السيطرة على حائط البراق المحاذي للمسجد الأقصى. اندلعت اشتباكات في القدس والخليل وصفد، وردّ الانتداب البريطاني بالقوة المفرطة، واستشهد أكثر من 116 فلسطينياً، وأُعدم ثلاثة من قادة الثورة لاحقاً (محمد جمجوم، فؤاد حجازي، عطا الزير) فخلّدتهم الذاكرة الوطنية.</p>
+                <div class="tlc-foot">
+                    <div class="tlc-stat"><span class="tlc-stat-label">عدد الشهداء:</span><span class="tlc-stat-num">حوالي 116 شهيد</span></div>
+                </div>
+            </article>
+        </section>
+
+        <!-- 1930s -->
+        <section class="tlc-decade" id="tlc-d1930">
+            <h2 class="tlc-decade-num">1930<span class="tlc-decade-num-suffix">s</span></h2>
+            <div class="tlc-decade-line"></div>
+            <div class="tlc-decade-cards">
+                <a class="tlc-decade-card" href="#tlc-m19">
+                    <span class="tlc-decade-card-img"><img src="images/timeline/19.jpg" alt="" loading="lazy"></span>
+                    <span class="tlc-decade-card-body">
+                        <span class="tlc-decade-card-year">1936 - 1939</span>
+                        <span class="tlc-decade-card-title">الثورة الفلسطينية الكبرى</span>
+                    </span>
+                </a>
+                <a class="tlc-decade-card" href="#tlc-m1">
+                    <span class="tlc-decade-card-img"><img src="images/timeline/1.jpg" alt="" loading="lazy"></span>
+                    <span class="tlc-decade-card-body">
+                        <span class="tlc-decade-card-year">1936 - 1948</span>
+                        <span class="tlc-decade-card-title">مرحلة التطهير العرقي في فلسطين</span>
+                    </span>
+                </a>
+            </div>
+        </section>
+
+        <section class="tlc-scene" id="tlc-m19">
+            <div class="tlc-bg"><img src="images/timeline/19.jpg" alt="" loading="lazy"><div class="tlc-bg-tint"></div></div>
+            <article class="tlc-panel">
+                <time class="tlc-date">1936 - 1939</time>
+                <h2 class="tlc-title">الثورة الفلسطينية الكبرى</h2>
+                <p class="tlc-alt">ثورة الست أشهر</p>
+                <p class="tlc-excerpt">انطلقت الثورة الفلسطينية الكبرى في نيسان/أبريل 1936 بإضراب عام شامل امتد ستة أشهر، ثم تحولت إلى مقاومة مسلحة استمرت حتى 1939. استهدفت الانتداب البريطاني والمشروع الصهيوني، وقمعتها بريطانيا بعنف عبر قانون الطوارئ ونسف القرى والإعدامات.</p>
+                <div class="tlc-foot">
+                    <div class="tlc-stat"><span class="tlc-stat-label">عدد الشهداء:</span><span class="tlc-stat-num">5,000 شهيد</span></div>
+                </div>
+            </article>
+        </section>
+
+        <section class="tlc-scene" id="tlc-m1">
+            <div class="tlc-bg"><img src="images/timeline/1.jpg" alt="" loading="lazy"><div class="tlc-bg-tint"></div></div>
+            <article class="tlc-panel">
+                <time class="tlc-date">1936 - 1948</time>
+                <h2 class="tlc-title">مرحلة التطهير العرقي في فلسطين</h2>
+                <p class="tlc-alt">النكبة والمجازر المبكرة</p>
+                <p class="tlc-excerpt">بدأت المجازر الإسرائيلية بحق الفلسطينيين قبل الإعلان عن قيام دولة إسرائيل بنحو 11 عاماً منذ كانت فلسطين تحت وصاية الانتداب البريطاني... وخلال هذه الفترة ارتكبت العصابات الصهيونية أكثر من 57 مجزرة ذهب ضحيتها أكثر من 5000 فلسطيني وآلاف الجرحى.</p>
+                <div class="tlc-foot">
+                    <div class="tlc-stat"><span class="tlc-stat-label">عدد الشهداء:</span><span class="tlc-stat-num">حوالي 5000 شهيد</span></div>
+                </div>
+            </article>
+        </section>
+
+        <!-- 1940s -->
+        <section class="tlc-decade" id="tlc-d1940">
+            <h2 class="tlc-decade-num">1940<span class="tlc-decade-num-suffix">s</span></h2>
+            <div class="tlc-decade-line"></div>
+            <div class="tlc-decade-cards">
+                <a class="tlc-decade-card" href="#tlc-m20">
+                    <span class="tlc-decade-card-img"><img src="images/timeline/20.jpg" alt="" loading="lazy"></span>
+                    <span class="tlc-decade-card-body">
+                        <span class="tlc-decade-card-year">1948</span>
+                        <span class="tlc-decade-card-title">مجزرة دير ياسين</span>
+                    </span>
+                </a>
+                <a class="tlc-decade-card" href="#tlc-m2">
+                    <span class="tlc-decade-card-img"><img src="images/timeline/2.jpg" alt="" loading="lazy"></span>
+                    <span class="tlc-decade-card-body">
+                        <span class="tlc-decade-card-year">1948</span>
+                        <span class="tlc-decade-card-title">الحرب العربية الإسرائيلية 1948</span>
+                    </span>
+                </a>
+                <a class="tlc-decade-card" href="#tlc-m3">
+                    <span class="tlc-decade-card-img"><img src="images/timeline/3.jpg" alt="" loading="lazy"></span>
+                    <span class="tlc-decade-card-body">
+                        <span class="tlc-decade-card-year">1949 - 1956</span>
+                        <span class="tlc-decade-card-title">العودة الفردية للاجئين الفلسطينيين</span>
+                    </span>
+                </a>
+            </div>
+        </section>
+
+        <section class="tlc-scene" id="tlc-m20">
+            <div class="tlc-bg"><img src="images/timeline/20.jpg" alt="" loading="lazy"><div class="tlc-bg-tint"></div></div>
+            <article class="tlc-panel">
+                <time class="tlc-date">1948</time>
+                <h2 class="tlc-title">مجزرة دير ياسين</h2>
+                <p class="tlc-excerpt">في فجر التاسع من نيسان 1948، اقتحمت عصابتا الإرغون وشتيرن قرية دير ياسين غرب القدس وارتكبتا مجزرة وحشية بحق سكانها، شملت إعدامات ميدانية وتمثيلاً بالجثث وتهجيراً بثّت عبر الإذاعات لإرهاب الفلسطينيين.</p>
+                <div class="tlc-foot">
+                    <div class="tlc-stat"><span class="tlc-stat-label">عدد الشهداء:</span><span class="tlc-stat-num">254 - 300 شهيد</span></div>
+                </div>
+            </article>
+        </section>
+
+        <section class="tlc-scene" id="tlc-m2">
+            <div class="tlc-bg"><img src="images/timeline/2.jpg" alt="" loading="lazy"><div class="tlc-bg-tint"></div></div>
+            <article class="tlc-panel">
+                <time class="tlc-date">1948</time>
+                <h2 class="tlc-title">الحرب العربية الإسرائيلية 1948</h2>
+                <p class="tlc-alt">حرب النكبة</p>
+                <p class="tlc-excerpt">أول حروب العرب مع إسرائيل، دارت عقب إنهاء الانتداب البريطاني على فلسطين وإعلان قيام إسرائيل منتصف مايو/أيار 1948، وارتقى خلالها آلاف الشهداء من الفلسطينيين والجيوش العربية.</p>
+                <div class="tlc-foot">
+                    <div class="tlc-stat"><span class="tlc-stat-label">عدد الشهداء:</span><span class="tlc-stat-num">20 - 22 ألف شهيد</span></div>
+                </div>
+            </article>
+        </section>
+
+        <section class="tlc-scene" id="tlc-m3">
+            <div class="tlc-bg"><img src="images/timeline/3.jpg" alt="" loading="lazy"><div class="tlc-bg-tint"></div></div>
+            <article class="tlc-panel">
+                <time class="tlc-date">1949 - 1956</time>
+                <h2 class="tlc-title">العودة الفردية للاجئين الفلسطينيين</h2>
+                <p class="tlc-excerpt">خلال الأعوام التالية للنكبة وما رافقها من تهجير، حدثت عمليات عبور الفلسطينيين للحدود عائدين إلى فلسطين لاستعادة ممتلكاتهم وجمع محاصيلهم، وواجه الاحتلال ذلك بوحشية ومجازر.</p>
+                <div class="tlc-foot">
+                    <div class="tlc-stat"><span class="tlc-stat-label">عدد الشهداء:</span><span class="tlc-stat-num">2,700 - 5,000 شهيد</span></div>
+                </div>
+            </article>
+        </section>
+
+        <!-- 1950s -->
+        <section class="tlc-decade" id="tlc-d1950">
+            <h2 class="tlc-decade-num">1950<span class="tlc-decade-num-suffix">s</span></h2>
+            <div class="tlc-decade-line"></div>
+            <div class="tlc-decade-cards">
+                <a class="tlc-decade-card" href="#tlc-m4">
+                    <span class="tlc-decade-card-img"><img src="images/timeline/4.jpg" alt="" loading="lazy"></span>
+                    <span class="tlc-decade-card-body">
+                        <span class="tlc-decade-card-year">1956</span>
+                        <span class="tlc-decade-card-title">احتلال غزة 1956</span>
+                    </span>
+                </a>
+                <a class="tlc-decade-card" href="#tlc-m21">
+                    <span class="tlc-decade-card-img"><img src="images/timeline/21.jpg" alt="" loading="lazy"></span>
+                    <span class="tlc-decade-card-body">
+                        <span class="tlc-decade-card-year">1956</span>
+                        <span class="tlc-decade-card-title">مجزرة كفر قاسم</span>
+                    </span>
+                </a>
+            </div>
+        </section>
+
+        <section class="tlc-scene" id="tlc-m4">
+            <div class="tlc-bg"><img src="images/timeline/4.jpg" alt="" loading="lazy"><div class="tlc-bg-tint"></div></div>
+            <article class="tlc-panel">
+                <time class="tlc-date">1956</time>
+                <h2 class="tlc-title">احتلال غزة 1956</h2>
+                <p class="tlc-alt">خلال العدوان الثلاثي</p>
+                <p class="tlc-excerpt">خلال "العدوان الثلاثي" على مصر، احتل جيش الاحتلال قطاع غزة، وارتقى مئات الشهداء في مجازر بشعة مثل مجزرتي خانيونس ورفح، وعمليات القتل والإعدام الميداني.</p>
+                <div class="tlc-foot">
+                    <div class="tlc-stat"><span class="tlc-stat-label">عدد الشهداء:</span><span class="tlc-stat-num">حوالي 1500 شهيد</span></div>
+                </div>
+            </article>
+        </section>
+
+        <section class="tlc-scene" id="tlc-m21">
+            <div class="tlc-bg"><img src="images/timeline/21.jpg" alt="" loading="lazy"><div class="tlc-bg-tint"></div></div>
+            <article class="tlc-panel">
+                <time class="tlc-date">1956</time>
+                <h2 class="tlc-title">مجزرة كفر قاسم</h2>
+                <p class="tlc-excerpt">في مساء 29 تشرين الأول 1956 وعلى أبواب العدوان الثلاثي، فرضت قوات الاحتلال حظر تجول مفاجئ على قرية كفر قاسم العربية وأعدمت وحدة من حرس الحدود 49 فلسطينياً ميدانياً.</p>
+                <div class="tlc-foot">
+                    <div class="tlc-stat"><span class="tlc-stat-label">عدد الشهداء:</span><span class="tlc-stat-num">49 شهيداً</span></div>
+                </div>
+            </article>
+        </section>
+    </main>
 </div>
 </main>
 
@@ -214,32 +419,6 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
         <span class="text-xs text-gray-400 block mb-1">الصحفيون الشهداء</span>
         <p class="text-2xl font-black text-white">190+</p>
         <span class="text-[10px] text-gray-400 mt-2 block">صوت الحقيقة الميداني</span>
-    </div>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <div class="glass-panel p-6 rounded-2xl">
-        <h3 class="text-sm font-bold text-red-500 mb-3">القطاع الصحي</h3>
-        <ul class="space-y-2 text-xs text-gray-300">
-            <li class="flex justify-between border-b border-white/5 pb-1"><span>المستشفيات المدمرة كلياً:</span> <strong class="text-white">34 مستشفى</strong></li>
-            <li class="flex justify-between border-b border-white/5 pb-1"><span>الكوادر الطبية الشهيدة:</span> <strong class="text-white">1,000+</strong></li>
-            <li class="flex justify-between"><span>سيارات الإسعاف المعطلة:</span> <strong class="text-white">130+</strong></li>
-        </ul>
-    </div>
-    <div class="glass-panel p-6 rounded-2xl">
-        <h3 class="text-sm font-bold text-red-500 mb-3">البنية التحتية والتعليم</h3>
-        <ul class="space-y-2 text-xs text-gray-300">
-            <li class="flex justify-between border-b border-white/5 pb-1"><span>المدارس والجامعات المدمرة:</span> <strong class="text-white">120+ مؤسسة</strong></li>
-            <li class="flex justify-between border-b border-white/5 pb-1"><span>الوحدات السكنية المدمرة:</span> <strong class="text-white">70% كلياً</strong></li>
-            <li class="flex justify-between"><span>المساجد والكنائس المستهدفة:</span> <strong class="text-white">600+</strong></li>
-        </ul>
-    </div>
-    <div class="glass-panel p-6 rounded-2xl">
-        <h3 class="text-sm font-bold text-red-500 mb-3">مؤشرات الأمن الغذائي</h3>
-        <ul class="space-y-2 text-xs text-gray-300">
-            <li class="flex justify-between border-b border-white/5 pb-1"><span>مستوى انعدام الأمن الغذائي:</span> <strong class="text-red-400">حرج للغاية</strong></li>
-            <li class="flex justify-between border-b border-white/5 pb-1"><span>المجاعة في الشمال:</span> <strong class="text-red-400">مؤكدة وواسعة</strong></li>
-            <li class="flex justify-between"><span>المساعدات الإنسانية الداخلة:</span> <strong class="text-yellow-400">شحيحة جداً</strong></li>
-        </ul>
     </div>
 </div>
 </div>
@@ -336,17 +515,6 @@ let map = null;
 let markersLayer = null;
 let mouseX = -1000, mouseY = -1000;
 
-const milestoneData = [
-    { year: "1920s - 1929", title: "هبة البراق والثلاثينات", desc: "بدايات الثورات الشعبية ومواجهة الانتداب البريطاني والعصابات الصهيونية وتقديم قوافل الشهداء الأوائل.", image: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=800&q=80" },
-    { year: "1936 - 1939", title: "الثورة الفلسطينية الكبرى", desc: "إضراب الستة أشهر والثورة المسلحة الكبرى ضد الاحتلال البريطاني ومشروعات الاستيطان.", image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&q=80" },
-    { year: "1948", title: "النكبة الفلسطينية ومجازر التطهير", desc: "تهجير أكثر من 750,000 فلسطيني وتدمير أكثر من 500 قرية واقتلاع الشعب من أرضه.", image: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80" },
-    { year: "1967", title: "النكسة واحتلال باقي الأراضي", desc: "احتلال الضفة الغربية وقطاع غزة والقدس الشرقية وبدء فصل جديد من المقاومة واللجوء.", image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80" },
-    { year: "1987", title: "انتفاضة الحجارة", desc: "هبة شعبية تاريخية انطلقت من مخيم جباليا في قطاع غزة وشملت كل مدن وقرى فلسطين.", image: "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80" },
-    { year: "2000", title: "انتفاضة الأقصى", desc: "اندلاع الانتفاضة إثر اقتحام المسجد الأقصى، وتقديم آلاف الشهداء والجرحى في ملحمة صمود كبرى.", image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80" },
-    { year: "2008 - 2021", title: "حروب غزة المتعاقبة", desc: "سلسلة من حروب الحصار والعدوان (2008، 2012، 2014، 2021) وسط صمود أسطوري وثبات شعبي.", image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80" },
-    { year: "2023 - 2026", title: "طوفان الأقصى والعدوان الشامل", desc: "حرب الإبادة والملحمة التاريخية المستمرة والتوثيق الميداني المباشر لأكبر تضحيات العصر.", image: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80" }
-];
-
 const translations={
 ar:{titleMain:"أرواح",logoText:"فلسطين",searchPlaceholder:"ابحث عن اسم الشهيد...",tabSouls:" شهداء غزة",tabJournalists:" صحفيو غزة",tabWestBank:" الضفة الغربية",tabMilestones:" أبرز المحطات",tabStats:" الإحصائيات",tabVideos:" التوثيق والأرشيف",tabMap:" الخريطة",donate:"❤️ إدعمنا لنستمر",musicOn:"🎵 الصوت",musicOff:"🔇 إيقاف",visitorText:"زوار:",verse:`"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"`,devText:"تطوير: عبد الهادي",shareBtn:"مشاركة",martyrsLabel:"شهيداً وثّقت أسماؤهم"},
 en:{titleMain:"Palestinian",logoText:"Souls",searchPlaceholder:"Search martyr...",tabSouls:" Gaza Souls",tabJournalists:" Gaza Journalists",tabWestBank:" West Bank",tabMilestones:" Milestones",tabStats:" Statistics",tabVideos:" Footage",tabMap:" Map",donate:" Support Us",musicOn:"🎵 Audio",musicOff:"Mute",visitorText:"Visits:",verse:`"Think not of those who are slain in Allah's way as dead..."`,devTest:"Dev: Abdelhadi",shareBtn:"Share",martyrsLabel:"Martyrs Documented"}
@@ -387,29 +555,6 @@ const text = `توثيق شهيد: ${name} | العمر: ${age} | رقم اله�
 navigator.clipboard.writeText(text).then(()=>alert('تم نسخ بيانات بطاقة الشهيد بنجاح!'));
 };
 
-function renderMilestones() {
-    const container = document.getElementById('tlc-scenes-container');
-    if(!container) return;
-    container.innerHTML = '';
-    milestoneData.forEach((item) => {
-        const div = document.createElement('div');
-        div.className = 'timeline-item';
-        div.innerHTML = `
-            <div class="timeline-dot"></div>
-            <div class="timeline-card overflow-hidden group shadow-xl">
-                <div class="h-52 w-full overflow-hidden rounded-xl mb-4 relative border border-white/10">
-                    <img src="${item.image}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="${item.title}">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                    <span class="absolute bottom-3 right-3 bg-red-600 text-white text-xs font-bold px-3.5 py-1 rounded-full shadow-lg">${item.year}</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2">${item.title}</h3>
-                <p class="text-xs text-gray-300 leading-relaxed">${item.desc}</p>
-            </div>
-        `;
-        container.appendChild(div);
-    });
-}
-
 function initMapIfNeeded() {
     if (!map) {
         const gazaBounds = [[31.22, 34.20], [31.60, 34.58]];
@@ -423,7 +568,7 @@ function initMapIfNeeded() {
     }
 }
 
-function renderMapAndList(dataToRender = []) {
+function renderMapAndList() {
     initMapIfNeeded();
     const listContainer = document.getElementById('map-data-list');
     if (listContainer) {
@@ -435,7 +580,7 @@ function renderMapAndList(dataToRender = []) {
 }
 
 function filterMapList() {
-    renderMapAndList([]);
+    renderMapAndList();
 }
 
 window.switchMainMode = function(mode) {
@@ -466,14 +611,13 @@ window.switchMainMode = function(mode) {
         document.getElementById('number').innerText = "0";
     } else if(mode === 'milestones') {
         document.getElementById('milestones-view').style.display = 'block';
-        renderMilestones();
     } else if(mode === 'stats') {
         document.getElementById('stats-view').style.display = 'block';
     } else if(mode === 'videos') {
         document.getElementById('videos-view').style.display = 'block';
     } else if(mode === 'map') {
         document.getElementById('map-view').style.display = 'flex';
-        renderMapAndList([]);
+        renderMapAndList();
         setTimeout(() => { if (map) map.invalidateSize(); }, 300);
     }
 };
@@ -507,8 +651,6 @@ class ShootingStar {
         this.opacity = Math.random() * 0.8 + 0.2;
         this.angle = (3 * Math.PI / 4) + (Math.random() * 0.06 - 0.03);
         this.thickness = Math.random() * 1.5 + 1;
-        this.headColor = '#ffffff';
-        this.tailColor = 'rgba(255, 51, 51, ';
     }
     update() {
         this.x += Math.cos(this.angle) * this.speed * 4;
@@ -535,7 +677,6 @@ class ShootingStar {
         sCtx.strokeStyle = gradient;
         sCtx.lineWidth = this.thickness;
         sCtx.stroke();
-        
         sCtx.restore();
     }
 }
