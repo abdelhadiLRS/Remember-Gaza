@@ -73,19 +73,12 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 
 /* تنسيق الخط الزمني السينمائي المطور */
 .tlc { position: relative; width: 100%; min-height: 100vh; background: #0a0a0a; color: #fff; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
-.tlc-tracker { position: sticky; top: 0; z-index: 40; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 12px 20px; display: flex; align-items: center; justify-content: center; gap: 15px; }
-.tlc-tracker-current { font-weight: bold; color: #f87171; font-size: 0.9rem; white-space: nowrap; }
-.tlc-tracker-clip { overflow-x: auto; max-width: 900px; width: 100%; scrollbar-width: none; }
-.tlc-tracker-clip::-webkit-scrollbar { display: none; }
-.tlc-tracker-list { display: flex; gap: 12px; list-style: none; padding: 0; margin: 0; align-items: center; }
-.tlc-tracker-item a { color: #aaa; text-decoration: none; font-size: 0.8rem; padding: 4px 10px; border-radius: 15px; background: rgba(255,255,255,0.05); transition: 0.3s; white-space: nowrap; display: inline-block; }
-.tlc-tracker-item a:hover, .tlc-tracker-item.is-current a { background: #dc2626; color: #fff; font-weight: bold; }
-.tlc-tracker-decade a { background: rgba(239, 68, 68, 0.2); color: #fca5a5; font-weight: bold; }
+.tlc-intro-box { max-width: 950px; margin: 30px auto 40px auto; padding: 30px; background: rgba(15, 15, 15, 0.95); border: 1px solid rgba(239,68,68,0.25); border-radius: 16px; text-align: justify; line-height: 2.2; font-size: 0.95rem; color: #d1d5db; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
 
-.tlc-main { max-width: 1100px; margin: 0 auto; padding: 40px 20px; display: flex; flex-direction: column; gap: 60px; }
+.tlc-main { max-width: 1100px; margin: 0 auto; padding: 0 20px 40px 20px; display: flex; flex-direction: column; gap: 60px; }
 .tlc-decade-group { display: flex; flex-direction: column; gap: 30px; border-bottom: 2px dashed rgba(239,68,68,0.2); padding-bottom: 50px; }
 
-/* تنسيق عنوان العقد البارز والضخم في المنتصف مطابق للنموذج المطلوب */
+/* تنسيق عنوان العقد البارز والضخم في المنتصف */
 .tlc-decade { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 10px; margin: 20px 0; }
 .tlc-decade-num { font-size: clamp(5rem, 12vw, 9rem); font-weight: 900; color: #e5e5e5; margin: 0; line-height: 1; letter-spacing: -3px; text-shadow: 0 15px 35px rgba(0,0,0,0.9); }
 .tlc-decade-num span { color: #dc2626; }
@@ -121,6 +114,7 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
     .tlc-scene { padding: 20px; min-height: 400px; }
     .tlc-panel { padding: 20px; }
     .tlc-title { font-size: 1.4rem; }
+    .tlc-intro-box { padding: 20px; margin: 15px; font-size: 0.85rem; }
 }
 </style>
 </head>
@@ -229,19 +223,19 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 </div>
 </main>
 
-<!-- قسم أبرز المحطات التاريخية (التصميم الجديد المطور) -->
+<!-- قسم أبرز المحطات التاريخية (التصميم الجديد المطور مع النص التوثيقي) -->
 <main id="milestones-view" class="text-white">
 <div class="tlc" id="tlc-root">
-    <nav class="tlc-tracker" aria-label="تصفّح الخط الزمني">
-        <span class="tlc-tracker-current" id="tlc-tracker-current">طوفان الأقصى</span>
-        <div class="tlc-tracker-clip">
-            <div class="tlc-tracker-track">
-                <ul class="tlc-tracker-list" id="tlc-tracker-list">
-                    <!-- تعبئة تلقائية عبر الجافاسكريبت -->
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <!-- صندوق النص التوثيقي في الأعلى بدلاً من شريط العقد القديم -->
+    <div class="tlc-intro-box">
+        <p style="margin-bottom: 15px;">
+            على مدى العقود الماضية، ارتقى عشرات الآلاف من الفلسطينيين شهداء على يد آلة البطش الإسرائيلية، الكثير منهم خلال مجازر بشعة ارتكبت بحق مدنيين عُدّ بدأت منذ ثلاثينيات القرن الماضي على يد العصابات الصهيونية حتى قبل قيام دولة الاحتلال، ولا تزال تحدث على مرأى ومسمع العالم حتى يومنا هذا، بيد أنها أصبحت اليوم تحدث على يد جيش منظم ومجهز بأحدث الأسلحة والمعدات الحربية الفتاكة، وتنقل الى العالم لحظياً بالوسائط المرئية والمسموعة، بل و بالبث المباشر أحياناً، حتى تجاوز عدد الشهداء الذين ارتقوا بحسب احصائيات الجهاز المركزي للإحصاء الفلسطيني.
+        </p>
+        <p style="color: #f87171; font-weight: bold; text-align: center; margin: 0;">
+            فيما يلي نسرد لكم أهم المحطات في تاريخ القضية الفلسطينية والتي ارتقى خلالها شهداء فلسطينيون وعرب مع الأعداد التقديرية للشهداء في كل من هذه المحطات.
+        </p>
+    </div>
+
     <main class="tlc-main" id="tlc-scenes-container">
         <!-- تعبئة تلقائية عبر الجافاسكريبت -->
     </main>
@@ -403,26 +397,27 @@ let map = null;
 let markersLayer = null;
 let mouseX = -1000, mouseY = -1000;
 
-// نظام تشغيل الصوت المحلي ambient.mp3 عبر Howler
+// نظام تشغيل الصوت المحلي ambient.mp3 عبر Howler مع دعم html5 للتأكد من تخطي قيود المتصفحات
 let backgroundSound = null;
 let isPlayingAudio = false;
 
 function initAudio() {
-    backgroundSound = new Howl({
-        src: ['./audio/ambient.mp3'], // تشغيل ملف الصوت المحلي المرفق
-        loop: true,
-        volume: 0.4,
-        onplay: () => { isPlayingAudio = true; updateMusicButton(); },
-        onpause: () => { isPlayingAudio = false; updateMusicButton(); },
-        onstop: () => { isPlayingAudio = false; updateMusicButton(); },
-        onloaderror: () => { console.log('خطأ في تحميل ملف الصوت ambient.mp3'); }
-    });
+    if (!backgroundSound) {
+        backgroundSound = new Howl({
+            src: ['./ambient.mp3'], 
+            loop: true,
+            volume: 0.4,
+            html5: true, // ضروري جداً لتشغيل الملفات المحلية وتجاوز القيود الأمنية
+            onplay: () => { isPlayingAudio = true; updateMusicButton(); },
+            onpause: () => { isPlayingAudio = false; updateMusicButton(); },
+            onstop: () => { isPlayingAudio = false; updateMusicButton(); },
+            onloaderror: (id, err) => { console.log('خطأ في تحميل ملف الصوت ambient.mp3:', err); }
+        });
+    }
 }
 
 function toggleMusic() {
-    if (!backgroundSound) {
-        initAudio();
-    }
+    initAudio();
     if (isPlayingAudio) {
         backgroundSound.pause();
     } else {
@@ -552,11 +547,9 @@ function openMilestoneModal(item) {
 }
 
 function renderCinematicTimeline() {
-    const trackerList = document.getElementById('tlc-tracker-list');
     const scenesContainer = document.getElementById('tlc-scenes-container');
-    if(!trackerList || !scenesContainer) return;
+    if(!scenesContainer) return;
     
-    trackerList.innerHTML = '';
     scenesContainer.innerHTML = '';
 
     let currentDecadeSection = null;
@@ -564,18 +557,12 @@ function renderCinematicTimeline() {
 
     milestoneCinematicData.forEach(item => {
         if (item.type === 'decade') {
-            const li = document.createElement('li');
-            li.className = 'tlc-tracker-item tlc-tracker-decade';
-            li.innerHTML = `<a href="#${item.id}">${item.decade}s</a>`;
-            trackerList.appendChild(li);
-
             currentDecadeSection = document.createElement('div');
             currentDecadeSection.className = 'tlc-decade-group';
             currentDecadeSection.id = item.id;
             
             const decadeHeader = document.createElement('div');
             decadeHeader.className = 'tlc-decade';
-            // جعل عنوان العقد كبير وضخم وبارز في المنتصف مطابق للتصميم المطلوب
             decadeHeader.innerHTML = `
                 <h2 class="tlc-decade-num">${item.decade}<span>s</span></h2>
                 <div class="tlc-decade-divider"></div>
@@ -587,12 +574,6 @@ function renderCinematicTimeline() {
             scenesContainer.appendChild(currentDecadeSection);
 
         } else if (item.type === 'scene') {
-            const li = document.createElement('li');
-            li.className = 'tlc-tracker-item';
-            if(item.id === 'm30') li.classList.add('is-current');
-            li.innerHTML = `<a href="#${item.id}">${item.title}</a>`;
-            trackerList.appendChild(li);
-
             if (currentCardsGrid) {
                 const cardA = document.createElement('a');
                 cardA.className = 'tlc-decade-card';
@@ -640,7 +621,6 @@ function renderCinematicTimeline() {
                 </article>
             `;
             
-            // ربط زر "اقرأ المزيد" بالنافذة المنبثقة التفصيلية
             const moreBtn = sceneEl.querySelector('.tlc-more');
             moreBtn.onclick = () => openMilestoneModal(item);
 
@@ -978,7 +958,7 @@ document.addEventListener('DOMContentLoaded', () => {
     switchMainMode('souls');
     gameLoop();
     
-    // ربط زر الصوت بالوظيفة الفعلية وملف ambient.mp3
+    // ربط زر الصوت بالوظيفة وتفعيل الملف الصوتي المحلي
     const musicBtn = document.getElementById('music-btn');
     if(musicBtn) {
         musicBtn.onclick = toggleMusic;
