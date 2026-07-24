@@ -71,7 +71,7 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
     font-family: 'Cairo', sans-serif;
 }
 
-/* تنسيق الخط الزمني السينمائي */
+/* تنسيق الخط الزمني السينمائي المحسن */
 .tlc { position: relative; width: 100%; min-height: 100vh; background: #0a0a0a; color: #fff; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
 .tlc-tracker { position: sticky; top: 0; z-index: 40; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 12px 20px; display: flex; align-items: center; justify-content: center; gap: 15px; }
 .tlc-tracker-current { font-weight: bold; color: #f87171; font-size: 0.9rem; white-space: nowrap; }
@@ -84,9 +84,9 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 
 .tlc-main { max-width: 1100px; margin: 0 auto; padding: 40px 20px; display: flex; flex-direction: column; gap: 60px; }
 .tlc-decade-group { display: flex; flex-direction: column; gap: 30px; border-bottom: 2px dashed rgba(239,68,68,0.2); padding-bottom: 50px; }
-.tlc-decade { display: flex; flex-direction: column; gap: 20px; }
-.tlc-decade-num { font-size: 2.5rem; font-weight: 900; color: #ef4444; margin: 0; }
-.tlc-decade-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.tlc-decade { display: flex; flex-direction: column; gap: 20px; align-items: center; text-align: center; margin: 40px 0 20px 0; }
+.tlc-decade-num { font-size: 4.5rem; font-weight: 900; color: #ef4444; margin: 0; text-shadow: 0 0 30px rgba(239, 68, 68, 0.6); letter-spacing: 4px; }
+.tlc-decade-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; width: 100%; }
 .tlc-decade-card { background: rgba(18, 18, 18, 0.9); border: 1px solid rgba(239,68,68,0.15); border-radius: 12px; overflow: hidden; text-decoration: none; color: inherit; transition: 0.3s; display: flex; flex-direction: column; }
 .tlc-decade-card:hover { transform: translateY(-5px); border-color: #ef4444; box-shadow: 0 10px 25px rgba(239,68,68,0.2); }
 .tlc-decade-card-img { height: 160px; overflow: hidden; position: relative; background: #111; }
@@ -116,6 +116,7 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
     .tlc-scene { padding: 20px; min-height: 400px; }
     .tlc-panel { padding: 20px; }
     .tlc-title { font-size: 1.4rem; }
+    .tlc-decade-num { font-size: 3rem; }
 }
 </style>
 </head>
@@ -494,7 +495,7 @@ function renderCinematicTimeline() {
             const decadeHeader = document.createElement('div');
             decadeHeader.className = 'tlc-decade';
             decadeHeader.innerHTML = `
-                <h2 class="tlc-decade-num">${item.decade}<span style="font-size:1.2rem;">s</span></h2>
+                <h2 class="tlc-decade-num">${item.decade}<span style="font-size:2.2rem; opacity:0.9;">s</span></h2>
                 <div class="tlc-decade-cards" id="cards-${item.decade}"></div>
             `;
             currentDecadeSection.appendChild(decadeHeader);
@@ -850,7 +851,7 @@ function gameLoop(){
         }
     }
 
-    if (sCtx) {
+    if(sCtx) {
         sCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
         shootingStarsArr.forEach(star => {
             star.update();
