@@ -202,9 +202,45 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
 </div>
 </main>
 
-<!-- قسم أبرز المحطات التاريخية (مطابق تماماً لموقع مرصد شيرين وملف images/timeline) -->
+<!-- قسم أبرز المحطات التاريخية (مطابق تماماً لموقع مرصد شيرين مع الهيدر المخصص والمصادر) -->
 <main id="milestones-view" class="text-white">
 <div class="tlc" id="tlc-root">
+    <!-- هيدر مرصد شيرين المخصص لخانة أبرز المحطات -->
+    <div class="Header Header--stats bg-gradient-to-b from-emerald-950/90 to-[#0b1410] py-8 px-6 border-b border-emerald-800/40">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-center md:text-right">
+                <h1 class="text-2xl md:text-3xl font-black text-white mb-2 flex items-center justify-center md:justify-start gap-2">
+                    <span class="text-emerald-400">الشهداء</span> » <span class="text-white">أبرز المحطات</span>
+                </h1>
+                <p class="text-xs md:text-sm text-gray-300">محطات بارزة في تاريخ القضية الفلسطينية</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-4">
+                <div class="glass-panel px-6 py-3 rounded-2xl border border-emerald-500/30 text-center bg-emerald-950/40">
+                    <span class="text-[10px] text-gray-300 block mb-1">إجمالي الشهداء المقدر</span>
+                    <span class="text-lg md:text-xl font-black text-emerald-400 font-mono">158,000 – 291,000</span>
+                    <span class="text-[10px] text-gray-400 block">شهيد</span>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto mt-6 pt-4 border-t border-white/10 flex flex-wrap justify-between items-center text-xs text-gray-300 gap-4">
+            <div class="flex items-center gap-2">
+                <details class="relative group cursor-pointer">
+                    <summary class="flex items-center gap-1.5 hover:text-white transition-colors list-none font-bold">
+                        <i class="fa fa-info-circle text-emerald-400"></i> المصادر (3)
+                    </summary>
+                    <div class="absolute top-full right-0 mt-2 bg-neutral-900 border border-emerald-600/40 rounded-xl p-3 shadow-2xl z-50 flex flex-col gap-2 min-w-[245px]">
+                        <a href="https://www.wikipedia.org/" target="_blank" rel="noopener" class="text-gray-300 hover:text-emerald-400 text-xs transition-colors flex items-center gap-2"><i class="fa fa-external-link-alt text-[10px]"></i> ويكيبيديا</a>
+                        <a href="https://www.palquest.org/" target="_blank" rel="noopener" class="text-gray-300 hover:text-emerald-400 text-xs transition-colors flex items-center gap-2"><i class="fa fa-external-link-alt text-[10px]"></i> الموسوعة التفاعلية للقضية الفلسطينية</a>
+                        <a href="https://www.shireen.ps/" target="_blank" rel="noopener" class="text-gray-300 hover:text-emerald-400 text-xs transition-colors flex items-center gap-2"><i class="fa fa-external-link-alt text-[10px]"></i> توثيق مرصد شيرين</a>
+                    </div>
+                </details>
+            </div>
+            <div class="flex items-center gap-1.5 text-gray-400 font-mono text-[11px]">
+                <i class="fa fa-clock text-emerald-400"></i> آخر تحديث: 2026-07-20
+            </div>
+        </div>
+    </div>
+
     <nav class="tlc-tracker" aria-label="تصفّح الخط الزمني">
         <span class="tlc-tracker-current" id="tlc-tracker-current">طوفان الأقصى</span>
         <div class="tlc-tracker-clip">
