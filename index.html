@@ -101,23 +101,38 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .share-btn:hover{background:#0056b3;border-color:#007bff;}
 .font-amiri{font-family:'Amiri',serif;}
 
-/* تصميم إبداعي متطور لأبرز المحطات (الخط الزمني السينمائي) */
+/* تصميم السنوات والمحطات التاريخية المطابق لنسق مرصد شيرين */
 .vertical-timeline-container { position: relative; max-width: 950px; margin: 0 auto; padding: 30px 15px; font-family: 'Cairo', sans-serif; }
-.vertical-timeline-container::before { content: ''; position: absolute; right: 38px; top: 0; bottom: 0; width: 4px; background: linear-gradient(to bottom, #cc0000, #ff4d4d, rgba(204,0,0,0.05)); box-shadow: 0 0 15px rgba(204,0,0,0.4); }
-.v-decade-section { margin-bottom: 70px; position: relative; }
-.v-decade-header { font-size: 2.4rem; font-weight: 900; color: #fff; margin-bottom: 30px; padding-right: 65px; position: relative; font-family: 'Cairo', sans-serif; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
-.v-decade-header span { color: #ff3333; text-shadow: 0 0 15px rgba(255,51,51,0.6); }
-.v-item-row { position: relative; margin-bottom: 30px; padding-right: 65px; }
-.v-item-dot { position: absolute; right: 29px; top: 22px; width: 20px; height: 20px; background: #cc0000; border-radius: 50%; border: 4px solid #000; box-shadow: 0 0 18px #ff0000; z-index: 3; transition: transform 0.3s ease; }
-.v-card { background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.98) 100%); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 18px 24px; display: flex; align-items: center; gap: 20px; cursor: pointer; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.7); position: relative; overflow: hidden; }
-.v-card::after { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%; background: #cc0000; opacity: 0; transition: opacity 0.3s; }
-.v-card:hover { border-color: rgba(255, 51, 51, 0.6); transform: translateX(-8px) scale(1.01); box-shadow: 0 15px 40px rgba(204,0,0,0.3); }
+.vertical-timeline-container::before { content: ''; position: absolute; right: 38px; top: 0; bottom: 0; width: 3px; background: rgba(204,0,0,0.3); }
+.v-decade-section { margin-bottom: 50px; position: relative; }
+.v-decade-header { 
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(204,0,0,0.2) 0%, rgba(20,20,20,0.9) 100%);
+    border: 1px solid rgba(204,0,0,0.4);
+    border-right: 4px solid #cc0000;
+    padding: 8px 20px;
+    border-radius: 12px;
+    font-size: 1.5rem; 
+    font-weight: 800; 
+    color: #fff; 
+    margin-bottom: 25px; 
+    margin-right: 50px;
+    font-family: 'Cairo', sans-serif; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5); 
+}
+.v-decade-header span { color: #ff4d4d; margin-right: 4px; }
+.v-item-row { position: relative; margin-bottom: 25px; padding-right: 65px; }
+.v-item-dot { position: absolute; right: 30px; top: 22px; width: 16px; height: 16px; background: #cc0000; border-radius: 50%; border: 3px solid #000; box-shadow: 0 0 12px #ff0000; z-index: 3; transition: transform 0.3s ease; }
+.v-card { background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.98) 100%); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 16px 20px; display: flex; align-items: center; gap: 18px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 25px rgba(0,0,0,0.6); position: relative; overflow: hidden; }
+.v-card::after { content: ''; position: absolute; top: 0; right: 0; width: 3px; height: 100%; background: #cc0000; opacity: 0; transition: opacity 0.3s; }
+.v-card:hover { border-color: rgba(255, 51, 51, 0.5); transform: translateX(-6px); box-shadow: 0 12px 35px rgba(204,0,0,0.25); }
 .v-card:hover::after { opacity: 1; }
-.v-card:hover .v-item-dot { transform: scale(1.3); }
-.v-card-img { width: 75px; height: 75px; border-radius: 12px; object-fit: cover; background: #1a1a1a; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+.v-card:hover .v-item-dot { transform: scale(1.2); }
+.v-card-img { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; background: #1a1a1a; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.15); }
 .v-card-info { flex: 1; min-width: 0; text-align: right; }
-.v-card-year { color: #ff4d4d; font-size: 0.85rem; font-weight: 800; margin-bottom: 4px; font-family: 'Cairo', sans-serif; letter-spacing: 0.5px; }
-.v-card-title { color: #fff; font-size: 1.15rem; font-weight: 900; font-family: 'Cairo', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.v-card-year { color: #ff4d4d; font-size: 0.8rem; font-weight: 700; margin-bottom: 3px; font-family: 'Cairo', sans-serif; }
+.v-card-title { color: #fff; font-size: 1.1rem; font-weight: 800; font-family: 'Cairo', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* نافذة التفاصيل المنبثقة للمحطات التاريخية */
 #tlc-custom-modal { display: none; position: fixed; inset: 0; z-index: 1050; background: rgba(0,0,0,0.94); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif; backdrop-filter: blur(8px); }
@@ -183,7 +198,6 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
         <h2 class="text-3xl md:text-4xl font-black mb-3 text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-400 to-white drop-shadow-lg">أبرز المحطات والتوثيق التاريخي</h2>
         <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto">محطات الصمود والنضال الفلسطيني عبر العقود، توثيق حي للأحداث والملاحم الخالدة</p>
     </div>
-    <!-- سيتم حقن الخط الزمني لشيرين هنا -->
     <div id="tlc-scenes-container"></div>
 </div>
 </main>
@@ -406,12 +420,7 @@ let mouseX = -1000, mouseY = -1000;
 
 const torrentConfig = {
     file1: "./data/file1.torrent",
-    file2: "./data/file2.torrent",
-    trackers: [
-        "udp://tracker.opentrackr.org:1337/announce",
-        "udp://open.tracker.cc:1337/announce",
-        "udp://exodus.desync.com:6969/announce"
-    ]
+    file2: "./data/file2.torrent"
 };
 
 const milestonesDecades = [
@@ -559,7 +568,7 @@ function renderMilestonesCinematic() {
                 <div class="v-item-row" id="${m.id}">
                     <div class="v-item-dot"></div>
                     <div class="v-card" onclick='openMilestoneModal(${JSON.stringify(m).replace(/'/g, "&#39;")})'>
-                        <img src="${m.img}" class="v-card-img" alt="" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2275%22 height=%2275%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%231a1a1a%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23777%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Cairo%22 font-size=%2211%22>أرشيف</text></svg>'">
+                        <img src="${m.img}" class="v-card-img" alt="" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2270%22 height=%2270%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%231a1a1a%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23777%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Cairo%22 font-size=%2211%22>أرشيف</text></svg>'">
                         <div class="v-card-info">
                             <div class="v-card-year">${m.year} ${m.subtitle ? ' - ' + m.subtitle : ''}</div>
                             <div class="v-card-title">${m.title}</div>
@@ -609,7 +618,7 @@ async function fetchTorrentVideos() {
     allVideoFiles = [
         {
             name: "Gaza Vol 5 (رابط مغناطيس مباشر)",
-            torrentSource: "magnet:?xt=urn:btih:14d81d460a7de2669e7bb2ac4782cb8e50b07338&dn=Gaza%20Vol%205&tr=udp%3a%2f%2ftracker.opentrackr.org%3a1337%2fannounce",
+            torrentSource: "magnet:?xt=urn:btih:14d81d460a7de2669e7bb2ac4782cb8e50b07338&dn=Gaza%20Vol%205",
             size: "رابط مغناطيس",
             date: "2026",
             source: "شبكة التورنت المباشرة",
@@ -722,7 +731,7 @@ async function openMediaModal(item) {
         }
 
         if (window.WebTorrentInstance) {
-            window.WebTorrentInstance.add(torrentIdentifier, { trackers: torrentConfig.trackers }, function (torrent) {
+            window.WebTorrentInstance.add(torrentIdentifier, function (torrent) {
                 const file = torrent.files.find(f => {
                     const name = f.name.toLowerCase();
                     return name.endsWith('.mp4') || name.endsWith('.mkv') || name.endsWith('.webm') || name.endsWith('.mov');
@@ -908,18 +917,17 @@ class ShootingStar {
     reset() {
         this.x = Math.random() * window.innerWidth;
         this.y = Math.random() * window.innerHeight * 0.4;
-        this.len = Math.random() * 80 + 30; // طول الذيل
-        this.speed = Math.random() * 2 + 1.5; // السرعة أصبحت أقل بكثير من السابق
+        this.len = Math.random() * 80 + 30;
+        this.speed = Math.random() * 2 + 1.5;
         this.opacity = Math.random() * 0.7 + 0.3;
         this.angle = Math.PI / 4;
-        this.glow = Math.random() * 10 + 5; // معامل التوهج
+        this.glow = Math.random() * 10 + 5;
     }
     update() {
         this.x -= this.speed * Math.cos(this.angle);
         this.y += this.speed * Math.sin(this.angle);
         if (this.x < -100 || this.y > window.innerHeight + 100) {
             this.reset();
-            // بدء الشهاب الجديد من الأطراف العلوية أو اليمنى ليعطي تساقطاً طبيعياً
             if (Math.random() > 0.5) {
                 this.x = window.innerWidth + 50;
                 this.y = Math.random() * window.innerHeight * 0.5;
@@ -933,7 +941,6 @@ class ShootingStar {
         if(!sCtx) return;
         sCtx.save();
         
-        // ذيل متدرج الشفافية والإضاءة (Gradient)
         const grad = sCtx.createLinearGradient(
             this.x, this.y, 
             this.x + this.len * Math.cos(this.angle), 
@@ -941,7 +948,7 @@ class ShootingStar {
         );
         grad.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
         grad.addColorStop(0.2, `rgba(204, 230, 255, ${this.opacity * 0.8})`); 
-        grad.addColorStop(1, `rgba(0, 0, 0, 0)`); // التلاشي في نهاية الذيل
+        grad.addColorStop(1, `rgba(0, 0, 0, 0)`);
         
         sCtx.strokeStyle = grad;
         sCtx.lineWidth = 2.5;
@@ -956,7 +963,6 @@ class ShootingStar {
         );
         sCtx.stroke();
         
-        // رأس مضيء للشهاب
         sCtx.beginPath();
         sCtx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
         sCtx.fillStyle = `rgba(255, 255, 255, ${this.opacity + 0.2})`;
@@ -996,7 +1002,6 @@ if (canvas) {
     });
 }
 
-/* فتح بطاقة الشهيد مع التحقق التلقائي لاسم اللغة الأخرى */
 function openMartyrCardModal(person) {
     const modal = document.getElementById('martyr-modal-overlay');
     document.getElementById('martyr-modal-name').innerText = person.name_ar || person.name || 'شهيد مجهول';
@@ -1065,7 +1070,6 @@ color:'#ffffff',userData:gazaSouls[i]
 animateCounter(gazaSouls.length>0?gazaSouls.length:0);
 }
 
-/* تحسين رسم وحركة النجوم، التوهج، ورسم الشهب المتساقطة بالتوازي */
 function gameLoop(){
 if(ctx){
 ctx.clearRect(0,0,width,height);
@@ -1136,7 +1140,6 @@ if (hoveredStar && hoveredStar.userData) {
 ctx.globalAlpha=1;
 }
 
-/* رسم الشهب المتساقطة في الطبقة الخاصة بها */
 if(sCtx){
 sCtx.clearRect(0,0,window.innerWidth,window.innerHeight);
 shootingStarsArr.forEach(star => {
