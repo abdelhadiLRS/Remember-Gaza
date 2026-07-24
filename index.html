@@ -101,8 +101,9 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .share-btn:hover{background:#0056b3;border-color:#007bff;}
 .font-amiri{font-family:'Amiri',serif;}
 
-/* تصميم إبداعي متطور لأبرز المحطات (الخط الزمني السينمائي) - بدون خط عمودي */
+/* تصميم إبداعي متطور لأبرز المحطات (الخط الزمني السينمائي) */
 .vertical-timeline-container { position: relative; max-width: 950px; margin: 0 auto; padding: 30px 15px; font-family: 'Cairo', sans-serif; }
+.vertical-timeline-container::before { content: ''; position: absolute; right: 38px; top: 0; bottom: 0; width: 4px; background: linear-gradient(to bottom, #cc0000, #ff4d4d, rgba(204,0,0,0.05)); box-shadow: 0 0 15px rgba(204,0,0,0.4); }
 .v-decade-section { margin-bottom: 70px; position: relative; }
 .v-decade-header { font-size: 2.4rem; font-weight: 900; color: #fff; margin-bottom: 30px; padding-right: 65px; position: relative; font-family: 'Cairo', sans-serif; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
 .v-decade-header span { color: #ff3333; text-shadow: 0 0 15px rgba(255,51,51,0.6); }
@@ -118,16 +119,71 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .v-card-year { color: #ff4d4d; font-size: 0.85rem; font-weight: 800; margin-bottom: 4px; font-family: 'Cairo', sans-serif; letter-spacing: 0.5px; }
 .v-card-title { color: #fff; font-size: 1.15rem; font-weight: 900; font-family: 'Cairo', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* شريط التتبع العلوي للخط الزمني مع خاصية السحب */
-.tlc-tracker { position: sticky; top: 120px; z-index: 50; background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 10px 0; margin-bottom: 30px; }
-.tlc-tracker-clip { overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
-.tlc-tracker-clip::-webkit-scrollbar { display: none; }
-.tlc-tracker-list { display: inline-flex; gap: 15px; padding: 0 20px; list-style: none; margin: 0; }
-.tlc-tracker-item a { display: block; padding: 6px 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; color: #ccc; font-size: 0.8rem; text-decoration: none; transition: 0.3s; }
-.tlc-tracker-item a:hover, .tlc-tracker-item a.active { background: #cc0000; color: white; border-color: #ff4d4d; }
+/* تعديل شريط التتبع (Tracker) ليظهر بشكل عمودي ومتطور */
+.tlc-tracker {
+    position: fixed !important;
+    left: 20px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: rgba(15, 15, 15, 0.95) !important;
+    border: 1px solid rgba(204, 0, 0, 0.3) !important;
+    border-radius: 16px !important;
+    padding: 15px 10px !important;
+    backdrop-filter: blur(10px) !important;
+    z-index: 100 !important;
+    max-height: 75vh !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8) !important;
+}
+.tlc-tracker-clip {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    max-height: 68vh !important;
+    width: 100% !important;
+}
+.tlc-tracker-track {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+}
+.tlc-tracker-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+}
+.tlc-tracker-item {
+    width: 100% !important;
+}
+.tlc-tracker-item a {
+    display: block !important;
+    padding: 8px 14px !important;
+    font-size: 0.8rem !important;
+    color: #ccc !important;
+    text-decoration: none !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+    text-align: center !important;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.tlc-tracker-item a:hover, .tlc-tracker-item a.active {
+    background: #cc0000 !important;
+    border-color: #ff4d4d !important;
+    color: #fff !important;
+    font-weight: bold !important;
+    box-shadow: 0 0 10px rgba(204,0,0,0.5);
+}
+.tlc-tracker-marker, .tlc-tracker-current, .tlc-tracker-tooltip {
+    display: none !important; 
+}
 
 /* نافذة التفاصيل المنبثقة للمحطات التاريخية */
-#tlc-custom-modal { display: none; position: fixed; inset: 0; z-index: 1050; background: rgba(0,0,0,0.94); align-items: center; justify-content: center; padding: 20px; font-family: 'Cairo', sans-serif; backdrop-filter: blur(8px); }
+#tlc-custom-modal { display: none; position: fixed; inset: 0; z-index: 1050; background: rgba(0,0,0,0.94); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif; backdrop-filter: blur(8px); }
 .tlc-modal-box { background: linear-gradient(135deg, #141414 0%, #0a0505 100%); border: 1px solid rgba(204,0,0,0.5); border-radius: 20px; width: 100%; max-width: 820px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.95); }
 .tlc-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); background: #0a0a0a; }
 .tlc-modal-body { padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; text-align: right; }
@@ -190,6 +246,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
         <h2 class="text-3xl md:text-4xl font-black mb-3 text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-400 to-white drop-shadow-lg">أبرز المحطات والتوثيق التاريخي</h2>
         <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto">محطات الصمود والنضال الفلسطيني عبر العقود، توثيق حي للأحداث والملاحم الخالدة</p>
     </div>
+    <!-- سيتم حقن الخط الزمني لشيرين هنا -->
     <div id="tlc-scenes-container"></div>
 </div>
 </main>
@@ -371,7 +428,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
 </div>
 
-<!-- نافذة بطاقة الشهيد الإبداعية -->
+<!-- نافذة بطاقة الشهيد الإبداعية مع زر مشاركة أحمر غير فاقع وتحقق اسم اللغة الأخرى -->
 <div id="martyr-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
     <div class="modal-box" style="max-width: 450px; background: linear-gradient(135deg, #121212 0%, #1a0505 100%); border: 1px solid rgba(204,0,0,0.4); box-shadow: 0 25px 50px rgba(0,0,0,0.9);">
         <div class="modal-header border-b border-red-600/20">
@@ -440,22 +497,25 @@ const milestonesDecades = [
     decadeId: "tlc-d1940",
     decade: "1940s",
     items: [
-      {id: "tlc-m20", year: "1948", title: "مجزرة دير ياسين", subtitle: "التطهير العرقي", img: "./images/timeline/20.jpg", desc: "في فجر التاسع من نيسان 1948، اقتحمت عصابتا الإرغون وشتيرن قرية دير ياسين وارتكبتا مجزرة وحشية لإرهاب الفلسطينيين ودفعهم للنزوح.", martyrs: "254 - 300 شهيد", sourceTitle: "ويكيبيديا - دير ياسين", sourceUrl: "https://ar.wikipedia.org/wiki/%D9%85%D8%AC%D8%B2%D8%B1%D8%A9_%D8%AF%D9%8A%D8%B0_%D9%8A%D8%A7%D8%B3%D9%8A%D9%86"},
-      {id: "tlc-m2", year: "1948", title: "الحرب العربية الإسرائيلية 1948", subtitle: "حرب النكبة", img: "./images/timeline/2.jpg", desc: "دارت عقب إنهاء الانتداب البريطاني وإعلان قيام إسرائيل، وانتهت بتهجير مئات الآلاف واحتلال الأراضي الفلسطينية.", martyrs: "20 - 22 ألف شهيد", sourceTitle: "ويكيبيديا - حرب 1948", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AD%D8%B8_1948"}
+      {id: "tlc-m20", year: "1948", title: "مجزرة دير ياسين", subtitle: "التطهير العرقي", img: "./images/timeline/20.jpg", desc: "في فجر التاسع من نيسان 1948، اقتحمت عصابتا الإرغون وشتيرن قرية دير ياسين وارتكبتا مجزرة وحشية لإرهاب الفلسطينيين ودفعهم للنزوح.", martyrs: "254 - 300 شهيد", sourceTitle: "ويكيبيديا - دير ياسين", sourceUrl: "https://ar.wikipedia.org/wiki/%D9%85%D8%AC%D8%B2%D8%A9_%D8%AF%D9%8A%D8%B0_%D9%8A%D8%A7%D8%B3%D9%8A%D9%86"},
+      {id: "tlc-m2", year: "1948", title: "الحرب العربية الإسرائيلية 1948", subtitle: "حرب النكبة", img: "./images/timeline/2.jpg", desc: "دارت عقب إنهاء الانتداب البريطاني وإعلان قيام إسرائيل، وانتهت بتهجير مئات الآلاف واحتلال الأراضي الفلسطينية.", martyrs: "20 - 22 ألف شهيد", sourceTitle: "ويكيبيديا - حرب 1948", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AD%D8%B8_1948"},
+      {id: "tlc-m3", year: "1949", title: "العودة الفردية للاجئين الفلسطينيين", subtitle: "محاولات التسلل والعودة", img: "./images/timeline/3.jpg", desc: "بدأ اللاجئون الفلسطينيون محاولات العودة الفردية والتسلل إلى قراهم وبلداتهم الأصلية لاستعادة ممتلكاتهم أو تفقدها.", martyrs: "مئات الشهداء", sourceTitle: "الأرشيف الفلسطيني", sourceUrl: "https://www.palquest.org"}
     ]
   },
   {
     decadeId: "tlc-d1950",
     decade: "1950s",
     items: [
-      {id: "tlc-m4", year: "1956", title: "احتلال غزة 1956", subtitle: "خلال العدوان الثلاثي", img: "./images/timeline/4.jpg", desc: "احتل جيش الاحتلال قطاع غزة وارتكب مجازر بشعة في خانيونس ورفح خلال العدوان الثلاثي على مصر.", martyrs: "حوالي 1500 شهيد", sourceTitle: "الموسوعة التفاعلية", sourceUrl: "https://www.palquest.org"}
+      {id: "tlc-m4", year: "1956", title: "احتلال غزة 1956", subtitle: "خلال العدوان الثلاثي", img: "./images/timeline/4.jpg", desc: "احتل جيش الاحتلال قطاع غزة وارتكب مجازر بشعة في خانيونس ورفح خلال العدوان الثلاثي على مصر.", martyrs: "حوالي 1500 شهيد", sourceTitle: "الموسوعة التفاعلية", sourceUrl: "https://www.palquest.org"},
+      {id: "tlc-m21", year: "1956", title: "مجزرة كفر قاسم", subtitle: "حظر التجوال", img: "./images/timeline/21.jpg", desc: "أعدمت قوات حرس الحدود الإسرائيلية 49 فلسطينياً ميدانياً عند مدخل قرية كفر قاسم لخرقهم حظر تجوال لم يُبلّغوا به.", martyrs: "49 شهيداً", sourceTitle: "ويكيبيديا - كفر قاسم", sourceUrl: "https://ar.wikipedia.org/wiki/%D9%85%D8%AC%D8%B2%D8%A9_%D9%83%D9%81%D8%B1_%D9%82%D8%A7%D8%B3%D9%85"}
     ]
   },
   {
     decadeId: "tlc-d1960",
     decade: "1960s",
     items: [
-      {id: "tlc-m5", year: "1967", title: "حرب حزيران 1967", subtitle: "النكسة", img: "./images/timeline/5.jpg", desc: "احتلت إسرائيل كامل فلسطين التاريخية وأراضٍ سورية ومصرية، وضاعفت المساحة بأكثر من ستة أضعاف.", martyrs: "15,000 - 25,000 شهيد", sourceTitle: "ويكيبيديا - حرب 1967", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AD%D8%B1%D8%B8_1967"}
+      {id: "tlc-m5", year: "1967", title: "حرب حزيران 1967", subtitle: "النكسة", img: "./images/timeline/5.jpg", desc: "احتلت إسرائيل كامل فلسطين التاريخية وأراضٍ سورية ومصرية، وضاعفت المساحة بأكثر من ستة أضعاف.", martyrs: "15,000 - 25,000 شهيد", sourceTitle: "ويكيبيديا - حرب 1967", sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AD%D8%B1%D8%B8_1967"},
+      {id: "tlc-m7", year: "1968", title: "معركة الكرامة", subtitle: "انتصار الإرادة", img: "./images/timeline/7.jpg", desc: "تصدى الجيش الأردني والفدائيون الفلسطينيون لقوات الاحتلال وأجبروها على الانسحاب الكامل من أرض المعركة.", martyrs: "حوالي 242 شهيد", sourceTitle: "مؤسسة ياسر عرفات", sourceUrl: "https://yaf.ps"}
     ]
   },
   {
@@ -469,6 +529,7 @@ const milestonesDecades = [
     decadeId: "tlc-d1980",
     decade: "1980s",
     items: [
+      {id: "tlc-m10", year: "1982", title: "مجزرة صبرا وشاتيلا", subtitle: "تحت أنوار القنابل المضيئة", img: "./images/timeline/10.jpg", desc: "ارتكبت الميليشيات اللبنانية المتحالفة مع الاحتلال مجزرة مروعة بحق المدنيين العزل في مخيم شاتيلا بحماية الجيش الإسرائيلي.", martyrs: "3,000 - 5,000 شهيد", sourceTitle: "الجزيرة نت", sourceUrl: "https://www.aljazeera.net"},
       {id: "tlc-m11", year: "1987", title: "الانتفاضة الفلسطينية الأولى", subtitle: "انتفاضة الحجارة", img: "./images/timeline/11.jpg", desc: "انتفاضة شعبية عارمة انطلقت من قطاع غزة وامتدت لكل فلسطين رفضا للاحتلال والقمع اليومي.", martyrs: "1550 شهيد", sourceTitle: "وكالة وفا", sourceUrl: "https://info.wafa.ps"}
     ]
   },
@@ -542,33 +603,46 @@ const text = `توثيق شهيد: ${name} | العمر: ${age} | رقم اله�
 navigator.clipboard.writeText(text).then(()=>alert('تم نسخ بيانات بطاقة الشهيد بنجاح!'));
 };
 
-/* رسم الخط الزمني العمودي للمحطات التاريخية مع شريط تتبع تفاعلي آمن */
+/* رسم الخط الزمني العمودي للمحطات التاريخية متطابقاً مع كلاسات شيرين */
 function renderMilestonesCinematic() {
     if (milestonesRendered) return;
     const scenesContainer = document.getElementById('tlc-scenes-container');
     if(!scenesContainer) return;
 
     let trackerHTML = `
+    <div class="tlc" id="tlc-root">
         <nav class="tlc-tracker" aria-label="تصفّح الخط الزمني">
+            <span class="tlc-tracker-marker" aria-hidden="true"></span>
+            <span class="tlc-tracker-current is-visible" id="tlc-tracker-current" aria-live="polite">طوفان الأقصى</span>
+            <span class="tlc-tracker-tooltip" id="tlc-tracker-tooltip" aria-hidden="true"></span>
             <div class="tlc-tracker-clip">
-                <ul class="tlc-tracker-list">
+                <div class="tlc-tracker-track" data-draggable="true">
+                    <ul class="tlc-tracker-list">
     `;
 
-    let contentHTML = `<div class="tlc-content" style="margin-top: 20px;">`;
+    let contentHTML = `<div class="tlc-content" style="margin-top: 40px;">`;
 
     milestonesDecades.forEach((dec) => {
+        // شريط التتبع (Tracker)
         trackerHTML += `
-            <li class="tlc-tracker-item">
-                <a href="#${dec.decadeId}">${dec.decade}</a>
+            <li class="tlc-tracker-item tlc-tracker-decade">
+                <a href="#${dec.decadeId}" data-tooltip="${dec.decade}">${dec.decade}</a>
             </li>
         `;
         
+        // محتوى العقد والتفاصيل
         contentHTML += `
             <div class="v-decade-section" id="${dec.decadeId}">
                 <div class="v-decade-header">${dec.decade.replace('s', '')}<span>s</span></div>
         `;
 
         dec.items.forEach(m => {
+            trackerHTML += `
+                <li class="tlc-tracker-item">
+                    <a href="#${m.id}" data-tooltip="${m.title}">${m.year}</a>
+                </li>
+            `;
+            
             contentHTML += `
                 <div class="v-item-row" id="${m.id}">
                     <div class="v-item-dot"></div>
@@ -587,27 +661,16 @@ function renderMilestonesCinematic() {
     });
 
     trackerHTML += `
-                </ul>
+                    </ul>
+                </div>
             </div>
         </nav>
     `;
     
-    contentHTML += `</div>`;
+    contentHTML += `</div></div>`; // إغلاق .tlc-content و .tlc
 
     scenesContainer.innerHTML = trackerHTML + contentHTML;
     milestonesRendered = true;
-
-    // ربط النقر بأمان لمنع أي تعليق أو تجمد أثناء الانتقال
-    document.querySelectorAll('.tlc-tracker-item a').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href').substring(1);
-            const targetEl = document.getElementById(targetId);
-            if (targetEl) {
-                targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        });
-    });
 }
 
 window.openMilestoneModal = function(m) {
@@ -932,6 +995,7 @@ sCanvas.width=window.innerWidth;sCanvas.height=window.innerHeight;
 window.addEventListener('resize',resize);
 resize();
 
+/* إعداد الشهب المتساقطة بشكل إبداعي وبطيء */
 class ShootingStar {
     constructor() {
         this.reset();
@@ -939,17 +1003,18 @@ class ShootingStar {
     reset() {
         this.x = Math.random() * window.innerWidth;
         this.y = Math.random() * window.innerHeight * 0.4;
-        this.len = Math.random() * 80 + 30;
-        this.speed = Math.random() * 2 + 1.5;
+        this.len = Math.random() * 80 + 30; // طول الذيل
+        this.speed = Math.random() * 2 + 1.5; // السرعة أصبحت أقل بكثير من السابق
         this.opacity = Math.random() * 0.7 + 0.3;
         this.angle = Math.PI / 4;
-        this.glow = Math.random() * 10 + 5;
+        this.glow = Math.random() * 10 + 5; // معامل التوهج
     }
     update() {
         this.x -= this.speed * Math.cos(this.angle);
         this.y += this.speed * Math.sin(this.angle);
         if (this.x < -100 || this.y > window.innerHeight + 100) {
             this.reset();
+            // بدء الشهاب الجديد من الأطراف العلوية أو اليمنى ليعطي تساقطاً طبيعياً
             if (Math.random() > 0.5) {
                 this.x = window.innerWidth + 50;
                 this.y = Math.random() * window.innerHeight * 0.5;
@@ -962,6 +1027,8 @@ class ShootingStar {
     draw() {
         if(!sCtx) return;
         sCtx.save();
+        
+        // ذيل متدرج الشفافية والإضاءة (Gradient)
         const grad = sCtx.createLinearGradient(
             this.x, this.y, 
             this.x + this.len * Math.cos(this.angle), 
@@ -969,7 +1036,7 @@ class ShootingStar {
         );
         grad.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
         grad.addColorStop(0.2, `rgba(204, 230, 255, ${this.opacity * 0.8})`); 
-        grad.addColorStop(1, `rgba(0, 0, 0, 0)`);
+        grad.addColorStop(1, `rgba(0, 0, 0, 0)`); // التلاشي في نهاية الذيل
         
         sCtx.strokeStyle = grad;
         sCtx.lineWidth = 2.5;
@@ -984,10 +1051,12 @@ class ShootingStar {
         );
         sCtx.stroke();
         
+        // رأس مضيء للشهاب
         sCtx.beginPath();
         sCtx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
         sCtx.fillStyle = `rgba(255, 255, 255, ${this.opacity + 0.2})`;
         sCtx.fill();
+        
         sCtx.restore();
     }
 }
@@ -1022,6 +1091,7 @@ if (canvas) {
     });
 }
 
+/* فتح بطاقة الشهيد مع التحقق التلقائي لاسم اللغة الأخرى */
 function openMartyrCardModal(person) {
     const modal = document.getElementById('martyr-modal-overlay');
     document.getElementById('martyr-modal-name').innerText = person.name_ar || person.name || 'شهيد مجهول';
@@ -1090,6 +1160,7 @@ color:'#ffffff',userData:gazaSouls[i]
 animateCounter(gazaSouls.length>0?gazaSouls.length:0);
 }
 
+/* تحسين رسم وحركة النجوم، التوهج، ورسم الشهب المتساقطة بالتوازي */
 function gameLoop(){
 if(ctx){
 ctx.clearRect(0,0,width,height);
@@ -1160,6 +1231,7 @@ if (hoveredStar && hoveredStar.userData) {
 ctx.globalAlpha=1;
 }
 
+/* رسم الشهب المتساقطة في الطبقة الخاصة بها */
 if(sCtx){
 sCtx.clearRect(0,0,window.innerWidth,window.innerHeight);
 shootingStarsArr.forEach(star => {
