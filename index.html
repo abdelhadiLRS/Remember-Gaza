@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+[cite: 9]<!DOCTYPE html>
 <html lang="ar" dir="rtl" id="html-root">
 <head>
 <meta charset="UTF-8">
@@ -417,7 +417,10 @@ function renderMapAndList(dataToRender = []) {
         return;
     }
 
-    data.forEach((person, idx) => {
+    // [إصلاح مشكلة التعليق]: تحديد عينة آمنة للأداء (أول 150 عنصراً كحد أقصى للرسم على الخريطة والقائمة لتجنب تجمد المتصفح)
+    const limitedData = data.slice(0, 150);
+
+    limitedData.forEach((person, idx) => {
         const card = document.createElement('div');
         card.className = "bg-black/40 border border-white/10 p-3.5 rounded-xl hover:border-red-500/50 transition-all cursor-pointer font-['Cairo']";
         card.innerHTML = `
@@ -438,6 +441,13 @@ function renderMapAndList(dataToRender = []) {
         marker.on('click', () => openMartyrCardModal(person));
         markersLayer.addLayer(marker);
     });
+
+    if (data.length > 150) {
+        const infoDiv = document.createElement('div');
+        infoDiv.className = "text-center text-gray-500 py-2 text-[11px]";
+        infoDiv.innerText = `يتم عرض أول 150 نتيجة من أصل ${data.length} لتسريع الأداء...`;
+        listContainer.appendChild(infoDiv);
+    }
 }
 
 function filterMapList() {
