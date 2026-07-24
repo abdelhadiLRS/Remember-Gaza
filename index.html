@@ -71,7 +71,7 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
     font-family: 'Cairo', sans-serif;
 }
 
-/* تنسيق الخط الزمني السينمائي المحسن */
+/* تنسيق الخط الزمني السينمائي وتحديث العناوين الكبيرة البارزة في الوسط */
 .tlc { position: relative; width: 100%; min-height: 100vh; background: #0a0a0a; color: #fff; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
 .tlc-tracker { position: sticky; top: 0; z-index: 40; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 12px 20px; display: flex; align-items: center; justify-content: center; gap: 15px; }
 .tlc-tracker-current { font-weight: bold; color: #f87171; font-size: 0.9rem; white-space: nowrap; }
@@ -84,10 +84,15 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 
 .tlc-main { max-width: 1100px; margin: 0 auto; padding: 40px 20px; display: flex; flex-direction: column; gap: 60px; }
 .tlc-decade-group { display: flex; flex-direction: column; gap: 30px; border-bottom: 2px dashed rgba(239,68,68,0.2); padding-bottom: 50px; }
-.tlc-decade { display: flex; flex-direction: column; gap: 20px; align-items: center; text-align: center; margin: 40px 0 20px 0; }
-.tlc-decade-num { font-size: 4.5rem; font-weight: 900; color: #ef4444; margin: 0; text-shadow: 0 0 30px rgba(239, 68, 68, 0.6); letter-spacing: 4px; }
+
+/* تنسيق عنوان العقد البارز والضخم في المنتصف مطابق للصورة */
+.tlc-decade { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 10px; margin: 20px 0; }
+.tlc-decade-num { font-size: clamp(5rem, 12vw, 9rem); font-weight: 900; color: #e5e5e5; margin: 0; line-height: 1; letter-spacing: -3px; text-shadow: 0 15px 35px rgba(0,0,0,0.9); }
+.tlc-decade-num span { color: #dc2626; }
+.tlc-decade-divider { width: 50px; height: 3px; background: #dc2626; margin: 5px auto 15px auto; border-radius: 2px; }
+
 .tlc-decade-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; width: 100%; }
-.tlc-decade-card { background: rgba(18, 18, 18, 0.9); border: 1px solid rgba(239,68,68,0.15); border-radius: 12px; overflow: hidden; text-decoration: none; color: inherit; transition: 0.3s; display: flex; flex-direction: column; }
+.tlc-decade-card { background: rgba(18, 18, 18, 0.9); border: 1px solid rgba(239,68,68,0.15); border-radius: 12px; overflow: hidden; text-decoration: none; color: inherit; transition: 0.3s; display: flex; flex-direction: column; cursor: pointer; }
 .tlc-decade-card:hover { transform: translateY(-5px); border-color: #ef4444; box-shadow: 0 10px 25px rgba(239,68,68,0.2); }
 .tlc-decade-card-img { height: 160px; overflow: hidden; position: relative; background: #111; }
 .tlc-decade-card-img img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
@@ -116,7 +121,6 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
     .tlc-scene { padding: 20px; min-height: 400px; }
     .tlc-panel { padding: 20px; }
     .tlc-title { font-size: 1.4rem; }
-    .tlc-decade-num { font-size: 3rem; }
 }
 </style>
 </head>
@@ -131,6 +135,27 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
     <div id="tooltip-name" class="font-bold text-red-400 mb-1 truncate text-sm"></div>
     <div id="tooltip-name-en" class="text-gray-400 text-[11px] mb-1 truncate font-mono" style="display: none;"></div>
     <div id="tooltip-age" class="text-gray-300 text-[11px]"></div>
+</div>
+
+<!-- نافذة تفاصيل المحطة التاريخية (اقرأ المزيد) -->
+<div id="milestone-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
+    <div class="modal-box" style="max-width: 600px; background: #121212; border: 1px solid rgba(239,68,68,0.4); border-radius: 16px; overflow: hidden; width: 100%; max-height: 90vh; display: flex; flex-direction: column;">
+        <div class="modal-header border-b border-white/10 p-4 flex justify-between items-center bg-black/40">
+            <h2 class="font-bold text-base text-red-400" id="milestone-modal-title">تفاصيل المحطة التاريخية</h2>
+            <button class="modal-close text-gray-400 hover:text-white" id="milestone-modal-close" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">✕</button>
+        </div>
+        <div class="modal-body p-6 space-y-4 overflow-y-auto">
+            <div id="milestone-modal-img" class="w-full h-48 bg-stone-900 border border-red-600/40 rounded-xl overflow-hidden">
+                <img src="" class="w-full h-full object-cover" alt="صورة المحطة">
+            </div>
+            <div class="flex items-center justify-between">
+                <span id="milestone-modal-date" class="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold"></span>
+                <span id="milestone-modal-stat" class="text-red-400 font-bold text-sm"></span>
+            </div>
+            <h3 id="milestone-modal-subtitle" class="text-xl font-black text-white"></h3>
+            <p id="milestone-modal-excerpt" class="text-gray-300 text-sm leading-relaxed"></p>
+        </div>
+    </div>
 </div>
 
 <!-- تصميم خانة الخريطة -->
@@ -378,6 +403,45 @@ let map = null;
 let markersLayer = null;
 let mouseX = -1000, mouseY = -1000;
 
+// نظام تشغيل الصوت عبر Howler
+let backgroundSound = null;
+let isPlayingAudio = false;
+
+function initAudio() {
+    backgroundSound = new Howl({
+        src: ['https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'], // مسار صوت هادئ وخلفية تفاعلية
+        loop: true,
+        volume: 0.4,
+        onplay: () => { isPlayingAudio = true; updateMusicButton(); },
+        onpause: () => { isPlayingAudio = false; updateMusicButton(); },
+        onstop: () => { isPlayingAudio = false; updateMusicButton(); },
+        onloaderror: () => { console.log('خطأ في تحميل الصوت'); }
+    });
+}
+
+function toggleMusic() {
+    if (!backgroundSound) {
+        initAudio();
+    }
+    if (isPlayingAudio) {
+        backgroundSound.pause();
+    } else {
+        backgroundSound.play();
+    }
+}
+
+function updateMusicButton() {
+    const btn = document.getElementById('music-btn');
+    if (btn) {
+        btn.innerHTML = isPlayingAudio ? '🔇 إيقاف الصوت' : '🎵 الصوت';
+        if (isPlayingAudio) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    }
+}
+
 const milestoneCinematicData = [
     { id: "d1920", type: "decade", decade: "1920" },
     { id: "m18", type: "scene", year: "1929", title: "هبّة البراق", alt: "ثورة البراق", image: "images/timeline/18.jpg", excerpt: "في آب/أغسطس 1929 انتفض الفلسطينيون احتجاجاً على محاولات السيطرة على حائط البراق المحاذي للمسجد الأقصى. اندلعت اشتباكات في القدس والخليل وصفد، وردّ الانتداب البريطاني بالقوة المفرطة، واستشهد أكثر من 116 فلسطينياً، وأُعدم ثلاثة من قادة الثورة لاحقاً (محمد جمجوم، فؤاد حجازي، عطا الزير) فخلّدتهم الذاكرة الوطنية.", stat: "حوالي 116 شهيد" },
@@ -470,6 +534,23 @@ const text = `توثيق شهيد: ${name} | العمر: ${age} | رقم اله�
 navigator.clipboard.writeText(text).then(()=>alert('تم نسخ بيانات بطاقة الشهيد بنجاح!'));
 };
 
+// فتح نافذة تفاصيل المحطة التاريخية (اقرأ المزيد)
+function openMilestoneModal(item) {
+    const modal = document.getElementById('milestone-modal-overlay');
+    if(!modal) return;
+    document.getElementById('milestone-modal-title').innerText = item.title;
+    document.getElementById('milestone-modal-subtitle').innerText = item.title + (item.alt ? ` (${item.alt})` : '');
+    document.getElementById('milestone-modal-date').innerText = item.year;
+    document.getElementById('milestone-modal-stat').innerText = 'الضحايا: ' + item.stat;
+    document.getElementById('milestone-modal-excerpt').innerText = item.excerpt;
+    
+    const imgContainer = document.querySelector('#milestone-modal-img img');
+    if(imgContainer) {
+        imgContainer.src = item.image;
+    }
+    modal.style.display = 'flex';
+}
+
 function renderCinematicTimeline() {
     const trackerList = document.getElementById('tlc-tracker-list');
     const scenesContainer = document.getElementById('tlc-scenes-container');
@@ -494,8 +575,10 @@ function renderCinematicTimeline() {
             
             const decadeHeader = document.createElement('div');
             decadeHeader.className = 'tlc-decade';
+            // جعل عنوان العقد كبير وضخم وبارز في المنتصف مثل الصورة المرفقة
             decadeHeader.innerHTML = `
-                <h2 class="tlc-decade-num">${item.decade}<span style="font-size:2.2rem; opacity:0.9;">s</span></h2>
+                <h2 class="tlc-decade-num">${item.decade}<span>s</span></h2>
+                <div class="tlc-decade-divider"></div>
                 <div class="tlc-decade-cards" id="cards-${item.decade}"></div>
             `;
             currentDecadeSection.appendChild(decadeHeader);
@@ -514,6 +597,11 @@ function renderCinematicTimeline() {
                 const cardA = document.createElement('a');
                 cardA.className = 'tlc-decade-card';
                 cardA.href = `#${item.id}`;
+                cardA.onclick = (e) => {
+                    e.preventDefault();
+                    const target = document.getElementById(item.id);
+                    if(target) target.scrollIntoView({behavior: 'smooth'});
+                };
                 cardA.innerHTML = `
                     <div class="tlc-decade-card-img">
                         <img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&w=600&q=80'">
@@ -544,13 +632,18 @@ function renderCinematicTimeline() {
                             <span class="tlc-stat-num">${item.stat}</span>
                             <span class="tlc-stat-label">عدد الشهداء والضحايا:</span>
                         </div>
-                        <button type="button" class="tlc-more" onclick="alert('تفاصيل محطة: ${item.title}')">
+                        <button type="button" class="tlc-more">
                             <span>اقرأ المزيد</span>
                             <span aria-hidden="true">→</span>
                         </button>
                     </div>
                 </article>
             `;
+            
+            // ربط زر "اقرأ المزيد" بالنافذة المنبثقة التفصيلية
+            const moreBtn = sceneEl.querySelector('.tlc-more');
+            moreBtn.onclick = () => openMilestoneModal(item);
+
             if (currentDecadeSection) {
                 currentDecadeSection.appendChild(sceneEl);
             } else {
@@ -755,6 +848,10 @@ document.getElementById('martyr-modal-close').onclick = () => {
     document.getElementById('martyr-modal-overlay').style.display = 'none';
 };
 
+document.getElementById('milestone-modal-close').onclick = () => {
+    document.getElementById('milestone-modal-overlay').style.display = 'none';
+};
+
 async function fetchAndRenderData(url){
 gazaSouls=[]; points=[];
 if(ctx) ctx.clearRect(0,0,width,height);
@@ -851,7 +948,7 @@ function gameLoop(){
         }
     }
 
-    if(sCtx) {
+    if (sCtx) {
         sCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
         shootingStarsArr.forEach(star => {
             star.update();
@@ -880,6 +977,12 @@ function animateCounter(targetNumber) {
 document.addEventListener('DOMContentLoaded', () => {
     switchMainMode('souls');
     gameLoop();
+    
+    // ربط زر الصوت بالوظيفة الفعلية
+    const musicBtn = document.getElementById('music-btn');
+    if(musicBtn) {
+        musicBtn.onclick = toggleMusic;
+    }
 });
 </script>
 </body>
