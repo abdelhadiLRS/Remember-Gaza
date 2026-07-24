@@ -28,7 +28,7 @@
 body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-serif;color:white;}
 #canvas-layer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;transition:opacity 0.4s ease;pointer-events:auto;cursor:pointer;}
 #shooting-stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;}
-#stats-view, #videos-view, #no-data-view, #map-view, #milestones-view{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:20;background:rgba(0,0,0,0.95);overflow-y:auto;pointer-events:auto;padding-top:120px;padding-bottom:100px;}
+#stats-view, #videos-view, #no-data-view, #map-view, #milestones-view{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:20;background:rgba(0,0,0,0.95);overflow-y:auto;pointer-events:auto;padding-top:90px;padding-bottom:100px;}
 #ui-layer{position:fixed;inset:0;z-index:30;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;}
 .interactive{pointer-events:auto;}
 .glass-panel{background:rgba(15, 15, 15, 0.9);border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(10px);}
@@ -37,12 +37,16 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
 ::-webkit-scrollbar{width:6px;}
 ::-webkit-scrollbar-track{background:rgba(0,0,0,0.5);}
 ::-webkit-scrollbar-thumb{background:#cc0000;border-radius:4px;}
-#header{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;flex-wrap:wrap;gap:10px;border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(10,10,10,0.95);}
-#search-input{background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.2);color:white;padding:6px 15px;border-radius:20px;width:180px;font-size:0.8rem;outline:none;transition:0.4s;}
-#search-input:focus{border-color:#cc0000;background:rgba(0,0,0,0.9);box-shadow:0 0 10px rgba(204,0,0,0.3);width:220px;}
-.btn-main{background:rgba(255,255,255,0.05);color:white;border:1px solid rgba(255,255,255,0.1);padding:6px 15px;border-radius:20px;cursor:pointer;transition:all 0.3s ease;font-size:0.8rem;white-space:nowrap;}
+
+/* هيدر مصغر ومضغوط لضمان تواجد كل الخانات في صف واحد */
+#header{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;flex-wrap:nowrap;gap:6px;border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(10,10,10,0.95);}
+#search-input{background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.2);color:white;padding:4px 10px;border-radius:20px;width:130px;font-size:0.75rem;outline:none;transition:0.4s;}
+#search-input:focus{border-color:#cc0000;background:rgba(0,0,0,0.9);box-shadow:0 0 8px rgba(204,0,0,0.3);width:160px;}
+
+.btn-main{background:rgba(255,255,255,0.05);color:white;border:1px solid rgba(255,255,255,0.1);padding:4px 9px;border-radius:20px;cursor:pointer;transition:all 0.3s ease;font-size:0.72rem;white-space:nowrap;}
 .btn-main:hover{background:rgba(204,0,0,0.3);border-color:rgba(204,0,0,0.5);}
-.btn-main.active{background:#cc0000;border-color:#ff4d4d;font-weight:bold;box-shadow:0 0 12px rgba(204,0,0,0.5);}
+.btn-main.active{background:#cc0000;border-color:#ff4d4d;font-weight:bold;box-shadow:0 0 10px rgba(204,0,0,0.5);}
+
 #bottom-bar{display:flex;justify-content:space-between;align-items:flex-end;padding:15px 25px;pointer-events:none;flex-wrap:wrap;gap:15px;}
 #counter-box{text-align:center;padding:10px 25px;border-radius:15px;border-bottom:3px solid #cc0000;min-width:140px;background:rgba(0,0,0,0.8);}
 .social-links a,.share-btn{color:#fff;background:rgba(255,255,255,0.05);padding:6px 14px;border-radius:20px;font-size:0.8rem;text-decoration:none;transition:0.3s;white-space:nowrap;border:1px solid rgba(255,255,255,0.1);cursor:pointer;}
@@ -66,7 +70,7 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
     font-family: 'Cairo', sans-serif;
 }
 
-/* تنسيق الخط الزمني الأصلي للمحطات التاريخية */
+/* تنسيق الخط الزمني للمحطات التاريخية */
 .timeline-container { max-width: 800px; margin: 0 auto; position: relative; padding: 20px 0; }
 .timeline-container::before { content: ''; position: absolute; right: 50%; top: 0; bottom: 0; width: 2px; background: rgba(204, 0, 0, 0.4); transform: translateX(50%); }
 .timeline-item { position: relative; margin-bottom: 30px; width: 50%; padding: 0 20px; box-sizing: border-box; }
@@ -97,26 +101,73 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
     <div id="tooltip-age" class="text-gray-300 text-[11px]"></div>
 </div>
 
-<!-- تصميم خانة الخريطة الأصلي -->
+<!-- تصميم خانة الخريطة (فارغة البيانات مع الحفاظ على الهيكل والشكل الأصلي) -->
 <main id="map-view" class="text-white">
 <div class="w-full h-full flex flex-col lg:flex-row p-6 gap-6" style="height: calc(100vh - 100px);">
     <div class="w-full lg:w-1/3 glass-panel p-5 rounded-2xl flex flex-col overflow-hidden h-1/2 lg:h-full">
         <h3 class="font-bold text-lg mb-4 text-red-500 font-['Cairo']">سجل الخريطة التفاعلية</h3>
         <input type="text" id="map-search-input" onkeyup="filterMapList()" placeholder="ابحث في الخريطة..." class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs mb-3 outline-none focus:border-red-600">
-        <div id="map-data-list" class="flex-1 overflow-y-auto space-y-2 no-scrollbar"></div>
+        <div id="map-data-list" class="flex-1 overflow-y-auto space-y-2 no-scrollbar">
+            <div class="text-center text-gray-500 py-20 text-xs">لا توجد سجلات مسجلة حالياً في الخريطة</div>
+        </div>
     </div>
-    <div class="flex-1 glass-panel rounded-2xl overflow-hidden h-1/2 lg:h-full relative border border-white/10">
+    <div class="flex-1 glass-panel rounded-2xl overflow-hidden h-1/2 lg:h-full relative border border-white/10 flex items-center justify-center">
         <div id="map" class="w-full h-full"></div>
+        <div class="absolute inset-0 flex items-center justify-center bg-black/40 pointer-events-none">
+            <span class="text-gray-400 text-sm font-semibold tracking-wide">الخريطة فارغة مؤقتاً</span>
+        </div>
     </div>
 </div>
 </main>
 
-<!-- تصميم خانة التوثيق والأرشيف الأصلي -->
+<!-- تصميم خانة التوثيق والأرشيف (معاد تصميمه بأسلوب عصري متطور) -->
 <main id="videos-view" class="text-white">
-<div class="max-w-5xl mx-auto px-4 py-10 font-['Cairo']">
-    <h2 class="text-3xl font-bold mb-6 text-center text-red-500">الأرشيف المرئي والتوثيق</h2>
+<div class="max-w-6xl mx-auto px-4 py-8 font-['Cairo']">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <div>
+            <h2 class="text-3xl font-bold text-red-500 mb-1">الأرشيف المرئي والتوثيق الميداني</h2>
+            <p class="text-xs text-gray-400">سجلات توثيقية مرئية وتقارير توثيقية شاملة</p>
+        </div>
+        <div class="flex gap-2 bg-black/60 p-1.5 rounded-xl border border-white/10">
+            <button class="px-3 py-1 rounded-lg text-xs bg-red-600 font-bold text-white transition-all">الكل</button>
+            <button class="px-3 py-1 rounded-lg text-xs text-gray-300 hover:text-white transition-all">تقارير مصورة</button>
+            <button class="px-3 py-1 rounded-lg text-xs text-gray-300 hover:text-white transition-all">شهادات حية</button>
+        </div>
+    </div>
     <div id="gallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="text-center text-gray-400 py-20 col-span-full">لا توجد سجلات توثيقية حالياً</div>
+        <div class="glass-panel rounded-2xl overflow-hidden border border-white/10 group hover:border-red-500/50 transition-all">
+            <div class="h-44 bg-gradient-to-tr from-stone-900 to-red-950/40 relative flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full bg-red-600/80 flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform cursor-pointer">▶</div>
+                <span class="absolute bottom-2 right-2 bg-black/70 text-[10px] px-2 py-0.5 rounded text-gray-300 font-mono">04:25</span>
+            </div>
+            <div class="p-4 space-y-2">
+                <span class="text-[10px] text-red-400 font-bold uppercase tracking-wider">توثيق خاص</span>
+                <h3 class="font-bold text-sm text-white line-clamp-1">توثيق شهادات الشهداء والتوثيق التاريخي الميداني</h3>
+                <p class="text-xs text-gray-400 line-clamp-2">ملخص لأبرز الوثائق والمقاطع المرئية المؤرشفة التي ترصد تفاصيل الحدث بمهنية عالية.</p>
+            </div>
+        </div>
+        <div class="glass-panel rounded-2xl overflow-hidden border border-white/10 group hover:border-red-500/50 transition-all">
+            <div class="h-44 bg-gradient-to-tr from-stone-900 to-red-950/40 relative flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full bg-red-600/80 flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform cursor-pointer">▶</div>
+                <span class="absolute bottom-2 right-2 bg-black/70 text-[10px] px-2 py-0.5 rounded text-gray-300 font-mono">12:10</span>
+            </div>
+            <div class="p-4 space-y-2">
+                <span class="text-[10px] text-red-400 font-bold uppercase tracking-wider">تقارير إخبارية</span>
+                <h3 class="font-bold text-sm text-white line-clamp-1">سجل توثيق الصحافة والشهداء الإعلاميين</h3>
+                <p class="text-xs text-gray-400 line-clamp-2">قراءة تحليلية في الأرشيف المرئي لحياة ومسيرة الصحفيين والأرواح الموثقة.</p>
+            </div>
+        </div>
+        <div class="glass-panel rounded-2xl overflow-hidden border border-white/10 group hover:border-red-500/50 transition-all">
+            <div class="h-44 bg-gradient-to-tr from-stone-900 to-red-950/40 relative flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full bg-red-600/80 flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform cursor-pointer">▶</div>
+                <span class="absolute bottom-2 right-2 bg-black/70 text-[10px] px-2 py-0.5 rounded text-gray-300 font-mono">08:40</span>
+            </div>
+            <div class="p-4 space-y-2">
+                <span class="text-[10px] text-red-400 font-bold uppercase tracking-wider">أرشيف المحطات</span>
+                <h3 class="font-bold text-sm text-white line-clamp-1">محطات الذاكرة الوطنية والتاريخية</h3>
+                <p class="text-xs text-gray-400 line-clamp-2">توثيق بصري تفصيلي لمحطات النضال والصمود عبر العقود الماضية.</p>
+            </div>
+        </div>
     </div>
 </div>
 </main>
@@ -135,27 +186,74 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
 </div>
 </main>
 
+<!-- تصميم خانة الإحصائيات (معاد تصميمه مع دمج خيارات وبيانات إضافية شاملة) -->
 <main id="stats-view" class="text-white">
 <div class="w-full max-w-6xl mx-auto px-6 py-10 font-['Cairo']">
-<div class="mb-8 text-center"><h2 id="stats-title" class="text-3xl font-bold text-red-500 mb-2">الإحصائيات الشاملة</h2></div>
+<div class="mb-8 text-center">
+    <h2 id="stats-title" class="text-3xl font-bold text-red-500 mb-2">الإحصائيات والبيانات الشاملة</h2>
+    <p class="text-xs text-gray-400">رصد دقيق ومؤشرات متكاملة للوضع الإنساني والميداني</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="glass-panel p-5 rounded-2xl text-center border border-red-600/20">
+        <span class="text-xs text-gray-400 block mb-1">الشهداء والمفقودون</span>
+        <p class="text-2xl font-black text-white">~100,000+</p>
+        <span class="text-[10px] text-red-400 mt-2 block">موثق بالبيانات الرسمية</span>
+    </div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
+        <span class="text-xs text-gray-400 block mb-1">الأطفال والنساء</span>
+        <p class="text-2xl font-black text-white">70%</p>
+        <span class="text-[10px] text-gray-400 mt-2 block">من إجمالي الضحايا</span>
+    </div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
+        <span class="text-xs text-gray-400 block mb-1">النازحون قسراً</span>
+        <p class="text-2xl font-black text-white">2M+</p>
+        <span class="text-[10px] text-gray-400 mt-2 block">داخل القطاع وخارجه</span>
+    </div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
+        <span class="text-xs text-gray-400 block mb-1">الصحفيون الشهداء</span>
+        <p class="text-2xl font-black text-white">190+</p>
+        <span class="text-[10px] text-gray-400 mt-2 block">صوت الحقيقة الميداني</span>
+    </div>
+</div>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-<div class="glass-panel p-6 rounded-2xl text-center"><h3 class="text-gray-400 mb-2 font-bold">الشهداء والمفقودون</h3><p class="text-3xl font-black text-white">~100,000+</p></div>
-<div class="glass-panel p-6 rounded-2xl text-center"><h3 class="text-gray-400 mb-2 font-bold">الأطفال والنساء</h3><p class="text-3xl font-black text-white">70%</p></div>
-<div class="glass-panel p-6 rounded-2xl text-center"><h3 class="text-gray-400 mb-2 font-bold">النازحون قسراً</h3><p class="text-3xl font-black text-white">2M+</p></div>
+    <div class="glass-panel p-6 rounded-2xl">
+        <h3 class="text-sm font-bold text-red-500 mb-3">القطاع الصحي</h3>
+        <ul class="space-y-2 text-xs text-gray-300">
+            <li class="flex justify-between border-b border-white/5 pb-1"><span>المستشفيات المدمرة كلياً:</span> <strong class="text-white">34 مستشفى</strong></li>
+            <li class="flex justify-between border-b border-white/5 pb-1"><span>الكوادر الطبية الشهيدة:</span> <strong class="text-white">1,000+</strong></li>
+            <li class="flex justify-between"><span>سيارات الإسعاف المعطلة:</span> <strong class="text-white">130+</strong></li>
+        </ul>
+    </div>
+    <div class="glass-panel p-6 rounded-2xl">
+        <h3 class="text-sm font-bold text-red-500 mb-3">البنية التحتية والتعليم</h3>
+        <ul class="space-y-2 text-xs text-gray-300">
+            <li class="flex justify-between border-b border-white/5 pb-1"><span>المدارس والجامعات المدمرة:</span> <strong class="text-white">120+ مؤسسة</strong></li>
+            <li class="flex justify-between border-b border-white/5 pb-1"><span>الوحدات السكنية المدمرة:</span> <strong class="text-white">70% كلياً</strong></li>
+            <li class="flex justify-between"><span>المساجد والكنائس المستهدفة:</span> <strong class="text-white">600+</strong></li>
+        </ul>
+    </div>
+    <div class="glass-panel p-6 rounded-2xl">
+        <h3 class="text-sm font-bold text-red-500 mb-3">مؤشرات الأمن الغذائي</h3>
+        <ul class="space-y-2 text-xs text-gray-300">
+            <li class="flex justify-between border-b border-white/5 pb-1"><span>مستوى انعدام الأمن الغذائي:</span> <strong class="text-red-400">حرج للغاية</strong></li>
+            <li class="flex justify-between border-b border-white/5 pb-1"><span>المجاعة في الشمال:</span> <strong class="text-red-400">مؤكدة وواسعة</strong></li>
+            <li class="flex justify-between"><span>المساعدات الإنسانية الداخلة:</span> <strong class="text-yellow-400">شحيحة جداً</strong></li>
+        </ul>
+    </div>
 </div>
 </div>
 </main>
 
 <div id="ui-layer">
 <header id="header" class="glass-panel interactive">
-<div class="flex items-center gap-2">
-<h1 class="text-lg font-black text-white drop-shadow-md"><span class="text-red-600" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
+<div class="flex items-center gap-1.5">
+<h1 class="text-sm font-black text-white drop-shadow-md"><span class="text-red-600" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
 </div>
 <div class="w-auto">
 <input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد..." onkeyup="searchMartyrByName(this.value)">
 </div>
 <div class="tabs-wrapper no-scrollbar interactive">
-<div class="flex gap-2 bg-black/40 p-1 rounded-full border border-white/5">
+<div class="flex gap-1 bg-black/40 p-1 rounded-full border border-white/5">
 <button class="btn-main active" id="tab-souls" onclick="switchMainMode('souls')">شهداء غزة</button>
 <button class="btn-main" id="tab-journalists" onclick="switchMainMode('journalists')">شهداء الصحافة</button>
 <button class="btn-main" id="tab-westbank" onclick="switchMainMode('westbank')">شهداء الضفة</button>
@@ -166,17 +264,17 @@ body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-ser
 </div>
 </div>
 <div class="relative inline-block text-right">
-<select id="language-select" onchange="changeLanguage(this.value)" class="bg-black/60 border border-white/20 text-white text-xs rounded-full px-2 py-1 outline-none cursor-pointer font-['Cairo']">
+<select id="language-select" onchange="changeLanguage(this.value)" class="bg-black/60 border border-white/20 text-white text-[11px] rounded-full px-2 py-0.5 outline-none cursor-pointer font-['Cairo']">
 <option value="ar">🇸🇦 العربية</option>
 <option value="en">🇬🇧 English</option>
 </select>
 </div>
-<div class="hidden lg:flex gap-2 items-center">
+<div class="hidden lg:flex gap-1.5 items-center">
 <button id="music-btn" class="btn-main">🎵 الصوت</button>
-<div class="interactive glass-panel px-3 py-1 rounded-full flex items-center gap-1 font-['Cairo']">
-<span class="text-[10px] text-gray-400" id="visitor-text">زوار:</span>
+<div class="interactive glass-panel px-2.5 py-0.5 rounded-full flex items-center gap-1 font-['Cairo']">
+<span class="text-[9px] text-gray-400" id="visitor-text">زوار:</span>
 <a href="https://www.hitwebcounter.com" target="_blank" class="inline-block flex items-center">
-<img src="https://hitwebcounter.com/counter/counter.php?page=11202868&style=0005&nbdigits=5&type=page&initCount=0" title="Counter" class="h-3" />
+<img src="https://hitwebcounter.com/counter/counter.php?page=11202868&style=0005&nbdigits=5&type=page&initCount=0" title="Counter" class="h-2.5" />
 </a>
 </div>
 </div>
@@ -320,45 +418,18 @@ function initMapIfNeeded() {
 
 function renderMapAndList(dataToRender = []) {
     initMapIfNeeded();
+    // الخريطة مفرغة البيانات مع الحفاظ على الهيكل والشكل تماماً
     const listContainer = document.getElementById('map-data-list');
-    if (!listContainer) return;
-    
-    listContainer.innerHTML = '';
-    markersLayer.clearLayers();
-
-    const data = dataToRender || [];
-    if (data.length === 0) {
-        listContainer.innerHTML = `<div class="text-center text-gray-500 py-10 text-xs">لا توجد أسماء مسجلة بالخريطة</div>`;
-        return;
+    if (listContainer) {
+        listContainer.innerHTML = `<div class="text-center text-gray-500 py-20 text-xs">لا توجد سجلات مسجلة حالياً في الخريطة</div>`;
     }
-
-    data.forEach((person, idx) => {
-        const card = document.createElement('div');
-        card.className = "bg-black/50 border border-white/10 p-2.5 rounded-xl hover:border-red-500 transition-all cursor-pointer font-['Cairo']";
-        card.innerHTML = `
-            <h4 class="font-bold text-xs text-white truncate">${person.name_ar || person.name || 'شهيد'}</h4>
-            <div class="text-[10px] text-gray-400 mt-1 flex justify-between">
-                <span>العمر: ${person.age || 'غير معروف'}</span>
-                <span class="font-mono">${person.id || '-'}</span>
-            </div>
-        `;
-        const lat = 31.35 + (idx % 30) * 0.008;
-        const lng = 34.30 + (idx % 30) * 0.008;
-
-        card.onclick = () => { if (map) map.setView([lat, lng], 14); openMartyrCardModal(person); };
-        listContainer.appendChild(card);
-
-        const marker = L.marker([lat, lng]);
-        marker.bindPopup(`<div style="color:black; font-family:'Cairo';"><b>${person.name_ar || person.name || 'شهيد'}</b><br>العمر: ${person.age || 'غير معروف'}</div>`);
-        marker.on('click', () => openMartyrCardModal(person));
-        markersLayer.addLayer(marker);
-    });
+    if (markersLayer) {
+        markersLayer.clearLayers();
+    }
 }
 
 function filterMapList() {
-    const q = document.getElementById('map-search-input').value.toLowerCase();
-    const filtered = gazaSouls.filter(p => (p.name_ar || "").toLowerCase().includes(q) || (p.id || "").includes(q));
-    renderMapAndList(filtered);
+    renderMapAndList([]);
 }
 
 window.switchMainMode = function(mode) {
@@ -396,7 +467,7 @@ window.switchMainMode = function(mode) {
         document.getElementById('videos-view').style.display = 'block';
     } else if(mode === 'map') {
         document.getElementById('map-view').style.display = 'flex';
-        renderMapAndList(gazaSouls);
+        renderMapAndList([]);
         setTimeout(() => { if (map) map.invalidateSize(); }, 300);
     }
 };
