@@ -101,38 +101,23 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .share-btn:hover{background:#0056b3;border-color:#007bff;}
 .font-amiri{font-family:'Amiri',serif;}
 
-/* تصميم السنوات والمحطات التاريخية المطابق لنسق مرصد شيرين */
+/* تصميم الخط الزمني السينمائي العمودي */
 .vertical-timeline-container { position: relative; max-width: 950px; margin: 0 auto; padding: 30px 15px; font-family: 'Cairo', sans-serif; }
-.vertical-timeline-container::before { content: ''; position: absolute; right: 38px; top: 0; bottom: 0; width: 3px; background: rgba(204,0,0,0.3); }
-.v-decade-section { margin-bottom: 50px; position: relative; }
-.v-decade-header { 
-    display: inline-flex;
-    align-items: center;
-    background: linear-gradient(135deg, rgba(204,0,0,0.2) 0%, rgba(20,20,20,0.9) 100%);
-    border: 1px solid rgba(204,0,0,0.4);
-    border-right: 4px solid #cc0000;
-    padding: 8px 20px;
-    border-radius: 12px;
-    font-size: 1.5rem; 
-    font-weight: 800; 
-    color: #fff; 
-    margin-bottom: 25px; 
-    margin-right: 50px;
-    font-family: 'Cairo', sans-serif; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5); 
-}
-.v-decade-header span { color: #ff4d4d; margin-right: 4px; }
-.v-item-row { position: relative; margin-bottom: 25px; padding-right: 65px; }
-.v-item-dot { position: absolute; right: 30px; top: 22px; width: 16px; height: 16px; background: #cc0000; border-radius: 50%; border: 3px solid #000; box-shadow: 0 0 12px #ff0000; z-index: 3; transition: transform 0.3s ease; }
-.v-card { background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.98) 100%); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 16px 20px; display: flex; align-items: center; gap: 18px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 25px rgba(0,0,0,0.6); position: relative; overflow: hidden; }
-.v-card::after { content: ''; position: absolute; top: 0; right: 0; width: 3px; height: 100%; background: #cc0000; opacity: 0; transition: opacity 0.3s; }
-.v-card:hover { border-color: rgba(255, 51, 51, 0.5); transform: translateX(-6px); box-shadow: 0 12px 35px rgba(204,0,0,0.25); }
+.vertical-timeline-container::before { content: ''; position: absolute; right: 38px; top: 0; bottom: 0; width: 3px; background: linear-gradient(to bottom, #cc0000, #ff4d4d, rgba(204,0,0,0.05)); box-shadow: 0 0 15px rgba(204,0,0,0.4); }
+.v-decade-section { margin-bottom: 70px; position: relative; }
+.v-decade-header { font-size: 2.4rem; font-weight: 900; color: #fff; margin-bottom: 30px; padding-right: 65px; position: relative; font-family: 'Cairo', sans-serif; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+.v-decade-header span { color: #ff3333; text-shadow: 0 0 15px rgba(255,51,51,0.6); }
+.v-item-row { position: relative; margin-bottom: 30px; padding-right: 65px; }
+.v-item-dot { position: absolute; right: 29px; top: 22px; width: 20px; height: 20px; background: #cc0000; border-radius: 50%; border: 4px solid #000; box-shadow: 0 0 18px #ff0000; z-index: 3; transition: transform 0.3s ease; }
+.v-card { background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.98) 100%); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 18px 24px; display: flex; align-items: center; gap: 20px; cursor: pointer; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.7); position: relative; overflow: hidden; }
+.v-card::after { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%; background: #cc0000; opacity: 0; transition: opacity 0.3s; }
+.v-card:hover { border-color: rgba(255, 51, 51, 0.6); transform: translateX(-8px) scale(1.01); box-shadow: 0 15px 40px rgba(204,0,0,0.3); }
 .v-card:hover::after { opacity: 1; }
-.v-card:hover .v-item-dot { transform: scale(1.2); }
-.v-card-img { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; background: #1a1a1a; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.15); }
+.v-card:hover .v-item-dot { transform: scale(1.3); }
+.v-card-img { width: 75px; height: 75px; border-radius: 12px; object-fit: cover; background: #1a1a1a; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
 .v-card-info { flex: 1; min-width: 0; text-align: right; }
-.v-card-year { color: #ff4d4d; font-size: 0.8rem; font-weight: 700; margin-bottom: 3px; font-family: 'Cairo', sans-serif; }
-.v-card-title { color: #fff; font-size: 1.1rem; font-weight: 800; font-family: 'Cairo', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.v-card-year { color: #ff4d4d; font-size: 0.85rem; font-weight: 800; margin-bottom: 4px; font-family: 'Cairo', sans-serif; letter-spacing: 0.5px; }
+.v-card-title { color: #fff; font-size: 1.15rem; font-weight: 900; font-family: 'Cairo', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* نافذة التفاصيل المنبثقة للمحطات التاريخية */
 #tlc-custom-modal { display: none; position: fixed; inset: 0; z-index: 1050; background: rgba(0,0,0,0.94); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif; backdrop-filter: blur(8px); }
@@ -141,7 +126,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 .tlc-modal-body { padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; text-align: right; }
 .tlc-modal-img { width: 100%; max-height: 320px; object-fit: cover; border-radius: 14px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 25px rgba(0,0,0,0.6); }
 
-/* بطاقة المعاينة العائمة للنجوم المحسنة */
+/* بطاقة المعاينة العائمة للنجوم */
 #star-tooltip {
     position: fixed;
     z-index: 50;
@@ -327,7 +312,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 </div>
 
-<!-- نافذة عرض الفيديوهات والأرشيف والمرئيات -->
+<!-- نافذة عرض الفيديوهات والأرشيف المرئي -->
 <div id="modal-overlay" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.85); align-items:center; justify-content:center; padding:20px; font-family:'Cairo',sans-serif;">
     <div class="modal-box">
         <div class="modal-header">
@@ -363,7 +348,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
 </div>
 
-<!-- نافذة تفاصيل المحطات التاريخية العمودية الإبداعية -->
+<!-- نافذة تفاصيل المحطات التاريخية العمودية -->
 <div id="tlc-custom-modal">
     <div class="tlc-modal-box">
         <div class="tlc-modal-header">
@@ -379,7 +364,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     </div>
 </div>
 
-<!-- نافذة بطاقة الشهيد الإبداعية مع زر مشاركة أحمر غير فاقع وتحقق اسم اللغة الأخرى -->
+<!-- نافذة بطاقة الشهيد الإبداعية مع زر المشاركة الهادئ -->
 <div id="martyr-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
     <div class="modal-box" style="max-width: 450px; background: linear-gradient(135deg, #121212 0%, #1a0505 100%); border: 1px solid rgba(204,0,0,0.4); box-shadow: 0 25px 50px rgba(0,0,0,0.9);">
         <div class="modal-header border-b border-red-600/20">
@@ -399,7 +384,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
                 <div class="flex justify-between border-b border-white/5 pb-1.5"><span class="text-gray-400">العمر:</span> <strong id="martyr-modal-age" class="text-white"></strong></div>
                 <div class="flex justify-between"><span class="text-gray-400">رقم الهوية:</span> <strong id="martyr-modal-id" class="text-white font-mono"></strong></div>
             </div>
-            <button onclick="shareMartyrCard()" class="w-full text-white font-bold py-2.5 px-4 rounded-xl transition-all shadow-[0_5px_15px_rgba(185,28,28,0.3)] flex items-center justify-center gap-2 cursor-pointer" style="background-color: #b91c1c; border: 1px solid #dc2626;">
+            <button onclick="shareMartyrCard()" class="w-full text-white font-bold py-2.5 px-4 rounded-xl transition-all shadow-[0_5px_15px_rgba(153,27,27,0.3)] flex items-center justify-center gap-2 cursor-pointer bg-[#991b1b] hover:bg-[#7f1d1d] border border-red-800">
                 <span>🔗 مشاركة بطاقة الشهيد</span>
             </button>
         </div>
@@ -420,7 +405,12 @@ let mouseX = -1000, mouseY = -1000;
 
 const torrentConfig = {
     file1: "./data/file1.torrent",
-    file2: "./data/file2.torrent"
+    file2: "./data/file2.torrent",
+    trackers: [
+        "udp://tracker.opentrackr.org:1337/announce",
+        "udp://open.tracker.cc:1337/announce",
+        "udp://exodus.desync.com:6969/announce"
+    ]
 };
 
 const milestonesDecades = [
@@ -549,7 +539,7 @@ const text = `توثيق شهيد: ${name} | العمر: ${age} | رقم اله�
 navigator.clipboard.writeText(text).then(()=>alert('تم نسخ بيانات بطاقة الشهيد بنجاح!'));
 };
 
-/* رسم الخط الزمني العمودي للمحطات التاريخية بدون شريط تتبع (Tracker) */
+/* رسم الخط الزمني العمودي السينمائي */
 function renderMilestonesCinematic() {
     if (milestonesRendered) return;
     const scenesContainer = document.getElementById('tlc-scenes-container');
@@ -568,7 +558,7 @@ function renderMilestonesCinematic() {
                 <div class="v-item-row" id="${m.id}">
                     <div class="v-item-dot"></div>
                     <div class="v-card" onclick='openMilestoneModal(${JSON.stringify(m).replace(/'/g, "&#39;")})'>
-                        <img src="${m.img}" class="v-card-img" alt="" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2270%22 height=%2270%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%231a1a1a%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23777%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Cairo%22 font-size=%2211%22>أرشيف</text></svg>'">
+                        <img src="${m.img}" class="v-card-img" alt="" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2275%22 height=%2275%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%231a1a1a%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23777%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Cairo%22 font-size=%2211%22>أرشيف</text></svg>'">
                         <div class="v-card-info">
                             <div class="v-card-year">${m.year} ${m.subtitle ? ' - ' + m.subtitle : ''}</div>
                             <div class="v-card-title">${m.title}</div>
@@ -618,7 +608,7 @@ async function fetchTorrentVideos() {
     allVideoFiles = [
         {
             name: "Gaza Vol 5 (رابط مغناطيس مباشر)",
-            torrentSource: "magnet:?xt=urn:btih:14d81d460a7de2669e7bb2ac4782cb8e50b07338&dn=Gaza%20Vol%205",
+            torrentSource: "magnet:?xt=urn:btih:14d81d460a7de2669e7bb2ac4782cb8e50b07338&dn=Gaza%20Vol%205&tr=udp%3a%2f%2ftracker.opentrackr.org%3a1337%2fannounce",
             size: "رابط مغناطيس",
             date: "2026",
             source: "شبكة التورنت المباشرة",
@@ -731,7 +721,7 @@ async function openMediaModal(item) {
         }
 
         if (window.WebTorrentInstance) {
-            window.WebTorrentInstance.add(torrentIdentifier, function (torrent) {
+            window.WebTorrentInstance.add(torrentIdentifier, { trackers: torrentConfig.trackers }, function (torrent) {
                 const file = torrent.files.find(f => {
                     const name = f.name.toLowerCase();
                     return name.endsWith('.mp4') || name.endsWith('.mkv') || name.endsWith('.webm') || name.endsWith('.mov');
@@ -799,12 +789,25 @@ document.getElementById('btn-reset').onclick = () => {
     renderArchiveGallery();
 };
 
+/* إعداد وتجهيز الخريطة التفاعلية بالستايل الداكن المتقدم */
 function initMapIfNeeded() {
     if (!map) {
-        map = L.map('map').setView([31.5, 34.46], 10);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap'
+        const gazaBounds = [
+            [31.22, 34.20], 
+            [31.60, 34.58]  
+        ];
+        map = L.map('map', {
+            maxBounds: gazaBounds,
+            maxBoundsViscosity: 0.8,
+            minZoom: 9
+        }).setView([31.45, 34.40], 11);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '© OpenStreetMap contributors © CARTO',
+            subdomains: 'abcd',
+            maxZoom: 19
         }).addTo(map);
+
         markersLayer = L.layerGroup().addTo(map);
     }
 }
@@ -837,7 +840,7 @@ function renderMapAndList(dataToRender) {
         listContainer.appendChild(card);
 
         const marker = L.marker([lat, lng]);
-        marker.bindPopup(`<b>${person.name_ar || person.name || 'شهيد'}</b><br>العمر: ${person.age || 'غير معروف'}`);
+        marker.bindPopup(`<div style="color:black; font-family:'Cairo';"><b>${person.name_ar || person.name || 'شهيد'}</b><br>العمر: ${person.age || 'غير معروف'}</div>`);
         marker.on('click', () => openMartyrCardModal(person));
         markersLayer.addLayer(marker);
     });
@@ -909,70 +912,54 @@ sCanvas.width=window.innerWidth;sCanvas.height=window.innerHeight;
 window.addEventListener('resize',resize);
 resize();
 
-/* إعداد الشهب المتساقطة بشكل إبداعي وبطيء */
+/* إعداد حركة الشهب السينمائية البطيئة والدراماتيكية */
 class ShootingStar {
     constructor() {
         this.reset();
     }
     reset() {
-        this.x = Math.random() * window.innerWidth;
-        this.y = Math.random() * window.innerHeight * 0.4;
-        this.len = Math.random() * 80 + 30;
-        this.speed = Math.random() * 2 + 1.5;
-        this.opacity = Math.random() * 0.7 + 0.3;
-        this.angle = Math.PI / 4;
-        this.glow = Math.random() * 10 + 5;
+        this.x = Math.random() * (width || window.innerWidth);
+        this.y = Math.random() * (height || window.innerHeight) * 0.4;
+        this.len = Math.random() * 120 + 50; 
+        this.speed = Math.random() * 0.8 + 0.4; // حركة هادئة وبطيئة
+        this.opacity = Math.random() * 0.8 + 0.2;
+        this.angle = Math.PI / 4 + (Math.random() * 0.1 - 0.05);
+        this.glow = Math.random() * 15 + 8;
     }
     update() {
-        this.x -= this.speed * Math.cos(this.angle);
-        this.y += this.speed * Math.sin(this.angle);
-        if (this.x < -100 || this.y > window.innerHeight + 100) {
+        this.x -= Math.cos(this.angle) * this.speed * 4;
+        this.y += Math.sin(this.angle) * this.speed * 4;
+        this.opacity -= 0.005;
+
+        if (this.opacity <= 0 || this.x < -100 || this.y > (height || window.innerHeight)) {
             this.reset();
-            if (Math.random() > 0.5) {
-                this.x = window.innerWidth + 50;
-                this.y = Math.random() * window.innerHeight * 0.5;
-            } else {
-                this.x = Math.random() * window.innerWidth;
-                this.y = -50;
-            }
         }
     }
     draw() {
         if(!sCtx) return;
         sCtx.save();
+        sCtx.translate(this.x, this.y);
+        sCtx.rotate(this.angle);
         
-        const grad = sCtx.createLinearGradient(
-            this.x, this.y, 
-            this.x + this.len * Math.cos(this.angle), 
-            this.y - this.len * Math.sin(this.angle)
-        );
-        grad.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
-        grad.addColorStop(0.2, `rgba(204, 230, 255, ${this.opacity * 0.8})`); 
-        grad.addColorStop(1, `rgba(0, 0, 0, 0)`);
+        sCtx.beginPath();
+        sCtx.moveTo(0, 0);
+        sCtx.lineTo(this.len, 0);
         
-        sCtx.strokeStyle = grad;
-        sCtx.lineWidth = 2.5;
+        let gradient = sCtx.createLinearGradient(0, 0, this.len, 0);
+        gradient.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        
+        sCtx.strokeStyle = gradient;
+        sCtx.lineWidth = 1.5;
         sCtx.shadowBlur = this.glow;
-        sCtx.shadowColor = "rgba(255, 255, 255, 0.8)";
-        
-        sCtx.beginPath();
-        sCtx.moveTo(this.x, this.y);
-        sCtx.lineTo(
-            this.x + this.len * Math.cos(this.angle),
-            this.y - this.len * Math.sin(this.angle)
-        );
+        sCtx.shadowColor = 'rgba(255, 255, 255, 0.8)';
         sCtx.stroke();
-        
-        sCtx.beginPath();
-        sCtx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
-        sCtx.fillStyle = `rgba(255, 255, 255, ${this.opacity + 0.2})`;
-        sCtx.fill();
         
         sCtx.restore();
     }
 }
 
-const shootingStarsArr = Array.from({ length: 12 }, () => new ShootingStar());
+const shootingStarsArr = Array.from({ length: 8 }, () => new ShootingStar());
 
 if (canvas) {
     canvas.addEventListener('mousemove', (e) => {
@@ -1070,107 +1057,88 @@ color:'#ffffff',userData:gazaSouls[i]
 animateCounter(gazaSouls.length>0?gazaSouls.length:0);
 }
 
+/* الحلقة الرئيسية للرسم والتأثيرات التفاعلية للنجوم والشهب */
 function gameLoop(){
-if(ctx){
-ctx.clearRect(0,0,width,height);
+    if(ctx){
+        ctx.clearRect(0, 0, width, height);
+        let hoveredStar = null;
 
-let hoveredStar = null;
+        for(let i=0; i<points.length; i++){
+            const p = points[i];
+            p.x += p.vx; p.y += p.vy;
+            if(p.x < 0) p.x = width; else if(p.x > width) p.x = 0;
+            if(p.y < 0) p.y = height; else if(p.y > height) p.y = 0;
 
-for(let i=0;i<points.length;i++){
-    const p=points[i];
-    p.x+=p.vx; p.y+=p.vy;
-    if(p.x<0)p.x=width;else if(p.x>width)p.x=0;
-    if(p.y<0)p.y=height;else if(p.y>height)p.y=0;
+            p.alpha += p.pulseSpeed;
+            if (p.alpha > 0.9 || p.alpha < 0.2) p.pulseSpeed = -p.pulseSpeed;
 
-    p.alpha += Math.sin(Date.now() * p.pulseSpeed) * 0.006;
-    if(p.alpha < 0.25) p.alpha = 0.25;
-    if(p.alpha > 0.95) p.alpha = 0.95;
+            const dist = Math.hypot(p.x - mouseX, p.y - mouseY);
+            if (dist < 15) {
+                hoveredStar = p;
+            }
 
-    const dist = Math.hypot(p.x - mouseX, p.y - mouseY);
-    let currentRadius = 2.4;
-    let currentAlpha = p.alpha;
-    let currentColor = p.color;
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, dist < 15 ? 4 : 1.5, 0, Math.PI * 2);
+            ctx.fillStyle = dist < 15 ? '#ff3333' : `rgba(255, 255, 255, ${Math.max(0.1, p.alpha)})`;
+            if (dist < 15) {
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = '#ff0000';
+            }
+            ctx.fill();
+            ctx.restore();
+        }
 
-    if (dist < 28) {
-        hoveredStar = p;
-        currentRadius = 5.5;
-        currentAlpha = 1.0;
-        currentColor = '#ff3333';
-        ctx.shadowColor = '#ff0000';
-        ctx.shadowBlur = 20;
-    } else {
-        ctx.shadowBlur = 0;
+        const tooltip = document.getElementById('star-tooltip');
+        if (hoveredStar && tooltip) {
+            tooltip.style.left = (mouseX + 15) + 'px';
+            tooltip.style.top = (mouseY + 15) + 'px';
+            tooltip.style.display = 'block';
+            document.getElementById('tooltip-name').innerText = hoveredStar.userData.name_ar || hoveredStar.userData.name || 'شهيد';
+            document.getElementById('tooltip-age').innerText = 'العمر: ' + (hoveredStar.userData.age || 'غير معروف');
+
+            const enName = hoveredStar.userData.name_en || hoveredStar.userData.english_name;
+            const enEl = document.getElementById('tooltip-name-en');
+            if (enName && enName.trim() !== "" && enName !== "Unknown Martyr") {
+                enEl.innerText = enName;
+                enEl.style.display = 'block';
+            } else {
+                enEl.style.display = 'none';
+            }
+        } else if (tooltip) {
+            tooltip.style.display = 'none';
+        }
     }
 
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, currentRadius, 0, Math.PI*2);
-    ctx.fillStyle = currentColor;
-    ctx.globalAlpha = currentAlpha;
-    ctx.fill();
-    ctx.shadowBlur = 0;
-}
-
-const tooltip = document.getElementById('star-tooltip');
-if (hoveredStar && hoveredStar.userData) {
-    document.getElementById('tooltip-name').innerText = hoveredStar.userData.name_ar || "شهيد مجهول";
-    
-    const tooltipEn = document.getElementById('tooltip-name-en');
-    const foreignName = hoveredStar.userData.name_en;
-    if (foreignName && foreignName.trim() !== "" && foreignName !== "Unknown Martyr" && foreignName !== "غير معروف") {
-        tooltipEn.innerText = foreignName;
-        tooltipEn.style.display = 'block';
-    } else {
-        tooltipEn.style.display = 'none';
+    if (sCtx) {
+        sCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        shootingStarsArr.forEach(star => {
+            star.update();
+            star.draw();
+        });
     }
 
-    document.getElementById('tooltip-age').innerText = `العمر: ${hoveredStar.userData.age || 'غير معروف'}`;
-    
-    tooltip.style.display = 'block';
-    
-    let tLeft = mouseX + 15;
-    let tTop = mouseY + 15;
-    if (tLeft + 280 > width) tLeft = mouseX - 290;
-    if (tTop + 110 > height) tTop = mouseY - 100;
-    
-    tooltip.style.left = tLeft + 'px';
-    tooltip.style.top = tTop + 'px';
-} else {
-    if (tooltip) tooltip.style.display = 'none';
-}
-ctx.globalAlpha=1;
+    requestAnimationFrame(gameLoop);
 }
 
-if(sCtx){
-sCtx.clearRect(0,0,window.innerWidth,window.innerHeight);
-shootingStarsArr.forEach(star => {
-    star.update();
-    star.draw();
-});
+function animateCounter(targetNumber) {
+    const counterEl = document.getElementById('number');
+    if (!counterEl) return;
+    let current = 0;
+    const step = Math.max(1, Math.floor(targetNumber / 60));
+    const timer = setInterval(() => {
+        current += step;
+        if (current >= targetNumber) {
+            current = targetNumber;
+            clearInterval(timer);
+        }
+        counterEl.innerText = current.toLocaleString('ar-EG');
+    }, 20);
 }
 
-requestAnimationFrame(gameLoop);
-}
-
-function animateCounter(target){
-if(target <= 0) {
-    const numberEl=document.getElementById('number');
-    if(numberEl)numberEl.innerText="0";
-    return;
-}
-let cur=0;
-const step=Math.ceil(target/100)||1;
-const timer=setInterval(()=>{
-cur+=step;
-if(cur>=target){cur=target;clearInterval(timer);}
-const numberEl=document.getElementById('number');
-if(numberEl)numberEl.innerText=cur.toLocaleString();
-},20);
-}
-
-window.addEventListener('DOMContentLoaded',()=>{
-changeLanguage('ar');
-requestAnimationFrame(gameLoop);
-switchMainMode('souls');
+document.addEventListener('DOMContentLoaded', () => {
+    switchMainMode('souls');
+    gameLoop();
 });
 </script>
 </body>
