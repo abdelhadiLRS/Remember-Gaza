@@ -71,7 +71,7 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
     font-family: 'Cairo', sans-serif;
 }
 
-/* تنسيق الخط الزمني السينمائي وتحديث العناوين الكبيرة البارزة في الوسط */
+/* تنسيق الخط الزمني السينمائي المطور */
 .tlc { position: relative; width: 100%; min-height: 100vh; background: #0a0a0a; color: #fff; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
 .tlc-tracker { position: sticky; top: 0; z-index: 40; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 12px 20px; display: flex; align-items: center; justify-content: center; gap: 15px; }
 .tlc-tracker-current { font-weight: bold; color: #f87171; font-size: 0.9rem; white-space: nowrap; }
@@ -85,7 +85,7 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 .tlc-main { max-width: 1100px; margin: 0 auto; padding: 40px 20px; display: flex; flex-direction: column; gap: 60px; }
 .tlc-decade-group { display: flex; flex-direction: column; gap: 30px; border-bottom: 2px dashed rgba(239,68,68,0.2); padding-bottom: 50px; }
 
-/* تنسيق عنوان العقد البارز والضخم في المنتصف مطابق للصورة */
+/* تنسيق عنوان العقد البارز والضخم في المنتصف مطابق للنموذج المطلوب */
 .tlc-decade { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 10px; margin: 20px 0; }
 .tlc-decade-num { font-size: clamp(5rem, 12vw, 9rem); font-weight: 900; color: #e5e5e5; margin: 0; line-height: 1; letter-spacing: -3px; text-shadow: 0 15px 35px rgba(0,0,0,0.9); }
 .tlc-decade-num span { color: #dc2626; }
@@ -229,7 +229,7 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 </div>
 </main>
 
-<!-- قسم أبرز المحطات التاريخية -->
+<!-- قسم أبرز المحطات التاريخية (التصميم الجديد المطور) -->
 <main id="milestones-view" class="text-white">
 <div class="tlc" id="tlc-root">
     <nav class="tlc-tracker" aria-label="تصفّح الخط الزمني">
@@ -237,13 +237,13 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
         <div class="tlc-tracker-clip">
             <div class="tlc-tracker-track">
                 <ul class="tlc-tracker-list" id="tlc-tracker-list">
-                    <!-- يتم تعبئتها تلقائياً عبر الجافاسكريبت -->
+                    <!-- تعبئة تلقائية عبر الجافاسكريبت -->
                 </ul>
             </div>
         </div>
     </nav>
     <main class="tlc-main" id="tlc-scenes-container">
-        <!-- يتم تعبئتها تلقائياً عبر الجافاسكريبت -->
+        <!-- تعبئة تلقائية عبر الجافاسكريبت -->
     </main>
 </div>
 </main>
@@ -403,19 +403,19 @@ let map = null;
 let markersLayer = null;
 let mouseX = -1000, mouseY = -1000;
 
-// نظام تشغيل الصوت عبر Howler
+// نظام تشغيل الصوت المحلي ambient.mp3 عبر Howler
 let backgroundSound = null;
 let isPlayingAudio = false;
 
 function initAudio() {
     backgroundSound = new Howl({
-        src: ['https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'], // مسار صوت هادئ وخلفية تفاعلية
+        src: ['ambient.mp3'], // تشغيل ملف الصوت المحلي المرفق
         loop: true,
         volume: 0.4,
         onplay: () => { isPlayingAudio = true; updateMusicButton(); },
         onpause: () => { isPlayingAudio = false; updateMusicButton(); },
         onstop: () => { isPlayingAudio = false; updateMusicButton(); },
-        onloaderror: () => { console.log('خطأ في تحميل الصوت'); }
+        onloaderror: () => { console.log('خطأ في تحميل ملف الصوت ambient.mp3'); }
     });
 }
 
@@ -575,7 +575,7 @@ function renderCinematicTimeline() {
             
             const decadeHeader = document.createElement('div');
             decadeHeader.className = 'tlc-decade';
-            // جعل عنوان العقد كبير وضخم وبارز في المنتصف مثل الصورة المرفقة
+            // جعل عنوان العقد كبير وضخم وبارز في المنتصف مطابق للتصميم المطلوب
             decadeHeader.innerHTML = `
                 <h2 class="tlc-decade-num">${item.decade}<span>s</span></h2>
                 <div class="tlc-decade-divider"></div>
@@ -978,7 +978,7 @@ document.addEventListener('DOMContentLoaded', () => {
     switchMainMode('souls');
     gameLoop();
     
-    // ربط زر الصوت بالوظيفة الفعلية
+    // ربط زر الصوت بالوظيفة الفعلية وملف ambient.mp3
     const musicBtn = document.getElementById('music-btn');
     if(musicBtn) {
         musicBtn.onclick = toggleMusic;
