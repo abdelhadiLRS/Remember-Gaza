@@ -1,8 +1,8 @@
-[cite: 9]<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl" id="html-root">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="favicon.png">
 <title id="page-title">أرواح فلسطين | Palestinian Souls</title>
 
@@ -25,47 +25,27 @@
 
 <style>
 *{box-sizing:border-box;}
-body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-serif;color:white;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;}
-
+body{margin:0;background-color:#000;overflow:hidden;font-family:'Cairo',sans-serif;color:white;}
 #canvas-layer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;transition:opacity 0.4s ease;pointer-events:auto;cursor:pointer;}
 #shooting-stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;}
-
-#stats-view, #videos-view, #no-data-view, #map-view, #milestones-view {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 20;
-    background: rgba(0,0,0,0.96);
-    overflow-y: auto; 
-    pointer-events: auto;
-    padding-top: 130px;
-    padding-bottom: 110px;
-    -webkit-overflow-scrolling: touch;
-}
-#milestones-view { padding-top: 140px; }
-#map-view { padding-top: 120px; padding-bottom: 20px; }
-
+#stats-view, #videos-view, #no-data-view, #map-view, #milestones-view{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:20;background:rgba(0,0,0,0.95);overflow-y:auto;pointer-events:auto;padding-top:120px;padding-bottom:100px;}
 #ui-layer{position:fixed;inset:0;z-index:30;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;}
 .interactive{pointer-events:auto;}
-.glass-panel{background:rgba(15, 15, 15, 0.94);border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(10px);}
+.glass-panel{background:rgba(15, 15, 15, 0.9);border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(10px);}
 .no-scrollbar::-webkit-scrollbar{display:none;}
 .no-scrollbar{-ms-overflow-style:none;scrollbar-width:none;}
 ::-webkit-scrollbar{width:6px;}
 ::-webkit-scrollbar-track{background:rgba(0,0,0,0.5);}
 ::-webkit-scrollbar-thumb{background:#cc0000;border-radius:4px;}
-
-#header{display:flex;justify-content:space-between;align-items:center;padding:8px 15px;flex-wrap:wrap;gap:8px;border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(10,10,10,0.95);position:relative;z-index:40;}
-#search-input{background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.2);color:white;padding:5px 12px;border-radius:20px;width:150px;min-width:120px;font-size:0.75rem;outline:none;transition:0.4s;font-family:'Cairo',sans-serif;}
-#search-input:focus{border-color:#cc0000;background:rgba(0,0,0,0.9);box-shadow:0 0 10px rgba(204,0,0,0.3);width:180px;}
-.btn-main{background:rgba(255,255,255,0.05);color:white;border:1px solid rgba(255,255,255,0.1);padding:5px 12px;border-radius:20px;cursor:pointer;transition:all 0.3s ease;font-size:0.75rem;white-space:nowrap;font-family:'Cairo',sans-serif;}
+#header{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;flex-wrap:wrap;gap:10px;border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(10,10,10,0.95);}
+#search-input{background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.2);color:white;padding:6px 15px;border-radius:20px;width:180px;font-size:0.8rem;outline:none;transition:0.4s;}
+#search-input:focus{border-color:#cc0000;background:rgba(0,0,0,0.9);box-shadow:0 0 10px rgba(204,0,0,0.3);width:220px;}
+.btn-main{background:rgba(255,255,255,0.05);color:white;border:1px solid rgba(255,255,255,0.1);padding:6px 15px;border-radius:20px;cursor:pointer;transition:all 0.3s ease;font-size:0.8rem;white-space:nowrap;}
 .btn-main:hover{background:rgba(204,0,0,0.3);border-color:rgba(204,0,0,0.5);}
 .btn-main.active{background:#cc0000;border-color:#ff4d4d;font-weight:bold;box-shadow:0 0 12px rgba(204,0,0,0.5);}
-#bottom-bar{display:flex;justify-content:space-between;align-items:flex-end;padding:10px 20px;pointer-events:none;flex-wrap:wrap;gap:10px;position:relative;z-index:40;}
-#counter-box{text-align:center;padding:8px 20px;border-radius:15px;border-bottom:3px solid #cc0000;min-width:120px;background:rgba(0,0,0,0.85);}
-.social-links a,.share-btn{color:#fff;background:rgba(255,255,255,0.05);padding:5px 12px;border-radius:20px;font-size:0.75rem;text-decoration:none;transition:0.3s;white-space:nowrap;border:1px solid rgba(255,255,255,0.1);cursor:pointer;font-family:'Cairo',sans-serif;}
+#bottom-bar{display:flex;justify-content:space-between;align-items:flex-end;padding:15px 25px;pointer-events:none;flex-wrap:wrap;gap:15px;}
+#counter-box{text-align:center;padding:10px 25px;border-radius:15px;border-bottom:3px solid #cc0000;min-width:140px;background:rgba(0,0,0,0.8);}
+.social-links a,.share-btn{color:#fff;background:rgba(255,255,255,0.05);padding:6px 14px;border-radius:20px;font-size:0.8rem;text-decoration:none;transition:0.3s;white-space:nowrap;border:1px solid rgba(255,255,255,0.1);cursor:pointer;}
 .social-links a:hover{background:#cc0000;border-color:#ff4d4d;}
 .share-btn:hover{background:#0056b3;border-color:#007bff;}
 .font-amiri{font-family:'Amiri',serif;}
@@ -75,44 +55,33 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
     position: fixed;
     z-index: 50;
     pointer-events: none;
-    background: rgba(15, 15, 15, 0.96);
-    border: 1px solid rgba(204, 0, 0, 0.6);
-    padding: 12px 18px;
-    border-radius: 14px;
-    box-shadow: 0 15px 35px rgba(204, 0, 0, 0.4);
+    background: rgba(15, 15, 15, 0.95);
+    border: 1px solid rgba(204, 0, 0, 0.5);
+    padding: 10px 15px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(204, 0, 0, 0.3);
     display: none;
-    font-size: 0.85rem;
-    max-width: 280px;
+    font-size: 0.8rem;
+    max-width: 250px;
     font-family: 'Cairo', sans-serif;
-    backdrop-filter: blur(8px);
 }
 
-/* تنسيق الخط الزمني للمحطات التاريخية */
-.timeline-container { max-width: 900px; margin: 0 auto; position: relative; padding: 20px 0; }
+/* تنسيق الخط الزمني الأصلي للمحطات التاريخية */
+.timeline-container { max-width: 800px; margin: 0 auto; position: relative; padding: 20px 0; }
 .timeline-container::before { content: ''; position: absolute; right: 50%; top: 0; bottom: 0; width: 2px; background: rgba(204, 0, 0, 0.4); transform: translateX(50%); }
-.timeline-item { position: relative; margin-bottom: 35px; width: 50%; padding: 0 25px; box-sizing: border-box; }
+.timeline-item { position: relative; margin-bottom: 30px; width: 50%; padding: 0 20px; box-sizing: border-box; }
 .timeline-item:nth-child(odd) { right: 0; text-align: right; }
 .timeline-item:nth-child(even) { right: 50%; text-align: right; }
-.timeline-dot { position: absolute; top: 15px; width: 16px; height: 16px; background: #cc0000; border: 3px solid #000; border-radius: 50%; box-shadow: 0 0 10px #ff3333; z-index: 2; }
-.timeline-item:nth-child(odd) .timeline-dot { left: -8px; }
-.timeline-item:nth-child(even) .timeline-dot { right: -8px; }
-.timeline-card { background: rgba(20, 20, 25, 0.9); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 20px; backdrop-filter: blur(10px); transition: 0.3s; }
-.timeline-card:hover { border-color: rgba(204, 0, 0, 0.6); transform: translateY(-3px); box-shadow: 0 10px 25px rgba(204, 0, 0, 0.2); }
+.timeline-dot { position: absolute; top: 15px; width: 14px; height: 14px; background: #cc0000; border: 3px solid #000; border-radius: 50%; box-shadow: 0 0 10px #ff3333; z-index: 2; }
+.timeline-item:nth-child(odd) .timeline-dot { left: -7px; }
+.timeline-item:nth-child(even) .timeline-dot { right: -7px; }
+.timeline-card { background: rgba(20, 20, 25, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 18px; backdrop-filter: blur(10px); }
 
 @media (max-width: 768px) {
     .timeline-container::before { right: 20px; }
-    .timeline-item { width: 100% !important; right: 0 !important; padding-right: 45px !important; padding-left: 10px !important; }
-    .timeline-item .timeline-dot { right: 12px !important; left: auto !important; }
+    .timeline-item { width: 100% !important; right: 0 !important; padding-right: 40px !important; padding-left: 10px !important; }
+    .timeline-item .timeline-dot { right: 13px !important; left: auto !important; }
 }
-
-/* التنسيق الجديد المطور لخانة التوثيق (الأرشيف المرئي) */
-.doc-filter-box { background: linear-gradient(135deg, rgba(25,10,10,0.85) 0%, rgba(15,15,15,0.95) 100%); border: 1px solid rgba(204,0,0,0.3); border-radius: 20px; padding: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.7); }
-.doc-card { background: rgba(18, 18, 22, 0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; overflow: hidden; transition: all 0.3s ease; position: relative; }
-.doc-card:hover { border-color: rgba(204,0,0,0.6); transform: translateY(-5px); box-shadow: 0 15px 30px rgba(204,0,0,0.2); }
-
-/* التنسيق الجديد المطور لخانة الخريطة التفاعلية */
-.map-sidebar-panel { background: linear-gradient(180deg, rgba(18,18,22,0.95) 0%, rgba(10,10,12,0.98) 100%); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
-.map-container-box { background: rgba(15,15,15,0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
 </style>
 </head>
 <body>
@@ -123,103 +92,56 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 
 <!-- بطاقة التلميح العائمة للشهداء عند تحريك الماوس فوق النجوم -->
 <div id="star-tooltip">
-    <div id="tooltip-name" class="font-bold text-red-500 mb-0.5 truncate text-base"></div>
+    <div id="tooltip-name" class="font-bold text-red-500 mb-1 truncate text-sm"></div>
     <div id="tooltip-name-en" class="text-gray-400 text-[11px] mb-1 truncate font-mono" style="display: none;"></div>
-    <div id="tooltip-age" class="text-gray-300 text-[11px] font-semibold"></div>
+    <div id="tooltip-age" class="text-gray-300 text-[11px]"></div>
 </div>
 
-<!-- تصميم خانة الخريطة المطورة والجديدة -->
+<!-- تصميم خانة الخريطة الأصلي -->
 <main id="map-view" class="text-white">
-<div class="w-full h-full flex flex-col lg:flex-row px-4 md:px-8 gap-4" style="height: calc(100vh - 140px);">
-    <div class="w-full lg:w-[400px] map-sidebar-panel flex flex-col overflow-hidden h-[42vh] lg:h-full">
-        <div class="p-5 border-b border-white/10 bg-black/40">
-            <div class="flex items-center gap-2 mb-3">
-                <span class="w-3 h-3 bg-red-600 rounded-full animate-pulse"></span>
-                <h3 class="font-black text-lg text-white font-['Cairo']">الخريطة التفاعلية والسجل الجغرافي</h3>
-            </div>
-            <div class="relative">
-                <input type="text" id="map-search-input" onkeyup="filterMapList()" placeholder="ابحث بالاسم أو رقم الهوية..." class="w-full bg-black/80 border border-white/20 text-white px-4 py-3 rounded-xl text-xs outline-none focus:border-red-600 transition-all font-['Cairo'] shadow-inner">
-            </div>
-            <div class="grid grid-cols-3 gap-2 mt-3 text-xs text-center bg-black/60 p-2.5 rounded-xl border border-white/5 font-['Cairo']">
-                <div class="border-l border-white/10">الكل: <br><strong id="map-total-count" class="text-white text-sm">0</strong></div>
-                <div class="border-l border-white/10">ذكور: <br><strong id="map-male-count" class="text-blue-400 text-sm">0</strong></div>
-                <div>إناث: <br><strong id="map-female-count" class="text-pink-400 text-sm">0</strong></div>
-            </div>
-        </div>
-        <div id="map-data-list" class="flex-1 overflow-y-auto p-3 space-y-2.5 no-scrollbar"></div>
+<div class="w-full h-full flex flex-col lg:flex-row p-6 gap-6" style="height: calc(100vh - 100px);">
+    <div class="w-full lg:w-1/3 glass-panel p-5 rounded-2xl flex flex-col overflow-hidden h-1/2 lg:h-full">
+        <h3 class="font-bold text-lg mb-4 text-red-500 font-['Cairo']">سجل الخريطة التفاعلية</h3>
+        <input type="text" id="map-search-input" onkeyup="filterMapList()" placeholder="ابحث في الخريطة..." class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs mb-3 outline-none focus:border-red-600">
+        <div id="map-data-list" class="flex-1 overflow-y-auto space-y-2 no-scrollbar"></div>
     </div>
-    <div class="flex-1 map-container-box h-[50vh] lg:h-full relative">
+    <div class="flex-1 glass-panel rounded-2xl overflow-hidden h-1/2 lg:h-full relative border border-white/10">
         <div id="map" class="w-full h-full"></div>
     </div>
 </div>
 </main>
 
-<!-- تصميم خانة التوثيق والأرشيف المرئي المطورة والجديدة -->
+<!-- تصميم خانة التوثيق والأرشيف الأصلي -->
 <main id="videos-view" class="text-white">
-<div class="max-w-6xl mx-auto px-4 font-['Cairo']">
-    <div class="text-center mb-8">
-        <h2 class="text-3xl md:text-4xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-500 to-white drop-shadow-lg">الأرشيف المرئي والتوثيق الميداني</h2>
-        <p class="text-gray-400 text-sm md:text-base">سجل المقاطع والتوثيقات التاريخية المصورة والموثقة بدقة</p>
-    </div>
-
-    <!-- شريط البحث والتصفية المطور -->
-    <div class="doc-filter-box mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
-        <div class="relative w-full md:flex-1">
-            <input type="text" id="doc-search-input" placeholder="ابحث في سجلات التوثيق والأرشيف..." class="w-full bg-black/70 border border-white/20 text-white px-4 py-3 rounded-xl text-sm outline-none focus:border-red-600 transition-all">
-        </div>
-        <div class="flex gap-3 w-full md:w-auto">
-            <select id="doc-filter-select" class="bg-black/80 border border-white/20 text-white px-4 py-3 rounded-xl text-sm outline-none focus:border-red-600 cursor-pointer flex-1 md:flex-initial">
-                <option value="">كافة التصنيفات</option>
-                <option value="video">مقاومة وتسجيلات مرئية</option>
-                <option value="report">تقارير وتقارير حقوقية</option>
-            </select>
-            <button onclick="resetDocFilters()" class="bg-red-900/60 hover:bg-red-700 text-white px-5 py-3 rounded-xl text-xs font-bold border border-red-500/40 transition-all whitespace-nowrap">إعادة تعيين</button>
-        </div>
-    </div>
-
-    <!-- حاوية عرض المواد التوثيقية -->
+<div class="max-w-5xl mx-auto px-4 py-10 font-['Cairo']">
+    <h2 class="text-3xl font-bold mb-6 text-center text-red-500">الأرشيف المرئي والتوثيق</h2>
     <div id="gallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- يتم تعبئتها ديناميكياً أو عرض الحالة الفارغة الأنيقة -->
-        <div class="col-span-full py-20 text-center bg-black/40 border border-white/10 rounded-2xl">
-            <svg class="w-16 h-16 mx-auto text-red-600/40 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-            <h3 class="text-xl font-bold text-gray-300 mb-1">الأرشيف جاهز للإضافة</h3>
-            <p class="text-xs text-gray-500">لا توجد سجلات توثيقية معروضة في الوقت الحالي</p>
-        </div>
+        <div class="text-center text-gray-400 py-20 col-span-full">لا توجد سجلات توثيقية حالياً</div>
     </div>
 </div>
 </main>
 
 <!-- قسم أبرز المحطات التاريخية -->
 <main id="milestones-view" class="text-white">
-<div class="max-w-5xl mx-auto px-4 font-['Cairo']">
-    <div class="text-center mb-10">
-        <h2 class="text-3xl md:text-4xl font-black mb-3 text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-400 to-white drop-shadow-lg">أبرز المحطات والتوثيق التاريخي</h2>
-        <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto">محطات الصمود والمراحل المفصلية في النضال الفلسطيني عبر العقود</p>
-    </div>
+<div class="max-w-4xl mx-auto px-4 py-10 font-['Cairo']">
+    <h2 class="text-3xl font-bold mb-8 text-center text-red-500">أبرز المحطات التاريخية</h2>
     <div class="timeline-container" id="tlc-scenes-container"></div>
 </div>
 </main>
 
 <main id="no-data-view" class="flex items-center justify-center">
-<div class="glass-panel p-10 rounded-2xl text-center border border-red-600/30 shadow-[0_0_30px_rgba(204,0,0,0.15)] font-['Cairo']">
-<svg class="w-16 h-16 mx-auto text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-<h2 id="no-data-text" class="text-2xl md:text-3xl font-bold text-gray-300">لا توجد بيانات حالياً</h2>
+<div class="glass-panel p-10 rounded-2xl text-center border border-red-600/30">
+<h2 id="no-data-text" class="text-2xl font-bold text-gray-300">لا توجد بيانات حالياً</h2>
 </div>
 </main>
 
 <main id="stats-view" class="text-white">
-<div class="w-full max-w-7xl mx-auto px-4 md:px-8 font-['Cairo']">
-<div class="mb-8 text-center">
-<h2 id="stats-title" class="text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400 drop-shadow-lg">السجل الإحصائي الشامل</h2>
-<p id="stats-desc" class="text-gray-400 text-sm md:text-base">توثيق مستمر لحجم الدمار والفقد في فلسطين</p>
-</div>
-<div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
-<div class="relative overflow-hidden bg-black/40 border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الشهداء والمفقودون</h3><p class="text-2xl md:text-4xl font-black text-white">~100,000+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
-<div class="relative overflow-hidden bg-black/40 border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الأطفال والنساء</h3><p class="text-2xl md:text-4xl font-black text-white">70%</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
-<div class="relative overflow-hidden bg-black/40 border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">النازحون قسراً</h3><p class="text-2xl md:text-4xl font-black text-white">2M+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
-<div class="relative overflow-hidden bg-black/40 border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الجرحى والمصابون</h3><p class="text-2xl md:text-4xl font-black text-white">100,000+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
-<div class="relative overflow-hidden bg-black/40 border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">المنازل المدمرة</h3><p class="text-2xl md:text-4xl font-black text-white">75%</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
-<div class="relative overflow-hidden bg-black/40 border border-white/10 p-5 rounded-2xl text-center shadow-lg"><h3 class="text-sm md:text-base text-gray-400 mb-2 font-bold">الكوادر الطبية والصحفية</h3><p class="text-2xl md:text-4xl font-black text-white">1,000+</p><div class="mt-3 h-1 w-16 bg-red-600 mx-auto rounded-full"></div></div>
+<div class="w-full max-w-6xl mx-auto px-6 py-10 font-['Cairo']">
+<div class="mb-8 text-center"><h2 id="stats-title" class="text-3xl font-bold text-red-500 mb-2">الإحصائيات الشاملة</h2></div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="glass-panel p-6 rounded-2xl text-center"><h3 class="text-gray-400 mb-2 font-bold">الشهداء والمفقودون</h3><p class="text-3xl font-black text-white">~100,000+</p></div>
+<div class="glass-panel p-6 rounded-2xl text-center"><h3 class="text-gray-400 mb-2 font-bold">الأطفال والنساء</h3><p class="text-3xl font-black text-white">70%</p></div>
+<div class="glass-panel p-6 rounded-2xl text-center"><h3 class="text-gray-400 mb-2 font-bold">النازحون قسراً</h3><p class="text-3xl font-black text-white">2M+</p></div>
 </div>
 </div>
 </main>
@@ -227,13 +149,13 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 <div id="ui-layer">
 <header id="header" class="glass-panel interactive">
 <div class="flex items-center gap-2">
-<h1 class="text-lg font-black text-white drop-shadow-md tracking-wide"><span class="text-red-600" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
+<h1 class="text-lg font-black text-white drop-shadow-md"><span class="text-red-600" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
 </div>
-<div class="w-auto hidden sm:block">
+<div class="w-auto">
 <input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد..." onkeyup="searchMartyrByName(this.value)">
 </div>
-<div class="tabs-wrapper no-scrollbar interactive w-full sm:w-auto">
-<div class="flex gap-1.5 bg-black/40 p-1 rounded-full border border-white/5 mx-auto md:mx-0">
+<div class="tabs-wrapper no-scrollbar interactive">
+<div class="flex gap-2 bg-black/40 p-1 rounded-full border border-white/5">
 <button class="btn-main active" id="tab-souls" onclick="switchMainMode('souls')">شهداء غزة</button>
 <button class="btn-main" id="tab-journalists" onclick="switchMainMode('journalists')">شهداء الصحافة</button>
 <button class="btn-main" id="tab-westbank" onclick="switchMainMode('westbank')">شهداء الضفة</button>
@@ -244,7 +166,7 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 </div>
 <div class="relative inline-block text-right">
-<select id="language-select" onchange="changeLanguage(this.value)" class="bg-black/60 border border-white/20 text-white text-xs rounded-full px-2 py-1 outline-none cursor-pointer hover:border-red-600 transition-all font-['Cairo']">
+<select id="language-select" onchange="changeLanguage(this.value)" class="bg-black/60 border border-white/20 text-white text-xs rounded-full px-2 py-1 outline-none cursor-pointer font-['Cairo']">
 <option value="ar">🇸🇦 العربية</option>
 <option value="en">🇬🇧 English</option>
 </select>
@@ -260,13 +182,13 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </div>
 </header>
 <div id="bottom-bar">
-<div id="verse-container" class="interactive glass-panel p-3 px-6 rounded-lg border-r-4 border-r-red-600 order-2 md:order-1 hidden md:block bg-black/80 max-w-lg shadow-[0_0_15px_rgba(204,0,0,0.2)]">
-<p id="verse-text" class="font-amiri text-gray-200 text-base md:text-xl font-bold leading-relaxed text-center">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</p>
+<div id="verse-container" class="interactive glass-panel p-3 px-6 rounded-lg border-r-4 border-r-red-600 order-2 md:order-1 hidden md:block bg-black/80 max-w-lg">
+<p id="verse-text" class="font-amiri text-gray-200 text-lg font-bold leading-relaxed text-center">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</p>
 </div>
 <div class="interactive glass-panel p-2 px-4 rounded-lg flex items-center gap-4 flex-wrap justify-center order-3 md:order-2 bg-black/80 font-['Cairo']" style="margin-right: auto;">
-<a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-xs bg-red-900 border-red-500 text-white hover:bg-red-700">❤️ إدعمنا لنستمر</a>
+<a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-xs bg-red-900 border-red-500 text-white">❤️ إدعمنا لنستمر</a>
 <span id="dev-text" class="text-xs text-gray-400 font-bold border-l border-white/20 pl-4">تطوير: عبد الهادي</span>
-<div class="social-links flex gap-1.5">
+<div class="social-links flex gap-2">
 <a href="https://www.facebook.com/abdelhadilrs" target="_blank">Facebook</a>
 <a href="https://www.instagram.com/abdelhadilrs" target="_blank">Instagram</a>
 <a href="https://x.com/larrasabdelhadi" target="_blank">X</a>
@@ -275,8 +197,8 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 </button>
 </div>
 </div>
-<div id="counter-box" class="interactive order-1 md:order-3 w-full md:w-auto shadow-2xl font-['Cairo']">
-<div id="number" class="text-3xl md:text-4xl font-black text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">0</div>
+<div id="counter-box" class="interactive order-1 md:order-3 shadow-2xl font-['Cairo']">
+<div id="number" class="text-3xl font-black text-white">0</div>
 <div id="martyrs-label" class="text-[10px] text-red-400 mt-1 font-bold tracking-widest">شهيداً وثّقت أسماؤهم</div>
 </div>
 </div>
@@ -284,27 +206,24 @@ body{margin:0;background-color:#000;overflow-x:hidden;font-family:'Cairo',sans-s
 
 <!-- نافذة بطاقة الشهيد والتفاصيل -->
 <div id="martyr-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
-    <div class="modal-box" style="max-width: 450px; background: linear-gradient(135deg, #121212 0%, #1a0505 100%); border: 1px solid rgba(204,0,0,0.4); box-shadow: 0 25px 50px rgba(0,0,0,0.9); border-radius: 20px; overflow: hidden; width: 100%;">
-        <div class="modal-header border-b border-red-600/20 p-4 flex justify-between items-center bg-black/50">
-            <h2 class="font-bold text-lg text-red-500">بطاقة توثيق الشهيد</h2>
-            <button class="modal-close text-gray-400 hover:text-white" id="martyr-modal-close" title="إغلاق">✕</button>
+    <div class="modal-box" style="max-width: 420px; background: #151515; border: 1px solid rgba(204,0,0,0.4); border-radius: 16px; overflow: hidden; width: 100%;">
+        <div class="modal-header border-b border-white/10 p-4 flex justify-between items-center bg-black/40">
+            <h2 class="font-bold text-base text-red-500">بطاقة توثيق الشهيد</h2>
+            <button class="modal-close text-gray-400 hover:text-white" id="martyr-modal-close">✕</button>
         </div>
         <div class="modal-body text-center p-6 space-y-4">
-            <div id="martyr-modal-photo" class="w-32 h-32 mx-auto bg-stone-900 border-2 border-red-600/50 rounded-2xl flex flex-col items-center justify-center text-stone-400 text-xs overflow-hidden relative">
-                <svg class="w-10 h-10 text-stone-600 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+            <div id="martyr-modal-photo" class="w-28 h-28 mx-auto bg-stone-900 border border-red-600/40 rounded-xl flex flex-col items-center justify-center text-stone-400 text-xs overflow-hidden">
                 <span>صورة الشهيد</span>
             </div>
             <div>
-                <h3 id="martyr-modal-name" class="text-xl font-black text-white mb-1"></h3>
-                <p id="martyr-modal-name-en" class="text-xs text-gray-400 font-mono tracking-wider" style="display: none;"></p>
+                <h3 id="martyr-modal-name" class="text-lg font-black text-white mb-1"></h3>
+                <p id="martyr-modal-name-en" class="text-xs text-gray-400 font-mono" style="display: none;"></p>
             </div>
-            <div class="bg-black/60 border border-white/10 p-4 rounded-xl text-right space-y-2.5 text-sm">
-                <div class="flex justify-between border-b border-white/5 pb-1.5"><span class="text-gray-400">العمر:</span> <strong id="martyr-modal-age" class="text-white"></strong></div>
+            <div class="bg-black/50 border border-white/10 p-3 rounded-xl text-right space-y-2 text-xs">
+                <div class="flex justify-between"><span class="text-gray-400">العمر:</span> <strong id="martyr-modal-age" class="text-white"></strong></div>
                 <div class="flex justify-between"><span class="text-gray-400">رقم الهوية:</span> <strong id="martyr-modal-id" class="text-white font-mono"></strong></div>
             </div>
-            <button onclick="shareMartyrCard()" class="w-full text-white font-bold py-2.5 px-4 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer bg-[#991b1b] hover:bg-[#7f1d1d] border border-red-800">
-                <span>🔗 مشاركة بطاقة الشهيد</span>
-            </button>
+            <button onclick="shareMartyrCard()" class="w-full text-white font-bold py-2 px-4 rounded-xl transition-all bg-red-800 hover:bg-red-700 text-xs">مشاركة بطاقة الشهيد</button>
         </div>
     </div>
 </div>
@@ -319,17 +238,17 @@ let markersLayer = null;
 let mouseX = -1000, mouseY = -1000;
 
 const milestoneData = [
-    { year: "1948", title: "النكبة الفلسطينية", desc: "تهجير أكثر من 750,000 فلسطيني وتدمير أضعاف القرى والمناطق وتأسيس المأساة المستمرة." },
-    { year: "1967", title: "النكسة واحتلال باقي الأراضي", desc: "احتلال الضفة الغربية وقطاع غزة والقدس الشرقية وسيناء والجولان." },
-    { year: "1987", title: "انتفاضة الحجارة (الانتفاضة الأولى)", desc: "هبة شعبية شاملة انطلقت من مخيم جباليا بغزة وامتدت لكافة الأراضي المحتلة." },
-    { year: "2000", title: "انتفاضة الأقصى (الانتفاضة الثانية)", desc: "اندلاع الانتفاضة بعد اقتحام المسجد الأقصى، وتقديم آلاف الشهداء في سبيل الحرية." },
-    { year: "2008 - 2021", title: "الحروب المتعاقبة على غزة", desc: "سلسلة جولات الصمود (2008، 2012، 2014، 2021 - معركة سيف القدس)." },
-    { year: "2023 - 2026", title: "طوفان الأقصى والعدوان الشامل", desc: "حرب الإبادة والملحمة التاريخية المستمرة والصمود الأسطوري للشعب الفلسطيني." }
+    { year: "1948", title: "النكبة الفلسطينية", desc: "تهجير أكثر من 750,000 فلسطيني وتدمير القرى وتأسيس المأساة المستمرة." },
+    { year: "1967", title: "النكسة واحتلال باقي الأراضي", desc: "احتلال الضفة الغربية وقطاع غزة والقدس الشرقية." },
+    { year: "1987", title: "انتفاضة الحجارة", desc: "هبة شعبية شاملة انطلقت من مخيم جباليا وامتدت لكافة الأراضي المحتلة." },
+    { year: "2000", title: "انتفاضة الأقصى", desc: "اندلاع الانتفاضة وتقديم آلاف الشهداء في سبيل الحرية." },
+    { year: "2008 - 2021", title: "الحروب المتعاقبة على غزة", desc: "سلسلة جولات الصمود والمواجهة البطولية." },
+    { year: "2023 - 2026", title: "طوفان الأقصى والعدوان الشامل", desc: "حرب الإبادة والملحمة التاريخية المستمرة والصمود الأسطوري." }
 ];
 
 const translations={
 ar:{titleMain:"أرواح",logoText:"فلسطين",searchPlaceholder:"ابحث عن اسم الشهيد...",tabSouls:" شهداء غزة",tabJournalists:" صحفيو غزة",tabWestBank:" الضفة الغربية",tabMilestones:" أبرز المحطات",tabStats:" الإحصائيات",tabVideos:" التوثيق والأرشيف",tabMap:" الخريطة",donate:"❤️ إدعمنا لنستمر",musicOn:"🎵 الصوت",musicOff:"🔇 إيقاف",visitorText:"زوار:",verse:`"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"`,devText:"تطوير: عبد الهادي",shareBtn:"مشاركة",martyrsLabel:"شهيداً وثّقت أسماؤهم"},
-en:{titleMain:"Palestinian",logoText:"Souls",searchPlaceholder:"Search martyr...",tabSouls:" Gaza Souls",tabJournalists:" Gaza Journalists",tabWestBank:" West Bank",tabMilestones:" Milestones",tabStats:" Statistics",tabVideos:" Footage",tabMap:" Map",donate:" Support Us",musicOn:"🎵 Audio",musicOff:"🔇 Mute",visitorText:"Visits:",verse:`"Think not of those who are slain in Allah's way as dead..."`,devTest:"Dev: Abdelhadi",shareBtn:"Share",martyrsLabel:"Martyrs Documented"}
+en:{titleMain:"Palestinian",logoText:"Souls",searchPlaceholder:"Search martyr...",tabSouls:" Gaza Souls",tabJournalists:" Gaza Journalists",tabWestBank:" West Bank",tabMilestones:" Milestones",tabStats:" Statistics",tabVideos:" Footage",tabMap:" Map",donate:" Support Us",musicOn:"🎵 Audio",musicOff:"Mute",visitorText:"Visits:",verse:`"Think not of those who are slain in Allah's way as dead..."`,devTest:"Dev: Abdelhadi",shareBtn:"Share",martyrsLabel:"Martyrs Documented"}
 };
 
 function changeLanguage(langCode){
@@ -363,7 +282,7 @@ window.shareMartyrCard=function(){
 const name = document.getElementById('martyr-modal-name').innerText;
 const age = document.getElementById('martyr-modal-age').innerText;
 const id = document.getElementById('martyr-modal-id').innerText;
-const text = `توثيق شهيد: ${name} | العمر: ${age} | رقم الهوية: ${id} عبر منصة أرواح فلسطين v2.0`;
+const text = `توثيق شهيد: ${name} | العمر: ${age} | رقم الهوية: ${id} عبر منصة أرواح فلسطين`;
 navigator.clipboard.writeText(text).then(()=>alert('تم نسخ بيانات بطاقة الشهيد بنجاح!'));
 };
 
@@ -377,8 +296,8 @@ function renderMilestones() {
         div.innerHTML = `
             <div class="timeline-dot"></div>
             <div class="timeline-card">
-                <span class="inline-block bg-red-900/80 text-red-300 text-xs font-bold px-3 py-1 rounded-full mb-2 border border-red-500/30">${item.year}</span>
-                <h3 class="text-lg font-bold text-white mb-1.5">${item.title}</h3>
+                <span class="inline-block bg-red-900/60 text-red-300 text-xs font-bold px-2.5 py-0.5 rounded-full mb-2">${item.year}</span>
+                <h3 class="text-base font-bold text-white mb-1">${item.title}</h3>
                 <p class="text-xs text-gray-300 leading-relaxed">${item.desc}</p>
             </div>
         `;
@@ -408,26 +327,22 @@ function renderMapAndList(dataToRender = []) {
     markersLayer.clearLayers();
 
     const data = dataToRender || [];
-    document.getElementById('map-total-count').innerText = data.length;
-    document.getElementById('map-male-count').innerText = data.filter(p => (p.gender || 'M').toUpperCase() === 'M').length;
-    document.getElementById('map-female-count').innerText = data.filter(p => (p.gender || '').toUpperCase() === 'F').length;
-
     if (data.length === 0) {
-        listContainer.innerHTML = `<div class="text-center text-gray-500 py-10 text-xs">لا توجد أسماء مسجلة بالخريطة حالياً</div>`;
+        listContainer.innerHTML = `<div class="text-center text-gray-500 py-10 text-xs">لا توجد أسماء مسجلة بالخريطة</div>`;
         return;
     }
 
-    // [إصلاح مشكلة التعليق]: تحديد عينة آمنة للأداء (أول 150 عنصراً كحد أقصى للرسم على الخريطة والقائمة لتجنب تجمد المتصفح)
+    // [إصلاح مشكلة التعليق]: تفعيل العينة الآمنة للأداء (أول 150 عنصراً كحد أقصى)
     const limitedData = data.slice(0, 150);
 
     limitedData.forEach((person, idx) => {
         const card = document.createElement('div');
-        card.className = "bg-black/40 border border-white/10 p-3.5 rounded-xl hover:border-red-500/50 transition-all cursor-pointer font-['Cairo']";
+        card.className = "bg-black/50 border border-white/10 p-2.5 rounded-xl hover:border-red-500 transition-all cursor-pointer font-['Cairo']";
         card.innerHTML = `
-            <h4 class="font-bold text-sm text-white truncate">${person.name_ar || person.name || 'شهيد'}</h4>
-            <div class="text-[11px] text-gray-400 mt-1 flex justify-between">
+            <h4 class="font-bold text-xs text-white truncate">${person.name_ar || person.name || 'شهيد'}</h4>
+            <div class="text-[10px] text-gray-400 mt-1 flex justify-between">
                 <span>العمر: ${person.age || 'غير معروف'}</span>
-                <span class="font-mono">الهوية: ${person.id || '-'}</span>
+                <span class="font-mono">${person.id || '-'}</span>
             </div>
         `;
         const lat = 31.35 + (idx % 30) * 0.008;
@@ -444,7 +359,7 @@ function renderMapAndList(dataToRender = []) {
 
     if (data.length > 150) {
         const infoDiv = document.createElement('div');
-        infoDiv.className = "text-center text-gray-500 py-2 text-[11px]";
+        infoDiv.className = "text-center text-gray-500 py-2 text-[10px]";
         infoDiv.innerText = `يتم عرض أول 150 نتيجة من أصل ${data.length} لتسريع الأداء...`;
         listContainer.appendChild(infoDiv);
     }
@@ -454,13 +369,6 @@ function filterMapList() {
     const q = document.getElementById('map-search-input').value.toLowerCase();
     const filtered = gazaSouls.filter(p => (p.name_ar || "").toLowerCase().includes(q) || (p.id || "").includes(q));
     renderMapAndList(filtered);
-}
-
-function resetDocFilters() {
-    const searchInput = document.getElementById('doc-search-input');
-    const filterSelect = document.getElementById('doc-filter-select');
-    if(searchInput) searchInput.value = '';
-    if(filterSelect) filterSelect.value = '';
 }
 
 window.switchMainMode = function(mode) {
@@ -527,20 +435,20 @@ class ShootingStar {
     reset() {
         this.x = Math.random() * (width || window.innerWidth) + 100;
         this.y = Math.random() * (height || window.innerHeight) * 0.4 - 50;
-        this.len = Math.random() * 150 + 80;
-        this.speed = Math.random() * 2 + 1.2;
-        this.opacity = Math.random() * 0.85 + 0.25;
-        this.angle = (3 * Math.PI / 4) + (Math.random() * 0.08 - 0.04);
-        this.thickness = Math.random() * 2 + 1.2;
-        this.headColor = Math.random() > 0.3 ? '#ffffff' : '#ffd700';
-        this.tailColor = Math.random() > 0.5 ? 'rgba(255, 51, 51, ' : 'rgba(255, 170, 0, ';
+        this.len = Math.random() * 120 + 60;
+        this.speed = Math.random() * 2 + 1;
+        this.opacity = Math.random() * 0.8 + 0.2;
+        this.angle = (3 * Math.PI / 4) + (Math.random() * 0.06 - 0.03);
+        this.thickness = Math.random() * 1.5 + 1;
+        this.headColor = '#ffffff';
+        this.tailColor = 'rgba(255, 51, 51, ';
     }
     update() {
-        this.x += Math.cos(this.angle) * this.speed * 4.5;
-        this.y += Math.sin(this.angle) * this.speed * 4.5;
-        this.opacity -= 0.006;
+        this.x += Math.cos(this.angle) * this.speed * 4;
+        this.y += Math.sin(this.angle) * this.speed * 4;
+        this.opacity -= 0.007;
 
-        if (this.opacity <= 0 || this.x < -150 || this.y > (height || window.innerHeight) + 100) {
+        if (this.opacity <= 0 || this.x < -100 || this.y > (height || window.innerHeight) + 100) {
             this.reset();
         }
     }
@@ -552,7 +460,6 @@ class ShootingStar {
         
         let gradient = sCtx.createLinearGradient(0, 0, -this.len, 0);
         gradient.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
-        gradient.addColorStop(0.25, `${this.tailColor}${this.opacity * 0.85})`);
         gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
         
         sCtx.beginPath();
@@ -560,22 +467,13 @@ class ShootingStar {
         sCtx.lineTo(-this.len, 0);
         sCtx.strokeStyle = gradient;
         sCtx.lineWidth = this.thickness;
-        sCtx.shadowBlur = 10;
-        sCtx.shadowColor = '#ff3333';
         sCtx.stroke();
         
-        sCtx.beginPath();
-        sCtx.arc(0, 0, this.thickness + 0.8, 0, Math.PI * 2);
-        sCtx.fillStyle = this.headColor;
-        sCtx.shadowBlur = 16;
-        sCtx.shadowColor = '#ffffff';
-        sCtx.fill();
-
         sCtx.restore();
     }
 }
 
-const shootingStarsArr = Array.from({ length: 8 }, () => new ShootingStar());
+const shootingStarsArr = Array.from({ length: 6 }, () => new ShootingStar());
 
 if (canvas) {
     canvas.addEventListener('mousemove', (e) => {
@@ -634,10 +532,7 @@ function openMartyrCardModal(person) {
     if (person.image) {
         photoContainer.innerHTML = `<img src="${person.image}" class="w-full h-full object-cover" alt="صورة الشهيد">`;
     } else {
-        photoContainer.innerHTML = `
-            <svg class="w-10 h-10 text-stone-600 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-            <span>صورة الشهيد</span>
-        `;
+        photoContainer.innerHTML = `<span>صورة الشهيد</span>`;
     }
     modal.style.display = 'flex';
 }
@@ -678,7 +573,7 @@ renderStars();
 
 function renderStars(){
 points=[];
-const dotsToRender = gazaSouls.length > 0 ? Math.min(1600, gazaSouls.length) : 800;
+const dotsToRender = gazaSouls.length > 0 ? Math.min(1500, gazaSouls.length) : 800;
 for(let i=0; i<dotsToRender; i++){
 points.push({
 x: Math.random()*width,
@@ -686,7 +581,7 @@ y: Math.random()*height,
 vx: (Math.random()-0.5)*0.2,
 vy: (Math.random()-0.5)*0.2,
 alpha: 0.3 + Math.random()*0.6,
-pulseSpeed: 0.015 + Math.random()*0.03,
+pulseSpeed: 0.02 + Math.random()*0.02,
 color: '#ffffff',
 userData: gazaSouls[i] || { name_ar: `شهيد ${i+1}`, age: "غير معروف", id: "-" }
 });
@@ -706,7 +601,7 @@ function gameLoop(){
             if(p.y < 0) p.y = height; else if(p.y > height) p.y = 0;
 
             p.alpha += p.pulseSpeed;
-            if (p.alpha > 0.95 || p.alpha < 0.2) p.pulseSpeed = -p.pulseSpeed;
+            if (p.alpha > 0.9 || p.alpha < 0.2) p.pulseSpeed = -p.pulseSpeed;
 
             const dist = Math.hypot(p.x - mouseX, p.y - mouseY);
             if (dist < 15) {
@@ -715,12 +610,8 @@ function gameLoop(){
 
             ctx.save();
             ctx.beginPath();
-            ctx.arc(p.x, p.y, dist < 15 ? 4.5 : 1.6, 0, Math.PI * 2);
-            ctx.fillStyle = dist < 15 ? '#ff3333' : `rgba(255, 255, 255, ${Math.max(0.15, p.alpha)})`;
-            if (dist < 15) {
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = '#ff0000';
-            }
+            ctx.arc(p.x, p.y, dist < 15 ? 4 : 1.5, 0, Math.PI * 2);
+            ctx.fillStyle = dist < 15 ? '#ff3333' : `rgba(255, 255, 255, ${Math.max(0.2, p.alpha)})`;
             ctx.fill();
             ctx.restore();
         }
