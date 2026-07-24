@@ -409,7 +409,7 @@ let isPlayingAudio = false;
 
 function initAudio() {
     backgroundSound = new Howl({
-        src: ['ambient.mp3'], // تشغيل ملف الصوت المحلي المرفق
+        src: ['./audio/ambient.mp3'], // تشغيل ملف الصوت المحلي المرفق
         loop: true,
         volume: 0.4,
         onplay: () => { isPlayingAudio = true; updateMusicButton(); },
