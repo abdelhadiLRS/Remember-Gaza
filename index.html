@@ -52,7 +52,8 @@ body.light-mode .tlc-title,
 body.light-mode .tlc-decade-num{color:#111827 !important;}
 body.light-mode .tlc-excerpt,
 body.light-mode .tlc-intro-box{color:#374151 !important;}
-body.light-mode #counter-box{background:rgba(255, 255, 255, 0.95) !important;color:#111827 !important;}
+body.light-mode #counter-box,
+body.light-mode #visitor-counter-box{background:rgba(255, 255, 255, 0.95) !important;color:#111827 !important;}
 
 #canvas-layer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;transition:opacity 0.4s ease;pointer-events:auto;cursor:pointer;}
 #shooting-stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;}
@@ -85,7 +86,7 @@ body.light-mode .btn-main{background:rgba(0,0,0,0.05);color:#111827;border-color
 .btn-main.active{background:#dc2626;border-color:#ef4444;font-weight:bold;box-shadow:0 0 10px rgba(239,68,68,0.4);color:white !important;}
 
 #bottom-bar{display:flex;justify-content:space-between;align-items:flex-end;padding:15px 25px;pointer-events:none;flex-wrap:wrap;gap:15px;}
-#counter-box{text-align:center;padding:10px 25px;border-radius:15px;border-bottom:3px solid #dc2626;min-width:140px;background:rgba(10,10,10,0.9);}
+#counter-box, #visitor-counter-box{text-align:center;padding:10px 20px;border-radius:15px;border-bottom:3px solid #dc2626;min-width:130px;background:rgba(10,10,10,0.9);}
 .social-links a,.share-btn{color:#fff;background:rgba(255,255,255,0.05);padding:4px 10px;border-radius:20px;font-size:0.7rem;text-decoration:none;transition:0.3s;white-space:nowrap;border:1px solid rgba(255,255,255,0.1);cursor:pointer;}
 body.light-mode .social-links a, body.light-mode .share-btn{color:#111827;background:rgba(0,0,0,0.05);border-color:rgba(0,0,0,0.1);}
 .social-links a:hover{background:#dc2626;border-color:#ef4444;color:white !important;}
@@ -536,9 +537,9 @@ body.light-mode .tlc-mdl-stat-exp{color:#4b5563;}
 </div>
 <div class="flex gap-1.5 items-center">
 <button id="music-btn" class="btn-main">🎵 الصوت</button>
-<!-- زر التبديل بين الوضع الداكن والمضيء مع أيقونة الهلال والنجوم المستوحاة من المرفقات[cite: 2] -->
-<button id="theme-toggle-btn" class="btn-main flex items-center justify-center p-1" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 30px; height: 30px; border-radius: 50%;">
-    <svg id="theme-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- زر التبديل بين الوضع الداكن والمضيء بحجم مكبر قليلاً -->
+<button id="theme-toggle-btn" class="btn-main flex items-center justify-center p-1" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 38px; height: 38px; border-radius: 50%;">
+    <svg id="theme-icon-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
         <path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/>
         <path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>
@@ -550,7 +551,14 @@ body.light-mode .tlc-mdl-stat-exp{color:#4b5563;}
 <div id="verse-container" class="interactive glass-panel p-3 px-6 rounded-lg border-r-4 border-r-red-600 order-2 md:order-1 hidden md:block bg-black/80 max-w-lg">
 <p id="verse-text" class="font-amiri text-gray-200 text-lg font-bold leading-relaxed text-center">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</p>
 </div>
-<div class="interactive glass-panel p-2 px-3 rounded-lg flex items-center gap-2.5 flex-wrap justify-center order-3 md:order-2 bg-black/80 font-['Cairo']" style="margin-right: auto;">
+
+<!-- عداد الزوار المعاد تفعيله -->
+<div id="visitor-counter-box" class="interactive order-2 md:order-2 shadow-2xl font-['Cairo']">
+<div id="visitor-number" class="text-2xl font-black text-white">0</div>
+<div id="visitor-label" class="text-[10px] text-red-400 mt-1 font-bold tracking-widest">زوار:</div>
+</div>
+
+<div class="interactive glass-panel p-2 px-3 rounded-lg flex items-center gap-2.5 flex-wrap justify-center order-4 md:order-3 bg-black/80 font-['Cairo']" style="margin-right: auto;">
 <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-[11px] bg-red-900 border-red-500 text-white px-2.5 py-1">❤️ إدعمنا لنستمر</a>
 <span id="dev-text" class="text-[11px] text-gray-400 font-bold border-l border-white/20 pl-3">تطوير: عبد الهادي</span>
 <div class="social-links flex gap-1.5">
@@ -562,7 +570,7 @@ body.light-mode .tlc-mdl-stat-exp{color:#4b5563;}
 </button>
 </div>
 </div>
-<div id="counter-box" class="interactive order-1 md:order-3 shadow-2xl font-['Cairo']">
+<div id="counter-box" class="interactive order-3 md:order-4 shadow-2xl font-['Cairo']">
 <div id="number" class="text-3xl font-black text-white">0</div>
 <div id="martyrs-label" class="text-[10px] text-red-400 mt-1 font-bold tracking-widest">شهيداً وثّقت أسماؤهم</div>
 </div>
@@ -617,12 +625,28 @@ function toggleTheme() {
 function updateThemeIcon(isLight) {
     const svgEl = document.getElementById('theme-icon-svg');
     if (!svgEl) return;
+    svgEl.setAttribute('width', '20');
+    svgEl.setAttribute('height', '20');
     if (isLight) {
         // أيقونة شمس للوضع النهاري
         svgEl.innerHTML = `<circle cx="12" cy="12" r="5" fill="currentColor"></circle><line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2"></line><line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2"></line><line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2"></line><line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2"></line>`;
     } else {
         // أيقونة الهلال والنجوم للوضع الداكن (الافتراضي)[cite: 2]
         svgEl.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/><path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>`;
+    }
+}
+
+function initVisitorCounter() {
+    let visits = localStorage.getItem('site_visits');
+    if (!visits) {
+        visits = 14250;
+    } else {
+        visits = parseInt(visits) + 1;
+    }
+    localStorage.setItem('site_visits', visits);
+    const visitorNumEl = document.getElementById('visitor-number');
+    if (visitorNumEl) {
+        visitorNumEl.innerText = parseInt(visits).toLocaleString('ar-EG');
     }
 }
 
@@ -667,7 +691,7 @@ const milestoneCinematicData = [
         stat: "حوالي 116 شهيد", 
         statExp: "116 شهيداً فلسطينياً سقطوا خلال الأحداث، إضافة إلى تنفيذ حكم الإعدام بثلاثة من قادة الثورة",
         sourceName: "ويكيبيديا - ثورة البراق 1929",
-        sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AB%D9%88%D8%B1%D8%A9_%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%82"
+        sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AB%D9%88%D8%B1%D8%A9_%D8%A7%D9%8„%D8%A8%D8%B1%D8%A7%D9%82"
     },
     
     { id: "d1930", type: "decade", decade: "1930" },
@@ -813,6 +837,7 @@ document.getElementById('donate-desktop').innerText=t.donate;
 document.getElementById('verse-text').innerText=t.verse;
 document.getElementById('dev-text').innerText=t.devTest;
 document.getElementById('share-btn-text').innerText=t.shareBtn;
+document.getElementById('visitor-label').innerText=t.visitorText;
 document.getElementById('martyrs-label').innerText=t.martyrsLabel;
 }
 
@@ -981,10 +1006,12 @@ window.switchMainMode = function(mode) {
 
     const verseContainer = document.getElementById('verse-container');
     const counterBox = document.getElementById('counter-box');
+    const visitorBox = document.getElementById('visitor-counter-box');
     const showVerseAndCounter = ['souls', 'journalists', 'westbank', 'martyrs48'].includes(mode);
 
     if (verseContainer) verseContainer.style.display = showVerseAndCounter ? '' : 'none';
     if (counterBox) counterBox.style.display = showVerseAndCounter ? 'block' : 'none';
+    if (visitorBox) visitorBox.style.display = showVerseAndCounter ? 'block' : 'none';
 
     if(mode === 'souls'){
         fetchAndRenderData('./data/victims.json');
@@ -1195,6 +1222,7 @@ function gameLoop(){
     if(ctx){
         ctx.clearRect(0, 0, width, height);
         let hoveredStar = null;
+        const isLight = document.body.classList.contains('light-mode');
 
         for(let i=0; i<points.length; i++){
             const p = points[i];
@@ -1211,7 +1239,12 @@ function gameLoop(){
             ctx.save();
             ctx.beginPath();
             ctx.arc(p.x, p.y, dist < 15 ? 4 : 1.5, 0, Math.PI * 2);
-            ctx.fillStyle = dist < 15 ? '#ef4444' : `rgba(255, 255, 255, ${Math.max(0.2, p.alpha)})`;
+            if (isLight) {
+                // إظهار النجوم بلون داكن وواضح في المود المضاء
+                ctx.fillStyle = dist < 15 ? '#dc2626' : `rgba(31, 41, 55, ${Math.max(0.4, p.alpha)})`;
+            } else {
+                ctx.fillStyle = dist < 15 ? '#ef4444' : `rgba(255, 255, 255, ${Math.max(0.2, p.alpha)})`;
+            }
             ctx.fill();
             ctx.restore();
         }
@@ -1265,6 +1298,7 @@ function animateCounter(targetNumber) {
 
 document.addEventListener('DOMContentLoaded', () => {
     switchMainMode('souls');
+    initVisitorCounter();
     gameLoop();
     
     const musicBtn = document.getElementById('music-btn');
