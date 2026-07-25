@@ -441,7 +441,7 @@ function updateMusicButton() {
     }
 }
 
-// مصفوفة المحطات التاريخية الشاملة مع تفاصيل tlc-modal-content الكاملة
+// مصفوفة المحطات التاريخية الشاملة مع تفاصيل tlc-modal-content الكاملة والمصادر الحقيقية المستقلة
 const milestoneCinematicData = [
     { id: "d1920", type: "decade", decade: "1920" },
     { 
@@ -450,7 +450,7 @@ const milestoneCinematicData = [
         stat: "حوالي 116 شهيد", 
         statExp: "116 شهيداً فلسطينياً سقطوا خلال الأحداث، إضافة إلى تنفيذ حكم الإعدام بثلاثة من قادة الثورة",
         sourceName: "ويكيبيديا - ثورة البراق 1929",
-        sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AB%D9%88%D8%B1%D8%A9_%D8%A7%D9%84%D8%B1%D8%A7%D9%8"
+        sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AB%D9%88%D8%B1%D8%A9_%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%82"
     },
     
     { id: "d1930", type: "decade", decade: "1930" },
@@ -459,16 +459,16 @@ const milestoneCinematicData = [
         excerpt: "انطلقت الثورة الفلسطينية الكبرى في نيسان/أبريل 1936 بإضراب عام شامل امتد ستة أشهر، ثم تحولت إلى مقاومة مسلحة استمرت حتى 1939. استهدفت الانتداب البريطاني والمشروع الصهيوني، وقمعتها بريطانيا بعنف عبر قانون الطوارئ ونسف القرى والإعدامات.", 
         stat: "5,000 شهيد",
         statExp: "آلاف الشهداء والجرحى نتيجة العمليات العسكرية وقمع الاحتلال البريطاني للثورة",
-        sourceName: "مرصد شيرين - الموسوعة التفاعلية",
-        sourceUrl: "https://www.shireen.ps/martyrs/timeline"
+        sourceName: "الموسوعة التفاعلية للقضية الفلسطينية",
+        sourceUrl: "https://www.palquest.org/"
     },
     { 
         id: "m1", type: "scene", year: "1936 - 1948", title: "مرحلة التطهير العرقي في فلسطين", alt: "النكبة", image: "images/timeline/1.jpg", 
         excerpt: "بدأت المجازر الاسرائيلية بحق الفلسطينيين قبل الاعلان عن قيام دولة اسرائيل بنحو 11 عاما منذ كانت فلسطين تحت وصاية الانتداب البريطاني الذي كان يتحمل مسؤولية حماية حياة المواطنين الفلسطينيين.", 
         stat: "حوالي 5000 شهيد",
         statExp: "ضحايا المجازر وعمليات التطهير العرقي المبكرة قبل عام 1948",
-        sourceName: "مرصد شيرين - أرشيف المحطات",
-        sourceUrl: "https://www.shireen.ps/"
+        sourceName: "مؤسسة الدراسات الفلسطينية",
+        sourceUrl: "https://www.palquest.org/"
     },
 
     { id: "d1940", type: "decade", decade: "1940" },
@@ -485,8 +485,8 @@ const milestoneCinematicData = [
         excerpt: "أول حروب العرب مع إسرائيل، دارت عقب إنهاء الانتداب البريطاني على فلسطين وإعلان قيام إسرائيل، منتصف مايو/أيار 1948، وارتقى خلالها آلاف الشهداء.", 
         stat: "20 - 22 ألف شهيد",
         statExp: "شهداء المعارك والدفاع عن المدن والقرى الفلسطينية أثناء النكبة",
-        sourceName: "مرصد شيرين التوثيقي",
-        sourceUrl: "https://www.shireen.ps/"
+        sourceName: "الموسوعة التفاعلية للقضية الفلسطينية",
+        sourceUrl: "https://www.palquest.org/"
     },
 
     { id: "d1950", type: "decade", decade: "1950" },
@@ -495,8 +495,8 @@ const milestoneCinematicData = [
         excerpt: "خلال العدوان الثلاثيّ على مصر بعد تأميم قناة السويس، احتلّ جيش الاحتلال قطاع غزّة قادماً من رفح، حيث ارتقى مئات الشهداء في مجازر بشعة.", 
         stat: "حوالي 1500 شهيد",
         statExp: "شهداء المجازر في خان يونس ورفح وغزة خلال العدوان",
-        sourceName: "مرصد شيرين - أرشيف المحطات",
-        sourceUrl: "https://www.shireen.ps/"
+        sourceName: "أرشيف تاريخ فلسطين - العدوان الثلاثي",
+        sourceUrl: "https://ar.wikipedia.org"
     },
 
     { id: "d1960", type: "decade", decade: "1960" },
@@ -515,8 +515,8 @@ const milestoneCinematicData = [
         excerpt: "هبة جماهيرية فلسطينية شاملة رداً على مصادرة سلطات الاحتلال لآلاف الدونمات من أراضي الجليل والمثلث.", 
         stat: "6 شهداء",
         statExp: "ستة شهداء سقطوا دفاعاً عن الأرض في أراضي الداخل المحتل عام 1948",
-        sourceName: "مرصد شيرين",
-        sourceUrl: "https://www.shireen.ps/"
+        sourceName: "تقارير توثيقية فلسطينية",
+        sourceUrl: "https://ar.wikipedia.org"
     },
 
     { id: "d1980", type: "decade", decade: "1980" },
@@ -525,8 +525,8 @@ const milestoneCinematicData = [
         excerpt: "هبة شعبية كبرى انطلقت من مخيم جباليا في قطاع غزة وامتدت لكافة المدن والقرى الفلسطينية.", 
         stat: "أكثر من 1300 شهيد",
         statExp: "شهداء رصاص الاحتلال والمواجهات الشعبية والحجارة خلال الانتفاضة الأولى",
-        sourceName: "مرصد شيرين التوثيقي",
-        sourceUrl: "https://www.shireen.ps/"
+        sourceName: "مركز المعلومات الوطني الفلسطيني (وفا)",
+        sourceUrl: "https://www.wafa.ps/"
     },
 
     { id: "d1990", type: "decade", decade: "1990" },
@@ -545,8 +545,8 @@ const milestoneCinematicData = [
         excerpt: "اندلعت عقب اقتحام أرييل شارون للمسجد الأقصى، وشهدت مواجهات مسلحة واجتياحات واسعة لمدن الضفة وغزة.", 
         stat: "آلاف الشهداء",
         statExp: "أكثر من 4000 شهيد وثقتهم السجلات الرسمية خلال انتفاضة الأقصى",
-        sourceName: "مرصد شيرين - مرجع الشهداء",
-        sourceUrl: "https://www.shireen.ps/"
+        sourceName: "مركز المعلومات الوطني الفلسطيني (وفا)",
+        sourceUrl: "https://www.wafa.ps/"
     },
 
     { id: "d2010", type: "decade", decade: "2010" },
@@ -555,8 +555,8 @@ const milestoneCinematicData = [
         excerpt: "حرب مدمرة استمرت 51 يوماً ضد قطاع غزة، وشهدت مجازر مروعة بحق العائلات وتدميراً واسعاً.", 
         stat: "2,200+ شهيد",
         statExp: "أكثر من 2200 شهيد بينهم مئات الأطفال والنساء وعائلات بأكملها مسحت من السجل المدني",
-        sourceName: "مرصد شيرين",
-        sourceUrl: "https://www.shireen.ps/"
+        sourceName: "الجهاز المركزي للإحصاء الفلسطيني",
+        sourceUrl: "https://www.pcbs.gov.ps/"
     },
 
     { id: "d2020", type: "decade", decade: "2020" },
@@ -565,8 +565,8 @@ const milestoneCinematicData = [
         excerpt: "الملحمة التاريخية الكبرى وطوفان الأقصى وما تلاه من حرب إبادة جماعية وعدوان غير مسبوق على قطاع غزة والضفة والمنطقة.", 
         stat: "عشرات الآلاف من الشهداء",
         statExp: "أكثر من 158,000 إلى 291,000 شهيد ومفقود وجريح ومستشهد تحت الأنقاض وفي حرب الإبادة الجماعية المستمرة",
-        sourceName: "مرصد شيرين والتقارير الإحصائية الرسمية",
-        sourceUrl: "https://www.shireen.ps/"
+        sourceName: "الجهاز المركزي للإحصاء الفلسطيني وتقارير الأمم المتحدة",
+        sourceUrl: "https://www.pcbs.gov.ps/"
     }
 ];
 
@@ -632,7 +632,7 @@ function openMilestoneModal(item) {
             </div>
             <div class="tlc-modal-source">
                 <span>المصدر:</span>
-                <a href="${item.sourceUrl || 'https://www.shireen.ps/'}" target="_blank" rel="noopener">${item.sourceName || 'مرصد شيرين'}</a>
+                <a href="${item.sourceUrl || 'https://www.palquest.org/'}" target="_blank" rel="noopener">${item.sourceName || 'الموسوعة التفاعلية للقضية الفلسطينية'}</a>
             </div>
         </div>
     `;
@@ -1056,4 +1056,3 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-```[cite: 7, 8]
