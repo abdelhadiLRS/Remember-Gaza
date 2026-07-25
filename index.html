@@ -29,7 +29,7 @@
 body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-serif;color:white;}
 #canvas-layer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;transition:opacity 0.4s ease;pointer-events:auto;cursor:pointer;}
 #shooting-stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;}
-#stats-view, #videos-view, #no-data-view, #map-view, #milestones-view, #westbank-view, #martyrs48-view, #injured-view{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:20;background:rgba(10,10,10,0.98);overflow-y:auto;pointer-events:auto;padding-top:90px;padding-bottom:100px;}
+#stats-view, #videos-view, #no-data-view, #map-view, #milestones-view, #westbank-view, #martyrs48-view{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:20;background:rgba(10,10,10,0.98);overflow-y:auto;pointer-events:auto;padding-top:90px;padding-bottom:100px;}
 #ui-layer{position:fixed;inset:0;z-index:30;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;}
 .interactive{pointer-events:auto;}
 .glass-panel{background:rgba(15, 15, 15, 0.9);border:1px solid rgba(239,68,68,0.15);backdrop-filter:blur(10px);}
@@ -193,41 +193,6 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 </div>
 </main>
 
-<!-- تصميم خانة الجرحى -->
-<main id="injured-view" class="text-white">
-<div class="w-full max-w-6xl mx-auto px-6 py-10 font-['Cairo']">
-    <div class="mb-8 text-center">
-        <h2 class="text-3xl font-bold text-red-400 mb-2">إحصائيات الجرحى والمصابين</h2>
-        <p class="text-xs text-gray-400">رصد ميداني لأعداد الإصابات والإعاقات الناجمة عن العدوان المستمر</p>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <div class="glass-panel p-6 rounded-2xl text-center border border-red-600/20">
-            <span class="text-xs text-gray-400 block mb-1">إجمالي عدد الجرحى والمصابين</span>
-            <p class="text-3xl font-black text-white">~105,000+</p>
-            <span class="text-[10px] text-red-400 mt-2 block">حالات إصابة متفاوتة الخطورة</span>
-        </div>
-        <div class="glass-panel p-6 rounded-2xl text-center border border-white/10">
-            <span class="text-xs text-gray-400 block mb-1">الإصابات بين الأطفال والنساء</span>
-            <p class="text-3xl font-black text-white">70%+</p>
-            <span class="text-[10px] text-gray-400 mt-2 block">من إجمالي الجرحى</span>
-        </div>
-        <div class="glass-panel p-6 rounded-2xl text-center border border-white/10">
-            <span class="text-xs text-gray-400 block mb-1">حالات الإعاقة المستدامة</span>
-            <p class="text-3xl font-black text-white">12,000+</p>
-            <span class="text-[10px] text-gray-400 mt-2 block">بين بتر للأطراف وإصابات بالغة</span>
-        </div>
-    </div>
-    <div class="glass-panel p-6 rounded-2xl">
-        <h3 class="text-sm font-bold text-red-400 mb-4">التحديات الصحية والإنسانية للجرحى</h3>
-        <ul class="space-y-3 text-xs text-gray-300">
-            <li class="flex justify-between border-b border-white/5 pb-2"><span>بحاجة ماسة للعلاج والسفر خارج القطاع:</span> <strong class="text-white">أكثر من 25,000 جريح</strong></li>
-            <li class="flex justify-between border-b border-white/5 pb-2"><span>انهيار المنظومة الصحية ونقص المستلزمات الطبية:</span> <strong class="text-red-400">حرج للغاية</strong></li>
-            <li class="flex justify-between"><span>مرضى الفشل الكلوي والأمراض المزمنة المحرومون من العلاج:</span> <strong class="text-red-400">مهددون بالخطر المباشر</strong></li>
-        </ul>
-    </div>
-</div>
-</main>
-
 <!-- تصميم خانة التوثيق والأرشيف -->
 <main id="videos-view" class="text-white">
 <div class="max-w-6xl mx-auto px-4 py-8 font-['Cairo']">
@@ -310,23 +275,28 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 </div>
 </main>
 
-<!-- تصميم خانة الإحصائيات -->
+<!-- تصميم خانة الإحصائيات (شاملة لبيانات الجرحى والإصابات) -->
 <main id="stats-view" class="text-white">
 <div class="w-full max-w-6xl mx-auto px-6 py-10 font-['Cairo']">
 <div class="mb-8 text-center">
     <h2 id="stats-title" class="text-3xl font-bold text-red-400 mb-2">الإحصائيات والبيانات الشاملة</h2>
     <p class="text-xs text-gray-400">رصد دقيق ومؤشرات متكاملة للوضع الإنساني والميداني</p>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
     <div class="glass-panel p-5 rounded-2xl text-center border border-red-600/20">
         <span class="text-xs text-gray-400 block mb-1">الشهداء والمفقودون</span>
         <p class="text-2xl font-black text-white">~158,000 – 291,000</p>
         <span class="text-[10px] text-red-400 mt-2 block">موثق بالبيانات الرسمية</span>
     </div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-red-600/20">
+        <span class="text-xs text-gray-400 block mb-1">إجمالي الجرحى والمصابين</span>
+        <p class="text-2xl font-black text-white">~105,000+</p>
+        <span class="text-[10px] text-red-400 mt-2 block">حالات إصابة متفاوتة الخطورة</span>
+    </div>
     <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">الأطفال والنساء</span>
-        <p class="text-2xl font-black text-white">70%</p>
-        <span class="text-[10px] text-gray-400 mt-2 block">من إجمالي الضحايا</span>
+        <span class="text-xs text-gray-400 block mb-1">الأطفال والنساء (من الضحايا والجرحى)</span>
+        <p class="text-2xl font-black text-white">70%+</p>
+        <span class="text-[10px] text-gray-400 mt-2 block">من إجمالي الضحايا والجرحى</span>
     </div>
     <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
         <span class="text-xs text-gray-400 block mb-1">النازحون قسراً</span>
@@ -338,27 +308,30 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
         <p class="text-2xl font-black text-white">190+</p>
         <span class="text-[10px] text-gray-400 mt-2 block">صوت الحقيقة الميداني</span>
     </div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
+        <span class="text-xs text-gray-400 block mb-1">حالات الإعاقة المستدامة</span>
+        <p class="text-2xl font-black text-white">12,000+</p>
+        <span class="text-[10px] text-gray-400 mt-2 block">بين بتر للأطراف وإصابات بالغة</span>
+    </div>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
     <div class="glass-panel p-6 rounded-2xl">
-        <h3 class="text-sm font-bold text-red-400 mb-3">القطاع الصحي</h3>
+        <h3 class="text-sm font-bold text-red-400 mb-3">القطاع الصحي والجرحى</h3>
         <ul class="space-y-2 text-xs text-gray-300">
             <li class="flex justify-between border-b border-white/5 pb-1"><span>المستشفيات المدمرة كلياً:</span> <strong class="text-white">34 مستشفى</strong></li>
             <li class="flex justify-between border-b border-white/5 pb-1"><span>الكوادر الطبية الشهيدة:</span> <strong class="text-white">1,000+</strong></li>
-            <li class="flex justify-between"><span>سيارات الإسعاف المعطلة:</span> <strong class="text-white">130+</strong></li>
+            <li class="flex justify-between border-b border-white/5 pb-1"><span>سيارات الإسعاف المعطلة:</span> <strong class="text-white">130+</strong></li>
+            <li class="flex justify-between border-b border-white/5 pb-1"><span>بحاجة ماسة للعلاج والسفر للخارج:</span> <strong class="text-white">أكثر من 25,000 جريح</strong></li>
+            <li class="flex justify-between border-b border-white/5 pb-1"><span>انهيار المنظومة الصحية:</span> <strong class="text-red-400">حرج للغاية</strong></li>
+            <li class="flex justify-between"><span>مرضى الفشل الكلوي والأمراض المزمنة:</span> <strong class="text-red-400">مهددون بالخطر المباشر</strong></li>
         </ul>
     </div>
     <div class="glass-panel p-6 rounded-2xl">
-        <h3 class="text-sm font-bold text-red-400 mb-3">البنية التحتية والتعليم</h3>
+        <h3 class="text-sm font-bold text-red-400 mb-3">البنية التحتية والتعليم والأمن الغذائي</h3>
         <ul class="space-y-2 text-xs text-gray-300">
             <li class="flex justify-between border-b border-white/5 pb-1"><span>المدارس والجامعات المدمرة:</span> <strong class="text-white">120+ مؤسسة</strong></li>
             <li class="flex justify-between border-b border-white/5 pb-1"><span>الوحدات السكنية المدمرة:</span> <strong class="text-white">70% كلياً</strong></li>
-            <li class="flex justify-between"><span>المساجد والكنائس المستهدفة:</span> <strong class="text-white">600+</strong></li>
-        </ul>
-    </div>
-    <div class="glass-panel p-6 rounded-2xl">
-        <h3 class="text-sm font-bold text-red-400 mb-3">مؤشرات الأمن الغذائي</h3>
-        <ul class="space-y-2 text-xs text-gray-300">
+            <li class="flex justify-between border-b border-white/5 pb-1"><span>المساجد والكنائس المستهدفة:</span> <strong class="text-white">600+</strong></li>
             <li class="flex justify-between border-b border-white/5 pb-1"><span>مستوى انعدام الأمن الغذائي:</span> <strong class="text-red-400">حرج للغاية</strong></li>
             <li class="flex justify-between border-b border-white/5 pb-1"><span>المجاعة في الشمال:</span> <strong class="text-red-400">مؤكدة وواسعة</strong></li>
             <li class="flex justify-between"><span>المساعدات الإنسانية الداخلة:</span> <strong class="text-yellow-400">شحيحة جداً</strong></li>
@@ -382,7 +355,6 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 <button class="btn-main" id="tab-journalists" onclick="switchMainMode('journalists')">شهداء الصحافة</button>
 <button class="btn-main" id="tab-westbank" onclick="switchMainMode('westbank')">شهداء الضفة</button>
 <button class="btn-main" id="tab-48" onclick="switchMainMode('martyrs48')">شهداء 48</button>
-<button class="btn-main" id="tab-injured" onclick="switchMainMode('injured')">الجرحى</button>
 <button class="btn-main" id="tab-milestones" onclick="switchMainMode('milestones')">أبرز المحطات</button>
 <button class="btn-main" id="tab-stats" onclick="switchMainMode('stats')">الإحصائيات</button>
 <button class="btn-main" id="tab-videos" onclick="switchMainMode('videos')">التوثيق والأرشيف</button>
@@ -554,8 +526,8 @@ const milestoneCinematicData = [
 ];
 
 const translations={
-ar:{titleMain:"أرواح",logoText:"فلسطين",searchPlaceholder:"ابحث عن اسم الشهيد...",tabSouls:" شهداء غزة",tabJournalists:" صحفيو غزة",tabWestBank:" الضفة الغربية",tab48:" شهداء 48",tabInjured:" الجرحى",tabMilestones:" أبرز المحطات",tabStats:" الإحصائيات",tabVideos:" التوثيق والأرشيف",tabMap:" الخريطة",donate:"❤️ إدعمنا لنستمر",musicOn:"🎵 الصوت",musicOff:"🔇 إيقاف",visitorText:"زوار:",verse:`"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"`,devText:"تطوير: عبد الهادي",shareBtn:"مشاركة",martyrsLabel:"شهيداً وثّقت أسماؤهم"},
-en:{titleMain:"Palestinian",logoText:"Souls",searchPlaceholder:"Search martyr...",tabSouls:" Gaza Souls",tabJournalists:" Gaza Journalists",tabWestBank:" West Bank",tab48:" 48 Martyrs",tabInjured:" Injured",tabMilestones:" Milestones",tabStats:" Statistics",tabVideos:" Footage",tabMap:" Map",donate:" Support Us",musicOn:"🎵 Audio",musicOff:"Mute",visitorText:"Visits:",verse:`"Think not of those who are slain in Allah's way as dead..."`,devTest:"Dev: Abdelhadi",shareBtn:"Share",martyrsLabel:"Martyrs Documented"}
+ar:{titleMain:"أرواح",logoText:"فلسطين",searchPlaceholder:"ابحث عن اسم الشهيد...",tabSouls:" شهداء غزة",tabJournalists:" صحفيو غزة",tabWestBank:" الضفة الغربية",tab48:" شهداء 48",tabMilestones:" أبرز المحطات",tabStats:" الإحصائيات",tabVideos:" التوثيق والأرشيف",tabMap:" الخريطة",donate:"❤️ إدعمنا لنستمر",musicOn:"🎵 الصوت",musicOff:"🔇 إيقاف",visitorText:"زوار:",verse:`"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"`,devText:"تطوير: عبد الهادي",shareBtn:"مشاركة",martyrsLabel:"شهيداً وثّقت أسماؤهم"},
+en:{titleMain:"Palestinian",logoText:"Souls",searchPlaceholder:"Search martyr...",tabSouls:" Gaza Souls",tabJournalists:" Gaza Journalists",tabWestBank:" West Bank",tab48:" 48 Martyrs",tabMilestones:" Milestones",tabStats:" Statistics",tabVideos:" Footage",tabMap:" Map",donate:" Support Us",musicOn:"🎵 Audio",musicOff:"Mute",visitorText:"Visits:",verse:`"Think not of those who are slain in Allah's way as dead..."`,devTest:"Dev: Abdelhadi",shareBtn:"Share",martyrsLabel:"Martyrs Documented"}
 };
 
 function changeLanguage(langCode){
@@ -571,7 +543,6 @@ document.getElementById('tab-souls').innerText=t.tabSouls;
 document.getElementById('tab-journalists').innerText=t.tabJournalists;
 document.getElementById('tab-westbank').innerText=t.tabWestBank;
 document.getElementById('tab-48').innerText=t.tab48;
-document.getElementById('tab-injured').innerText=t.tabInjured;
 document.getElementById('tab-milestones').innerText=t.tabMilestones;
 document.getElementById('tab-stats').innerText=t.tabStats;
 document.getElementById('tab-videos').innerText=t.tabVideos;
@@ -734,7 +705,7 @@ window.switchMainMode = function(mode) {
     const activeBtn = document.getElementById(`tab-${mode === 'martyrs48' ? '48' : mode}`);
     if (activeBtn) activeBtn.classList.add('active');
     
-    ['map-view', 'stats-view', 'videos-view', 'no-data-view', 'milestones-view', 'westbank-view', 'martyrs48-view', 'injured-view'].forEach(id => {
+    ['map-view', 'stats-view', 'videos-view', 'no-data-view', 'milestones-view', 'westbank-view', 'martyrs48-view'].forEach(id => {
         document.getElementById(id).style.display = 'none';
     });
 
@@ -759,10 +730,6 @@ window.switchMainMode = function(mode) {
         points = [];
         if(ctx) ctx.clearRect(0, 0, width, height);
         document.getElementById('number').innerText = "0";
-    } else if(mode === 'injured') {
-        document.getElementById('injured-view').style.display = 'block';
-        points = [];
-        if(ctx) ctx.clearRect(0, 0, width, height);
     } else if(mode === 'milestones') {
         document.getElementById('milestones-view').style.display = 'block';
         renderCinematicTimeline();
