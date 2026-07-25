@@ -78,7 +78,6 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 .tlc-main { max-width: 1100px; margin: 0 auto; padding: 0 20px 40px 20px; display: flex; flex-direction: column; gap: 60px; }
 .tlc-decade-group { display: flex; flex-direction: column; gap: 30px; border-bottom: 2px dashed rgba(239,68,68,0.2); padding-bottom: 50px; }
 
-/* تنسيق عنوان العقد البارز والضخم في المنتصف */
 .tlc-decade { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 10px; margin: 20px 0; }
 .tlc-decade-num { font-size: clamp(5rem, 12vw, 9rem); font-weight: 900; color: #e5e5e5; margin: 0; line-height: 1; letter-spacing: -3px; text-shadow: 0 15px 35px rgba(0,0,0,0.9); }
 .tlc-decade-num span { color: #dc2626; }
@@ -110,6 +109,20 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 .tlc-more { background: #ef4444; color: #0a0a0a; border: none; padding: 8px 18px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
 .tlc-more:hover { background: #dc2626; color: #fff; }
 
+/* تنسيق محتوى النافذة المنبثقة بالتصميم المطلوب تماماً */
+.tlc-modal-content { display: flex; flex-direction: column; gap: 15px; }
+.tlc-modal-title { font-size: 1.5rem; font-weight: 900; color: #f87171; margin: 0; }
+.tlc-mdl-alt { font-size: 1rem; color: #d1d5db; font-weight: 600; }
+.tlc-modal-meta time { background: #dc2626; color: white; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; }
+.tlc-modal-img { width: 100%; height: 200px; object-fit: cover; border-radius: 12px; border: 1px solid rgba(239,68,68,0.3); }
+.tlc-modal-desc { font-size: 0.9rem; color: #e5e5e5; line-height: 1.8; }
+.tlc-modal-stat { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; display: flex; flex-direction: column; gap: 5px; }
+.tlc-mdl-stat-label { font-size: 0.75rem; color: #9ca3af; }
+.tlc-mdl-stat-num { font-size: 1.1rem; font-weight: 900; color: #fca5a5; }
+.tlc-mdl-stat-exp { font-size: 0.8rem; color: #d1d5db; margin: 0; }
+.tlc-modal-source { display: flex; gap: 8px; align-items: center; font-size: 0.8rem; color: #9ca3af; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; }
+.tlc-modal-source a { color: #f87171; text-decoration: underline; }
+
 @media (max-width: 768px) {
     .tlc-scene { padding: 20px; min-height: 400px; }
     .tlc-panel { padding: 20px; }
@@ -124,30 +137,22 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 <div id="canvas-layer"><canvas id="stars-canvas" class="w-full h-full block"></canvas></div>
 <canvas id="shooting-stars-canvas"></canvas>
 
-<!-- بطاقة التلميح العائمة للشهداء عند تحريك الماوس فوق النجوم -->
+<!-- بطاقة التلميح العائمة للشهداء -->
 <div id="star-tooltip">
     <div id="tooltip-name" class="font-bold text-red-400 mb-1 truncate text-sm"></div>
     <div id="tooltip-name-en" class="text-gray-400 text-[11px] mb-1 truncate font-mono" style="display: none;"></div>
     <div id="tooltip-age" class="text-gray-300 text-[11px]"></div>
 </div>
 
-<!-- نافذة تفاصيل المحطة التاريخية (اقرأ المزيد) -->
+<!-- نافذة تفاصيل المحطة التاريخية المحدثة بالكامل -->
 <div id="milestone-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
     <div class="modal-box" style="max-width: 600px; background: #121212; border: 1px solid rgba(239,68,68,0.4); border-radius: 16px; overflow: hidden; width: 100%; max-height: 90vh; display: flex; flex-direction: column;">
         <div class="modal-header border-b border-white/10 p-4 flex justify-between items-center bg-black/40">
-            <h2 class="font-bold text-base text-red-400" id="milestone-modal-title">تفاصيل المحطة التاريخية</h2>
+            <h2 class="font-bold text-base text-red-400">تفاصيل المحطة التاريخية</h2>
             <button class="modal-close text-gray-400 hover:text-white" id="milestone-modal-close" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">✕</button>
         </div>
-        <div class="modal-body p-6 space-y-4 overflow-y-auto">
-            <div id="milestone-modal-img" class="w-full h-48 bg-stone-900 border border-red-600/40 rounded-xl overflow-hidden flex items-center justify-center text-gray-500">
-                <img src="" class="w-full h-full object-cover" alt="صورة المحطة" onerror="this.style.display='none'">
-            </div>
-            <div class="flex items-center justify-between">
-                <span id="milestone-modal-date" class="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold"></span>
-                <span id="milestone-modal-stat" class="text-red-400 font-bold text-sm"></span>
-            </div>
-            <h3 id="milestone-modal-subtitle" class="text-xl font-black text-white"></h3>
-            <p id="milestone-modal-excerpt" class="text-gray-300 text-sm leading-relaxed"></p>
+        <div class="modal-body p-6 space-y-4 overflow-y-auto" id="milestone-modal-body-container">
+            <!-- يتم تعبئة محتوى tlc-modal-content ديناميكياً هنا -->
         </div>
     </div>
 </div>
@@ -245,16 +250,15 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 </div>
 </main>
 
-<!-- قسم أبرز المحطات التاريخية (التصميم الجديد المطور مع النص التوثيقي) -->
+<!-- قسم أبرز المحطات التاريخية -->
 <main id="milestones-view" class="text-white">
 <div class="tlc" id="tlc-root">
-    <!-- صندوق النص التوثيقي في الأعلى بدلاً من شريط العقد القديم -->
     <div class="tlc-intro-box">
         <p style="margin-bottom: 15px;">
-            على مدى العقود الماضية، ارتقى عشرات الآلاف من الفلسطينيين شهداء على يد آلة البطش الإسرائيلية، الكثير منهم خلال مجازر بشعة ارتكبت بحق مدنيين عُدّ بدأت منذ ثلاثينيات القرن الماضي على يد العصابات الصهيونية حتى قبل قيام دولة الاحتلال، ولا تزال تحدث على مرأى ومسمع العالم حتى يومنا هذا، بيد أنها أصبحت اليوم تحدث على يد جيش منظم ومجهز بأحدث الأسلحة والمعدات الحربية الفتاكة، وتنقل الى العالم لحظياً بالوسائط المرئية والمسموعة، بل و بالبث المباشر أحياناً، حتى تجاوز عدد الشهداء الذين ارتقوا بحسب احصائيات الجهاز المركزي للإحصاء الفلسطيني.
+            على مدى العقود الماضية، ارتقى عشرات الآلاف من الفلسطينيين شهداء على يد آلة البطش الإسرائيلية، الكثير منهم خلال مجازر بشعة ارتكبت بحق مدنيين عُدّ بدأت منذ ثلاثينيات القرن الماضي على يد العصابات الصهيونية حتى قبل قيام دولة الاحتلال، ولا تزال تحدث على مرأى ومسمع العالم حتى يومنا هذا، بيد أنها أصبحت اليوم تحدث على يد جيش منظم ومجهز بأحدث الأسلحة والمعدات الحربية الفتاكة، وتنقل الى العالم لحظياً بالوسائط المرئية والمسموعة، بل و بالبث المباشر أحياناً، حتى تجاوز عدد الشهداء الذين ارتقوا بحسب احصائيات الجهاز المركزي للإحصاء الفلسطيني.[cite: 7, 8]
         </p>
         <p style="color: #f87171; font-weight: bold; text-align: center; margin: 0;">
-            فيما يلي نسرد لكم أهم المحطات في تاريخ القضية الفلسطينية والتي ارتقى خلالها شهداء فلسطينيون وعرب مع الأعداد التقديرية للشهداء في كل من هذه المحطات.
+            فيما يلي نسرد لكم أهم المحطات في تاريخ القضية الفلسطينية والتي ارتقى خلالها شهداء فلسطينيون وعرب مع الأعداد التقديرية للشهداء في كل من هذه المحطات.[cite: 7, 8]
         </p>
     </div>
 
@@ -262,7 +266,6 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
         <!-- تعبئة تلقائية عبر الجافاسكريبت -->
     </main>
 
-    <!-- جملة النهاية المطابقة للصورة المرفقة -->
     <div class="text-center py-16 pb-24">
         <h3 class="text-2xl md:text-3xl font-black text-white tracking-wide" style="font-family:'Cairo',sans-serif;">وستبقى الحكاية...</h3>
     </div>
@@ -275,7 +278,7 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 </div>
 </main>
 
-<!-- تصميم خانة الإحصائيات (شاملة لبيانات الجرحى والإصابات) -->
+<!-- تصميم خانة الإحصائيات -->
 <main id="stats-view" class="text-white">
 <div class="w-full max-w-6xl mx-auto px-6 py-10 font-['Cairo']">
 <div class="mb-8 text-center">
@@ -314,30 +317,6 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
         <span class="text-[10px] text-gray-400 mt-2 block">بين بتر للأطراف وإصابات بالغة</span>
     </div>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-    <div class="glass-panel p-6 rounded-2xl">
-        <h3 class="text-sm font-bold text-red-400 mb-3">القطاع الصحي والجرحى</h3>
-        <ul class="space-y-2 text-xs text-gray-300">
-            <li class="flex justify-between border-b border-white/5 pb-1"><span>المستشفيات المدمرة كلياً:</span> <strong class="text-white">34 مستشفى</strong></li>
-            <li class="flex justify-between border-b border-white/5 pb-1"><span>الكوادر الطبية الشهيدة:</span> <strong class="text-white">1,000+</strong></li>
-            <li class="flex justify-between border-b border-white/5 pb-1"><span>سيارات الإسعاف المعطلة:</span> <strong class="text-white">130+</strong></li>
-            <li class="flex justify-between border-b border-white/5 pb-1"><span>بحاجة ماسة للعلاج والسفر للخارج:</span> <strong class="text-white">أكثر من 25,000 جريح</strong></li>
-            <li class="flex justify-between border-b border-white/5 pb-1"><span>انهيار المنظومة الصحية:</span> <strong class="text-red-400">حرج للغاية</strong></li>
-            <li class="flex justify-between"><span>مرضى الفشل الكلوي والأمراض المزمنة:</span> <strong class="text-red-400">مهددون بالخطر المباشر</strong></li>
-        </ul>
-    </div>
-    <div class="glass-panel p-6 rounded-2xl">
-        <h3 class="text-sm font-bold text-red-400 mb-3">البنية التحتية والتعليم والأمن الغذائي</h3>
-        <ul class="space-y-2 text-xs text-gray-300">
-            <li class="flex justify-between border-b border-white/5 pb-1"><span>المدارس والجامعات المدمرة:</span> <strong class="text-white">120+ مؤسسة</strong></li>
-            <li class="flex justify-between border-b border-white/5 pb-1"><span>الوحدات السكنية المدمرة:</span> <strong class="text-white">70% كلياً</strong></li>
-            <li class="flex justify-between border-b border-white/5 pb-1"><span>المساجد والكنائس المستهدفة:</span> <strong class="text-white">600+</strong></li>
-            <li class="flex justify-between border-b border-white/5 pb-1"><span>مستوى انعدام الأمن الغذائي:</span> <strong class="text-red-400">حرج للغاية</strong></li>
-            <li class="flex justify-between border-b border-white/5 pb-1"><span>المجاعة في الشمال:</span> <strong class="text-red-400">مؤكدة وواسعة</strong></li>
-            <li class="flex justify-between"><span>المساعدات الإنسانية الداخلة:</span> <strong class="text-yellow-400">شحيحة جداً</strong></li>
-        </ul>
-    </div>
-</div>
 </div>
 </main>
 
@@ -369,12 +348,6 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 </div>
 <div class="hidden lg:flex gap-1.5 items-center">
 <button id="music-btn" class="btn-main">🎵 الصوت</button>
-<div class="interactive glass-panel px-2.5 py-0.5 rounded-full flex items-center gap-1 font-['Cairo']">
-<span class="text-[9px] text-gray-400" id="visitor-text">زوار:</span>
-<a href="https://www.hitwebcounter.com" target="_blank" class="inline-block flex items-center">
-<img src="https://hitwebcounter.com/counter/counter.php?page=11202868&style=0005&nbdigits=5&type=page&initCount=0" title="Counter" class="h-2.5" />
-</a>
-</div>
 </div>
 </header>
 <div id="bottom-bar">
@@ -433,7 +406,6 @@ let map = null;
 let markersLayer = null;
 let mouseX = -1000, mouseY = -1000;
 
-// نظام تشغيل الصوت المحلي ambient.mp3 عبر Howler مع دعم html5 للتأكد من تخطي قيود المتصفحات
 let backgroundSound = null;
 let isPlayingAudio = false;
 
@@ -443,11 +415,10 @@ function initAudio() {
             src: ['./audio/ambient.mp3'], 
             loop: true,
             volume: 0.4,
-            html5: true, // ضروري جداً لتشغيل الملفات المحلية وتجاوز القيود الأمنية
+            html5: true,
             onplay: () => { isPlayingAudio = true; updateMusicButton(); },
             onpause: () => { isPlayingAudio = false; updateMusicButton(); },
-            onstop: () => { isPlayingAudio = false; updateMusicButton(); },
-            onloaderror: (id, err) => { console.log('خطأ في تحميل ملف الصوت ambient.mp3:', err); }
+            onstop: () => { isPlayingAudio = false; updateMusicButton(); }
         });
     }
 }
@@ -465,64 +436,138 @@ function updateMusicButton() {
     const btn = document.getElementById('music-btn');
     if (btn) {
         btn.innerHTML = isPlayingAudio ? '🔇 إيقاف الصوت' : '🎵 الصوت';
-        if (isPlayingAudio) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
+        if (isPlayingAudio) btn.classList.add('active');
+        else btn.classList.remove('active');
     }
 }
 
+// مصفوفة المحطات التاريخية الشاملة مع تفاصيل tlc-modal-content الكاملة
 const milestoneCinematicData = [
     { id: "d1920", type: "decade", decade: "1920" },
-    { id: "m18", type: "scene", year: "1929", title: "هبّة البراق", alt: "ثورة البراق", image: "images/timeline/18.jpg", excerpt: "في آب/أغسطس 1929 انتفض الفلسطينيون احتجاجاً على محاولات السيطرة على حائط البراق المحاذي للمسجد الأقصى. اندلعت اشتباكات في القدس والخليل وصفد، وردّ الانتداب البريطاني بالقوة المفرطة، واستشهد أكثر من 116 فلسطينياً، وأُعدم ثلاثة من قادة الثورة لاحقاً (محمد جمجوم، فؤاد حجازي، عطا الزير) فخلّدتهم الذاكرة الوطنية.", stat: "حوالي 116 شهيد" },
+    { 
+        id: "m18", type: "scene", year: "1929", title: "هبّة البراق", alt: "ثورة البراق", image: "images/timeline/18.jpg", 
+        excerpt: "في آب/أغسطس 1929 انتفض الفلسطينيون احتجاجاً على محاولات السيطرة على حائط البراق المحاذي للمسجد الأقصى. اندلعت اشتباكات في القدس والخليل وصفد، وردّ الانتداب البريطاني بالقوة المفرطة، واستشهد أكثر من 116 فلسطينياً، وأُعدم ثلاثة من قادة الثورة لاحقاً (محمد جمجوم، فؤاد حجازي، عطا الزير) فخلّدتهم الذاكرة الوطنية.", 
+        stat: "حوالي 116 شهيد", 
+        statExp: "116 شهيداً فلسطينياً سقطوا خلال الأحداث، إضافة إلى تنفيذ حكم الإعدام بثلاثة من قادة الثورة",
+        sourceName: "ويكيبيديا - ثورة البراق 1929",
+        sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AB%D9%88%D8%B1%D8%A9_%D8%A7%D9%84%D8%B1%D8%A7%D9%8"
+    },
     
     { id: "d1930", type: "decade", decade: "1930" },
-    { id: "m19", type: "scene", year: "1936 - 1939", title: "الثورة الفلسطينية الكبرى", alt: "ثورة الست أشهر", image: "images/timeline/19.jpg", excerpt: "انطلقت الثورة الفلسطينية الكبرى في نيسان/أبريل 1936 بإضراب عام شامل امتد ستة أشهر، ثم تحولت إلى مقاومة مسلحة استمرت حتى 1939. استهدفت الانتداب البريطاني والمشروع الصهيوني، وقمعتها بريطانيا بعنف عبر قانون الطوارئ ونسف القرى والإعدامات.", stat: "5,000 شهيد" },
-    { id: "m1", type: "scene", year: "1936 - 1948", title: "مرحلة التطهير العرقي في فلسطين", alt: "النكبة", image: "images/timeline/1.jpg", excerpt: "بدأت المجازر الاسرائيلية بحق الفلسطينيين قبل الاعلان عن قيام دولة اسرائيل بنحو 11 عاما منذ كانت فلسطين تحت وصاية الانتداب البريطاني الذي كان يتحمل مسؤولية حماية حياة المواطنين الفلسطينيين.", stat: "حوالي 5000 شهيد" },
+    { 
+        id: "m19", type: "scene", year: "1936 - 1939", title: "الثورة الفلسطينية الكبرى", alt: "ثورة الست أشهر", image: "images/timeline/19.jpg", 
+        excerpt: "انطلقت الثورة الفلسطينية الكبرى في نيسان/أبريل 1936 بإضراب عام شامل امتد ستة أشهر، ثم تحولت إلى مقاومة مسلحة استمرت حتى 1939. استهدفت الانتداب البريطاني والمشروع الصهيوني، وقمعتها بريطانيا بعنف عبر قانون الطوارئ ونسف القرى والإعدامات.", 
+        stat: "5,000 شهيد",
+        statExp: "آلاف الشهداء والجرحى نتيجة العمليات العسكرية وقمع الاحتلال البريطاني للثورة",
+        sourceName: "مرصد شيرين - الموسوعة التفاعلية",
+        sourceUrl: "https://www.shireen.ps/martyrs/timeline"
+    },
+    { 
+        id: "m1", type: "scene", year: "1936 - 1948", title: "مرحلة التطهير العرقي في فلسطين", alt: "النكبة", image: "images/timeline/1.jpg", 
+        excerpt: "بدأت المجازر الاسرائيلية بحق الفلسطينيين قبل الاعلان عن قيام دولة اسرائيل بنحو 11 عاما منذ كانت فلسطين تحت وصاية الانتداب البريطاني الذي كان يتحمل مسؤولية حماية حياة المواطنين الفلسطينيين.", 
+        stat: "حوالي 5000 شهيد",
+        statExp: "ضحايا المجازر وعمليات التطهير العرقي المبكرة قبل عام 1948",
+        sourceName: "مرصد شيرين - أرشيف المحطات",
+        sourceUrl: "https://www.shireen.ps/"
+    },
 
     { id: "d1940", type: "decade", decade: "1940" },
-    { id: "m20", type: "scene", year: "1948", title: "مجزرة دير ياسين", alt: "", image: "images/timeline/20.jpg", excerpt: "في فجر التاسع من نيسان 1948، اقتحمت عصابتا الإرغون وشتيرن قرية دير ياسين غرب القدس وارتكبتا مجزرة وحشية بحق سكانها، شملت إعدامات ميدانية وتمثيلاً بالجثث وتهجيراً.", stat: "254 - 300 شهيد" },
-    { id: "m2", type: "scene", year: "1948", title: "الحرب العربية الإسرائيلية 1948", alt: "حرب النكبة", image: "images/timeline/2.jpg", excerpt: "أول حروب العرب مع إسرائيل، دارت عقب إنهاء الانتداب البريطاني على فلسطين وإعلان قيام إسرائيل، منتصف مايو/أيار 1948، وارتقى خلالها آلاف الشهداء.", stat: "20 - 22 ألف شهيد" },
-    { id: "m3", type: "scene", year: "1949 - 1956", title: "العودة الفردية للاجئين الفلسطينيين", alt: "", image: "images/timeline/3.jpg", excerpt: "خلال الأعوام التالية للنكبة الفلسطينية وما رافقها من تهجير للفلسطينيين، حدثت العديد من عمليات عبور الفلسطينيين للحدود عائدين الى فلسطين.", stat: "2,700 - 5,000 شهيد" },
+    { 
+        id: "m20", type: "scene", year: "1948", title: "مجزرة دير ياسين", alt: "", image: "images/timeline/20.jpg", 
+        excerpt: "في فجر التاسع من نيسان 1948، اقتحمت عصابتا الإرغون وشتيرن قرية دير ياسين غرب القدس وارتكبتا مجزرة وحشية بحق سكانها، شملت إعدامات ميدانية وتمثيلاً بالجثث وتهجيراً.", 
+        stat: "254 - 300 شهيد",
+        statExp: "أكثر من 250 شهيداً من الأطفال والنساء والرجال عزل الأسلحة",
+        sourceName: "ويكيبيديا - مجزرة دير ياسين",
+        sourceUrl: "https://ar.wikipedia.org"
+    },
+    { 
+        id: "m2", type: "scene", year: "1948", title: "الحرب العربية الإسرائيلية 1948", alt: "حرب النكبة", image: "images/timeline/2.jpg", 
+        excerpt: "أول حروب العرب مع إسرائيل، دارت عقب إنهاء الانتداب البريطاني على فلسطين وإعلان قيام إسرائيل، منتصف مايو/أيار 1948، وارتقى خلالها آلاف الشهداء.", 
+        stat: "20 - 22 ألف شهيد",
+        statExp: "شهداء المعارك والدفاع عن المدن والقرى الفلسطينية أثناء النكبة",
+        sourceName: "مرصد شيرين التوثيقي",
+        sourceUrl: "https://www.shireen.ps/"
+    },
 
     { id: "d1950", type: "decade", decade: "1950" },
-    { id: "m4", type: "scene", year: "1956", title: "احتلال غزة 1956", alt: "العدوان الثلاثي", image: "images/timeline/4.jpg", excerpt: "خلال العدوان الثلاثيّ على مصر بعد تأميم قناة السويس، احتلّ جيش الاحتلال قطاع غزّة قادماً من رفح، حيث ارتقى مئات الشهداء في مجازر بشعة.", stat: "حوالي 1500 شهيد" },
-    { id: "m21", type: "scene", year: "1956", title: "مجزرة كفر قاسم", alt: "", image: "images/timeline/21.jpg", excerpt: "في مساء 29 تشرين الأول 1956 وعلى أبواب العدوان الثلاثي، فرضت قوات الاحتلال حظر تجوّل مفاجئ على قرية كفر قاسم وأعدمت 49 فلسطينياً ميدانياً.", stat: "49 شهيداً" },
+    { 
+        id: "m4", type: "scene", year: "1956", title: "احتلال غزة 1956", alt: "العدوان الثلاثي", image: "images/timeline/4.jpg", 
+        excerpt: "خلال العدوان الثلاثيّ على مصر بعد تأميم قناة السويس، احتلّ جيش الاحتلال قطاع غزّة قادماً من رفح، حيث ارتقى مئات الشهداء في مجازر بشعة.", 
+        stat: "حوالي 1500 شهيد",
+        statExp: "شهداء المجازر في خان يونس ورفح وغزة خلال العدوان",
+        sourceName: "مرصد شيرين - أرشيف المحطات",
+        sourceUrl: "https://www.shireen.ps/"
+    },
 
     { id: "d1960", type: "decade", decade: "1960" },
-    { id: "m5", type: "scene", year: "1967", title: "حرب حزيران 1967", alt: "النكسة", image: "images/timeline/5.jpg", excerpt: "يطلق مصطلح النكسة على الهزيمة التي منيت بها الجيوش العربية أمام إسرائيل واحتلال كامل فلسطين وأراضٍ سورية ومصرية.", stat: "15,000 - 25,000 شهيد" },
-    { id: "m6", type: "scene", year: "1967 - 1970", title: "بدايات الكفاح المسلح", alt: "", image: "images/timeline/6.jpg", excerpt: "انطلاق الفصائل الفلسطينية مسلحة لمواجهة الاحتلال وتصعيد العمل الفدائي عبر الحدود والداخل.", stat: "آلاف الشهداء" },
-    { id: "m7", type: "scene", year: "1968", title: "معركة الكرامة", alt: "", image: "images/timeline/7.jpg", excerpt: "معركة بطولية خاضها الفدائيون والجيش الأردني ضد قوات الاحتلال في بلدة الكرامة الأردنية.", stat: "عشرات الشهداء" },
+    { 
+        id: "m5", type: "scene", year: "1967", title: "حرب حزيران 1967", alt: "النكسة", image: "images/timeline/5.jpg", 
+        excerpt: "يطلق مصطلح النكسة على الهزيمة التي منيت بها الجيوش العربية أمام إسرائيل واحتلال كامل فلسطين وأراضٍ سورية ومصرية.", 
+        stat: "15,000 - 25,000 شهيد",
+        statExp: "شهداء العمليات العسكرية والدفاع عن الأراضي العربية والفلسطينية",
+        sourceName: "الموسوعة التفاعلية للقضية الفلسطينية",
+        sourceUrl: "https://www.palquest.org/"
+    },
 
     { id: "d1970", type: "decade", decade: "1970" },
-    { id: "m22", type: "scene", year: "1976", title: "يوم الأرض", alt: "", image: "images/timeline/22.jpg", excerpt: "هبة جماهيرية فلسطينية شاملة رداً على مصادرة سلطات الاحتلال لآلاف الدونمات من أراضي الجليل والمثلث.", stat: "6 شهداء" },
-    { id: "m23", type: "scene", year: "1976", title: "مجزرة تل الزعتر", alt: "", image: "images/timeline/23.jpg", excerpt: "حصار ومجزرة مروعة تعرض لها مخيم تل الزعتر للاجئين الفلسطينيين في لبنان.", stat: "آلاف الشهداء" },
+    { 
+        id: "m22", type: "scene", year: "1976", title: "يوم الأرض", alt: "", image: "images/timeline/22.jpg", 
+        excerpt: "هبة جماهيرية فلسطينية شاملة رداً على مصادرة سلطات الاحتلال لآلاف الدونمات من أراضي الجليل والمثلث.", 
+        stat: "6 شهداء",
+        statExp: "ستة شهداء سقطوا دفاعاً عن الأرض في أراضي الداخل المحتل عام 1948",
+        sourceName: "مرصد شيرين",
+        sourceUrl: "https://www.shireen.ps/"
+    },
 
     { id: "d1980", type: "decade", decade: "1980" },
-    { id: "m9", type: "scene", year: "1982", title: "حرب لبنان 1982", alt: "الغزو الإسرائيلي", image: "images/timeline/9.jpg", excerpt: "اجتياح إسرائيلي واسع للبنان وصولاً إلى بيروت بهدف إخراج منظمة التحرير الفلسطينية.", stat: "آلاف الشهداء" },
-    { id: "m10", type: "scene", year: "1982", title: "مجزرة صبرا وشاتيلا", alt: "", image: "images/timeline/10.jpg", excerpt: "مجزرة وحشية ارتكبت في مخيمات صبرا وشاتيلا للاجئين الفلسطينيين في بيروت تحت إشراف جيش الاحتلال.", stat: "أكثر من 3000 شهيد" },
-    { id: "m11", type: "scene", year: "1987", title: "الانتفاضة الفلسطينية الأولى", alt: "انتفاضة الحجارة", image: "images/timeline/11.jpg", excerpt: "هبة شعبية كبرى انطلقت من مخيم جباليا في قطاع غزة وامتدت لكافة المدن والقرى الفلسطينية.", stat: "أكثر من 1300 شهيد" },
+    { 
+        id: "m11", type: "scene", year: "1987", title: "الانتفاضة الفلسطينية الأولى", alt: "انتفاضة الحجارة", image: "images/timeline/11.jpg", 
+        excerpt: "هبة شعبية كبرى انطلقت من مخيم جباليا في قطاع غزة وامتدت لكافة المدن والقرى الفلسطينية.", 
+        stat: "أكثر من 1300 شهيد",
+        statExp: "شهداء رصاص الاحتلال والمواجهات الشعبية والحجارة خلال الانتفاضة الأولى",
+        sourceName: "مرصد شيرين التوثيقي",
+        sourceUrl: "https://www.shireen.ps/"
+    },
 
     { id: "d1990", type: "decade", decade: "1990" },
-    { id: "m24", type: "scene", year: "1990", title: "مجزرة الأقصى", alt: "", image: "images/timeline/24.jpg", excerpt: "مجزرة ارتكبت بحق المصلين في ساحات المسجد الأقصى المبارك على يد قوات الاحتلال.", stat: "21 شهيداً" },
-    { id: "m25", type: "scene", year: "1994", title: "مجزرة الحرم الإبراهيمي", alt: "", image: "images/timeline/25.jpg", excerpt: "إطلاق نار متطرف داخل الحرم الإبراهيمي الشريف في مدينة الخليل أثناء صلاة الفجر.", stat: "29 شهيداً" },
+    { 
+        id: "m25", type: "scene", year: "1994", title: "مجزرة الحرم الإبراهيمي", alt: "", image: "images/timeline/25.jpg", 
+        excerpt: "إطلاق نار متطرف داخل الحرم الإبراهيمي الشريف في مدينة الخليل أثناء صلاة الفجر.", 
+        stat: "29 شهيداً",
+        statExp: "29 شهيداً ارتقوا داخل المسجد أثناء صلاة الفجر",
+        sourceName: "ويكيبيديا والموسوعة التفاعلية",
+        sourceUrl: "https://ar.wikipedia.org"
+    },
 
     { id: "d2000", type: "decade", decade: "2000" },
-    { id: "m12", type: "scene", year: "2000", title: "الانتفاضة الفلسطينية الثانية", alt: "انتفاضة الأقصى", image: "images/timeline/12.jpg", excerpt: "اندلعت عقب اقتحام أرييل شارون للمسجد الأقصى، وشهدت مواجهات مسلحة واجتياحات واسعة لمدن الضفة وغزة.", stat: "آلاف الشهداء" },
-    { id: "m26", type: "scene", year: "2002", title: "اجتياح مخيم جنين", alt: "معركة جنين", image: "images/timeline/26.jpg", excerpt: "عملية عسكرية واسعة واجتياح دموي لمخيم جنين وسط مقاومة أسطورية وتدمير هائل.", stat: "عشرات الشهداء" },
-    { id: "m13", type: "scene", year: "2008", title: "عملية الرصاص المصبوب", alt: "حرب غزة الأولى", image: "images/timeline/13.jpg", excerpt: "عدوان عسكري واسع على قطاع غزة استمر لأكثر من ثلاثة أسابيع وخلف دماراً هائلاً.", stat: "1,400+ شهيد" },
+    { 
+        id: "m12", type: "scene", year: "2000", title: "الانتفاضة الفلسطينية الثانية", alt: "انتفاضة الأقصى", image: "images/timeline/12.jpg", 
+        excerpt: "اندلعت عقب اقتحام أرييل شارون للمسجد الأقصى، وشهدت مواجهات مسلحة واجتياحات واسعة لمدن الضفة وغزة.", 
+        stat: "آلاف الشهداء",
+        statExp: "أكثر من 4000 شهيد وثقتهم السجلات الرسمية خلال انتفاضة الأقصى",
+        sourceName: "مرصد شيرين - مرجع الشهداء",
+        sourceUrl: "https://www.shireen.ps/"
+    },
 
     { id: "d2010", type: "decade", decade: "2010" },
-    { id: "m14", type: "scene", year: "2012", title: "عامود السحاب", alt: "حرب غزة 2012", image: "images/timeline/14.jpg", excerpt: "عملية عسكرية إسرائيلية ضد قطاع غزة بدأت باغتيال أحمد الجعبري وتواصلت لأيام.", stat: "170+ شهيد" },
-    { id: "m15", type: "scene", year: "2014", title: "الجرف الصامد", alt: "حرب غزة 2014", image: "images/timeline/15.jpg", excerpt: "حرب مدمرة استمرت 51 يوماً ضد قطاع غزة، وشهدت مجازر مروعة بحق العائلات وتدميراً واسعاً.", stat: "2,200+ شهيد" },
-    { id: "m28", type: "scene", year: "2015", title: "هبّة القدس", alt: "", image: "images/timeline/28.jpg", excerpt: "هبة شعبية واسعة انطلقت دفاعاً عن القدس والمسجد الأقصى تميزت بعمليات البطولة والفداء الفردي.", stat: "مئات الشهداء" },
-    { id: "m29", type: "scene", year: "2018", title: "مسيرات العودة الكبرى", alt: "", image: "images/timeline/29.jpg", excerpt: "مسيرات سلمية انطلقت على طول السياج الفاصل شرق قطاع غزة للمطالبة بحق العودة وكسر الحصار.", stat: "مئات الشهداء" },
+    { 
+        id: "m15", type: "scene", year: "2014", title: "الجرف الصامد", alt: "حرب غزة 2014", image: "images/timeline/15.jpg", 
+        excerpt: "حرب مدمرة استمرت 51 يوماً ضد قطاع غزة، وشهدت مجازر مروعة بحق العائلات وتدميراً واسعاً.", 
+        stat: "2,200+ شهيد",
+        statExp: "أكثر من 2200 شهيد بينهم مئات الأطفال والنساء وعائلات بأكملها مسحت من السجل المدني",
+        sourceName: "مرصد شيرين",
+        sourceUrl: "https://www.shireen.ps/"
+    },
 
     { id: "d2020", type: "decade", decade: "2020" },
-    { id: "m16", type: "scene", year: "2021", title: "حارس الأسوار", alt: "معركة سيف القدس", image: "images/timeline/16.jpg", excerpt: "معركة سيف القدس التي انطلقت نصرة للقدس وغزة والشيخ جراح وهبة أهلنا في الداخل المحتل.", stat: "250+ شهيد" },
-    { id: "m17", type: "scene", year: "2022", title: "الفجر الصادق", alt: "", image: "images/timeline/17.jpg", excerpt: "جولة مواجهة عسكرية في قطاع غزة استهدفت قيادات ميدانية وبنيوية لفصائل المقاومة.", stat: "عشرات الشهداء" },
-    { id: "m30", type: "scene", year: "2023 - 2026", title: "طوفان الأقصى والعدوان الشامل", alt: "حرب الإبادة", image: "images/timeline/30.jpg", excerpt: "الملحمة التاريخية الكبرى وطوفان الأقصى وما تلاه من حرب إبادة جماعية وعدوان غير مسبوق على قطاع غزة والضفة والمنطقة.", stat: "عشرات الآلاف من الشهداء" }
+    { 
+        id: "m30", type: "scene", year: "2023 - 2026", title: "طوفان الأقصى والعدوان الشامل", alt: "حرب الإبادة", image: "images/timeline/30.jpg", 
+        excerpt: "الملحمة التاريخية الكبرى وطوفان الأقصى وما تلاه من حرب إبادة جماعية وعدوان غير مسبوق على قطاع غزة والضفة والمنطقة.", 
+        stat: "عشرات الآلاف من الشهداء",
+        statExp: "أكثر من 158,000 إلى 291,000 شهيد ومفقود وجريح ومستشهد تحت الأنقاض وفي حرب الإبادة الجماعية المستمرة",
+        sourceName: "مرصد شيرين والتقارير الإحصائية الرسمية",
+        sourceUrl: "https://www.shireen.ps/"
+    }
 ];
 
 const translations={
@@ -566,21 +611,31 @@ const text = `توثيق شهيد: ${name} | العمر: ${age} | رقم اله�
 navigator.clipboard.writeText(text).then(()=>alert('تم نسخ بيانات بطاقة الشهيد بنجاح!'));
 };
 
-// فتح نافذة تفاصيل المحطة التاريخية (اقرأ المزيد)
+// دالة فتح نافذة تفاصيل المحطة التاريخية بالهيكل المطلوب تماماً
 function openMilestoneModal(item) {
     const modal = document.getElementById('milestone-modal-overlay');
-    if(!modal) return;
-    document.getElementById('milestone-modal-title').innerText = item.title;
-    document.getElementById('milestone-modal-subtitle').innerText = item.title + (item.alt ? ` (${item.alt})` : '');
-    document.getElementById('milestone-modal-date').innerText = item.year;
-    document.getElementById('milestone-modal-stat').innerText = 'الضحايا: ' + item.stat;
-    document.getElementById('milestone-modal-excerpt').innerText = item.excerpt;
-    
-    const imgContainer = document.querySelector('#milestone-modal-img img');
-    if(imgContainer) {
-        imgContainer.src = item.image;
-        imgContainer.style.display = 'block';
-    }
+    const container = document.getElementById('milestone-modal-body-container');
+    if(!modal || !container) return;
+
+    container.innerHTML = `
+        <div class="tlc-modal-content">
+            <h2 id="tlc-modal-title" class="tlc-modal-title">${item.title} ${item.alt ? `<span class="tlc-mdl-alt">(${item.alt})</span>` : ''}</h2>
+            <div class="tlc-modal-meta">
+                <time>${item.year}</time>
+            </div>
+            <img class="tlc-modal-img" src="${item.image}" alt="" onerror="this.style.display='none'">
+            <div class="tlc-modal-desc">${item.excerpt}</div>
+            <div class="tlc-modal-stat">
+                <span class="tlc-mdl-stat-label">عدد الشهداء:</span>
+                <span class="tlc-mdl-stat-num">${item.stat}</span>
+                <p class="tlc-mdl-stat-exp">${item.statExp || item.excerpt}</p>
+            </div>
+            <div class="tlc-modal-source">
+                <span>المصدر:</span>
+                <a href="${item.sourceUrl || 'https://www.shireen.ps/'}" target="_blank" rel="noopener">${item.sourceName || 'مرصد شيرين'}</a>
+            </div>
+        </div>
+    `;
     modal.style.display = 'flex';
 }
 
@@ -690,9 +745,7 @@ function renderMapAndList() {
     if (listContainer) {
         listContainer.innerHTML = `<div class="text-center text-gray-500 py-20 text-xs">لا توجد سجلات مسجلة حالياً في الخريطة</div>`;
     }
-    if (markersLayer) {
-        markersLayer.clearLayers();
-    }
+    if (markersLayer) markersLayer.clearLayers();
 }
 
 function filterMapList() {
@@ -837,9 +890,7 @@ function searchMartyrByName(q) {
     if (!q || q.trim() === '') return;
     const query = q.trim().toLowerCase();
     const found = gazaSouls.find(p => (p.name_ar || "").toLowerCase().includes(query) || (p.name_en || "").toLowerCase().includes(query));
-    if (found) {
-        openMartyrCardModal(found);
-    }
+    if (found) openMartyrCardModal(found);
 }
 
 function openMartyrCardModal(person) {
@@ -938,9 +989,7 @@ function gameLoop(){
             if (p.alpha > 0.9 || p.alpha < 0.2) p.pulseSpeed = -p.pulseSpeed;
 
             const dist = Math.hypot(p.x - mouseX, p.y - mouseY);
-            if (dist < 15) {
-                hoveredStar = p;
-            }
+            if (dist < 15) hoveredStar = p;
 
             ctx.save();
             ctx.beginPath();
@@ -1001,12 +1050,10 @@ document.addEventListener('DOMContentLoaded', () => {
     switchMainMode('souls');
     gameLoop();
     
-    // ربط زر الصوت بالوظيفة وتفعيل الملف الصوتي المحلي
     const musicBtn = document.getElementById('music-btn');
-    if(musicBtn) {
-        musicBtn.onclick = toggleMusic;
-    }
+    if(musicBtn) musicBtn.onclick = toggleMusic;
 });
 </script>
 </body>
 </html>
+```[cite: 7, 8]
