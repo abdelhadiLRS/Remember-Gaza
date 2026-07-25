@@ -29,7 +29,7 @@
 body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-serif;color:white;}
 #canvas-layer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;transition:opacity 0.4s ease;pointer-events:auto;cursor:pointer;}
 #shooting-stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;}
-#stats-view, #videos-view, #no-data-view, #map-view, #milestones-view{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:20;background:rgba(10,10,10,0.98);overflow-y:auto;pointer-events:auto;padding-top:90px;padding-bottom:100px;}
+#stats-view, #videos-view, #no-data-view, #map-view, #milestones-view, #westbank-view, #martyrs48-view, #injured-view{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:20;background:rgba(10,10,10,0.98);overflow-y:auto;pointer-events:auto;padding-top:90px;padding-bottom:100px;}
 #ui-layer{position:fixed;inset:0;z-index:30;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;}
 .interactive{pointer-events:auto;}
 .glass-panel{background:rgba(15, 15, 15, 0.9);border:1px solid rgba(239,68,68,0.15);backdrop-filter:blur(10px);}
@@ -44,13 +44,13 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 #search-input{background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.2);color:white;padding:4px 10px;border-radius:20px;width:130px;font-size:0.75rem;outline:none;transition:0.4s;}
 #search-input:focus{border-color:#ef4444;background:rgba(0,0,0,0.9);box-shadow:0 0 8px rgba(239,68,68,0.3);width:160px;}
 
-.btn-main{background:rgba(255,255,255,0.05);color:white;border:1px solid rgba(255,255,255,0.1);padding:4px 9px;border-radius:20px;cursor:pointer;transition:all 0.3s ease;font-size:0.72rem;white-space:nowrap;}
+.btn-main{background:rgba(255,255,255,0.05);color:white;border:1px solid rgba(255,255,255,0.1);padding:3px 7px;border-radius:20px;cursor:pointer;transition:all 0.3s ease;font-size:0.68rem;white-space:nowrap;}
 .btn-main:hover{background:rgba(220,38,38,0.3);border-color:rgba(239,68,68,0.5);}
 .btn-main.active{background:#dc2626;border-color:#ef4444;font-weight:bold;box-shadow:0 0 10px rgba(239,68,68,0.4);}
 
 #bottom-bar{display:flex;justify-content:space-between;align-items:flex-end;padding:15px 25px;pointer-events:none;flex-wrap:wrap;gap:15px;}
 #counter-box{text-align:center;padding:10px 25px;border-radius:15px;border-bottom:3px solid #dc2626;min-width:140px;background:rgba(10,10,10,0.9);}
-.social-links a,.share-btn{color:#fff;background:rgba(255,255,255,0.05);padding:6px 14px;border-radius:20px;font-size:0.8rem;text-decoration:none;transition:0.3s;white-space:nowrap;border:1px solid rgba(255,255,255,0.1);cursor:pointer;}
+.social-links a,.share-btn{color:#fff;background:rgba(255,255,255,0.05);padding:4px 10px;border-radius:20px;font-size:0.7rem;text-decoration:none;transition:0.3s;white-space:nowrap;border:1px solid rgba(255,255,255,0.1);cursor:pointer;}
 .social-links a:hover{background:#dc2626;border-color:#ef4444;}
 .share-btn:hover{background:#000000;border-color:#ffffff;}
 .font-amiri{font-family:'Amiri',serif;}
@@ -90,9 +90,9 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 .tlc-decade-card-img { height: 160px; overflow: hidden; position: relative; background: #111; }
 .tlc-decade-card-img img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
 .tlc-decade-card:hover .tlc-decade-card-img img { transform: scale(1.05); }
-.tlc-decade-card-body { padding: 15px; display: flex; flex-direction: column; gap: 6px; }
-.tlc-decade-card-year { font-size: 0.75rem; color: #ef4444; font-weight: bold; }
-.tlc-decade-card-title { font-size: 1rem; font-weight: bold; color: #fff; }
+.tlc-decade-card-body { padding: 12px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
+.tlc-decade-card-year { font-size: 0.7rem; color: #ef4444; font-weight: bold; }
+.tlc-decade-card-title { font-size: 0.85rem; font-weight: bold; color: #fff; text-align: center; }
 
 .tlc-scene { position: relative; border-radius: 20px; overflow: hidden; min-height: 450px; display: flex; align-items: flex-end; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); border: 1px solid rgba(239,68,68,0.2); margin-top: 20px; }
 .tlc-bg { position: absolute; inset: 0; z-index: 1; }
@@ -139,8 +139,8 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
             <button class="modal-close text-gray-400 hover:text-white" id="milestone-modal-close" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">✕</button>
         </div>
         <div class="modal-body p-6 space-y-4 overflow-y-auto">
-            <div id="milestone-modal-img" class="w-full h-48 bg-stone-900 border border-red-600/40 rounded-xl overflow-hidden">
-                <img src="" class="w-full h-full object-cover" alt="صورة المحطة">
+            <div id="milestone-modal-img" class="w-full h-48 bg-stone-900 border border-red-600/40 rounded-xl overflow-hidden flex items-center justify-center text-gray-500">
+                <img src="" class="w-full h-full object-cover" alt="صورة المحطة" onerror="this.style.display='none'">
             </div>
             <div class="flex items-center justify-between">
                 <span id="milestone-modal-date" class="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold"></span>
@@ -167,6 +167,63 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
         <div class="absolute inset-0 flex items-center justify-center bg-black/40 pointer-events-none">
             <span class="text-gray-400 text-sm font-semibold tracking-wide">الخريطة فارغة مؤقتاً</span>
         </div>
+    </div>
+</div>
+</main>
+
+<!-- تصميم خانة شهداء الضفة -->
+<main id="westbank-view" class="text-white">
+<div class="max-w-4xl mx-auto px-4 py-16 text-center font-['Cairo']">
+    <div class="glass-panel p-10 rounded-2xl border border-red-600/30">
+        <h2 class="text-2xl font-bold text-red-400 mb-3">شهداء الضفة الغربية والقدس</h2>
+        <p class="text-gray-300 text-sm leading-relaxed mb-6">توثيق شامل لأرواح الشهداء في مدن وقرى ومخيمات الضفة الغربية والقدس المحتلة في مواجهة اقتحامات الاحتلال واعتداءات المستوطنين.</p>
+        <div class="text-gray-400 text-xs">جاري تحديث السجلات والبيانات الميدانية...</div>
+    </div>
+</div>
+</main>
+
+<!-- تصميم خانة شهداء 48 -->
+<main id="martyrs48-view" class="text-white">
+<div class="max-w-4xl mx-auto px-4 py-16 text-center font-['Cairo']">
+    <div class="glass-panel p-10 rounded-2xl border border-red-600/30">
+        <h2 class="text-2xl font-bold text-red-400 mb-3">شهداء أراضي 1948 (الداخل الفلسطيني)</h2>
+        <p class="text-gray-300 text-sm leading-relaxed mb-6">سجل الخلود والبطولة لأبناء الشعب الفلسطيني في الداخل المحتل عام 1948 الذين ارقوا دفاعاً عن الهوية والوجود منذ النكبة وحتى اليوم.</p>
+        <div class="text-gray-400 text-xs">يتم إعداد الأرشيف التوثيقي الخاص بشهداء الداخل الفلسطيني...</div>
+    </div>
+</div>
+</main>
+
+<!-- تصميم خانة الجرحى -->
+<main id="injured-view" class="text-white">
+<div class="w-full max-w-6xl mx-auto px-6 py-10 font-['Cairo']">
+    <div class="mb-8 text-center">
+        <h2 class="text-3xl font-bold text-red-400 mb-2">إحصائيات الجرحى والمصابين</h2>
+        <p class="text-xs text-gray-400">رصد ميداني لأعداد الإصابات والإعاقات الناجمة عن العدوان المستمر</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div class="glass-panel p-6 rounded-2xl text-center border border-red-600/20">
+            <span class="text-xs text-gray-400 block mb-1">إجمالي عدد الجرحى والمصابين</span>
+            <p class="text-3xl font-black text-white">~105,000+</p>
+            <span class="text-[10px] text-red-400 mt-2 block">حالات إصابة متفاوتة الخطورة</span>
+        </div>
+        <div class="glass-panel p-6 rounded-2xl text-center border border-white/10">
+            <span class="text-xs text-gray-400 block mb-1">الإصابات بين الأطفال والنساء</span>
+            <p class="text-3xl font-black text-white">70%+</p>
+            <span class="text-[10px] text-gray-400 mt-2 block">من إجمالي الجرحى</span>
+        </div>
+        <div class="glass-panel p-6 rounded-2xl text-center border border-white/10">
+            <span class="text-xs text-gray-400 block mb-1">حالات الإعاقة المستدامة</span>
+            <p class="text-3xl font-black text-white">12,000+</p>
+            <span class="text-[10px] text-gray-400 mt-2 block">بين بتر للأطراف وإصابات بالغة</span>
+        </div>
+    </div>
+    <div class="glass-panel p-6 rounded-2xl">
+        <h3 class="text-sm font-bold text-red-400 mb-4">التحديات الصحية والإنسانية للجرحى</h3>
+        <ul class="space-y-3 text-xs text-gray-300">
+            <li class="flex justify-between border-b border-white/5 pb-2"><span>بحاجة ماسة للعلاج والسفر خارج القطاع:</span> <strong class="text-white">أكثر من 25,000 جريح</strong></li>
+            <li class="flex justify-between border-b border-white/5 pb-2"><span>انهيار المنظومة الصحية ونقص المستلزمات الطبية:</span> <strong class="text-red-400">حرج للغاية</strong></li>
+            <li class="flex justify-between"><span>مرضى الفشل الكلوي والأمراض المزمنة المحرومون من العلاج:</span> <strong class="text-red-400">مهددون بالخطر المباشر</strong></li>
+        </ul>
     </div>
 </div>
 </main>
@@ -239,6 +296,11 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
     <main class="tlc-main" id="tlc-scenes-container">
         <!-- تعبئة تلقائية عبر الجافاسكريبت -->
     </main>
+
+    <!-- جملة النهاية المطابقة للصورة المرفقة -->
+    <div class="text-center py-16 pb-24">
+        <h3 class="text-2xl md:text-3xl font-black text-white tracking-wide" style="font-family:'Cairo',sans-serif;">وستبقى الحكاية...</h3>
+    </div>
 </div>
 </main>
 
@@ -319,6 +381,8 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 <button class="btn-main active" id="tab-souls" onclick="switchMainMode('souls')">شهداء غزة</button>
 <button class="btn-main" id="tab-journalists" onclick="switchMainMode('journalists')">شهداء الصحافة</button>
 <button class="btn-main" id="tab-westbank" onclick="switchMainMode('westbank')">شهداء الضفة</button>
+<button class="btn-main" id="tab-48" onclick="switchMainMode('martyrs48')">شهداء 48</button>
+<button class="btn-main" id="tab-injured" onclick="switchMainMode('injured')">الجرحى</button>
 <button class="btn-main" id="tab-milestones" onclick="switchMainMode('milestones')">أبرز المحطات</button>
 <button class="btn-main" id="tab-stats" onclick="switchMainMode('stats')">الإحصائيات</button>
 <button class="btn-main" id="tab-videos" onclick="switchMainMode('videos')">التوثيق والأرشيف</button>
@@ -345,14 +409,14 @@ body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-
 <div id="verse-container" class="interactive glass-panel p-3 px-6 rounded-lg border-r-4 border-r-red-600 order-2 md:order-1 hidden md:block bg-black/80 max-w-lg">
 <p id="verse-text" class="font-amiri text-gray-200 text-lg font-bold leading-relaxed text-center">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</p>
 </div>
-<div class="interactive glass-panel p-2 px-4 rounded-lg flex items-center gap-4 flex-wrap justify-center order-3 md:order-2 bg-black/80 font-['Cairo']" style="margin-right: auto;">
-<a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-xs bg-red-900 border-red-500 text-white">❤️ إدعمنا لنستمر</a>
-<span id="dev-text" class="text-xs text-gray-400 font-bold border-l border-white/20 pl-4">تطوير: عبد الهادي</span>
-<div class="social-links flex gap-2">
-<a href="https://www.facebook.com/abdelhadilrs" target="_blank">Facebook</a>
-<a href="https://www.instagram.com/abdelhadilrs" target="_blank">Instagram</a>
-<a href="https://x.com/larrasabdelhadi" target="_blank">X</a>
-<button onclick="shareSite()" class="share-btn flex gap-1 items-center bg-black border-white font-bold">
+<div class="interactive glass-panel p-2 px-3 rounded-lg flex items-center gap-2.5 flex-wrap justify-center order-3 md:order-2 bg-black/80 font-['Cairo']" style="margin-right: auto;">
+<a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-[11px] bg-red-900 border-red-500 text-white px-2.5 py-1">❤️ إدعمنا لنستمر</a>
+<span id="dev-text" class="text-[11px] text-gray-400 font-bold border-l border-white/20 pl-3">تطوير: عبد الهادي</span>
+<div class="social-links flex gap-1.5">
+<a href="https://www.facebook.com/abdelhadilrs" target="_blank" class="text-[11px] px-2.5 py-1">Facebook</a>
+<a href="https://www.instagram.com/abdelhadilrs" target="_blank" class="text-[11px] px-2.5 py-1">Instagram</a>
+<a href="https://x.com/larrasabdelhadi" target="_blank" class="text-[11px] px-2.5 py-1">X</a>
+<button onclick="shareSite()" class="share-btn flex gap-1 items-center bg-black border-white font-bold text-[11px] px-2.5 py-1">
 <span id="share-btn-text">مشاركة</span>
 </button>
 </div>
@@ -404,7 +468,7 @@ let isPlayingAudio = false;
 function initAudio() {
     if (!backgroundSound) {
         backgroundSound = new Howl({
-            src: ['./ambient.mp3'], 
+            src: ['./audio/ambient.mp3'], 
             loop: true,
             volume: 0.4,
             html5: true, // ضروري جداً لتشغيل الملفات المحلية وتجاوز القيود الأمنية
@@ -490,8 +554,8 @@ const milestoneCinematicData = [
 ];
 
 const translations={
-ar:{titleMain:"أرواح",logoText:"فلسطين",searchPlaceholder:"ابحث عن اسم الشهيد...",tabSouls:" شهداء غزة",tabJournalists:" صحفيو غزة",tabWestBank:" الضفة الغربية",tabMilestones:" أبرز المحطات",tabStats:" الإحصائيات",tabVideos:" التوثيق والأرشيف",tabMap:" الخريطة",donate:"❤️ إدعمنا لنستمر",musicOn:"🎵 الصوت",musicOff:"🔇 إيقاف",visitorText:"زوار:",verse:`"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"`,devText:"تطوير: عبد الهادي",shareBtn:"مشاركة",martyrsLabel:"شهيداً وثّقت أسماؤهم"},
-en:{titleMain:"Palestinian",logoText:"Souls",searchPlaceholder:"Search martyr...",tabSouls:" Gaza Souls",tabJournalists:" Gaza Journalists",tabWestBank:" West Bank",tabMilestones:" Milestones",tabStats:" Statistics",tabVideos:" Footage",tabMap:" Map",donate:" Support Us",musicOn:"🎵 Audio",musicOff:"Mute",visitorText:"Visits:",verse:`"Think not of those who are slain in Allah's way as dead..."`,devTest:"Dev: Abdelhadi",shareBtn:"Share",martyrsLabel:"Martyrs Documented"}
+ar:{titleMain:"أرواح",logoText:"فلسطين",searchPlaceholder:"ابحث عن اسم الشهيد...",tabSouls:" شهداء غزة",tabJournalists:" صحفيو غزة",tabWestBank:" الضفة الغربية",tab48:" شهداء 48",tabInjured:" الجرحى",tabMilestones:" أبرز المحطات",tabStats:" الإحصائيات",tabVideos:" التوثيق والأرشيف",tabMap:" الخريطة",donate:"❤️ إدعمنا لنستمر",musicOn:"🎵 الصوت",musicOff:"🔇 إيقاف",visitorText:"زوار:",verse:`"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"`,devText:"تطوير: عبد الهادي",shareBtn:"مشاركة",martyrsLabel:"شهيداً وثّقت أسماؤهم"},
+en:{titleMain:"Palestinian",logoText:"Souls",searchPlaceholder:"Search martyr...",tabSouls:" Gaza Souls",tabJournalists:" Gaza Journalists",tabWestBank:" West Bank",tab48:" 48 Martyrs",tabInjured:" Injured",tabMilestones:" Milestones",tabStats:" Statistics",tabVideos:" Footage",tabMap:" Map",donate:" Support Us",musicOn:"🎵 Audio",musicOff:"Mute",visitorText:"Visits:",verse:`"Think not of those who are slain in Allah's way as dead..."`,devTest:"Dev: Abdelhadi",shareBtn:"Share",martyrsLabel:"Martyrs Documented"}
 };
 
 function changeLanguage(langCode){
@@ -506,6 +570,8 @@ document.getElementById('search-input').placeholder=t.searchPlaceholder;
 document.getElementById('tab-souls').innerText=t.tabSouls;
 document.getElementById('tab-journalists').innerText=t.tabJournalists;
 document.getElementById('tab-westbank').innerText=t.tabWestBank;
+document.getElementById('tab-48').innerText=t.tab48;
+document.getElementById('tab-injured').innerText=t.tabInjured;
 document.getElementById('tab-milestones').innerText=t.tabMilestones;
 document.getElementById('tab-stats').innerText=t.tabStats;
 document.getElementById('tab-videos').innerText=t.tabVideos;
@@ -542,6 +608,7 @@ function openMilestoneModal(item) {
     const imgContainer = document.querySelector('#milestone-modal-img img');
     if(imgContainer) {
         imgContainer.src = item.image;
+        imgContainer.style.display = 'block';
     }
     modal.style.display = 'flex';
 }
@@ -585,7 +652,7 @@ function renderCinematicTimeline() {
                 };
                 cardA.innerHTML = `
                     <div class="tlc-decade-card-img">
-                        <img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&w=600&q=80'">
+                        <img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.style.display='none'">
                     </div>
                     <div class="tlc-decade-card-body">
                         <span class="tlc-decade-card-year">${item.year}</span>
@@ -600,7 +667,7 @@ function renderCinematicTimeline() {
             sceneEl.id = item.id;
             sceneEl.innerHTML = `
                 <div class="tlc-bg" aria-hidden="true">
-                    <img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&w=1200&q=80'">
+                    <img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.style.display='none'">
                     <div class="tlc-bg-tint"></div>
                 </div>
                 <article class="tlc-panel">
@@ -664,16 +731,16 @@ function filterMapList() {
 window.switchMainMode = function(mode) {
     currentMainMode = mode; 
     document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
-    const activeBtn = document.getElementById(`tab-${mode}`);
+    const activeBtn = document.getElementById(`tab-${mode === 'martyrs48' ? '48' : mode}`);
     if (activeBtn) activeBtn.classList.add('active');
     
-    ['map-view', 'stats-view', 'videos-view', 'no-data-view', 'milestones-view'].forEach(id => {
+    ['map-view', 'stats-view', 'videos-view', 'no-data-view', 'milestones-view', 'westbank-view', 'martyrs48-view', 'injured-view'].forEach(id => {
         document.getElementById(id).style.display = 'none';
     });
 
     const verseContainer = document.getElementById('verse-container');
     const counterBox = document.getElementById('counter-box');
-    const showVerseAndCounter = ['souls', 'journalists', 'westbank'].includes(mode);
+    const showVerseAndCounter = ['souls', 'journalists', 'westbank', 'martyrs48'].includes(mode);
 
     if (verseContainer) verseContainer.style.display = showVerseAndCounter ? '' : 'none';
     if (counterBox) counterBox.style.display = showVerseAndCounter ? 'block' : 'none';
@@ -683,10 +750,19 @@ window.switchMainMode = function(mode) {
     } else if(mode === 'journalists') {
         fetchAndRenderData('./data/journalists.json');
     } else if(mode === 'westbank') {
-        document.getElementById('no-data-view').style.display = 'flex';
+        document.getElementById('westbank-view').style.display = 'block';
         points = [];
         if(ctx) ctx.clearRect(0, 0, width, height);
         document.getElementById('number').innerText = "0";
+    } else if(mode === 'martyrs48') {
+        document.getElementById('martyrs48-view').style.display = 'block';
+        points = [];
+        if(ctx) ctx.clearRect(0, 0, width, height);
+        document.getElementById('number').innerText = "0";
+    } else if(mode === 'injured') {
+        document.getElementById('injured-view').style.display = 'block';
+        points = [];
+        if(ctx) ctx.clearRect(0, 0, width, height);
     } else if(mode === 'milestones') {
         document.getElementById('milestones-view').style.display = 'block';
         renderCinematicTimeline();
