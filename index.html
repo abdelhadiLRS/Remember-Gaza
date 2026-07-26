@@ -535,6 +535,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <header id="header" class="glass-panel interactive">
 <div class="flex items-center gap-1.5">
 <h1 class="text-sm font-black text-white drop-shadow-md"><span class="text-red-500" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
+<!-- زر التبديل بين الوضع الداكن والمضيء (تم نقله إلى الهيدر بجوار العنوان وتصغيره) -->
+<button id="theme-toggle-btn" class="btn-main flex items-center justify-center p-1 shadow-md hover:scale-105 transition-transform" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 24px; height: 24px; border-radius: 50%; background: rgba(220, 38, 38, 0.2); border-color: rgba(239, 68, 68, 0.5);">
+    <svg id="theme-icon-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
+        <path d="M15 5L15.5 6.5L17 7L15.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/>
+        <path d="M19 9L19.3 9.7L20 10L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>
+    </svg>
+</button>
 </div>
 <div class="w-auto">
 <!-- البحث يتفاعل الآن مباشرة مع الـ Canvas لتلاشي النجوم -->
@@ -575,17 +583,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div id="bottom-bar">
 <div id="verse-container" class="interactive glass-panel p-3 px-6 rounded-lg border-r-4 border-r-red-600 order-2 md:order-1 hidden md:block bg-black/80 max-w-lg">
 <p id="verse-text" class="font-amiri text-gray-200 text-lg font-bold leading-relaxed text-center">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</p>
-</div>
-
-<!-- زر التبديل بين الوضع الداكن والمضيء -->
-<div class="interactive order-2 md:order-2 flex items-center justify-center">
-<button id="theme-toggle-btn" class="btn-main flex items-center justify-center p-2 shadow-lg hover:scale-105 transition-transform" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 42px; height: 42px; border-radius: 50%; background: rgba(220, 38, 38, 0.2); border-color: rgba(239, 68, 68, 0.5);">
-    <svg id="theme-icon-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
-        <path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/>
-        <path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>
-    </svg>
-</button>
 </div>
 
 <div class="interactive glass-panel p-2 px-3 rounded-lg flex items-center gap-2.5 flex-wrap justify-center order-4 md:order-3 bg-black/80 font-['Cairo']" style="margin-right: auto;">
@@ -784,7 +781,7 @@ function updateThemeIcon(isLight) {
     if (isLight) {
         svgEl.innerHTML = `<circle cx="12" cy="12" r="5" fill="currentColor"></circle><line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2"></line><line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2"></line><line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2"></line><line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2"></line>`;
     } else {
-        svgEl.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/><path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>`;
+        svgEl.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><path d="M15 5L15.5 6.5L17 7L15.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/><path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>`;
     }
 }
 
@@ -1438,231 +1435,3 @@ if (canvas) {
 
         for (const p of points) {
             if (p.currentRadius > 0.5 && Math.hypot(p.x - clickX, p.y - clickY) < (p.currentRadius + 12)) {
-                if (p.userData) openMartyrCardModal(p.userData);
-                break;
-            }
-        }
-    });
-}
-
-function searchMartyrByName(q) {
-    currentSearchQuery = (q || "").trim().toLowerCase();
-}
-
-function openMartyrCardModal(person) {
-    currentMartyrObj = person;
-    const modal = document.getElementById('martyr-modal-overlay');
-    document.getElementById('martyr-modal-name').innerText = person.name_ar || person.name || 'شهيد مجهول';
-    
-    const enNameEl = document.getElementById('martyr-modal-name-en');
-    const foreignName = person.name_en || person.english_name;
-    if (foreignName && foreignName.trim() !== "" && foreignName !== "Unknown Martyr") {
-        enNameEl.innerText = foreignName;
-        enNameEl.style.display = 'block';
-    } else {
-        enNameEl.style.display = 'none';
-    }
-
-    document.getElementById('martyr-modal-age').innerText = person.age || 'غير معروف';
-    document.getElementById('martyr-modal-id').innerText = person.id || '-';
-    
-    const photoContainer = document.getElementById('martyr-modal-photo');
-    if (person.image) {
-        photoContainer.innerHTML = `<img src="${person.image}" class="w-full h-full object-cover" alt="صورة الشهيد">`;
-    } else {
-        photoContainer.innerHTML = `<span id="modal-photo-text">${translations[currentLang].modalPhotoText}</span>`;
-    }
-    modal.style.display = 'flex';
-}
-
-document.getElementById('martyr-modal-close').onclick = () => {
-    document.getElementById('martyr-modal-overlay').style.display = 'none';
-};
-
-document.getElementById('milestone-modal-close').onclick = () => {
-    document.getElementById('milestone-modal-overlay').style.display = 'none';
-};
-
-async function fetchAndRenderData(url){
-    gazaSouls=[]; points=[];
-    if(ctx) ctx.clearRect(0,0,width,height);
-    try{
-        const res = await fetch(url, {cache:'no-cache'});
-        if(res.ok){
-            const text = await res.text();
-            if(text && text.trim().length > 0){
-                const data = JSON.parse(text);
-                const list = Array.isArray(data) ? data : (data.data || []);
-                gazaSouls = list.map(item => ({
-                    name_ar: item.name_ar || item.name || "شهيد مجهول",
-                    name_en: item.name_en || item.english_name || "",
-                    age: item.age || "غير معروف", 
-                    id: item.id || "-", 
-                    image: item.image || null
-                }));
-            }
-        }
-    }catch(e){
-        gazaSouls = Array.from({length: 1200}, (_, i) => ({
-            name_ar: `شهيد فلسطين رقم ${i+1}`,
-            name_en: `Palestine Martyr #${i+1}`,
-            age: Math.floor(Math.random() * 60 + 1),
-            id: `9${Math.floor(10000000 + Math.random() * 90000000)}`
-        }));
-    }
-    renderStars();
-}
-
-function animateCounter(target) {
-    const numEl = document.getElementById('number');
-    if(!numEl) return;
-    let start = 0;
-    const duration = 1200;
-    const startTime = performance.now();
-    function update(time) {
-        const elapsed = time - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const current = Math.floor(progress * target);
-        numEl.innerText = current.toLocaleString();
-        if(progress < 1) {
-            requestAnimationFrame(update);
-        } else {
-            numEl.innerText = target.toLocaleString();
-        }
-    }
-    requestAnimationFrame(update);
-}
-
-function renderStars(){
-    points=[];
-    const dotsToRender = gazaSouls.length > 0 ? Math.min(1500, gazaSouls.length) : 800;
-    for(let i=0; i<dotsToRender; i++){
-        points.push({
-            x: Math.random()*width,
-            y: Math.random()*height,
-            vx: (Math.random()-0.5)*0.08, // سرعة حركة بطيئة وهادئة جداً للنجوم
-            vy: (Math.random()-0.5)*0.08,
-            alpha: 0.3 + Math.random()*0.6,
-            currentAlpha: 0.3 + Math.random()*0.6,
-            currentRadius: 1.5,
-            pulseSpeed: 0.005 + Math.random()*0.008, // نبض وتلألؤ بطيء
-            color: '#ffffff',
-            userData: gazaSouls[i] || { name_ar: `شهيد ${i+1}`, age: "غير معروف", id: "-" }
-        });
-    }
-    const targetCount = gazaSouls.length > 0 ? gazaSouls.length : 60198;
-    animateCounter(targetCount);
-}
-
-/* الحلقة الرئيسية المتحكمة بحركة النجوم والشهب وتأثير الحركة البطيئة */
-function gameLoop(){
-    if(ctx){
-        if (!width || !height) {
-            resize();
-        }
-        ctx.clearRect(0, 0, width, height);
-        let hoveredStar = null;
-        const isLight = document.body.classList.contains('light-mode');
-        const query = currentSearchQuery;
-
-        if (points.length === 0) {
-            for(let i=0; i<800; i++){
-                points.push({
-                    x: Math.random()*width, y: Math.random()*height,
-                    vx: (Math.random()-0.5)*0.08, vy: (Math.random()-0.5)*0.08,
-                    alpha: 0.5, currentAlpha: 0.5, currentRadius: 1.5,
-                    pulseSpeed: 0.006, userData: { name_ar: `شهيد ${i+1}`, age: "غير معروف", id: "-" }
-                });
-            }
-        }
-
-        for(let i=0; i<points.length; i++){
-            const p = points[i];
-            p.x += p.vx; p.y += p.vy;
-            if(p.x < 0) p.x = width; else if(p.x > width) p.x = 0;
-            if(p.y < 0) p.y = height; else if(p.y > height) p.y = 0;
-
-            p.alpha += p.pulseSpeed;
-            if (p.alpha > 0.95 || p.alpha < 0.2) p.pulseSpeed = -p.pulseSpeed;
-
-            let isMatch = true;
-            if (query !== "") {
-                const nameAr = (p.userData.name_ar || p.userData.name || "").toLowerCase();
-                const nameEn = (p.userData.name_en || p.userData.english_name || "").toLowerCase();
-                isMatch = nameAr.includes(query) || nameEn.includes(query);
-            }
-
-            const dist = Math.hypot(p.x - mouseX, p.y - mouseY);
-            
-            let targetAlpha = isMatch ? p.alpha : 0.05;
-            let targetRadius = isMatch ? (dist < 15 ? 4.5 : 1.5) : 0.5;
-            
-            p.currentAlpha += (targetAlpha - p.currentAlpha) * 0.08;
-            p.currentRadius += (targetRadius - p.currentRadius) * 0.08;
-
-            if (p.currentRadius > 0.5 && dist < 15 && isMatch) {
-                hoveredStar = p;
-            }
-
-            if (p.currentRadius > 0.1) {
-                ctx.save();
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.currentRadius, 0, Math.PI * 2);
-                if (isLight) {
-                    ctx.fillStyle = (dist < 15 && isMatch) ? '#dc2626' : `rgba(31, 41, 55, ${p.currentAlpha})`;
-                } else {
-                    ctx.fillStyle = (dist < 15 && isMatch) ? '#ef4444' : `rgba(255, 255, 255, ${p.currentAlpha})`;
-                }
-                ctx.fill();
-                ctx.restore();
-            }
-        }
-
-        /* تحديث بطاقة المعاينة العائمة عند التحويم فوق أي نجمة */
-        const tooltip = document.getElementById('star-tooltip');
-        if (hoveredStar && tooltip) {
-            document.getElementById('tooltip-name').innerText = hoveredStar.userData.name_ar || hoveredStar.userData.name || 'شهيد';
-            const nameEnEl = document.getElementById('tooltip-name-en');
-            if (hoveredStar.userData.name_en) {
-                nameEnEl.innerText = hoveredStar.userData.name_en;
-                nameEnEl.style.display = 'block';
-            } else {
-                nameEnEl.style.display = 'none';
-            }
-            document.getElementById('tooltip-age').innerText = `${translations[currentLang].ageLabel} ${hoveredStar.userData.age || 'غير معروف'}`;
-            
-            tooltip.style.display = 'block';
-            tooltip.style.left = (mouseX + 15) + 'px';
-            tooltip.style.top = (mouseY + 15) + 'px';
-        } else if (tooltip) {
-            tooltip.style.display = 'none';
-        }
-    }
-
-    /* رسم ورندر الشهب المتساقطة بطيئة الحركة */
-    if (sCtx) {
-        sCtx.clearRect(0, 0, sCanvas.width, sCanvas.height);
-        shootingStarsArr.forEach(star => {
-            star.update();
-            star.draw();
-        });
-    }
-
-    requestAnimationFrame(gameLoop);
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-    resize();
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-        document.body.classList.add('light-mode');
-        updateThemeIcon(true);
-    }
-    const savedLang = localStorage.getItem('site_lang') || 'ar';
-    changeLanguage(savedLang);
-    fetchAndRenderData('./data/victims.json');
-    requestAnimationFrame(gameLoop);
-});
-</script>
-</body>
-</html>
