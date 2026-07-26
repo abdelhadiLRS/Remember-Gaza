@@ -549,10 +549,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <option value="en">🇬🇧 English</option>
 </select>
 </div>
-<!-- عداد الزوار في مكانه القديم في الأعلى بجانب اللغة -->
-<div id="visitor-counter-box" class="interactive px-3 py-1 rounded-full text-center shadow-md font-['Cairo'] flex items-center gap-1.5 border border-white/10" style="background: rgba(0,0,0,0.6);">
-<span id="visitor-label" class="text-[10px] text-red-400 font-bold">زوار:</span>
-<div id="visitor-number" class="text-xs font-black text-white">0</div>
+<!-- عداد الزوار الجديد -->
+<div class="interactive flex items-center">
+<div class="powr-hit-counter" id="0599e319_1785025528"></div><script src="https://www.powr.io/powr.js?platform=html"></script>[cite: 8]
 </div>
 <div class="flex gap-1.5 items-center">
 <button id="music-btn" class="btn-main">🎵 الصوت</button>
@@ -649,20 +648,6 @@ function updateThemeIcon(isLight) {
     } else {
         // أيقونة الهلال والنجوم للوضع الداكن (الافتراضي)
         svgEl.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/><path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>`;
-    }
-}
-
-function initVisitorCounter() {
-    let visits = localStorage.getItem('site_visits');
-    if (!visits) {
-        visits = 14250;
-    } else {
-        visits = parseInt(visits) + 1;
-    }
-    localStorage.setItem('site_visits', visits);
-    const visitorNumEl = document.getElementById('visitor-number');
-    if (visitorNumEl) {
-        visitorNumEl.innerText = parseInt(visits).toLocaleString('en-US');
     }
 }
 
@@ -853,7 +838,6 @@ document.getElementById('donate-desktop').innerText=t.donate;
 document.getElementById('verse-text').innerText=t.verse;
 document.getElementById('dev-text').innerText=t.devTest;
 document.getElementById('share-btn-text').innerText=t.shareBtn;
-document.getElementById('visitor-label').innerText=t.visitorText;
 document.getElementById('martyrs-label').innerText=t.martyrsLabel;
 }
 
@@ -1022,12 +1006,10 @@ window.switchMainMode = function(mode) {
 
     const verseContainer = document.getElementById('verse-container');
     const counterBox = document.getElementById('counter-box');
-    const visitorBox = document.getElementById('visitor-counter-box');
     const showVerseAndCounter = ['souls', 'journalists', 'westbank', 'martyrs48'].includes(mode);
 
     if (verseContainer) verseContainer.style.display = showVerseAndCounter ? '' : 'none';
     if (counterBox) counterBox.style.display = showVerseAndCounter ? 'block' : 'none';
-    if (visitorBox) visitorBox.style.display = showVerseAndCounter ? 'flex' : 'none';
 
     if(mode === 'souls'){
         fetchAndRenderData('./data/victims.json');
@@ -1314,7 +1296,6 @@ function animateCounter(targetNumber) {
 
 document.addEventListener('DOMContentLoaded', () => {
     switchMainMode('souls');
-    initVisitorCounter();
     gameLoop();
     
     const musicBtn = document.getElementById('music-btn');
@@ -1323,4 +1304,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-```[cite: 7]
+```[cite: 8]
