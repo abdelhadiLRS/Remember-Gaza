@@ -60,6 +60,7 @@ body.light-mode .tlc-title,
 body.light-mode .tlc-decade-num{color:#111827 !important;}
 body.light-mode .tlc-excerpt,
 body.light-mode .tlc-intro-box{color:#374151 !important;}
+body.light-mode #visitor-counter-box,
 body.light-mode #counter-box{background:rgba(255, 255, 255, 0.95) !important;color:#111827 !important;}
 body.light-mode #verse-container{background:rgba(255, 255, 255, 0.95) !important;color:#111827 !important;border-color:#dc2626 !important;}
 body.light-mode #verse-text{color:#111827 !important;}
@@ -86,53 +87,52 @@ body.light-mode #martyrs48-view{background:rgba(243, 244, 246, 0.98) !important;
 ::-webkit-scrollbar-thumb{background:#dc2626;border-radius:4px;}
 
 /* هيدر مصغر ومضغوط */
-#header{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;flex-wrap:nowrap;gap:6px;border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(10,10,10,0.95); z-index: 50;}
+#header{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;flex-wrap:nowrap;gap:6px;border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(10,10,10,0.95);}
 #search-input{background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.2);color:white;padding:4px 10px;border-radius:20px;width:130px;font-size:0.75rem;outline:none;transition:0.4s;}
 #search-input:focus{border-color:#ef4444;background:rgba(0,0,0,0.9);box-shadow:0 0 8px rgba(239,68,68,0.3);width:160px;}
 
-.btn-main{background:rgba(255,255,255,0.05);color:white;border:1px solid rgba(255,255,255,0.1);padding:3px 7px;border-radius:20px;cursor:pointer;transition:all 0.3s ease;font-size:0.68rem;white-space:nowrap; height: 28px; display: flex; align-items: center; justify-content: center;}
+.btn-main{background:rgba(255,255,255,0.05);color:white;border:1px solid rgba(255,255,255,0.1);padding:3px 8px;border-radius:20px;cursor:pointer;transition:all 0.3s ease;font-size:0.68rem;white-space:nowrap;}
 body.light-mode .btn-main{background:rgba(0,0,0,0.05);color:#111827;border-color:rgba(0,0,0,0.1);}
 .btn-main:hover{background:rgba(220,38,38,0.3);border-color:rgba(239,68,68,0.5);}
 .btn-main.active{background:#dc2626;border-color:#ef4444;font-weight:bold;box-shadow:0 0 10px rgba(239,68,68,0.4);color:white !important;}
 
-#bottom-bar{display:flex;justify-content:space-between;align-items:flex-end;padding:15px 25px;pointer-events:none;flex-wrap:wrap;gap:15px; z-index: 50;}
+#bottom-bar{display:flex;justify-content:space-between;align-items:flex-end;padding:15px 25px;pointer-events:none;flex-wrap:wrap;gap:15px;}
 .social-links a,.share-btn{color:#fff;background:rgba(255,255,255,0.05);padding:4px 10px;border-radius:20px;font-size:0.7rem;text-decoration:none;transition:0.3s;white-space:nowrap;border:1px solid rgba(255,255,255,0.1);cursor:pointer;}
 body.light-mode .social-links a, body.light-mode .share-btn{color:#111827;background:rgba(0,0,0,0.05);border-color:rgba(0,0,0,0.1);}
 .social-links a:hover{background:#dc2626;border-color:#ef4444;color:white !important;}
 .share-btn:hover{background:#000000;border-color:#ffffff;color:white !important;}
 .font-amiri{font-family:'Amiri',serif;}
 
-/* تنسيق العداد الحديث المصغر */
-.modern-counter {
+/* تنسيق العداد الحديث مصغر للعداد في الهيدر */
+#visitor-counter-box {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 0 10px;
-    height: 28px;
-    background: rgba(15, 23, 42, 0.8);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 30px;
-    font-family: 'Cairo', sans-serif;
-    font-size: 11px;
-    color: #f8fafc;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease;
+    justify-content: center;
+    padding: 2px 8px;
+    height: 26px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    transition: all 0.2s ease;
+}
+#visitor-counter-box img {
+    height: 12px;
+    width: auto;
 }
 
+/* بطاقة المعاينة العائمة للنجوم */
 #star-tooltip {
     position: fixed;
     z-index: 50;
     pointer-events: none;
     background: rgba(15, 15, 15, 0.95);
     border: 1px solid rgba(239, 68, 68, 0.5);
-    padding: 10px 15px;
-    border-radius: 12px;
+    padding: 8px 12px;
+    border-radius: 10px;
     box-shadow: 0 10px 30px rgba(239, 68, 68, 0.2);
     display: none;
-    font-size: 0.8rem;
-    max-width: 250px;
+    font-size: 0.75rem;
+    max-width: 230px;
     font-family: 'Cairo', sans-serif;
 }
 body.light-mode #star-tooltip{background:rgba(255,255,255,0.95);color:#111827;}
@@ -213,9 +213,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- بطاقة التلميح العائمة للشهداء -->
 <div id="star-tooltip">
-    <div id="tooltip-name" class="font-bold text-red-400 mb-1 truncate text-sm"></div>
-    <div id="tooltip-name-en" class="text-gray-400 text-[11px] mb-1 truncate font-mono" style="display: none;"></div>
-    <div id="tooltip-age" class="text-gray-300 text-[11px]"></div>
+    <div id="tooltip-name" class="font-bold text-red-400 mb-1 truncate text-xs"></div>
+    <div id="tooltip-name-en" class="text-gray-400 text-[10px] mb-1 truncate font-mono" style="display: none;"></div>
+    <div id="tooltip-age" class="text-gray-300 text-[10px]"></div>
 </div>
 
 <!-- نافذة تفاصيل المحطة التاريخية -->
@@ -533,24 +533,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <div id="ui-layer">
 <header id="header" class="glass-panel interactive">
-<div class="flex items-center gap-2">
-    <!-- عنوان الموقع -->
-    <h1 class="text-sm font-black text-white drop-shadow-md whitespace-nowrap"><span class="text-red-500" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
-    
-    <!-- زر الدارك مود يقابل العنوان مباشرة -->
-    <button id="theme-toggle-btn" class="btn-main p-1.5 shadow-lg transition-transform" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 28px; height: 28px; border-radius: 50%; padding:0;">
-        <svg id="theme-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
-            <path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/>
-            <path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>
-        </svg>
-    </button>
+<div class="flex items-center gap-1.5">
+<h1 class="text-sm font-black text-white drop-shadow-md"><span class="text-red-500" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
 </div>
-
 <div class="w-auto">
+<!-- البحث يتفاعل الآن مباشرة مع الـ Canvas لتلاشي النجوم -->
 <input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد..." oninput="searchMartyrByName(this.value)">
 </div>
-
 <div class="tabs-wrapper no-scrollbar interactive">
 <div class="flex gap-1 bg-black/40 p-1 rounded-full border border-white/5">
 <button class="btn-main active" id="tab-souls" onclick="switchMainMode('souls')">شهداء غزة</button>
@@ -563,25 +552,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <button class="btn-main" id="tab-map" onclick="switchMainMode('map')">الخريطة</button>
 </div>
 </div>
-
-<div class="relative inline-block text-right">
+<div class="relative inline-block text-right flex items-center gap-2">
 <select id="language-select" onchange="changeLanguage(this.value)" class="bg-black/60 border border-white/20 text-white text-[11px] rounded-full px-2 py-0.5 outline-none cursor-pointer font-['Cairo']">
 <option value="ar">🇸🇦 العربية</option>
 <option value="en">🇬🇧 English</option>
 <option value="fr">🇫🇷 Français</option>
 <option value="es">🇪🇸 Español</option>
 </select>
+
+<!-- تصميم عداد الزوار المصغر والمتناسق مع الأزرار -->
+<div id="visitor-counter-box" class="interactive font-['Cairo'] flex items-center justify-center shadow-md" title="عدد الزوار">
+    <a href="https://www.hitwebcounter.com" target="_blank" title="Web Counter" style="display: flex; align-items: center; text-decoration: none;">
+        <img src="https://hitwebcounter.com/counter/counter.php?page=11202868&style=0005&nbdigits=5&type=page&initCount=0" title="Web Counter" Alt="web counter" border="0" />
+    </a>
 </div>
 
 <div class="flex gap-1.5 items-center">
-    <!-- عداد الزوار المصغر والمدمج -->
-    <div id="counter-box" class="interactive font-['Cairo'] flex items-center justify-center gap-1.5 bg-black/60 border border-white/10 rounded-full px-2 py-1 transition-all shadow-md" style="height: 28px;">
-        <a href="https://www.hitwebcounter.com" target="_blank" title="Web Counter" style="display: flex; align-items: center; text-decoration: none;">
-            <img src="https://hitwebcounter.com/counter/counter.php?page=11202868&style=0005&nbdigits=5&type=page&initCount=0" title="Web Counter" alt="web counter" border="0" style="height: 12px; width: auto;" />
-        </a>
-    </div>
-    
-    <button id="music-btn" class="btn-main" onclick="toggleMusic()">🎵 الصوت</button>
+<button id="music-btn" class="btn-main" onclick="toggleMusic()">🎵 الصوت</button>
+</div>
 </div>
 </header>
 <div id="bottom-bar">
@@ -589,23 +577,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <p id="verse-text" class="font-amiri text-gray-200 text-lg font-bold leading-relaxed text-center">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</p>
 </div>
 
+<!-- زر التبديل بين الوضع الداكن والمضيء -->
+<div class="interactive order-2 md:order-2 flex items-center justify-center">
+<button id="theme-toggle-btn" class="btn-main flex items-center justify-center p-2 shadow-lg hover:scale-105 transition-transform" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 42px; height: 42px; border-radius: 50%; background: rgba(220, 38, 38, 0.2); border-color: rgba(239, 68, 68, 0.5);">
+    <svg id="theme-icon-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
+        <path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/>
+        <path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>
+    </svg>
+</button>
+</div>
+
 <div class="interactive glass-panel p-2 px-3 rounded-lg flex items-center gap-2.5 flex-wrap justify-center order-4 md:order-3 bg-black/80 font-['Cairo']" style="margin-right: auto;">
-<a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-[10px] bg-red-900 border-red-500 text-white px-2 py-1">❤️ إدعمنا لنستمر</a>
-<span id="dev-text" class="text-[10px] text-gray-400 font-bold border-l border-white/20 pl-3">تطوير: عبد الهادي</span>
+<a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-[11px] bg-red-900 border-red-500 text-white px-2.5 py-1">❤️ إدعمنا لنستمر</a>
+<span id="dev-text" class="text-[11px] text-gray-400 font-bold border-l border-white/20 pl-3">تطوير: عبد الهادي</span>
 <div class="social-links flex gap-1.5">
-<a href="https://www.facebook.com/abdelhadilrs" target="_blank" class="text-[10px] px-2 py-1">Facebook</a>
-<a href="https://www.instagram.com/abdelhadilrs" target="_blank" class="text-[10px] px-2 py-1">Instagram</a>
-<a href="https://x.com/larrasabdelhadi" target="_blank" class="text-[10px] px-2 py-1">X</a>
-<button onclick="shareSite()" class="share-btn flex gap-1 items-center bg-black border-white font-bold text-[10px] px-2 py-1">
+<a href="https://www.facebook.com/abdelhadilrs" target="_blank" class="text-[11px] px-2.5 py-1">Facebook</a>
+<a href="https://www.instagram.com/abdelhadilrs" target="_blank" class="text-[11px] px-2.5 py-1">Instagram</a>
+<a href="https://x.com/larrasabdelhadi" target="_blank" class="text-[11px] px-2.5 py-1">X</a>
+<button onclick="shareSite()" class="share-btn flex gap-1 items-center bg-black border-white font-bold text-[11px] px-2.5 py-1">
 <span id="share-btn-text">مشاركة المنصة</span>
 </button>
 </div>
 </div>
 
-<!-- عداد الشهداء المصغر -->
-<div id="martyrs-counter-box" class="interactive order-3 md:order-4 font-['Cairo'] flex items-center justify-center gap-2 bg-black/60 border border-white/10 rounded-full px-3 py-1 transition-all shadow-md" style="height: 28px;">
-    <span id="martyrs-label" class="text-[10px] text-red-400 font-bold whitespace-nowrap">شهيداً وثّقت أسماؤهم:</span>
-    <span id="number" class="text-xs font-black text-white">60,198</span>
+<!-- تصميم خانة عدد الشهداء الموثقة أسماؤهم -->
+<div id="counter-box" class="interactive order-3 md:order-4 font-['Cairo'] flex items-center justify-center gap-2 bg-black/60 border border-white/10 rounded-full px-4 py-1.5 transition-all shadow-md">
+    <span id="martyrs-label" class="text-[11px] text-red-400 font-bold whitespace-nowrap">شهيداً وثّقت أسماؤهم:</span>
+    <span id="number" class="text-sm font-black text-white">60,198</span>
 </div>
 
 </div>
@@ -616,7 +615,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="modal-box" style="max-width: 420px; background: #121212; border: 1px solid rgba(239,68,68,0.4); border-radius: 16px; overflow: hidden; width: 100%;">
         <div class="modal-header border-b border-white/10 p-4 flex justify-between items-center bg-black/40">
             <h2 id="modal-martyr-title-text" class="font-bold text-base text-red-400">بطاقة توثيق الشهيد</h2>
-            <button class="modal-close text-gray-400 hover:text-white" id="martyr-modal-close" onclick="document.getElementById('martyr-modal-overlay').style.display='none'">✕</button>
+            <button class="modal-close text-gray-400 hover:text-white" id="martyr-modal-close">✕</button>
         </div>
         <div class="modal-body text-center p-6 space-y-4">
             <div id="martyr-modal-photo" class="w-28 h-28 mx-auto bg-stone-900 border border-red-600/40 rounded-xl flex flex-col items-center justify-center text-stone-400 text-xs overflow-hidden">
@@ -680,10 +679,13 @@ let mouseX = -1000, mouseY = -1000;
 
 let backgroundSound = null;
 let isPlayingAudio = false;
+let audioCtx = null, synthOsc1 = null, synthOsc2 = null, synthGain = null;
+let isAudioSynthActive = false;
+
 let currentSearchQuery = "";
 let currentMartyrObj = null;
 
-/* قاموس اللغات الأربع الأساسية */
+/* قاموس اللغات الأربع الأساسية (العربية، الإنجليزية، الفرنسية، الإسبانية) */
 const translations = {
     ar: {
         titleMain: "أرواح", logoText: "فلسطين", searchPlaceholder: "ابحث عن اسم الشهيد...",
@@ -713,20 +715,61 @@ const translations = {
         verse: "\"Think not of those who are slain in Allah's way as dead, but living with their Lord...\"",
         devText: "Dev: Abdelhadi", shareBtn: "Share Platform", martyrsLabel: "Martyrs Documented:",
         milestonesTitle: "Historical Milestone Details", readMore: "Read More", source: "Source:",
-        martyrCardTitle: "Martyr Documentation Card", ageLabel: "Age:", idLabel: "ID Number:", shareCardBtn: "Share Martyr Card",
+        martyrCardTitle: "Martyr Documentation Card", ageLabel: "Age:", idLabel: "ID Number:", shareCardBtn: "Share Martyr Card as Image",
         modalPhotoText: "Martyr Photo", mapLogTitle: "Interactive Map Log", mapSearchPlaceholder: "Search map...",
         mapEmptyText: "No records currently registered on the map", mapEmptyOverlay: "Map is temporarily empty",
-        wbTitle: "West Bank & Jerusalem Martyrs", wbDesc: "Comprehensive documentation of martyrs in West Bank cities.", wbStatus: "Updating field records and data...",
-        m48Title: "1948 Lands Martyrs", m48Desc: "Record of immortality and heroism for Palestinians in the 1948 occupied territories.", m48Status: "Preparing documentary archive...",
-        archiveTitle: "Visual Archive", archiveSub: "Visual documentary records",
+        wbTitle: "West Bank & Jerusalem Martyrs", wbDesc: "Comprehensive documentation of martyrs in West Bank cities, villages, and camps facing occupation raids.", wbStatus: "Updating field records and data...",
+        m48Title: "1948 Lands Martyrs (Palestinian Interior)", m48Desc: "Record of immortality and heroism for Palestinians in the 1948 occupied territories.", m48Status: "Preparing documentary archive...",
+        archiveTitle: "Visual Archive & Field Documentation", archiveSub: "Visual documentary records and comprehensive reports",
         btnAll: "All", btnReports: "Photo Reports", btnTestimonies: "Live Testimonies",
         tlcIntro1: "Over past decades, tens of thousands of Palestinians have been martyred by the Israeli oppression machine...",
-        tlcIntro2: "Below we list the most important milestones...", tlcFooterStory: "And the story will remain...",
-        statsTitle: "Gaza Genocide War", statsSubtitle: "1000 Days of Genocide", statsBanner: "Over 2.4 million people facing extermination", statsUrbanHeader: "Occupation attacks target urban aspects as well.",
+        tlcIntro2: "Below we list the most important milestones in the history of the Palestinian cause...", tlcFooterStory: "And the story will remain...",
+        statsTitle: "Gaza Genocide War", statsSubtitle: "1000 Days of Genocide", statsBanner: "Over 2.4 million people facing extermination and starvation", statsUrbanHeader: "Occupation attacks are not limited to humans but also target urban and civil aspects.",
         noDataText: "No data available currently"
+    },
+    fr: {
+        titleMain: "Âmes", logoText: "Palestiniennes", searchPlaceholder: "Rechercher un martyr...",
+        tabSouls: "Âmes de Gaza", tabJournalists: "Journalistes", tabWestBank: "Cisjordanie", tab48: "Martyrs de 48",
+        tabMilestones: "Étapes clés", tabStats: "Statistiques", tabVideos: "Archives", tabMap: "Carte",
+        donate: "❤️ Soutenez-nous", musicOn: "🎵 Audio", musicOff: "Muet", visitorLabel: "Visiteurs :",
+        verse: "\"Ne pensez pas que ceux qui ont été tués dans le sentier d'Allah soient morts...\"",
+        devText: "Développement : Abdelhadi", shareBtn: "Partager", martyrsLabel: "Martyrs documentés :",
+        milestonesTitle: "Détails de l'étape historique", readMore: "Lire la suite", source: "Source :",
+        martyrCardTitle: "Carte de documentation du martyr", ageLabel: "Âge :", idLabel: "N° d'identité :", shareCardBtn: "Partager la carte en image",
+        modalPhotoText: "Photo du martyr", mapLogTitle: "Journal de la carte interactive", mapSearchPlaceholder: "Rechercher sur la carte...",
+        mapEmptyText: "Aucun enregistrement sur la carte", mapEmptyOverlay: "Carte temporairement vide",
+        wbTitle: "Martyrs de Cisjordanie et Jérusalem", wbDesc: "Documentation complète des martyrs en Cisjordanie face aux raids d'occupation.", wbStatus: "Mise à jour des dossiers...",
+        m48Title: "Martyrs des territoires de 1948", m48Desc: "Registre d'immortalité et d'héroïsme des Palestiniens de 1948.", m48Status: "Préparation des archives...",
+        archiveTitle: "Archives Visuelles & Documentation", archiveSub: "Dossiers documentaires visuels et rapports complets",
+        btnAll: "Tous", btnReports: "Rapports photo", btnTestimonies: "Témoignages",
+        tlcIntro1: "Au fil des décennies, des dizaines de milliers de Palestiniens sont tombés en martyrs...",
+        tlcIntro2: "Voici les étapes clés de l'histoire de la cause palestinienne...", tlcFooterStory: "Et l'histoire continuera...",
+        statsTitle: "Guerre de génocide à Gaza", statsSubtitle: "1000 jours de génocide", statsBanner: "Plus de 2,4 millions de personnes confrontées à l'extermination", statsUrbanHeader: "Les attaques de l'occupation ciblent également l'urbanisme et la civilisation.",
+        noDataText: "Aucune donnée disponible"
+    },
+    es: {
+        titleMain: "Almas", logoText: "Palestinas", searchPlaceholder: "Buscar mártir...",
+        tabSouls: "Almas de Gaza", tabJournalists: "Periodistas", tabWestBank: "Cisjordania", tab48: "Mártires del 48",
+        tabMilestones: "Hitos", tabStats: "Estadísticas", tabVideos: "Archivos", tabMap: "Mapa",
+        donate: "❤️ Apóyanos", musicOn: "🎵 Audio", musicOff: "Silenciar", visitorLabel: "Visitas:",
+        verse: "\"No creáis que los que han muerto por la causa de Dios están muertos...\"",
+        devText: "Desarrollo: Abdelhadi", shareBtn: "Compartir", martyrsLabel: "Mártires documentados:",
+        milestonesTitle: "Detalles del hito histórico", readMore: "Leer más", source: "Fuente:",
+        martyrCardTitle: "Tarjeta de documentación del mártir", ageLabel: "Edad:", idLabel: "Nº de identidad:", shareCardBtn: "Compartir tarjeta como imagen",
+        modalPhotoText: "Foto del mártir", mapLogTitle: "Registro del mapa interactivo", mapSearchPlaceholder: "Buscar en el mapa...",
+        mapEmptyText: "No hay registros en el mapa", mapEmptyOverlay: "Mapa temporalmente vacío",
+        wbTitle: "Mártires de Cisjordania y Jerusalén", wbDesc: "Documentación completa de los mártires en Cisjordania y Jerusalén.", wbStatus: "Actualizando registros de campo...",
+        m48Title: "Mártires de los territorios de 1948", m48Desc: "Registro de inmortalidad y heroísmo de los palestinos del 48.", m48Status: "Preparando archivo documental...",
+        archiveTitle: "Archivo Visual y Documentación", archiveSub: "Registros documentales visuales e informes completos",
+        btnAll: "Todos", btnReports: "Reportes fotográficos", btnTestimonies: "Testimonios",
+        tlcIntro1: "Durante las últimas décadas, decenas de miles de palestinos han muerto como mártires...",
+        tlcIntro2: "A continuación detallamos los hitos más importantes de la causa palestina...", tlcFooterStory: "Y la historia continuará...",
+        statsTitle: "Guerra de genocidio en Gaza", statsSubtitle: "1000 días de genocidio", statsBanner: "Más de 2,4 millones de personas enfrentan el exterminio y el hambre", statsUrbanHeader: "Los ataques de la ocupación también tienen como blanco el urbanismo y la civilización.",
+        noDataText: "No hay datos disponibles actualmente"
     }
 };
 
+// وظيفة التبديل بين الوضع الداكن والمضيء
 function toggleTheme() {
     const body = document.body;
     body.classList.toggle('light-mode');
@@ -738,8 +781,6 @@ function toggleTheme() {
 function updateThemeIcon(isLight) {
     const svgEl = document.getElementById('theme-icon-svg');
     if (!svgEl) return;
-    svgEl.setAttribute('width', '14');
-    svgEl.setAttribute('height', '14');
     if (isLight) {
         svgEl.innerHTML = `<circle cx="12" cy="12" r="5" fill="currentColor"></circle><line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2"></line><line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2"></line><line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2"></line><line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2"></line>`;
     } else {
@@ -749,44 +790,343 @@ function updateThemeIcon(isLight) {
 
 function initAudio() {
     if (!backgroundSound) {
-        // تأكد من مسار الملف الصوتي الخاص بك هنا
-        backgroundSound = new Howl({
-            src: ['./audio/ambient.mp3'], 
-            loop: true,
-            volume: 0.4,
-            html5: true,
-            onplay: () => { isPlayingAudio = true; updateMusicButton(); },
-            onpause: () => { isPlayingAudio = false; updateMusicButton(); },
-            onstop: () => { isPlayingAudio = false; updateMusicButton(); }
-        });
+        try {
+            backgroundSound = new Howl({
+                src: ['./audio/ambient.mp3', 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3'], 
+                loop: true,
+                volume: 0.35,
+                html5: true,
+                onplay: () => { isPlayingAudio = true; updateMusicButton(); },
+                onpause: () => { isPlayingAudio = false; updateMusicButton(); },
+                onstop: () => { isPlayingAudio = false; updateMusicButton(); }
+            });
+        } catch(e) {
+            console.log("Howler error:", e);
+        }
+    }
+}
+
+function startSynthAmbient() {
+    if(!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if(audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    if(!isAudioSynthActive) {
+        synthGain = audioCtx.createGain();
+        synthGain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+
+        synthOsc1 = audioCtx.createOscillator();
+        synthOsc1.type = 'sine';
+        synthOsc1.frequency.setValueAtTime(110, audioCtx.currentTime); 
+
+        synthOsc2 = audioCtx.createOscillator();
+        synthOsc2.type = 'triangle';
+        synthOsc2.frequency.setValueAtTime(164.81, audioCtx.currentTime); 
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(400, audioCtx.currentTime);
+
+        synthOsc1.connect(synthGain);
+        synthOsc2.connect(synthGain);
+        synthGain.connect(filter);
+        filter.connect(audioCtx.destination);
+
+        synthOsc1.start();
+        synthOsc2.start();
+        isAudioSynthActive = true;
+    }
+}
+
+function stopSynthAmbient() {
+    if(synthGain && audioCtx) {
+        synthGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.4);
+        setTimeout(() => {
+            if(synthOsc1) { synthOsc1.stop(); synthOsc1.disconnect(); synthOsc1 = null; }
+            if(synthOsc2) { synthOsc2.stop(); synthOsc2.disconnect(); synthOsc2 = null; }
+            isAudioSynthActive = false;
+        }, 400);
     }
 }
 
 function toggleMusic() {
     initAudio();
     if (isPlayingAudio) {
-        backgroundSound.pause();
+        if (backgroundSound && backgroundSound.playing()) {
+            backgroundSound.pause();
+        }
+        stopSynthAmbient();
+        isPlayingAudio = false;
+        updateMusicButton();
     } else {
-        backgroundSound.play();
+        isPlayingAudio = true;
+        updateMusicButton();
+        if (backgroundSound) {
+            backgroundSound.play();
+            setTimeout(() => {
+                if (!backgroundSound.playing()) {
+                    startSynthAmbient();
+                }
+            }, 600);
+        } else {
+            startSynthAmbient();
+        }
     }
 }
 
 function updateMusicButton() {
     const btn = document.getElementById('music-btn');
     if (btn) {
-        const t = translations[currentLang] || translations['ar'];
+        const t = translations[currentLang];
         btn.innerHTML = isPlayingAudio ? t.musicOff : t.musicOn;
         if (isPlayingAudio) btn.classList.add('active');
         else btn.classList.remove('active');
     }
 }
 
-// دالة المشاركة المتقدمة عبر Web Share API
+const milestoneCinematicData = [
+    { id: "d1920", type: "decade", decade: "1920" },
+    { 
+        id: "m18", type: "scene", year: "1929", title: "هبّة البراق", alt: "ثورة البراق", image: "images/timeline/18.jpg", 
+        excerpt: "في آب/أغسطس 1929 انتفض الفلسطينيون احتجاجاً على محاولات السيطرة على حائط البراق المحاذي للمسجد الأقصى. اندلعت اشتباكات في القدس والخليل وصفد، وردّ الانتداب البريطاني بالقوة المفرطة، واستشهد أكثر من 116 فلسطينياً، وأُعدم ثلاثة من قادة الثورة لاحقاً (محمد جمجوم، فؤاد حجازي، عطا الزير) فخلّدتهم الذاكرة الوطنية.", 
+        stat: "حوالي 116 شهيد", 
+        statExp: "116 شهيداً فلسطينياً سقطوا خلال الأحداث، إضافة إلى تنفيذ حكم الإعدام بثلاثة من قادة الثورة",
+        sourceName: "ويكيبيديا - ثورة البراق 1929",
+        sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AB%D9%88%D8%B1%D8%A9_%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%82"
+    },
+    
+    { id: "d1930", type: "decade", decade: "1930" },
+    { 
+        id: "m19", type: "scene", year: "1936 - 1939", title: "الثورة الفلسطينية الكبرى", alt: "ثورة الست أشهر", image: "images/timeline/19.jpg", 
+        excerpt: "انطلقت الثورة الفلسطينية الكبرى في نيسان/أبريل 1936 بإضراب عام شامل امتد ستة أشهر، ثم تحولت إلى مقاومة مسلحة استمرت حتى 1939. استهدفت الانتداب البريطاني والمشروع الصهيوني، وقمعتها بريطانيا بعنف عبر قانون الطوارئ ونسف القرى والإعدامات.", 
+        stat: "5,000 شهيد",
+        statExp: "آلاف الشهداء والجرحى نتيجة العمليات العسكرية وقمع الاحتلال البريطاني للثورة",
+        sourceName: "الموسوعة التفاعلية للقضية الفلسطينية",
+        sourceUrl: "https://www.palquest.org/"
+    },
+    { 
+        id: "m1", type: "scene", year: "1936 - 1948", title: "مرحلة التطهير العرقي في فلسطين", alt: "النكبة", image: "images/timeline/1.jpg", 
+        excerpt: "بدأت المجازر الاسرائيلية بحق الفلسطينيين قبل الاعلان عن قيام دولة اسرائيل بنحو 11 عاما منذ كانت فلسطين تحت وصاية الانتداب البريطاني الذي كان يتحمل مسؤولية حماية حياة المواطنين الفلسطينيين.", 
+        stat: "حوالي 5000 شهيد",
+        statExp: "ضحايا المجازر وعمليات التطهير العرقي المبكرة قبل عام 1948",
+        sourceName: "مؤسسة الدراسات الفلسطينية",
+        sourceUrl: "https://www.palquest.org/"
+    },
+
+    { id: "d1940", type: "decade", decade: "1940" },
+    { 
+        id: "m20", type: "scene", year: "1948", title: "مجزرة دير ياسين", alt: "", image: "images/timeline/20.jpg", 
+        excerpt: "في فجر التاسع من نيسان 1948، اقتحمت عصابتا الإرغون وشتيرن قرية دير ياسين غرب القدس وارتكبتا مجزرة وحشية بحق سكانها، شملت إعدامات ميدانية وتمثيلاً بالجثث وتهجيراً.", 
+        stat: "254 - 300 شهيد",
+        statExp: "أكثر من 250 شهيداً من الأطفال والنساء والرجال عزل الأسلحة",
+        sourceName: "ويكيبيديا - مجزرة دير ياسين",
+        sourceUrl: "https://ar.wikipedia.org"
+    },
+    { 
+        id: "m2", type: "scene", year: "1948", title: "الحرب العربية الإسرائيلية 1948", alt: "حرب النكبة", image: "images/timeline/2.jpg", 
+        excerpt: "أول حروب العرب مع إسرائيل، دارت عقب إنهاء الانتداب البريطاني على فلسطين وإعلان قيام إسرائيل، منتصف مايو/أيار 1948، وارتقى خلالها آلاف الشهداء.", 
+        stat: "20 - 22 ألف شهيد",
+        statExp: "شهداء المعارك والدفاع عن المدن والقرى الفلسطينية أثناء النكبة",
+        sourceName: "الموسوعة التفاعلية للقضية الفلسطينية",
+        sourceUrl: "https://www.palquest.org/"
+    },
+
+    { id: "d1950", type: "decade", decade: "1950" },
+    { 
+        id: "m4", type: "scene", year: "1956", title: "احتلال غزة 1956", alt: "العدوان الثلاثي", image: "images/timeline/4.jpg", 
+        excerpt: "خلال العدوان الثلاثيّ على مصر بعد تأميم قناة السويس، احتلّ جيش الاحتلال قطاع غزّة قادماً من رفح، حيث ارتقى مئات الشهداء في مجازر بشعة.", 
+        stat: "حوالي 1500 شهيد",
+        statExp: "شهداء المجازر في خان يونس ورفح وغزة خلال العدوان",
+        sourceName: "أرشيف تاريخ فلسطين - العدوان الثلاثي",
+        sourceUrl: "https://ar.wikipedia.org"
+    },
+
+    { id: "d1960", type: "decade", decade: "1960" },
+    { 
+        id: "m5", type: "scene", year: "1967", title: "حرب حزيران 1967", alt: "النكسة", image: "images/timeline/5.jpg", 
+        excerpt: "يطلق مصطلح النكسة على الهزيمة التي منيت بها الجيوش العربية أمام إسرائيل واحتلال كامل فلسطين وأراضٍ سورية ومصرية.", 
+        stat: "15,000 - 25,000 شهيد",
+        statExp: "شهداء العمليات العسكرية والدفاع عن الأراضي العربية والفلسطينية",
+        sourceName: "الموسوعة التفاعلية للقضية الفلسطينية",
+        sourceUrl: "https://www.palquest.org/"
+    },
+
+    { id: "d1970", type: "decade", decade: "1970" },
+    { 
+        id: "m22", type: "scene", year: "1976", title: "يوم الأرض", alt: "", image: "images/timeline/22.jpg", 
+        excerpt: "هبة جماهيرية فلسطينية شاملة رداً على مصادرة سلطات الاحتلال لآلاف الدونمات من أراضي الجليل والمثلث.", 
+        stat: "6 شهداء",
+        statExp: "ستة شهداء سقطوا دفاعاً عن الأرض في أراضي الداخل المحتل عام 1948",
+        sourceName: "تقارير توثيقية فلسطينية",
+        sourceUrl: "https://ar.wikipedia.org"
+    },
+
+    { id: "d1980", type: "decade", decade: "1980" },
+    { 
+        id: "m11", type: "scene", year: "1987", title: "الانتفاضة الفلسطينية الأولى", alt: "انتفاضة الحجارة", image: "images/timeline/11.jpg", 
+        excerpt: "هبة شعبية كبرى انطلقت من مخيم جباليا في قطاع غزة وامتدت لكافة المدن والقرى الفلسطينية.", 
+        stat: "أكثر من 1300 شهيد",
+        statExp: "شهداء رصاص الاحتلال والمواجهات الشعبية والحجارة خلال الانتفاضة الأولى",
+        sourceName: "مركز المعلومات الوطني الفلسطيني (وفا)",
+        sourceUrl: "https://www.wafa.ps/"
+    },
+
+    { id: "d1990", type: "decade", decade: "1990" },
+    { 
+        id: "m25", type: "scene", year: "1994", title: "مجزرة الحرم الإبراهيمي", alt: "", image: "images/timeline/25.jpg", 
+        excerpt: "إطلاق نار متطرف داخل الحرم الإبراهيمي الشريف في مدينة الخليل أثناء صلاة الفجر.", 
+        stat: "29 شهيداً",
+        statExp: "29 شهيداً ارتقوا داخل المسجد أثناء صلاة الفجر",
+        sourceName: "ويكيبيديا والموسوعة التفاعلية",
+        sourceUrl: "https://ar.wikipedia.org"
+    },
+
+    { id: "d2000", type: "decade", decade: "2000" },
+    { 
+        id: "m12", type: "scene", year: "2000", title: "الانتفاضة الفلسطينية الثانية", alt: "انتفاضة الأقصى", image: "images/timeline/12.jpg", 
+        excerpt: "اندلعت عقب اقتحام أرييل شارون للمسجد الأقصى، وشهدت مواجهات مسلحة واجتياحات واسعة لمدن الضفة وغزة.", 
+        stat: "آلاف الشهداء",
+        statExp: "أكثر من 4000 شهيد وثقتهم السجلات الرسمية خلال انتفاضة الأقصى",
+        sourceName: "مركز المعلومات الوطني الفلسطيني (وفا)",
+        sourceUrl: "https://www.wafa.ps/"
+    },
+
+    { id: "d2010", type: "decade", decade: "2010" },
+    { 
+        id: "m15", type: "scene", year: "2014", title: "الجرف الصامد", alt: "حرب غزة 2014", image: "images/timeline/15.jpg", 
+        excerpt: "حرب مدمرة استمرت 51 يوماً ضد قطاع غزة، وشهدت مجازر مروعة بحق العائلات وتدميراً واسعاً.", 
+        stat: "2,200+ شهيد",
+        statExp: "أكثر من 2200 شهيد بينهم مئات الأطفال والنساء وعائلات بأكملها مسحت من السجل المدني",
+        sourceName: "الجهاز المركزي للإحصاء الفلسطيني",
+        sourceUrl: "https://www.pcbs.gov.ps/"
+    },
+
+    { id: "d2020", type: "decade", decade: "2020" },
+    { 
+        id: "m30", type: "scene", year: "2023 - 2026", title: "طوفان الأقصى والعدوان الشامل", alt: "حرب الإبادة", image: "images/timeline/30.jpg", 
+        excerpt: "الملحمة التاريخية الكبرى وطوفان الأقصى وما تلاه من حرب إبادة جماعية وعدوان غير مسبوق على قطاع غزة والضفة والمنطقة.", 
+        stat: "عشرات الآلاف من الشهداء",
+        statExp: "أكثر من 158,000 إلى 291,000 شهيد ومفقود وجريح ومستشهد تحت الأنقاض وفي حرب الإبادة الجماعية المستمرة",
+        sourceName: "الجهاز المركزي للإحصاء الفلسطيني وتقارير الأمم المتحدة",
+        sourceUrl: "https://www.pcbs.gov.ps/"
+    }
+];
+
+function changeLanguage(langCode) {
+    if (!translations[langCode]) langCode = 'ar';
+    currentLang = langCode;
+    localStorage.setItem('site_lang', langCode);
+    const t = translations[currentLang];
+    
+    document.getElementById('html-root').lang = currentLang;
+    document.getElementById('html-root').dir = (currentLang === 'ar') ? 'rtl' : 'ltr';
+    document.getElementById('language-select').value = currentLang;
+    
+    document.getElementById('title-main').innerText = t.titleMain;
+    document.getElementById('logo-text').innerText = t.logoText;
+    document.getElementById('search-input').placeholder = t.searchPlaceholder;
+    document.getElementById('tab-souls').innerText = t.tabSouls;
+    document.getElementById('tab-journalists').innerText = t.tabJournalists;
+    document.getElementById('tab-westbank').innerText = t.tabWestBank;
+    document.getElementById('tab-48').innerText = t.tab48;
+    document.getElementById('tab-milestones').innerText = t.tabMilestones;
+    document.getElementById('tab-stats').innerText = t.tabStats;
+    document.getElementById('tab-videos').innerText = t.tabVideos;
+    document.getElementById('tab-map').innerText = t.tabMap;
+    document.getElementById('donate-desktop').innerText = t.donate;
+    document.getElementById('verse-text').innerText = t.verse;
+    document.getElementById('dev-text').innerText = t.devText;
+    document.getElementById('share-btn-text').innerText = t.shareBtn;
+    document.getElementById('martyrs-label').innerText = t.martyrsLabel;
+    
+    const modalMilestoneTitle = document.getElementById('modal-milestone-title-text');
+    if(modalMilestoneTitle) modalMilestoneTitle.innerText = t.milestonesTitle;
+    
+    const modalMartyrTitle = document.getElementById('modal-martyr-title-text');
+    if(modalMartyrTitle) modalMartyrTitle.innerText = t.martyrCardTitle;
+    
+    const modalPhotoText = document.getElementById('modal-photo-text');
+    if(modalPhotoText) modalPhotoText.innerText = t.modalPhotoText;
+    
+    const modalAgeLabel = document.getElementById('modal-age-label');
+    if(modalAgeLabel) modalAgeLabel.innerText = t.ageLabel;
+    
+    const modalIdLabel = document.getElementById('modal-id-label');
+    if(modalIdLabel) modalIdLabel.innerText = t.idLabel;
+    
+    const shareBtnModal = document.getElementById('share-btn-modal');
+    if(shareBtnModal) shareBtnModal.innerText = t.shareCardBtn;
+
+    const mapLogTitle = document.getElementById('map-log-title');
+    if(mapLogTitle) mapLogTitle.innerText = t.mapLogTitle;
+    
+    const mapSearchInput = document.getElementById('map-search-input');
+    if(mapSearchInput) mapSearchInput.placeholder = t.mapSearchPlaceholder;
+    
+    const mapEmptyText = document.getElementById('map-empty-text');
+    if(mapEmptyText) mapEmptyText.innerText = t.mapEmptyText;
+    
+    const mapEmptyOverlay = document.getElementById('map-empty-overlay');
+    if(mapEmptyOverlay) mapEmptyOverlay.innerText = t.mapEmptyOverlay;
+
+    const wbTitle = document.getElementById('wb-title');
+    if(wbTitle) wbTitle.innerText = t.wbTitle;
+    const wbDesc = document.getElementById('wb-desc');
+    if(wbDesc) wbDesc.innerText = t.wbDesc;
+    const wbStatus = document.getElementById('wb-status');
+    if(wbStatus) wbStatus.innerText = t.wbStatus;
+
+    const m48Title = document.getElementById('m48-title');
+    if(m48Title) m48Title.innerText = t.m48Title;
+    const m48Desc = document.getElementById('m48-desc');
+    if(m48Desc) m48Desc.innerText = t.m48Desc;
+    const m48Status = document.getElementById('m48-status');
+    if(m48Status) m48Status.innerText = t.m48Status;
+
+    const archiveTitle = document.getElementById('archive-title');
+    if(archiveTitle) archiveTitle.innerText = t.archiveTitle;
+    const archiveSub = document.getElementById('archive-sub');
+    if(archiveSub) archiveSub.innerText = t.archiveSub;
+    const btnAll = document.getElementById('btn-all');
+    if(btnAll) btnAll.innerText = t.btnAll;
+    const btnReports = document.getElementById('btn-reports');
+    if(btnReports) btnReports.innerText = t.btnReports;
+    const btnTestimonies = document.getElementById('btn-testimonies');
+    if(btnTestimonies) btnTestimonies.innerText = t.btnTestimonies;
+
+    const tlcIntro1 = document.getElementById('tlc-intro-1');
+    if(tlcIntro1) tlcIntro1.innerText = t.tlcIntro1;
+    const tlcIntro2 = document.getElementById('tlc-intro-2');
+    if(tlcIntro2) tlcIntro2.innerText = t.tlcIntro2;
+    const tlcFooterStory = document.getElementById('tlc-footer-story');
+    if(tlcFooterStory) tlcFooterStory.innerText = t.tlcFooterStory;
+
+    const statsTitle = document.getElementById('stats-title');
+    if(statsTitle) statsTitle.innerText = t.statsTitle;
+    const statsSubtitle = document.getElementById('stats-subtitle');
+    if(statsSubtitle) statsSubtitle.innerText = t.statsSubtitle;
+    const statsBanner = document.getElementById('stats-banner');
+    if(statsBanner) statsBanner.innerText = t.statsBanner;
+    const statsUrbanHeader = document.getElementById('stats-urban-header');
+    if(statsUrbanHeader) statsUrbanHeader.innerText = t.statsUrbanHeader;
+
+    const noDataText = document.getElementById('no-data-text');
+    if(noDataText) noDataText.innerText = t.noDataText;
+
+    updateMusicButton();
+}
+
+window.shareSite = function(){
+    navigator.clipboard.writeText(window.location.href).then(() => alert('تم نسخ رابط المنصة بنجاح!'));
+};
+
 window.shareMartyrCard = function(){
     if(!currentMartyrObj) return;
     const btn = document.getElementById('share-btn-modal');
     const originalText = btn.innerText;
-    btn.innerText = "جاري تحضير الصورة للمشاركة...";
+    btn.innerText = "جاري تحضير الصورة...";
     btn.disabled = true;
 
     const person = currentMartyrObj;
@@ -804,60 +1144,146 @@ window.shareMartyrCard = function(){
 
     const cardElement = document.getElementById('shareable-card');
     
-    // رفع الدقة إلى 3 للصورة النهائية العالية
     html2canvas(cardElement, {
-        scale: 3, 
+        scale: 2,
         useCORS: true,
         backgroundColor: '#0a0a0a'
     }).then(canvas => {
-        canvas.toBlob(blob => {
-            const fileName = `توثيق_الشهيد_${(person.name_ar || 'مجهول').replace(/\s+/g, '_')}.png`;
-            const file = new File([blob], fileName, { type: 'image/png' });
-            
-            // محاولة إرسال الصورة عبر Web Share API للمنصات (هاتف أو حاسوب حديث)
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                navigator.share({
-                    title: 'أرواح فلسطين - بطاقة توثيق شهيد',
-                    text: `الشهيد: ${person.name_ar || person.name} \nتم التوثيق عبر منصة أرواح فلسطين.`,
-                    files: [file]
-                }).then(() => {
-                    resetBtn(btn, originalText);
-                }).catch(err => {
-                    // إذا قام المستخدم بالإلغاء أو حدث خطأ، قم بتحميلها بالطريقة التقليدية
-                    downloadFallback(canvas, fileName);
-                    resetBtn(btn, originalText);
-                });
-            } else {
-                // الطريقة التقليدية (التحميل المباشر) للمتصفحات غير الداعمة
-                downloadFallback(canvas, fileName);
-                resetBtn(btn, originalText);
-            }
-        }, 'image/png');
+        const link = document.createElement('a');
+        link.download = `توثيق_الشهيد_${(person.name_ar || 'مجهول').replace(/\s+/g, '_')}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        
+        btn.innerText = originalText;
+        btn.disabled = false;
     }).catch(err => {
         console.error("Error generating card image:", err);
         alert("حدث خطأ أثناء التقاط الصورة. يرجى المحاولة مرة أخرى.");
-        resetBtn(btn, originalText);
+        btn.innerText = originalText;
+        btn.disabled = false;
     });
 };
 
-function downloadFallback(canvas, fileName) {
-    const link = document.createElement('a');
-    link.download = fileName;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+function openMilestoneModal(item) {
+    const modal = document.getElementById('milestone-modal-overlay');
+    const container = document.getElementById('milestone-modal-body-container');
+    if(!modal || !container) return;
+    const t = translations[currentLang];
+
+    container.innerHTML = `
+        <div class="tlc-modal-content">
+            <h2 class="tlc-modal-title">${item.title} ${item.alt ? `<span class="tlc-mdl-alt">(${item.alt})</span>` : ''}</h2>
+            <div class="tlc-modal-meta">
+                <time>${item.year}</time>
+            </div>
+            <img class="tlc-modal-img" src="${item.image}" alt="" onerror="this.style.display='none'">
+            <div class="tlc-modal-desc">${item.excerpt}</div>
+            <div class="tlc-modal-stat">
+                <span class="tlc-mdl-stat-label">عدد الشهداء:</span>
+                <span class="tlc-mdl-stat-num">${item.stat}</span>
+                <p class="tlc-mdl-stat-exp">${item.statExp || item.excerpt}</p>
+            </div>
+            <div class="tlc-modal-source">
+                <span>${t.source}</span>
+                <a href="${item.sourceUrl || 'https://www.palquest.org/'}" target="_blank" rel="noopener">${item.sourceName || 'الموسوعة التفاعلية للقضية الفلسطينية'}</a>
+            </div>
+        </div>
+    `;
+    modal.style.display = 'flex';
 }
 
-function resetBtn(btn, text) {
-    btn.innerText = text;
-    btn.disabled = false;
+function renderCinematicTimeline() {
+    const scenesContainer = document.getElementById('tlc-scenes-container');
+    if(!scenesContainer) return;
+    
+    scenesContainer.innerHTML = '';
+
+    let currentDecadeSection = null;
+    let currentCardsGrid = null;
+    const t = translations[currentLang];
+
+    milestoneCinematicData.forEach(item => {
+        if (item.type === 'decade') {
+            currentDecadeSection = document.createElement('div');
+            currentDecadeSection.className = 'tlc-decade-group';
+            currentDecadeSection.id = item.id;
+            
+            const decadeHeader = document.createElement('div');
+            decadeHeader.className = 'tlc-decade';
+            decadeHeader.innerHTML = `
+                <h2 class="tlc-decade-num">${item.decade}<span>s</span></h2>
+                <div class="tlc-decade-divider"></div>
+                <div class="tlc-decade-cards" id="cards-${item.decade}"></div>
+            `;
+            currentDecadeSection.appendChild(decadeHeader);
+            currentCardsGrid = decadeHeader.querySelector('.tlc-decade-cards');
+            
+            scenesContainer.appendChild(currentDecadeSection);
+
+        } else if (item.type === 'scene') {
+            if (currentCardsGrid) {
+                const cardA = document.createElement('a');
+                cardA.className = 'tlc-decade-card';
+                cardA.href = `#${item.id}`;
+                cardA.onclick = (e) => {
+                    e.preventDefault();
+                    const target = document.getElementById(item.id);
+                    if(target) target.scrollIntoView({behavior: 'smooth'});
+                };
+                cardA.innerHTML = `
+                    <div class="tlc-decade-card-img">
+                        <img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.style.display='none'">
+                    </div>
+                    <div class="tlc-decade-card-body">
+                        <span class="tlc-decade-card-year">${item.year}</span>
+                        <span class="tlc-decade-card-title">${item.title}</span>
+                    </div>
+                `;
+                currentCardsGrid.appendChild(cardA);
+            }
+
+            const sceneEl = document.createElement('section');
+            sceneEl.className = 'tlc-scene';
+            sceneEl.id = item.id;
+            sceneEl.innerHTML = `
+                <div class="tlc-bg" aria-hidden="true">
+                    <img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.style.display='none'">
+                    <div class="tlc-bg-tint"></div>
+                </div>
+                <article class="tlc-panel">
+                    <time class="tlc-date">${item.year}</time>
+                    <h2 class="tlc-title">${item.title}</h2>
+                    ${item.alt ? `<p class="tlc-alt">${item.alt}</p>` : ''}
+                    <p class="tlc-excerpt">${item.excerpt}</p>
+                    <div class="tlc-foot">
+                        <div class="tlc-stat">
+                            <span class="tlc-stat-num">${item.stat}</span>
+                            <span class="tlc-stat-label">عدد الشهداء والضحايا:</span>
+                        </div>
+                        <button type="button" class="tlc-more">
+                            <span>${t.readMore}</span>
+                            <span aria-hidden="true">→</span>
+                        </button>
+                    </div>
+                </article>
+            `;
+            
+            const moreBtn = sceneEl.querySelector('.tlc-more');
+            moreBtn.onclick = () => openMilestoneModal(item);
+
+            if (currentDecadeSection) {
+                currentDecadeSection.appendChild(sceneEl);
+            } else {
+                scenesContainer.appendChild(sceneEl);
+            }
+        }
+    });
 }
 
-// تعديل دالة الخرائط لتشمل إحداثيات كل أراضي فلسطين والضفة
 function initMapIfNeeded() {
     if (!map) {
-        // إحداثيات تشمل فلسطين التاريخية بالكامل
-        const palestineBounds = [[29.40, 34.00], [33.40, 36.00]];
-        map = L.map('map', { maxBounds: palestineBounds, maxBoundsViscosity: 0.8, minZoom: 7 }).setView([31.95, 35.20], 8);
+        const gazaBounds = [[31.22, 34.20], [31.60, 34.58]];
+        map = L.map('map', { maxBounds: gazaBounds, maxBoundsViscosity: 0.8, minZoom: 9 }).setView([31.45, 34.40], 11);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '© OpenStreetMap contributors © CARTO',
             subdomains: 'abcd',
@@ -867,121 +1293,19 @@ function initMapIfNeeded() {
     }
 }
 
-// دالة لتهيئة الرسوميات بشكل بطيء وتجنب التداخل
-const canvas=document.getElementById('stars-canvas');
-const ctx=canvas?canvas.getContext('2d'):null;
-const sCanvas=document.getElementById('shooting-stars-canvas');
-const sCtx=sCanvas?sCanvas.getContext('2d'):null;
-
-function resize(){
-    if(canvas){
-        width=window.innerWidth;height=window.innerHeight;
-        canvas.width=width;canvas.height=height;
+function renderMapAndList() {
+    initMapIfNeeded();
+    const listContainer = document.getElementById('map-data-list');
+    const t = translations[currentLang];
+    if (listContainer) {
+        listContainer.innerHTML = `<div class="text-center text-gray-500 py-20 text-xs">${t.mapEmptyText}</div>`;
     }
-    if(sCanvas){
-        sCanvas.width=window.innerWidth;sCanvas.height=window.innerHeight;
-    }
-}
-window.addEventListener('resize',resize);
-resize();
-
-// توليد النجوم لحركة البطيئة (Slow Motion)
-let numStars = 150;
-for(let i=0; i<numStars; i++){
-    points.push({
-        x: Math.random() * (width || 1000),
-        y: Math.random() * (height || 1000),
-        vx: (Math.random() - 0.5) * 0.15, // سرعة بطيئة جداً للنجوم العادية
-        vy: (Math.random() - 0.5) * 0.15,
-        radius: Math.random() * 1.5,
-        alpha: Math.random()
-    });
+    if (markersLayer) markersLayer.clearLayers();
 }
 
-class ShootingStar {
-    constructor() { this.reset(); }
-    reset() {
-        this.x = Math.random() * (width || window.innerWidth);
-        this.y = 0;
-        this.len = Math.random() * 40 + 20;
-        this.speedX = (Math.random() - 0.5) * 1.5; // سرعة بطيئة جداً للشهب (Slow motion)
-        this.speedY = Math.random() * 2 + 1.5;
-        this.alpha = Math.random() * 0.5 + 0.3;
-        this.wait = Math.random() * 300; // وقت انتظار أطول
-    }
-    update() {
-        if(this.wait > 0) { this.wait--; return; }
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if(this.y > height || this.x < 0 || this.x > width) this.reset();
-    }
-    draw(ctx) {
-        if(this.wait > 0) return;
-        ctx.beginPath();
-        ctx.moveTo(this.x, this.y);
-        ctx.lineTo(this.x - this.speedX * 5, this.y - this.speedY * 5);
-        ctx.strokeStyle = `rgba(255, 255, 255, ${this.alpha})`;
-        ctx.lineWidth = 1;
-        ctx.stroke();
-    }
+function filterMapList() {
+    renderMapAndList();
 }
-
-let shootingStars = [];
-for(let i=0; i<3; i++) shootingStars.push(new ShootingStar());
-
-function animateStars() {
-    if(!ctx) return;
-    ctx.clearRect(0, 0, width, height);
-    
-    // التحقق من حالة البطاقة (Modal) لتجنبها
-    const overlay = document.getElementById('martyr-modal-overlay');
-    const isModalOpen = overlay && overlay.style.display !== 'none';
-    const centerX = width / 2;
-    const centerY = height / 2;
-
-    points.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-        
-        // --- خوارزمية إبعاد النجوم عن الهيدر والخانات ---
-        // 1. الابتعاد عن شريط المهام بالأعلى (Y أقل من 80px)
-        if(p.y < 80) {
-            p.vy = Math.abs(p.vy); // ارتداد نحو الأسفل بلطف
-            p.y = 80;
-        }
-
-        // 2. الابتعاد عن بطاقة الشهيد في حال كانت مفتوحة بمنتصف الشاشة
-        if (isModalOpen) {
-            const dx = p.x - centerX;
-            const dy = p.y - centerY;
-            const dist = Math.sqrt(dx*dx + dy*dy);
-            if (dist < 220) { // نصف قطر التقريب للبطاقة
-                p.x += (dx / dist) * 0.5; // دفعة خفيفة للخارج
-                p.y += (dy / dist) * 0.5;
-            }
-        }
-
-        // إبقاء النجوم داخل الشاشة
-        if (p.x < 0) { p.x = 0; p.vx *= -1; }
-        if (p.x > width) { p.x = width; p.vx *= -1; }
-        if (p.y > height) { p.y = height; p.vy *= -1; }
-        
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
-        ctx.fill();
-    });
-
-    sCtx.clearRect(0, 0, width, height);
-    shootingStars.forEach(s => {
-        s.update();
-        s.draw(sCtx);
-    });
-
-    requestAnimationFrame(animateStars);
-}
-// بدء الأنيميشن
-animateStars();
 
 window.switchMainMode = function(mode) {
     currentMainMode = mode; 
@@ -993,21 +1317,352 @@ window.switchMainMode = function(mode) {
         document.getElementById(id).style.display = 'none';
     });
 
-    if(mode === 'westbank') {
+    const verseContainer = document.getElementById('verse-container');
+    const counterBox = document.getElementById('counter-box');
+    const showVerseAndCounter = ['souls', 'journalists', 'westbank', 'martyrs48'].includes(mode);
+
+    if (verseContainer) verseContainer.style.display = showVerseAndCounter ? '' : 'none';
+    if (counterBox) counterBox.style.display = showVerseAndCounter ? 'flex' : 'none';
+
+    if(mode === 'souls'){
+        fetchAndRenderData('./data/victims.json');
+    } else if(mode === 'journalists') {
+        fetchAndRenderData('./data/journalists.json');
+    } else if(mode === 'westbank') {
         document.getElementById('westbank-view').style.display = 'block';
+        points = [];
+        if(ctx) ctx.clearRect(0, 0, width, height);
+        document.getElementById('number').innerText = "0";
     } else if(mode === 'martyrs48') {
         document.getElementById('martyrs48-view').style.display = 'block';
+        points = [];
+        if(ctx) ctx.clearRect(0, 0, width, height);
+        document.getElementById('number').innerText = "0";
+    } else if(mode === 'milestones') {
+        document.getElementById('milestones-view').style.display = 'block';
+        renderCinematicTimeline();
     } else if(mode === 'stats') {
         document.getElementById('stats-view').style.display = 'block';
     } else if(mode === 'videos') {
         document.getElementById('videos-view').style.display = 'block';
     } else if(mode === 'map') {
         document.getElementById('map-view').style.display = 'flex';
-        initMapIfNeeded();
+        renderMapAndList();
         setTimeout(() => { if (map) map.invalidateSize(); }, 300);
     }
 };
 
+const canvas=document.getElementById('stars-canvas');
+const ctx=canvas?canvas.getContext('2d'):null;
+const sCanvas=document.getElementById('shooting-stars-canvas');
+const sCtx=sCanvas?sCanvas.getContext('2d'):null;
+
+function resize(){
+    width = window.innerWidth;
+    height = window.innerHeight;
+    if(canvas){
+        canvas.width = width;
+        canvas.height = height;
+    }
+    if(sCanvas){
+        sCanvas.width = width;
+        sCanvas.height = height;
+    }
+}
+window.addEventListener('resize', resize);
+resize();
+
+/* صنف الشهب المتساقطة بحركة هادئة وبطيئة سينمائية */
+class ShootingStar {
+    constructor() {
+        this.reset();
+    }
+    reset() {
+        this.x = Math.random() * (width || window.innerWidth) + 200;
+        this.y = Math.random() * (height || window.innerHeight) * 0.4 - 50;
+        this.len = Math.random() * 90 + 50;
+        this.speed = Math.random() * 0.6 + 0.3; // سرعة بطيئة ورزينة
+        this.opacity = Math.random() * 0.7 + 0.3;
+        this.angle = (3 * Math.PI / 4) + (Math.random() * 0.04 - 0.02);
+        this.thickness = Math.random() * 1.2 + 0.8;
+    }
+    update() {
+        this.x += Math.cos(this.angle) * this.speed * 2.2;
+        this.y += Math.sin(this.angle) * this.speed * 2.2;
+        this.opacity -= 0.0035;
+
+        if (this.opacity <= 0 || this.x < -100 || this.y > (height || window.innerHeight) + 100) {
+            this.reset();
+        }
+    }
+    draw() {
+        if(!sCtx) return;
+        sCtx.save();
+        sCtx.translate(this.x, this.y);
+        sCtx.rotate(this.angle);
+        
+        let gradient = sCtx.createLinearGradient(0, 0, -this.len, 0);
+        gradient.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        
+        sCtx.beginPath();
+        sCtx.moveTo(0, 0);
+        sCtx.lineTo(-this.len, 0);
+        sCtx.strokeStyle = gradient;
+        sCtx.lineWidth = this.thickness;
+        sCtx.stroke();
+        sCtx.restore();
+    }
+}
+
+const shootingStarsArr = Array.from({ length: 5 }, () => new ShootingStar());
+
+if (canvas) {
+    canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+        mouseY = e.clientY - rect.top;
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+        mouseX = -1000;
+        mouseY = -1000;
+        const tooltip = document.getElementById('star-tooltip');
+        if (tooltip) tooltip.style.display = 'none';
+    });
+
+    canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const clickY = e.clientY - rect.top;
+
+        for (const p of points) {
+            if (p.currentRadius > 0.5 && Math.hypot(p.x - clickX, p.y - clickY) < (p.currentRadius + 12)) {
+                if (p.userData) openMartyrCardModal(p.userData);
+                break;
+            }
+        }
+    });
+}
+
+function searchMartyrByName(q) {
+    currentSearchQuery = (q || "").trim().toLowerCase();
+}
+
+function openMartyrCardModal(person) {
+    currentMartyrObj = person;
+    const modal = document.getElementById('martyr-modal-overlay');
+    document.getElementById('martyr-modal-name').innerText = person.name_ar || person.name || 'شهيد مجهول';
+    
+    const enNameEl = document.getElementById('martyr-modal-name-en');
+    const foreignName = person.name_en || person.english_name;
+    if (foreignName && foreignName.trim() !== "" && foreignName !== "Unknown Martyr") {
+        enNameEl.innerText = foreignName;
+        enNameEl.style.display = 'block';
+    } else {
+        enNameEl.style.display = 'none';
+    }
+
+    document.getElementById('martyr-modal-age').innerText = person.age || 'غير معروف';
+    document.getElementById('martyr-modal-id').innerText = person.id || '-';
+    
+    const photoContainer = document.getElementById('martyr-modal-photo');
+    if (person.image) {
+        photoContainer.innerHTML = `<img src="${person.image}" class="w-full h-full object-cover" alt="صورة الشهيد">`;
+    } else {
+        photoContainer.innerHTML = `<span id="modal-photo-text">${translations[currentLang].modalPhotoText}</span>`;
+    }
+    modal.style.display = 'flex';
+}
+
+document.getElementById('martyr-modal-close').onclick = () => {
+    document.getElementById('martyr-modal-overlay').style.display = 'none';
+};
+
+document.getElementById('milestone-modal-close').onclick = () => {
+    document.getElementById('milestone-modal-overlay').style.display = 'none';
+};
+
+async function fetchAndRenderData(url){
+    gazaSouls=[]; points=[];
+    if(ctx) ctx.clearRect(0,0,width,height);
+    try{
+        const res = await fetch(url, {cache:'no-cache'});
+        if(res.ok){
+            const text = await res.text();
+            if(text && text.trim().length > 0){
+                const data = JSON.parse(text);
+                const list = Array.isArray(data) ? data : (data.data || []);
+                gazaSouls = list.map(item => ({
+                    name_ar: item.name_ar || item.name || "شهيد مجهول",
+                    name_en: item.name_en || item.english_name || "",
+                    age: item.age || "غير معروف", 
+                    id: item.id || "-", 
+                    image: item.image || null
+                }));
+            }
+        }
+    }catch(e){
+        gazaSouls = Array.from({length: 1200}, (_, i) => ({
+            name_ar: `شهيد فلسطين رقم ${i+1}`,
+            name_en: `Palestine Martyr #${i+1}`,
+            age: Math.floor(Math.random() * 60 + 1),
+            id: `9${Math.floor(10000000 + Math.random() * 90000000)}`
+        }));
+    }
+    renderStars();
+}
+
+function animateCounter(target) {
+    const numEl = document.getElementById('number');
+    if(!numEl) return;
+    let start = 0;
+    const duration = 1200;
+    const startTime = performance.now();
+    function update(time) {
+        const elapsed = time - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const current = Math.floor(progress * target);
+        numEl.innerText = current.toLocaleString();
+        if(progress < 1) {
+            requestAnimationFrame(update);
+        } else {
+            numEl.innerText = target.toLocaleString();
+        }
+    }
+    requestAnimationFrame(update);
+}
+
+function renderStars(){
+    points=[];
+    const dotsToRender = gazaSouls.length > 0 ? Math.min(1500, gazaSouls.length) : 800;
+    for(let i=0; i<dotsToRender; i++){
+        points.push({
+            x: Math.random()*width,
+            y: Math.random()*height,
+            vx: (Math.random()-0.5)*0.08, // سرعة حركة بطيئة وهادئة جداً للنجوم
+            vy: (Math.random()-0.5)*0.08,
+            alpha: 0.3 + Math.random()*0.6,
+            currentAlpha: 0.3 + Math.random()*0.6,
+            currentRadius: 1.5,
+            pulseSpeed: 0.005 + Math.random()*0.008, // نبض وتلألؤ بطيء
+            color: '#ffffff',
+            userData: gazaSouls[i] || { name_ar: `شهيد ${i+1}`, age: "غير معروف", id: "-" }
+        });
+    }
+    const targetCount = gazaSouls.length > 0 ? gazaSouls.length : 60198;
+    animateCounter(targetCount);
+}
+
+/* الحلقة الرئيسية المتحكمة بحركة النجوم والشهب وتأثير الحركة البطيئة */
+function gameLoop(){
+    if(ctx){
+        if (!width || !height) {
+            resize();
+        }
+        ctx.clearRect(0, 0, width, height);
+        let hoveredStar = null;
+        const isLight = document.body.classList.contains('light-mode');
+        const query = currentSearchQuery;
+
+        if (points.length === 0) {
+            for(let i=0; i<800; i++){
+                points.push({
+                    x: Math.random()*width, y: Math.random()*height,
+                    vx: (Math.random()-0.5)*0.08, vy: (Math.random()-0.5)*0.08,
+                    alpha: 0.5, currentAlpha: 0.5, currentRadius: 1.5,
+                    pulseSpeed: 0.006, userData: { name_ar: `شهيد ${i+1}`, age: "غير معروف", id: "-" }
+                });
+            }
+        }
+
+        for(let i=0; i<points.length; i++){
+            const p = points[i];
+            p.x += p.vx; p.y += p.vy;
+            if(p.x < 0) p.x = width; else if(p.x > width) p.x = 0;
+            if(p.y < 0) p.y = height; else if(p.y > height) p.y = 0;
+
+            p.alpha += p.pulseSpeed;
+            if (p.alpha > 0.95 || p.alpha < 0.2) p.pulseSpeed = -p.pulseSpeed;
+
+            let isMatch = true;
+            if (query !== "") {
+                const nameAr = (p.userData.name_ar || p.userData.name || "").toLowerCase();
+                const nameEn = (p.userData.name_en || p.userData.english_name || "").toLowerCase();
+                isMatch = nameAr.includes(query) || nameEn.includes(query);
+            }
+
+            const dist = Math.hypot(p.x - mouseX, p.y - mouseY);
+            
+            let targetAlpha = isMatch ? p.alpha : 0.05;
+            let targetRadius = isMatch ? (dist < 15 ? 4.5 : 1.5) : 0.5;
+            
+            p.currentAlpha += (targetAlpha - p.currentAlpha) * 0.08;
+            p.currentRadius += (targetRadius - p.currentRadius) * 0.08;
+
+            if (p.currentRadius > 0.5 && dist < 15 && isMatch) {
+                hoveredStar = p;
+            }
+
+            if (p.currentRadius > 0.1) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.currentRadius, 0, Math.PI * 2);
+                if (isLight) {
+                    ctx.fillStyle = (dist < 15 && isMatch) ? '#dc2626' : `rgba(31, 41, 55, ${p.currentAlpha})`;
+                } else {
+                    ctx.fillStyle = (dist < 15 && isMatch) ? '#ef4444' : `rgba(255, 255, 255, ${p.currentAlpha})`;
+                }
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        /* تحديث بطاقة المعاينة العائمة عند التحويم فوق أي نجمة */
+        const tooltip = document.getElementById('star-tooltip');
+        if (hoveredStar && tooltip) {
+            document.getElementById('tooltip-name').innerText = hoveredStar.userData.name_ar || hoveredStar.userData.name || 'شهيد';
+            const nameEnEl = document.getElementById('tooltip-name-en');
+            if (hoveredStar.userData.name_en) {
+                nameEnEl.innerText = hoveredStar.userData.name_en;
+                nameEnEl.style.display = 'block';
+            } else {
+                nameEnEl.style.display = 'none';
+            }
+            document.getElementById('tooltip-age').innerText = `${translations[currentLang].ageLabel} ${hoveredStar.userData.age || 'غير معروف'}`;
+            
+            tooltip.style.display = 'block';
+            tooltip.style.left = (mouseX + 15) + 'px';
+            tooltip.style.top = (mouseY + 15) + 'px';
+        } else if (tooltip) {
+            tooltip.style.display = 'none';
+        }
+    }
+
+    /* رسم ورندر الشهب المتساقطة بطيئة الحركة */
+    if (sCtx) {
+        sCtx.clearRect(0, 0, sCanvas.width, sCanvas.height);
+        shootingStarsArr.forEach(star => {
+            star.update();
+            star.draw();
+        });
+    }
+
+    requestAnimationFrame(gameLoop);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    resize();
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        updateThemeIcon(true);
+    }
+    const savedLang = localStorage.getItem('site_lang') || 'ar';
+    changeLanguage(savedLang);
+    fetchAndRenderData('./data/victims.json');
+    requestAnimationFrame(gameLoop);
+});
 </script>
 </body>
 </html>
