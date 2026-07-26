@@ -535,15 +535,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <header id="header" class="glass-panel interactive">
 <div class="flex items-center gap-1.5">
 <h1 class="text-sm font-black text-white drop-shadow-md"><span class="text-red-500" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
-<!-- زر التبديل بين الوضع الداكن والمضيء (تم نقله إلى الهيدر بجوار العنوان وتصغيره) -->
-<button id="theme-toggle-btn" class="btn-main flex items-center justify-center p-1 shadow-md hover:scale-105 transition-transform" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 24px; height: 24px; border-radius: 50%; background: rgba(220, 38, 38, 0.2); border-color: rgba(239, 68, 68, 0.5);">
-    <svg id="theme-icon-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+<!-- زر التبديل بين الوضع الداكن والمضيء (تم نقله هنا مصغراً بجوار العنوان) -->
+<button id="theme-toggle-btn" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 26px; height: 26px; border-radius: 50%; background: rgba(220, 38, 38, 0.2); border-color: rgba(239, 68, 68, 0.5);">
+    <svg id="theme-icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
-        <path d="M15 5L15.5 6.5L17 7L15.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/>
-        <path d="M19 9L19.3 9.7L20 10L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>
+        <path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/>
+        <path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>
     </svg>
 </button>
 </div>
+
 <div class="w-auto">
 <!-- البحث يتفاعل الآن مباشرة مع الـ Canvas لتلاشي النجوم -->
 <input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد..." oninput="searchMartyrByName(this.value)">
@@ -781,7 +783,7 @@ function updateThemeIcon(isLight) {
     if (isLight) {
         svgEl.innerHTML = `<circle cx="12" cy="12" r="5" fill="currentColor"></circle><line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2"></line><line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2"></line><line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2"></line><line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2"></line>`;
     } else {
-        svgEl.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><path d="M15 5L15.5 6.5L17 7L15.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/><path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>`;
+        svgEl.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/><path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>`;
     }
 }
 
@@ -1434,4 +1436,175 @@ if (canvas) {
         const clickY = e.clientY - rect.top;
 
         for (const p of points) {
-            if (p.currentRadius > 0.5 && Math.hypot(p.x - clickX, p.y - clickY) < (p.currentRadius + 12)) {
+            if (p.currentRadius > 0.5 && Math.hypot(p.x - clickX, p.y - clickY) < (p.currentRadius + 5)) {
+                openMartyrModal(p.data);
+                break;
+            }
+        }
+    });
+}
+
+function openMartyrModal(person) {
+    currentMartyrObj = person;
+    const modal = document.getElementById('martyr-modal-overlay');
+    if(!modal) return;
+    
+    document.getElementById('martyr-modal-name').innerText = person.name_ar || person.name || 'شهيد مجهول';
+    const enName = document.getElementById('martyr-modal-name-en');
+    if(person.name_en || person.english_name) {
+        enName.innerText = person.name_en || person.english_name;
+        enName.style.display = 'block';
+    } else {
+        enName.style.display = 'none';
+    }
+    
+    document.getElementById('martyr-modal-age').innerText = person.age || 'غير معروف';
+    document.getElementById('martyr-modal-id').innerText = person.id || '-';
+    
+    const photoContainer = document.getElementById('martyr-modal-photo');
+    if(person.image) {
+        photoContainer.innerHTML = `<img src="${person.image}" class="w-full h-full object-cover">`;
+    } else {
+        const t = translations[currentLang];
+        photoContainer.innerHTML = `<span id="modal-photo-text">${t.modalPhotoText}</span>`;
+    }
+    
+    modal.style.display = 'flex';
+}
+
+const martyrModalCloseBtn = document.getElementById('martyr-modal-close');
+if(martyrModalCloseBtn) {
+    martyrModalCloseBtn.onclick = () => {
+        document.getElementById('martyr-modal-overlay').style.display = 'none';
+    };
+}
+
+const milestoneModalCloseBtn = document.getElementById('milestone-modal-close');
+if(milestoneModalCloseBtn) {
+    milestoneModalCloseBtn.onclick = () => {
+        document.getElementById('milestone-modal-overlay').style.display = 'none';
+    };
+}
+
+window.onclick = function(event) {
+    const mOverlay = document.getElementById('martyr-modal-overlay');
+    const msOverlay = document.getElementById('milestone-modal-overlay');
+    if (event.target === mOverlay) mOverlay.style.display = 'none';
+    if (event.target === msOverlay) msOverlay.style.display = 'none';
+};
+
+function searchMartyrByName(query) {
+    currentSearchQuery = query.trim().toLowerCase();
+}
+
+function fetchAndRenderData(jsonUrl) {
+    fetch(jsonUrl)
+    .then(r => r.json())
+    .then(data => {
+        gazaSouls = data;
+        const count = gazaSouls.length;
+        document.getElementById('number').innerText = count.toLocaleString('ar-EG');
+        
+        points = gazaSouls.map(item => {
+            return {
+                x: Math.random() * width,
+                y: Math.random() * height,
+                baseRadius: Math.random() * 1.5 + 0.5,
+                currentRadius: Math.random() * 1.5 + 0.5,
+                alpha: Math.random() * 0.8 + 0.2,
+                twinkleSpeed: Math.random() * 0.02 + 0.005,
+                data: item
+            };
+        });
+    })
+    .catch(err => {
+        console.error("Data loading error:", err);
+        document.getElementById('no-data-view').style.display = 'flex';
+    });
+}
+
+function animate() {
+    if(ctx) {
+        ctx.clearRect(0, 0, width, height);
+        let hoveredStar = null;
+
+        for (let p of points) {
+            let isMatch = true;
+            if (currentSearchQuery !== "") {
+                const nameAr = (p.data.name_ar || p.data.name || "").toLowerCase();
+                const nameEn = (p.data.name_en || p.data.english_name || "").toLowerCase();
+                isMatch = nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery);
+            }
+
+            if (isMatch) {
+                p.currentRadius = p.baseRadius;
+                p.alpha += p.twinkleSpeed;
+                if (p.alpha > 1 || p.alpha < 0.2) p.twinkleSpeed = -p.twinkleSpeed;
+
+                const dist = Math.hypot(p.x - mouseX, p.y - mouseY);
+                if (dist < 15) {
+                    hoveredStar = p;
+                }
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.currentRadius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+                ctx.shadowBlur = dist < 15 ? 10 : 0;
+                ctx.shadowColor = '#ef4444';
+                ctx.fill();
+            } else {
+                p.currentRadius = 0;
+            }
+        }
+
+        const tooltip = document.getElementById('star-tooltip');
+        if (hoveredStar && tooltip) {
+            tooltip.style.display = 'block';
+            tooltip.style.left = (mouseX + 15) + 'px';
+            tooltip.style.top = (mouseY + 15) + 'px';
+            
+            document.getElementById('tooltip-name').innerText = hoveredStar.data.name_ar || hoveredStar.data.name || 'شهيد مجهول';
+            
+            const tooltipEn = document.getElementById('tooltip-name-en');
+            if (hoveredStar.data.name_en || hoveredStar.data.english_name) {
+                tooltipEn.innerText = hoveredStar.data.name_en || hoveredStar.data.english_name;
+                tooltipEn.style.display = 'block';
+            } else {
+                tooltipEn.style.display = 'none';
+            }
+            
+            const ageVal = hoveredStar.data.age ? hoveredStar.data.age : 'غير معروف';
+            document.getElementById('tooltip-age').innerText = `العمر: ${ageVal}`;
+        } else if (tooltip) {
+            tooltip.style.display = 'none';
+        }
+    }
+
+    if(sCtx) {
+        sCtx.clearRect(0, 0, width, height);
+        shootingStarsArr.forEach(star => {
+            star.update();
+            star.draw();
+        });
+    }
+
+    requestAnimationFrame(animate);
+}
+
+// بدء الأنيميشن
+animate();
+
+// تهيئة الوضع المضيء واللغة المخزنة عند التحميل
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        updateThemeIcon(true);
+    }
+    const savedLang = localStorage.getItem('site_lang') || 'ar';
+    changeLanguage(savedLang);
+    switchMainMode('souls');
+});
+</script>
+</body>
+</html>
