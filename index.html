@@ -54,9 +54,8 @@ body.light-mode .tlc-excerpt,
 body.light-mode .tlc-intro-box{color:#374151 !important;}
 body.light-mode #counter-box,
 body.light-mode #visitor-counter-box{background:rgba(255, 255, 255, 0.95) !important;color:#111827 !important;}
-body.light-mode #verse-container{background:rgba(255, 255, 255, 0.95) !important;color:#111827 !important;border-right-color:#dc2626 !important;box-shadow:0 4px 6px -1px rgba(0, 0, 0, 0.05);}
+body.light-mode #verse-container{background:rgba(255, 255, 255, 0.95) !important;color:#111827 !important;border-color:#dc2626 !important;}
 body.light-mode #verse-text{color:#111827 !important;}
-body.light-mode #theme-toggle-btn{background:rgba(255, 255, 255, 0.95) !important;color:#111827 !important;border-color:rgba(0,0,0,0.1) !important;}
 
 #canvas-layer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;transition:opacity 0.4s ease;pointer-events:auto;cursor:pointer;}
 #shooting-stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;}
@@ -429,7 +428,7 @@ body.light-mode .tlc-mdl-stat-exp{color:#4b5563;}
 <!-- عنوان العمران والحضارة -->
 <div class="mb-8 text-center">
     <h3 class="text-xl md:text-2xl font-bold text-red-400 leading-relaxed max-w-4xl mx-auto bg-black/60 border border-white/10 p-4 rounded-2xl">
-        لم تقتصر إعتداءات الإحتلال على البشر بل تطال مختلف مظاهر العمران والحضارة كذلك. إذ استباح الإحتلال مختلف مباني الدولة وممتلكات المدنيين دور العبادة والمؤسسات الصحية والمباني الأثرية.
+        لم تقتصر إعتداءات الإحتلال على البشر بل تطال مختلف مظاهر العمران والحضارة كذلك. إذ استباح الإحتلال مختلف مباني الدولة وممتلكات المدنيين ودور العبادة والمؤسسات الصحية والمباني الأثرية.
     </h3>
 </div>
 
@@ -538,6 +537,11 @@ body.light-mode .tlc-mdl-stat-exp{color:#4b5563;}
 <option value="en">🇬🇧 English</option>
 </select>
 </div>
+<!-- عداد الزوار في مكانه القديم في الأعلى بجانب اللغة -->
+<div id="visitor-counter-box" class="interactive px-3 py-1 rounded-full text-center shadow-md font-['Cairo'] flex items-center gap-1.5 border border-white/10" style="background: rgba(0,0,0,0.6);">
+<span id="visitor-label" class="text-[10px] text-red-400 font-bold">زوار:</span>
+<div id="visitor-number" class="text-xs font-black text-white">0</div>
+</div>
 <div class="flex gap-1.5 items-center">
 <button id="music-btn" class="btn-main">🎵 الصوت</button>
 </div>
@@ -547,14 +551,9 @@ body.light-mode .tlc-mdl-stat-exp{color:#4b5563;}
 <p id="verse-text" class="font-amiri text-gray-200 text-lg font-bold leading-relaxed text-center">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</p>
 </div>
 
-<!-- مجموعة عداد الزوار وأيقونة الإضاءة الكبيرة في الأسفل -->
-<div class="flex items-center gap-3 order-2 md:order-2">
-<div id="visitor-counter-box" class="interactive shadow-2xl font-['Cairo'] text-center p-2 px-4 rounded-xl border-b-3 border-red-600 bg-black/90">
-<div id="visitor-number" class="text-2xl font-black text-white">0</div>
-<div id="visitor-label" class="text-[10px] text-red-400 mt-1 font-bold tracking-widest">زوار:</div>
-</div>
-<!-- زر التبديل بين الوضع الداكن والمضيء في الأسفل بحجم مكبر -->
-<button id="theme-toggle-btn" class="interactive btn-main flex items-center justify-center p-1 shadow-2xl" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 48px; height: 48px; border-radius: 50%; background: rgba(10,10,10,0.9);">
+<!-- زر التبديل بين الوضع الداكن والمضيء في الأسفل وبحجم أكبر -->
+<div class="interactive order-2 md:order-2 flex items-center justify-center">
+<button id="theme-toggle-btn" class="btn-main flex items-center justify-center p-2 shadow-lg hover:scale-105 transition-transform" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(220, 38, 38, 0.2); border-color: rgba(239, 68, 68, 0.5);">
     <svg id="theme-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
         <path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/>
@@ -576,7 +575,7 @@ body.light-mode .tlc-mdl-stat-exp{color:#4b5563;}
 </div>
 </div>
 <div id="counter-box" class="interactive order-3 md:order-4 shadow-2xl font-['Cairo']">
-<div id="number" class="text-3xl font-black text-white">0</div>
+<div id="number" class="text-3xl font-black text-white">60,198</div>
 <div id="martyrs-label" class="text-[10px] text-red-400 mt-1 font-bold tracking-widest">شهيداً وثّقت أسماؤهم</div>
 </div>
 </div>
@@ -1016,7 +1015,7 @@ window.switchMainMode = function(mode) {
 
     if (verseContainer) verseContainer.style.display = showVerseAndCounter ? '' : 'none';
     if (counterBox) counterBox.style.display = showVerseAndCounter ? 'block' : 'none';
-    if (visitorBox) visitorBox.style.display = showVerseAndCounter ? 'block' : 'none';
+    if (visitorBox) visitorBox.style.display = showVerseAndCounter ? 'flex' : 'none';
 
     if(mode === 'souls'){
         fetchAndRenderData('./data/victims.json');
@@ -1220,7 +1219,8 @@ color: '#ffffff',
 userData: gazaSouls[i] || { name_ar: `شهيد ${i+1}`, age: "غير معروف", id: "-" }
 });
 }
-animateCounter(gazaSouls.length > 0 ? gazaSouls.length : 0);
+const targetCount = gazaSouls.length > 0 ? gazaSouls.length : 60198;
+animateCounter(targetCount);
 }
 
 function gameLoop(){
