@@ -54,6 +54,9 @@ body.light-mode .tlc-excerpt,
 body.light-mode .tlc-intro-box{color:#374151 !important;}
 body.light-mode #counter-box,
 body.light-mode #visitor-counter-box{background:rgba(255, 255, 255, 0.95) !important;color:#111827 !important;}
+body.light-mode #verse-container{background:rgba(255, 255, 255, 0.95) !important;color:#111827 !important;border-right-color:#dc2626 !important;box-shadow:0 4px 6px -1px rgba(0, 0, 0, 0.05);}
+body.light-mode #verse-text{color:#111827 !important;}
+body.light-mode #theme-toggle-btn{background:rgba(255, 255, 255, 0.95) !important;color:#111827 !important;border-color:rgba(0,0,0,0.1) !important;}
 
 #canvas-layer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;transition:opacity 0.4s ease;pointer-events:auto;cursor:pointer;}
 #shooting-stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;}
@@ -426,7 +429,7 @@ body.light-mode .tlc-mdl-stat-exp{color:#4b5563;}
 <!-- عنوان العمران والحضارة -->
 <div class="mb-8 text-center">
     <h3 class="text-xl md:text-2xl font-bold text-red-400 leading-relaxed max-w-4xl mx-auto bg-black/60 border border-white/10 p-4 rounded-2xl">
-        لم تقتصر إعتداءات الإحتلال على البشر بل تطال مختلف مظاهر العمران والحضارة كذلك. إذ استباح الإحتلال مختلف مباني الدولة وممتلكات المدنيين ودور العبادة والمؤسسات الصحية والمباني الأثرية.
+        لم تقتصر إعتداءات الإحتلال على البشر بل تطال مختلف مظاهر العمران والحضارة كذلك. إذ استباح الإحتلال مختلف مباني الدولة وممتلكات المدنيين دور العبادة والمؤسسات الصحية والمباني الأثرية.
     </h3>
 </div>
 
@@ -537,14 +540,6 @@ body.light-mode .tlc-mdl-stat-exp{color:#4b5563;}
 </div>
 <div class="flex gap-1.5 items-center">
 <button id="music-btn" class="btn-main">🎵 الصوت</button>
-<!-- زر التبديل بين الوضع الداكن والمضيء بحجم مكبر قليلاً -->
-<button id="theme-toggle-btn" class="btn-main flex items-center justify-center p-1" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 38px; height: 38px; border-radius: 50%;">
-    <svg id="theme-icon-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
-        <path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/>
-        <path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>
-    </svg>
-</button>
 </div>
 </header>
 <div id="bottom-bar">
@@ -552,10 +547,20 @@ body.light-mode .tlc-mdl-stat-exp{color:#4b5563;}
 <p id="verse-text" class="font-amiri text-gray-200 text-lg font-bold leading-relaxed text-center">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</p>
 </div>
 
-<!-- عداد الزوار المعاد تفعيله -->
-<div id="visitor-counter-box" class="interactive order-2 md:order-2 shadow-2xl font-['Cairo']">
+<!-- مجموعة عداد الزوار وأيقونة الإضاءة الكبيرة في الأسفل -->
+<div class="flex items-center gap-3 order-2 md:order-2">
+<div id="visitor-counter-box" class="interactive shadow-2xl font-['Cairo'] text-center p-2 px-4 rounded-xl border-b-3 border-red-600 bg-black/90">
 <div id="visitor-number" class="text-2xl font-black text-white">0</div>
 <div id="visitor-label" class="text-[10px] text-red-400 mt-1 font-bold tracking-widest">زوار:</div>
+</div>
+<!-- زر التبديل بين الوضع الداكن والمضيء في الأسفل بحجم مكبر -->
+<button id="theme-toggle-btn" class="interactive btn-main flex items-center justify-center p-1 shadow-2xl" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 48px; height: 48px; border-radius: 50%; background: rgba(10,10,10,0.9);">
+    <svg id="theme-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
+        <path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/>
+        <path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>
+    </svg>
+</button>
 </div>
 
 <div class="interactive glass-panel p-2 px-3 rounded-lg flex items-center gap-2.5 flex-wrap justify-center order-4 md:order-3 bg-black/80 font-['Cairo']" style="margin-right: auto;">
@@ -625,13 +630,13 @@ function toggleTheme() {
 function updateThemeIcon(isLight) {
     const svgEl = document.getElementById('theme-icon-svg');
     if (!svgEl) return;
-    svgEl.setAttribute('width', '20');
-    svgEl.setAttribute('height', '20');
+    svgEl.setAttribute('width', '24');
+    svgEl.setAttribute('height', '24');
     if (isLight) {
         // أيقونة شمس للوضع النهاري
         svgEl.innerHTML = `<circle cx="12" cy="12" r="5" fill="currentColor"></circle><line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2"></line><line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2"></line><line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2"></line><line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2"></line>`;
     } else {
-        // أيقونة الهلال والنجوم للوضع الداكن (الافتراضي)[cite: 2]
+        // أيقونة الهلال والنجوم للوضع الداكن (الافتراضي)
         svgEl.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/><path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/><path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>`;
     }
 }
@@ -646,7 +651,7 @@ function initVisitorCounter() {
     localStorage.setItem('site_visits', visits);
     const visitorNumEl = document.getElementById('visitor-number');
     if (visitorNumEl) {
-        visitorNumEl.innerText = parseInt(visits).toLocaleString('ar-EG');
+        visitorNumEl.innerText = parseInt(visits).toLocaleString('en-US');
     }
 }
 
@@ -1240,7 +1245,6 @@ function gameLoop(){
             ctx.beginPath();
             ctx.arc(p.x, p.y, dist < 15 ? 4 : 1.5, 0, Math.PI * 2);
             if (isLight) {
-                // إظهار النجوم بلون داكن وواضح في المود المضاء
                 ctx.fillStyle = dist < 15 ? '#dc2626' : `rgba(31, 41, 55, ${Math.max(0.4, p.alpha)})`;
             } else {
                 ctx.fillStyle = dist < 15 ? '#ef4444' : `rgba(255, 255, 255, ${Math.max(0.2, p.alpha)})`;
@@ -1292,7 +1296,7 @@ function animateCounter(targetNumber) {
             current = targetNumber;
             clearInterval(timer);
         }
-        counterEl.innerText = current.toLocaleString('ar-EG');
+        counterEl.innerText = current.toLocaleString('en-US');
     }, 20);
 }
 
