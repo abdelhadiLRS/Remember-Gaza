@@ -199,6 +199,23 @@ body.light-mode .tlc-mdl-stat-exp{color:#4b5563;}
     .tlc-title { font-size: 1.4rem; }
     .tlc-intro-box { padding: 20px; margin: 15px; font-size: 0.85rem; }
 }
+
+/* Category 2 Scrollytelling Cinematic Styles */
+.tlc-scene {
+    opacity: 0.35;
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: scale(0.96) translateY(20px);
+}
+.tlc-scene.active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+.tlc-scene .tlc-bg img {
+    transition: transform 2.5s ease-out;
+}
+.tlc-scene.active .tlc-bg img {
+    transform: scale(1.1);
+}
 </style>
 </head>
 <body>
@@ -224,9 +241,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         <div class="modal-body p-6 space-y-4 overflow-y-auto" id="milestone-modal-body-container"></div>
         <div class="modal-footer border-t border-white/10 p-3 bg-black/40 flex justify-between items-center text-xs">
-            <button id="milestone-tts-btn" onclick="playMilestoneTTS()" class="btn-main text-[11px] px-3 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded-full">
+            <button id="milestone-tts-btn" onclick="playMilestoneTTS()" class="btn-main text-[11px] px-3 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded-full flex items-center gap-1">
                 🔊 <span id="milestone-tts-btn-text">استماع للحدث التاريخي</span>
             </button>
+            <div id="milestone-lang-container" class="flex items-center gap-1.5 font-['Cairo']">
+                <span class="text-gray-400 text-[10px] font-bold">Translate:</span>
+                <button onclick="translateMilestoneModal('ar')" class="px-1.5 py-0.5 rounded bg-red-600/30 border border-red-500 text-white text-[9px]">العربية</button>
+                <button onclick="translateMilestoneModal('en')" class="px-1.5 py-0.5 rounded bg-gray-800 border border-white/10 text-gray-300 text-[9px]">English</button>
+                <button onclick="translateMilestoneModal('fr')" class="px-1.5 py-0.5 rounded bg-gray-800 border border-white/10 text-gray-300 text-[9px]">Français</button>
+                <button onclick="translateMilestoneModal('es')" class="px-1.5 py-0.5 rounded bg-gray-800 border border-white/10 text-gray-300 text-[9px]">Español</button>
+            </div>
         </div>
     </div>
 </div>
@@ -237,7 +261,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <h3 id="map-log-title" class="font-bold text-lg mb-4 text-red-400 font-['Cairo']">سجل الخريطة التفاعلية</h3>
         <div class="flex items-center gap-1 mb-3">
             <input type="text" id="map-search-input" onkeyup="filterMapList()" placeholder="ابحث في الخريطة..." class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
-            <button id="map-voice-btn" onclick="startVoiceSearch('map-search-input', filterMapList)" class="btn-main px-2 py-2 text-xs rounded-xl">🎤</button>
+            <button id="map-voice-btn" onclick="startVoiceSearch('map-search-input', (val) => filterMapList())" class="btn-main px-2 py-2 text-xs rounded-xl" title="البحث الصوتي">🎤</button>
         </div>
         <div id="map-data-list" class="flex-1 overflow-y-auto space-y-2 no-scrollbar">
             <div id="map-empty-text" class="text-center text-gray-500 py-20 text-xs">لا توجد سجلات مسجلة حالياً في الخريطة</div>
@@ -346,48 +370,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 </main>
 
-<!-- شريط "في مثل هذا اليوم" (On This Day) & دفتر الزوار العالمي (Global Guestbook) متحرك -->
-<div class="w-full bg-[#1c0404]/90 backdrop-blur border-b border-red-900/60 text-right p-2 px-6 flex flex-col md:flex-row justify-between items-center gap-4 z-[25] fixed top-[44px] left-0 font-['Cairo'] text-[11px] pointer-events-auto">
-    <!-- في مثل هذا اليوم -->
-    <div id="on-this-day-widget" class="flex items-center gap-2 bg-red-950/60 border border-red-500/30 px-2.5 py-1 rounded-full w-full md:w-auto">
-        <span class="bg-red-600 text-white font-bold px-2 py-0.5 rounded-full text-[9px] whitespace-nowrap">📅 في مثل هذا اليوم</span>
-        <div id="on-this-day-content" class="text-gray-200 font-bold truncate text-[10px]">جاري تحميل أحداث ذكرى اليوم...</div>
-    </div>
-    
-    <!-- دفتر الزوار العالمي -->
-    <div class="flex-1 flex items-center gap-3 overflow-hidden relative h-6 w-full">
-        <span class="bg-amber-600/20 border border-amber-500/40 text-amber-400 font-bold px-2.5 py-0.5 rounded-full text-[9px] shrink-0 whitespace-nowrap">💬 دفتر الزوار العالمي</span>
-        <div class="flex-1 overflow-hidden relative h-full">
-            <!-- Scrolling messages -->
-            <marquee class="text-gray-300 font-semibold" scrollamount="4" id="guestbook-marquee">
-                "عاشت فلسطين حرة أبية 🇵🇸" - أحمد من مصر | "We stand with Gaza from Ireland 🇮🇪" - Sinead | "Liberté pour la Palestine 🇵🇱" - Jean-Luc | "سيبقى ذكر الشهداء مخلداً في القلوب ❤️" - فاطمة من تونس
-            </marquee>
-        </div>
-        <button onclick="openGuestbookModal()" class="btn-main text-[9px] bg-amber-600 border border-amber-500 text-white font-bold py-0.5 px-2 rounded-full shrink-0">✍️ اكتب كلمة</button>
-    </div>
-</div>
-
-<!-- نافذة دفتر الزوار العالمي لإضافة رسالة -->
-<div id="guestbook-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1007; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
-    <div class="modal-box" style="max-width: 420px; background: #121212; border: 1px solid rgba(239,68,68,0.4); border-radius: 16px; overflow: hidden; width: 100%;">
-        <div class="modal-header border-b border-white/10 p-4 flex justify-between items-center bg-black/40">
-            <h2 class="font-bold text-base text-red-400">سجل كلمة تضامن في دفتر الزوار العالمي</h2>
-            <button class="modal-close text-gray-400 hover:text-white" onclick="document.getElementById('guestbook-modal-overlay').style.display='none'">✕</button>
-        </div>
-        <form onsubmit="submitGuestbookMessage(event)" class="modal-body p-6 space-y-4 text-right text-xs">
-            <div class="space-y-1">
-                <label class="text-gray-300 block">اسمك / بلدك:</label>
-                <input type="text" id="gb-author" required placeholder="مثلاً: يوسف من الجزائر 🇩🇿" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
-            </div>
-            <div class="space-y-1">
-                <label class="text-gray-300 block">رسالة تضامن قصيرة:</label>
-                <textarea id="gb-message" required max="120" rows="3" placeholder="اكتب رسالة تضامن موجزة لتظهر في الشريط الرئيسي..." class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500 resize-none"></textarea>
-            </div>
-            <button type="submit" class="w-full text-white font-bold py-2 px-4 rounded-xl transition-all bg-red-600 hover:bg-red-700 text-xs shadow-[0_0_15px_rgba(220,38,38,0.3)]">إرسال للتسجيل</button>
-        </form>
-    </div>
-</div>
-
 <main id="stats-view" class="text-white">
 <div class="w-full max-w-6xl mx-auto px-6 py-10 font-['Cairo']">
 
@@ -403,78 +385,47 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <input type="text" id="cert-name" value="متضامن مع فلسطين" oninput="updateCertificatePreview()" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
             </div>
             <div class="space-y-1">
-                <label class="text-xs text-gray-400">شعار تضامني:</label>
-                <select id="cert-slogan" onchange="updateCertificatePreview()" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
-                    <option value="القدس عاصمة فلسطين الأبدية 🇵🇸">القدس عاصمة فلسطين الأبدية 🇵🇸</option>
-                    <option value="لن ننسى.. ولن نغفر 🕊️">لن ننسى.. ولن نغفر 🕊️</option>
-                    <option value="أرواح فلسطين.. خلود وبطولة 🌟">أرواح فلسطين.. خلود وبطولة 🌟</option>
-                    <option value="الحريّة لفلسطين الحبيبة 🤝">الحريّة لفلسطين الحبيبة 🤝</option>
-                </select>
+                <label class="text-xs text-gray-400">شعار أو عبارة تضامنية مخصصة:</label>
+                <textarea id="cs-slogan" rows="2" oninput="updateCertificatePreview()" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500 resize-none">عهد الأحرار للقدس الصامدة والأرض الطيبة 🇵🇸</textarea>
             </div>
             <div class="space-y-1">
-                <label class="text-xs text-gray-400">الرمز المختار:</label>
-                <select id="cert-symbol" onchange="updateCertificatePreview()" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
-                    <option value="🌿 غصن زيتون السلام">🌿 غصن زيتون السلام</option>
-                    <option value="🦅 نسر فلسطين الحر">🦅 نسر فلسطين الحر</option>
-                    <option value="🔑 مفتاح العودة الموعود">🔑 مفتاح العودة الموعود</option>
+                <label class="text-xs text-gray-400">اختر الثيم والخلفية:</label>
+                <select id="cert-theme" onchange="updateCertificateTheme(this.value)" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none cursor-pointer">
+                    <option value="keffiyeh">🏁 نقشة الكوفية الفلسطينية العريقة</option>
+                    <option value="flag">🇵🇸 العلم الفلسطيني والحدود التاريخية</option>
+                    <option value="olive">🌿 غصن الزيتون ورمز السلام والصمود</option>
                 </select>
             </div>
-            <div class="space-y-1">
-                <label class="text-xs text-gray-400">المدينة المانحة:</label>
-                <input type="text" id="cert-city" value="القدس الشريف" oninput="updateCertificatePreview()" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
-            </div>
-            <button onclick="downloadSolidarityCertificate()" class="w-full text-white font-bold py-2.5 px-4 rounded-xl transition-all bg-red-600 hover:bg-red-700 text-xs shadow-[0_0_15px_rgba(220,38,38,0.3)]">💾 تحميل بطاقة التضامن كصورة</button>
+            <button onclick="downloadCertificate()" class="w-full text-white font-bold py-2.5 px-4 rounded-xl transition-all bg-red-600 hover:bg-red-700 text-xs shadow-[0_0_15px_rgba(220,38,38,0.4)]">تحميل بطاقة التضامن كصورة 💾</button>
         </div>
-
-        <!-- معاينة البطاقة -->
+        
+        <!-- Live Preview Board -->
         <div class="flex justify-center">
-            <div id="solidarity-certificate-preview" class="w-80 h-[480px] bg-gradient-to-br from-neutral-900 to-red-950 border-4 border-red-600/80 rounded-2xl p-6 flex flex-col justify-between text-center relative shadow-2xl overflow-hidden">
-                <div class="absolute inset-0 bg-black/40 pointer-events-none"></div>
-                <div class="relative z-10 space-y-4">
-                    <h4 class="text-red-500 font-black text-xl tracking-wide">أرواح فلسطين</h4>
-                    <p class="text-[10px] text-gray-400 tracking-widest uppercase">وثيقة تضامن ووفاء للشهداء</p>
-                    <div class="h-0.5 bg-red-600/50 w-24 mx-auto"></div>
+            <div id="certificate-preview" class="w-[320px] h-[440px] bg-[#1a1a1a] rounded-2xl relative border-4 border-red-600/50 p-6 flex flex-col justify-between text-center overflow-hidden shadow-2xl">
+                <!-- Background Overlays -->
+                <div id="cert-bg-keffiyeh" class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle, #fff 10%, transparent 11%), radial-gradient(circle, #fff 10%, transparent 11%); background-size: 15px 15px; background-position: 0 0, 7.5px 7.5px;"></div>
+                <div id="cert-bg-flag" class="absolute inset-0 opacity-10 pointer-events-none hidden" style="background: linear-gradient(180deg, #000 33.3%, #008000 33.3%, #008000 66.6%, #fff 66.6%);"></div>
+                <div id="cert-bg-olive" class="absolute inset-0 opacity-15 pointer-events-none hidden flex items-center justify-center"><span class="text-8xl">🌿</span></div>
+                
+                <!-- Border Details -->
+                <div class="absolute inset-2 border border-red-500/20 rounded-xl pointer-events-none"></div>
+                
+                <div class="z-10 space-y-2 mt-4">
+                    <span class="text-red-500 font-bold tracking-widest text-[10px] block font-['Cairo']">عهد الوفاء والتضامن</span>
+                    <h4 class="text-xl font-black text-white tracking-wide font-['Cairo']">شهادة تضامن شرفية</h4>
+                    <div class="w-12 h-0.5 bg-red-600 mx-auto my-2"></div>
                 </div>
-
-                <div class="relative z-10 my-auto space-y-4">
-                    <div id="preview-symbol-output" class="text-4xl">🌿</div>
-                    <p class="text-xs text-gray-300">يتقدم القائمون على المنصة والمجتمع بشهادة فخر ووفاء إلى:</p>
-                    <h5 id="preview-name-output" class="text-white font-bold text-lg">متضامن مع فلسطين</h5>
-                    <p class="text-[11px] text-red-400 font-semibold" id="preview-slogan-output">القدس عاصمة فلسطين الأبدية 🇵🇸</p>
+                
+                <div class="z-10 space-y-3">
+                    <p class="text-[11px] text-gray-400 font-['Cairo']">تُمنح هذه البطاقة تقديراً لموقف البذل والمؤازرة للحق والعدالة الإنسانية من:</p>
+                    <h5 id="preview-cert-name" class="text-lg font-black text-red-400 font-amiri tracking-wide">متضامن مع فلسطين</h5>
+                    <p id="preview-cs-slogan" class="text-[10px] text-gray-300 italic max-w-[240px] mx-auto leading-relaxed font-['Cairo']">عهد الأحرار للقدس الصامدة والأرض الطيبة 🇵🇸</p>
                 </div>
-
-                <div class="relative z-10 pt-4 border-t border-white/10 flex justify-between items-center text-[10px] text-gray-400">
-                    <div>
-                        <span>البلد / المدينة:</span>
-                        <strong class="text-white block" id="preview-city-output">القدس الشريف</strong>
-                    </div>
-                    <div>
-                        <span>تاريخ التضامن:</span>
-                        <strong class="text-white block" id="preview-date-output"></strong>
-                    </div>
+                
+                <div class="z-10 mb-4 space-y-1 font-['Cairo']">
+                    <p class="text-[9px] text-gray-500">تم التوثيق والمشاركة عبر منصة أرواح فلسطين</p>
+                    <p class="text-[8px] text-gray-600 font-mono">palestiniansouls.com</p>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- لوحة الرسوم البيانية والإحصائيات التفاعلية -->
-<div class="mb-12 glass-panel p-8 rounded-2xl border border-red-600/30">
-    <h3 class="text-2xl font-black text-red-400 text-center mb-6">📊 لوحة الرسوم التحليلية والإحصائية التفاعلية (Dynamic Charts)</h3>
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- الرسم البياني 1: توزيع الفئات العمرية -->
-        <div class="bg-black/40 p-5 rounded-2xl border border-white/10">
-            <h4 class="text-sm font-bold text-gray-300 mb-4 text-right">👶 توزيع الفئات العمرية للشهداء</h4>
-            <div class="relative h-64 flex justify-center items-center">
-                <canvas id="ageDistributionChart"></canvas>
-            </div>
-        </div>
-
-        <!-- الرسم البياني 2: الاستهداف حسب المحافظات والمدن -->
-        <div class="bg-black/40 p-5 rounded-2xl border border-white/10">
-            <h4 class="text-sm font-bold text-gray-300 mb-4 text-right">🏙️ نسب الاستهداف الموثق حسب المحافظات والمدن</h4>
-            <div class="relative h-64 flex justify-center items-center">
-                <canvas id="cityTargetingChart"></canvas>
             </div>
         </div>
     </div>
@@ -537,18 +488,37 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">شبكات مياه دمرها الاحتلال</span><p class="text-2xl font-black text-white">+700 ألف متر</p></div>
 </div>
 
+<!-- لوحة الرسوم البيانية التفاعلية -->
+<div class="mt-12 glass-panel p-8 rounded-2xl border border-red-600/30 text-center">
+    <h3 class="text-2xl font-black text-red-400 mb-2">📊 لوحة الرسوم البيانية والتوزيع الإحصائي التفاعلي (Interactive Charts)</h3>
+    <p class="text-xs text-gray-300 mb-8 leading-relaxed">تحليلات دقيقة توضح التوزيع الديموغرافي للفئات العمرية للشهداء ونسب الاستهداف الموثقة للمدن والمحافظات الفلسطينية.</p>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 text-right">
+        <!-- Chart 1 -->
+        <div class="bg-black/40 border border-white/10 p-5 rounded-2xl flex flex-col items-center">
+            <h4 class="font-bold text-sm text-gray-200 mb-4 self-start">👶 توزيع الفئات العمرية للشهداء</h4>
+            <div class="w-full max-w-[280px]">
+                <canvas id="chart-age-distribution"></canvas>
+            </div>
+        </div>
+        
+        <!-- Chart 2 -->
+        <div class="bg-black/40 border border-white/10 p-5 rounded-2xl flex flex-col items-center">
+            <h4 class="font-bold text-sm text-gray-200 mb-4 self-start">🏙️ نسب الاستهداف الموثق حسب المحافظات والمدن</h4>
+            <div class="w-full h-[280px]">
+                <canvas id="chart-regional-targeting"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
 </div>
 </main>
 
 <div id="ui-layer">
 <header id="header" class="glass-panel interactive">
 <div class="flex items-center gap-1.5">
-<h1 class="text-sm font-black text-white drop-shadow-md cursor-pointer" onclick="switchMainMode('souls')"><span class="text-red-500" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
-
-<!-- زر فتح لوحة الإدارة لمراجعة المساهمات -->
-<button id="admin-panel-btn" class="btn-main font-bold text-[10px] bg-red-950/40 border border-red-500/30 text-red-400 py-0.5 px-2 rounded-full hidden" onclick="openAdminModal()">
-    🔑 الإدارة
-</button>
+<h1 class="text-sm font-black text-white drop-shadow-md"><span class="text-red-500" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
 
 <button id="theme-toggle-btn" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 26px; height: 26px; border-radius: 50%; background: rgba(220, 38, 38, 0.2); border-color: rgba(239, 68, 68, 0.5);">
     <svg id="theme-icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -561,7 +531,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <div class="w-auto relative flex items-center gap-1">
 <input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد..." oninput="searchMartyrByName(this.value)">
-<button id="voice-search-btn" onclick="startVoiceSearch('search-input')" class="btn-main px-2 py-1 text-xs" title="البحث الصوتي">🎤</button>
+<button id="voice-search-btn" onclick="startVoiceSearch('search-input', (val) => searchMartyrByName(val))" class="btn-main px-2 py-2 text-xs rounded-xl" title="البحث الصوتي">🎤</button>
 <div id="search-results-dropdown" class="absolute left-0 right-0 mt-2 max-h-80 overflow-y-auto bg-[#0a0a0af2] border border-red-500/30 rounded-xl shadow-2xl hidden z-[1001] text-right font-['Cairo'] text-xs"></div>
 </div>
 <div class="tabs-wrapper no-scrollbar interactive">
@@ -601,7 +571,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <div class="interactive glass-panel p-2 px-3 rounded-lg flex items-center gap-2.5 flex-wrap justify-center order-4 md:order-3 bg-black/80 font-['Cairo']" style="margin-right: auto;">
-<button onclick="openCrowdsourcingModal()" class="btn-main font-bold text-[11px] bg-red-600 border border-red-500 text-white px-2.5 py-1">✍️ مساهمة وتصحيح بيانات</button>
+<button onclick="openCrowdsourceModal()" class="btn-main font-bold text-[11px] bg-red-600/20 border border-red-500/40 text-red-400 px-2.5 py-1">✍️ مساهمة وتصحيح بيانات</button>
 <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-[11px] bg-red-900 border-red-500 text-white px-2.5 py-1">❤️ إدعمنا لنستمر</a>
 <span id="dev-text" class="text-[11px] text-gray-400 font-bold border-l border-white/20 pl-3">تطوير: عبد الهادي</span>
 <div class="social-links flex gap-1.5">
@@ -621,83 +591,86 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 </div>
 
-<!-- نافذة إرسال المساهمات والتصحيحات (Crowdsourcing) -->
-<div id="crowdsourcing-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
-    <div class="modal-box" style="max-width: 480px; background: #121212; border: 1px solid rgba(239,68,68,0.4); border-radius: 16px; overflow: hidden; width: 100%;">
+<!-- نافذة المساهمات المجتمعية وتصحيح البيانات -->
+<div id="crowdsource-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1006; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
+    <div class="modal-box" style="max-width: 440px; background: #121212; border: 1px solid rgba(239,68,68,0.4); border-radius: 16px; overflow: hidden; width: 100%; max-height: 90vh; display: flex; flex-direction: column;">
         <div class="modal-header border-b border-white/10 p-4 flex justify-between items-center bg-black/40">
-            <h2 class="font-bold text-base text-red-400">إرسال وثائق أو تصحيح بيانات الشهداء</h2>
-            <button class="modal-close text-gray-400 hover:text-white" onclick="document.getElementById('crowdsourcing-modal-overlay').style.display='none'">✕</button>
+            <h2 class="font-bold text-base text-red-400">ركن المساهمات وتصحيح البيانات</h2>
+            <div class="flex gap-2">
+                <button onclick="openAdminReviewPanel()" class="text-xs text-gray-500 hover:text-red-400 underline">لوحة الإدارة 🔑</button>
+                <button class="modal-close text-gray-400 hover:text-white" onclick="document.getElementById('crowdsource-modal-overlay').style.display='none'">✕</button>
+            </div>
         </div>
-        <form id="crowdsourcing-form" onsubmit="submitCrowdsourcing(event)" class="modal-body p-6 space-y-4 text-right text-xs">
+        <form onsubmit="submitCrowdsourceForm(event)" class="modal-body p-6 space-y-3 overflow-y-auto flex-1 text-right text-xs">
+            <div class="space-y-1">
+                <label class="text-gray-300 block">اسم مقدم المساهمة:</label>
+                <input type="text" id="cs-submitter" required placeholder="مثلاً: يوسف أحمد" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
+            </div>
             <div class="space-y-1">
                 <label class="text-gray-300 block">اسم الشهيد الكامل:</label>
-                <input type="text" id="cs-martyr-name" required class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="space-y-1">
-                    <label class="text-gray-300 block">العمر:</label>
-                    <input type="number" id="cs-martyr-age" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-gray-300 block">رقم الهوية (إن وجد):</label>
-                    <input type="text" id="cs-martyr-id" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
-                </div>
+                <input type="text" id="cs-martyr-name" required placeholder="أدخل اسم الشهيد رباعياً" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
             </div>
             <div class="space-y-1">
-                <label class="text-gray-300 block">تفاصيل التصحيح أو الإضافة:</label>
-                <textarea id="cs-details" required rows="3" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500 resize-none" placeholder="مثلاً: السيرة الذاتية للشهيد، تاريخ الاستشهاد، صلة القرابة..."></textarea>
+                <label class="text-gray-300 block">المدينة / المحافظة:</label>
+                <input type="text" id="cs-martyr-city" required placeholder="مثلاً: غزة، جنين، القدس" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
             </div>
             <div class="space-y-1">
-                <label class="text-gray-300 block">رابط صورة أو وثيقة داعمة (اختياري):</label>
-                <input type="url" id="cs-doc-url" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500" placeholder="https://example.com/image.jpg">
+                <label class="text-gray-300 block">التصحيح أو السيرة التفصيلية / وثيقة:</label>
+                <textarea id="cs-notes" required rows="3" placeholder="اكتب السيرة، تاريخ الاستشهاد، أو أي تفاصيل/تصحيحات ترغب في إضافتها..." class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500 resize-none"></textarea>
+            </div>
+            <div class="space-y-1">
+                <label class="text-gray-300 block">رابط صورة الشهيد أو مستند إثبات (اختياري):</label>
+                <input type="url" id="cs-photo" placeholder="https://example.com/photo.jpg" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
             </div>
             
-            <!-- حماية بواسطة كابتشا حسابية بسيطة -->
-            <div class="space-y-1 bg-black/30 border border-white/5 p-3 rounded-xl flex items-center justify-between">
-                <div>
-                    <span class="text-gray-400">سؤال أمان وحماية:</span>
-                    <strong class="text-red-400 block mt-0.5" id="cs-captcha-question">5 + 3 = ?</strong>
+            <!-- اختبار الأمان Math Captcha -->
+            <div class="bg-red-950/20 border border-red-500/20 p-2.5 rounded-xl space-y-1">
+                <label class="text-red-400 block font-bold">سؤال الأمان (لمنع البرامج التلقائية):</label>
+                <div class="flex items-center gap-2">
+                    <span id="cs-captcha-question" class="text-white font-bold text-xs shrink-0">5 + 3 =</span>
+                    <input type="number" id="cs-captcha-answer" required placeholder="الناتج?" class="w-20 bg-black/60 border border-white/20 text-white px-2 py-1.5 rounded-lg text-xs outline-none focus:border-red-500 text-center">
                 </div>
-                <input type="number" id="cs-captcha-answer" required class="w-24 bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500 text-center" placeholder="النتيجة">
             </div>
-
-            <button type="submit" class="w-full text-white font-bold py-2.5 px-4 rounded-xl transition-all bg-red-600 hover:bg-red-700 text-xs shadow-[0_0_15px_rgba(220,38,38,0.3)]">إرسال للمراجعة الآمنة</button>
+            
+            <button type="submit" class="w-full text-white font-bold py-2 px-4 rounded-xl transition-all bg-red-600 hover:bg-red-700 text-xs shadow-[0_0_15px_rgba(220,38,38,0.3)]">إرسال للمراجعة والاعتماد</button>
         </form>
     </div>
 </div>
 
-<!-- لوحة مراجعة الإدارة الخاصة (Admin Review Panel) -->
-<div id="admin-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1006; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
-    <div class="modal-box" style="max-width: 600px; background: #121212; border: 1px solid rgba(239,68,68,0.4); border-radius: 16px; overflow: hidden; width: 100%; max-height: 85vh; display: flex; flex-direction: column;">
+<!-- لوحة المراجعة الخاصة بالإدارة -->
+<div id="admin-review-overlay" style="display: none; position: fixed; inset: 0; z-index: 1007; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
+    <div class="modal-box" style="max-width: 500px; background: #121212; border: 1px solid rgba(239,68,68,0.4); border-radius: 16px; overflow: hidden; width: 100%; max-height: 90vh; display: flex; flex-direction: column;">
         <div class="modal-header border-b border-white/10 p-4 flex justify-between items-center bg-black/40">
-            <h2 class="font-bold text-base text-red-400">لوحة مراجعة مساهمات وتصحيحات الجمهور</h2>
-            <button class="modal-close text-gray-400 hover:text-white" onclick="document.getElementById('admin-modal-overlay').style.display='none'">✕</button>
+            <h2 class="font-bold text-base text-red-400">لوحة مراجعة واعتماد المساهمات (Admin Control Panel)</h2>
+            <button class="modal-close text-gray-400 hover:text-white" onclick="document.getElementById('admin-review-overlay').style.display='none'">✕</button>
         </div>
-        <div class="modal-body p-6 space-y-4 overflow-y-auto flex-1 text-right text-xs" id="admin-submissions-list">
-            <div class="text-gray-500 text-center py-12">لا توجد مساهمات معلقة حالياً للمراجعة.</div>
+        <div class="modal-body p-6 space-y-4 overflow-y-auto flex-1 text-right text-xs">
+            <div id="admin-submissions-list" class="space-y-3">
+                <div class="text-gray-500 text-center py-6">لا توجد مساهمات معلقة للمراجعة حالياً.</div>
+            </div>
         </div>
     </div>
 </div>
 
 <div id="martyr-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
-    <div class="modal-box" style="max-width: 500px; background: #121212; border: 1px solid rgba(239,68,68,0.4); border-radius: 16px; overflow: hidden; width: 100%; max-height: 95vh; display: flex; flex-direction: column;">
+    <div class="modal-box" style="max-width: 440px; background: #121212; border: 1px solid rgba(239,68,68,0.4); border-radius: 16px; overflow: hidden; width: 100%; max-height: 90vh; display: flex; flex-direction: column;">
         <div class="modal-header border-b border-white/10 p-4 flex justify-between items-center bg-black/40">
             <h2 id="modal-martyr-title-text" class="font-bold text-base text-red-400">بطاقة توثيق الشهيد</h2>
             <button class="modal-close text-gray-400 hover:text-white" id="martyr-modal-close">✕</button>
         </div>
         <div class="modal-body text-center p-6 space-y-4 overflow-y-auto flex-1">
-            <div class="flex justify-between items-center mb-2">
-                <button id="tts-btn-modal" onclick="playMartyrTTS()" class="btn-main text-[11px] px-3 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded-full flex items-center gap-1">
+            <div class="flex justify-between items-center mb-1">
+                <button id="tts-btn-modal" onclick="playMartyrTTS()" class="btn-main text-[10px] px-2.5 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded-full flex items-center gap-1">
                     🔊 <span id="tts-btn-text">استماع للسيرة</span>
                 </button>
                 <div class="flex items-center gap-2">
-                    <button id="tribute-candle-btn" onclick="lightTributeCandle()" class="btn-main text-xs px-3 py-1 bg-amber-600/20 border border-amber-500/40 text-amber-400 rounded-full flex items-center gap-1">
+                    <button id="tribute-candle-btn" onclick="lightTributeCandle()" class="btn-main text-[10px] px-2.5 py-1 bg-amber-600/20 border border-amber-500/40 text-amber-400 rounded-full flex items-center gap-1">
                         🕯️ <span id="tribute-candle-text">إضاءة شمعة</span> (<span id="tribute-candle-count">0</span>)
                     </button>
                 </div>
             </div>
             
-            <div id="candle-animation-area" class="h-12 flex justify-center items-center hidden">
+            <div id="candle-animation-area" class="h-10 flex justify-center items-center hidden">
                 <div class="candle-flame text-2xl animate-pulse">🕯️🔥</div>
             </div>
 
@@ -713,17 +686,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <div class="flex justify-between"><span id="modal-id-label" class="text-gray-400">رقم الهوية:</span> <strong id="martyr-modal-id" class="text-white font-mono"></strong></div>
             </div>
 
-            <!-- قسم التفاعل العاطفي والمجتمعي - ترك تعليق تضامني -->
-            <div class="bg-black/30 border border-white/5 p-4 rounded-xl text-right space-y-3">
-                <h4 class="font-bold text-xs text-red-400 mb-1">اترك أثراً تضامنياً (رسالة تعليق)</h4>
-                <div class="space-y-2">
-                    <input type="text" id="tribute-name-input" placeholder="اسمك (أو زائر من حول العالم)" class="w-full bg-black/60 border border-white/20 text-white px-2.5 py-1.5 rounded-lg text-xs outline-none focus:border-red-500">
-                    <textarea id="tribute-msg-input" placeholder="اكتب كلمة تضامن مع عائلة الشهيد..." rows="2" class="w-full bg-black/60 border border-white/20 text-white px-2.5 py-1.5 rounded-lg text-xs outline-none focus:border-red-500 resize-none"></textarea>
-                    <button onclick="submitVirtualTribute()" class="w-full btn-main text-xs bg-red-600 border border-red-500 py-1.5 font-bold rounded-lg text-white">إرسال التضامن</button>
+            <!-- Dedicated Martyr Biography & Translation Block (Category 6) -->
+            <div id="martyr-modal-bio-container" class="text-right text-xs space-y-2">
+                <div class="flex justify-center items-center gap-1.5 bg-black/40 border border-white/10 p-1.5 rounded-xl">
+                    <span class="text-gray-400 text-[10px] font-bold">الترجمة / Translate:</span>
+                    <button onclick="translateMartyrModal('ar')" class="px-1.5 py-0.5 rounded bg-red-600/30 border border-red-500 text-white text-[9px]">العربية</button>
+                    <button onclick="translateMartyrModal('en')" class="px-1.5 py-0.5 rounded bg-gray-800 border border-white/10 text-gray-300 text-[9px]">English</button>
+                    <button onclick="translateMartyrModal('fr')" class="px-1.5 py-0.5 rounded bg-gray-800 border border-white/10 text-gray-300 text-[9px]">Français</button>
+                    <button onclick="translateMartyrModal('es')" class="px-1.5 py-0.5 rounded bg-gray-800 border border-white/10 text-gray-300 text-[9px]">Español</button>
                 </div>
-                <div class="mt-3">
+                <div id="martyr-modal-bio-text-div" class="bg-red-950/20 border border-red-500/20 p-2.5 rounded-lg text-gray-200 font-semibold hidden">
+                </div>
+            </div>
+
+            <!-- ترك أثر تضامني -->
+            <div class="bg-black/30 border border-white/5 p-3 rounded-xl text-right space-y-2">
+                <h4 class="font-bold text-xs text-red-400 mb-1">اترك أثراً تضامنياً (رسالة تعليق)</h4>
+                <div class="space-y-1.5">
+                    <input type="text" id="tribute-name-input" placeholder="اسمك (أو زائر من حول العالم)" class="w-full bg-black/60 border border-white/20 text-white px-2.5 py-1 rounded-lg text-[11px] outline-none focus:border-red-500">
+                    <textarea id="tribute-msg-input" placeholder="اكتب كلمة تضامن مع عائلة الشهيد..." rows="2" class="w-full bg-black/60 border border-white/20 text-white px-2.5 py-1 rounded-lg text-[11px] outline-none focus:border-red-500 resize-none"></textarea>
+                    <button onclick="submitVirtualTribute()" class="w-full btn-main text-[10px] bg-red-600 border border-red-500 py-1 font-bold rounded-lg text-white">إرسال التضامن</button>
+                </div>
+                <div class="mt-2">
                     <h5 class="text-[10px] text-gray-400 font-bold mb-1">أحدث رسائل التضامن:</h5>
-                    <div id="tributes-list-container" class="max-h-24 overflow-y-auto space-y-1.5 text-[10px] no-scrollbar">
+                    <div id="tributes-list-container" class="max-h-24 overflow-y-auto space-y-1 text-[10px] no-scrollbar">
                         <div class="text-gray-500 text-center py-2">لا توجد رسائل تضامن حالياً. كن أول من يترك أثراً.</div>
                     </div>
                 </div>
@@ -769,586 +755,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
 let currentLang='ar';
 let gazaSouls=[];
-
-// ----------------------------------------------------
-// Category 6 JS: Instant Translations & Adaptive Dark Mode
-// ----------------------------------------------------
-const multilingualBios = {
-    "شيرين أبو عاقلة": {
-        en: "Shireen Abu Akleh was a prominent Palestinian-American journalist who worked as a reporter for Al Jazeera for 25 years. She was shot and killed by Israeli forces while covering a raid on the Jenin refugee camp.",
-        fr: "Shireen Abu Akleh était une journaliste palestino-américaine de renom qui a travaillé comme reporter pour Al Jazeera pendant 25 ans. Elle a été abattue par les forces israéliennes alors qu'elle couvrait un raid.",
-        es: "Shireen Abu Akleh fue una destacada periodista palestino-estadounidense que trabajó como reportera para Al Jazeera durante 25 años. Fue asesinada por las fuerzas israelíes mientras cubría una redada."
-    },
-    "إبراهيم النابلسي": {
-        en: "Ibrahim al-Nabulsi was a young inspirational resistance commander in Nablus. He was martyred during an armed confrontation, leaving a popular national legacy calling for unity and perseverance.",
-        fr: "Ibrahim al-Nabulsi était un jeune commandant inspirant de la résistance à Naplouse. Il est tombé en martyr lors d'une confrontation armée, laissant un héritage de courage.",
-        es: "Ibrahim al-Nabulsi fue un joven e inspirador comandante de la resistencia en Nablus. Murió como mártir durante un enfrentamiento armado, dejando un legado de unidad."
-    },
-    "باسل الأعرج": {
-        en: "Basil al-Araj was an intellectual writer, activist, and pharmacist. He championed cultural resistance and was martyred in a gunfight with special forces after a months-long chase.",
-        fr: "Basil al-Araj était un écrivain intellectuel, activiste et pharmacien. Il a défendu la résistance culturelle et est tombé en martyr après une longue traque.",
-        es: "Basil al-Araj fue un escritor intelectual, activista y farmacéutico. Defendió la resistencia cultural y murió como mártir tras una persecución de meses."
-    }
-};
-
-function translateContentInstantly(bioText, name) {
-    if (currentLang === 'ar') return bioText;
-    if (multilingualBios[name] && multilingualBios[name][currentLang]) {
-        return multilingualBios[name][currentLang];
-    }
-    // Simulation / Fallback mock-translator for standard entries
-    const mockTranslations = {
-        en: "A brave Palestinian soul who was martyred in defense of the homeland, dignity, and national identity.",
-        fr: "Une âme palestinienne courageuse qui est tombée en martyr pour la défense de la patrie, de la dignité et de l'identité.",
-        es: "Un alma palestina valiente que murió como mártir en defensa de la patria, la dignidad y la identidad nacional."
-    };
-    return mockTranslations[currentLang] || bioText;
-}
-
-function initAdaptiveTheme() {
-    // Check local storage theme first
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-        if (savedTheme === 'light') {
-            document.body.classList.add('light-mode');
-            updateThemeIcon(true);
-        } else {
-            document.body.classList.remove('light-mode');
-            updateThemeIcon(false);
-        }
-    } else {
-        // Auto-adapt based on system prefers-color-scheme
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (prefersDark) {
-            document.body.classList.remove('light-mode');
-            updateThemeIcon(false);
-        } else {
-            document.body.classList.add('light-mode');
-            updateThemeIcon(true);
-        }
-    }
-    isDirty = true;
-}
-
-// ----------------------------------------------------
-// Category 4 & 5 JS: Solidarity Tools, Charts & Global Guestbook
-// ----------------------------------------------------
-let ageChartInstance = null;
-let cityChartInstance = null;
-
-function updateCertificatePreview() {
-    const name = document.getElementById('cert-name').value.trim() || 'متضامن مع فلسطين';
-    const slogan = document.getElementById('cert-slogan').value;
-    const symbol = document.getElementById('cert-symbol').value.split(' ')[0]; // Extract emoji
-    const city = document.getElementById('cert-city').value.trim() || 'القدس الشريف';
-
-    document.getElementById('preview-name-output').innerText = name;
-    document.getElementById('preview-slogan-output').innerText = slogan;
-    document.getElementById('preview-symbol-output').innerText = symbol;
-    document.getElementById('preview-city-output').innerText = city;
-    
-    const dateEl = document.getElementById('preview-date-output');
-    if (dateEl) {
-        dateEl.innerText = new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US');
-    }
-}
-
-function downloadSolidarityCertificate() {
-    const cardElement = document.getElementById('solidarity-certificate-preview');
-    html2canvas(cardElement, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: '#171717'
-    }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `شهادة_تضامن_أرواح_فلسطين.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-    }).catch(err => {
-        console.error("Error generating certificate image:", err);
-        alert("حدث خطأ أثناء تصدير الشهادة.");
-    });
-}
-
-function initAnalyticsCharts() {
-    // 1. Age Distribution Chart
-    const ageCtx = document.getElementById('ageDistributionChart');
-    if (ageCtx) {
-        if (ageChartInstance) ageChartInstance.destroy();
-        ageChartInstance = new Chart(ageCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['أطفال (0-17)', 'شباب (18-35)', 'بالغين (36-60)', 'كبار السن (+60)'],
-                datasets: [{
-                    data: [21500, 31200, 15300, 5066],
-                    backgroundColor: ['#dc2626', '#ef4444', '#f87171', '#fca5a5'],
-                    borderColor: '#121212',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { color: '#ffffff', font: { family: 'Cairo', size: 10 } }
-                    }
-                }
-            }
-        });
-    }
-
-    // 2. City targeting comparison chart
-    const cityCtx = document.getElementById('cityTargetingChart');
-    if (cityCtx) {
-        if (cityChartInstance) cityChartInstance.destroy();
-        cityChartInstance = new Chart(cityCtx, {
-            type: 'bar',
-            data: {
-                labels: ['مدينة غزة', 'شمال غزة', 'خان يونس', 'دير البلح', 'رفح', 'جنين', 'نابلس', 'الخليل'],
-                datasets: [{
-                    label: 'نسبة الاستهداف والدمار (%)',
-                    data: [92, 95, 88, 82, 85, 45, 40, 35],
-                    backgroundColor: 'rgba(220, 38, 38, 0.85)',
-                    borderColor: '#dc2626',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: { ticks: { color: '#ffffff', font: { family: 'Cairo', size: 10 } } },
-                    y: { ticks: { color: '#ffffff', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.1)' } }
-                },
-                plugins: {
-                    legend: { display: false }
-                }
-            }
-        });
-    }
-}
-
-function initOnThisDayWidget() {
-    const otdContent = document.getElementById('on-this-day-content');
-    if (!otdContent) return;
-
-    // Filter milestones and martyrs to fetch On This Day relevance
-    const today = new Date();
-    const currentMonth = today.getMonth() + 1;
-    const currentDay = today.getDate();
-
-    // Map month names
-    const months = ["كانون الثاني", "شباط", "آذار", "نيسان", "أيار", "حزيران", "تموز", "آب", "أيلول", "تشرين الأول", "تشرين الثاني", "كانون الأول"];
-    const monthText = months[today.getMonth()];
-
-    // Generate dynamic "On This Day" content based on date
-    if (currentMonth === 5) {
-        otdContent.innerHTML = `ذكرى استشهاد الصحفية شيرين أبو عاقلة برصاص الاحتلال في جنين (11 مايو)`;
-    } else if (currentMonth === 10) {
-        otdContent.innerHTML = `ذكرى اندلاع هبة أكتوبر ومواجهات يوم الأرض بالداخل الفلسطيني المحتل`;
-    } else if (currentMonth === 3) {
-        otdContent.innerHTML = `ذكرى يوم الأرض الخالد واستشهاد أبطال سخنين وطمرة دفاعاً عن الهوية`;
-    } else if (currentMonth === 8) {
-        otdContent.innerHTML = `ذكرى ثورة هبّة البراق عام 1929 واستشهاد 116 فلسطينياً من أبطال الأقصى`;
-    } else {
-        otdContent.innerHTML = `في مثل هذا اليوم من شهر ${monthText} يستحضر شعبنا دماء أبطال سخنين وجنين وغزة الأبية`;
-    }
-}
-
-function openGuestbookModal() {
-    document.getElementById('guestbook-modal-overlay').style.display = 'flex';
-}
-
-function submitGuestbookMessage(e) {
-    e.preventDefault();
-    const author = document.getElementById('gb-author').value.trim();
-    const msg = document.getElementById('gb-message').value.trim();
-
-    if (!author || !msg) return;
-
-    const marquee = document.getElementById('guestbook-marquee');
-    if (marquee) {
-        // Prepend new support message to Global Guestbook marquee
-        const origContent = marquee.innerHTML;
-        marquee.innerHTML = `"${msg}" - ${author} | ` + origContent;
-    }
-
-    alert('تم إرسال رسالتك التضامنية بنجاح، ستظهر فوراً في شريط الدعم العالمي!');
-    document.getElementById('gb-author').value = '';
-    document.getElementById('gb-message').value = '';
-    document.getElementById('guestbook-modal-overlay').style.display = 'none';
-}
-
-// ----------------------------------------------------
-// Category 3 JS: Voice Search & Text-to-Speech Accessibility
-// ----------------------------------------------------
-function startVoiceSearch(inputId, callback) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-        alert(currentLang === 'ar' ? 'البحث الصوتي غير مدعوم في متصفحك. يرجى استخدام متصفح Chrome أو Safari.' : 'Voice Search is not supported in your browser. Please use Chrome or Safari.');
-        return;
-    }
-
-    const recognition = new SpeechRecognition();
-    recognition.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US';
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-
-    const micBtn = event.currentTarget;
-    const origText = micBtn.innerText;
-    micBtn.innerText = '🎙️';
-    micBtn.classList.add('animate-pulse');
-
-    recognition.start();
-
-    recognition.onresult = (event) => {
-        const speechResult = event.results[0][0].transcript;
-        const inputEl = document.getElementById(inputId);
-        if (inputEl) {
-            inputEl.value = speechResult;
-            if (inputId === 'search-input') {
-                searchMartyrByName(speechResult);
-            }
-            if (callback) callback();
-        }
-    };
-
-    recognition.onspeechend = () => {
-        recognition.stop();
-        micBtn.innerText = origText;
-        micBtn.classList.remove('animate-pulse');
-    };
-
-    recognition.onerror = (event) => {
-        console.error('Speech recognition error', event.error);
-        micBtn.innerText = origText;
-        micBtn.classList.remove('animate-pulse');
-    };
-}
-
-let currentMilestoneObj = null;
-let isMilestoneSpeaking = false;
-
-function playMilestoneTTS() {
-    if (!currentMilestoneObj) return;
-
-    if (isMilestoneSpeaking) {
-        window.speechSynthesis.cancel();
-        isMilestoneSpeaking = false;
-        document.getElementById('milestone-tts-btn-text').innerText = currentLang === 'ar' ? 'استماع للحدث التاريخي' : 'Listen Event';
-        return;
-    }
-
-    const title = currentMilestoneObj.title || 'حدث تاريخي';
-    const excerpt = currentMilestoneObj.excerpt || '';
-    const year = currentMilestoneObj.year || '';
-    
-    let textToSpeak = '';
-    if (currentLang === 'ar') {
-        textToSpeak = `الحدث التاريخي: ${title}. في عام ${year}. التفاصيل: ${excerpt}`;
-    } else {
-        textToSpeak = `Historical Event: ${title}. In the year ${year}. Details: ${excerpt}`;
-    }
-
-    const utterance = new SpeechSynthesisUtterance(textToSpeak);
-    utterance.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US';
-    utterance.rate = 0.85;
-
-    utterance.onstart = () => {
-        isMilestoneSpeaking = true;
-        document.getElementById('milestone-tts-btn-text').innerText = currentLang === 'ar' ? 'إيقاف الصوت' : 'Stop Listening';
-    };
-
-    utterance.onend = () => {
-        isMilestoneSpeaking = false;
-        document.getElementById('milestone-tts-btn-text').innerText = currentLang === 'ar' ? 'استماع للحدث التاريخي' : 'Listen Event';
-    };
-
-    utterance.onerror = () => {
-        isMilestoneSpeaking = false;
-        document.getElementById('milestone-tts-btn-text').innerText = currentLang === 'ar' ? 'استماع للحدث التاريخي' : 'Listen Event';
-    };
-
-    window.speechSynthesis.speak(utterance);
-}
-
-let isSpeaking = false;
-function playMartyrTTS() {
-    if (!currentMartyrObj) return;
-
-    if (isSpeaking) {
-        window.speechSynthesis.cancel();
-        isSpeaking = false;
-        document.getElementById('tts-btn-text').innerText = currentLang === 'ar' ? 'استماع للسيرة' : 'Listen Biography';
-        return;
-    }
-
-    const name = currentMartyrObj.name || currentMartyrObj.name_ar || 'شهيد مجهول';
-    const age = currentMartyrObj.age || 'غير معروف';
-    const city = currentMartyrObj.city || '';
-    const notes = currentMartyrObj.notes || '';
-    
-    let textToSpeak = '';
-    if (currentLang === 'ar') {
-        textToSpeak = `الشهيد البطل ${name}. يبلغ من العمر ${age} عاماً. ${city ? `من مدينة ${city}.` : ''} ${notes ? notes : 'ارتقى شهيداً في سبيل الوطن والحريّة.'}`;
-    } else {
-        const nameEn = currentMartyrObj.name_en || currentMartyrObj.english_name || name;
-        textToSpeak = `Martyr ${nameEn}. Age ${age}. ${city ? `From ${city}.` : ''} ${notes ? notes : 'Martyred for homeland and freedom.'}`;
-    }
-
-    const utterance = new SpeechSynthesisUtterance(textToSpeak);
-    utterance.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US';
-    utterance.rate = 0.85; // slightly slower for emotional storytelling tone
-
-    utterance.onstart = () => {
-        isSpeaking = true;
-        document.getElementById('tts-btn-text').innerText = currentLang === 'ar' ? 'إيقاف الصوت' : 'Stop Listening';
-    };
-
-    utterance.onend = () => {
-        isSpeaking = false;
-        document.getElementById('tts-btn-text').innerText = currentLang === 'ar' ? 'استماع للسيرة' : 'Listen Biography';
-    };
-
-    utterance.onerror = () => {
-        isSpeaking = false;
-        document.getElementById('tts-btn-text').innerText = currentLang === 'ar' ? 'استماع للسيرة' : 'Listen Biography';
-    };
-
-    window.speechSynthesis.speak(utterance);
-}
-
-// ----------------------------------------------------
-// Category 1 JS: Virtual Tributes & Crowdsourcing Admin
-// ----------------------------------------------------
-let virtualTributes = JSON.parse(localStorage.getItem('virtual_tributes') || '{}');
-let crowdsourcingSubmissions = JSON.parse(localStorage.getItem('cs_submissions') || '[]');
-let csCaptchaVal1 = 0;
-let csCaptchaVal2 = 0;
-
-function lightTributeCandle() {
-    if (!currentMartyrObj) return;
-    const mid = currentMartyrObj.id;
-    if (!virtualTributes[mid]) {
-        virtualTributes[mid] = { candles: 0, messages: [] };
-    }
-    virtualTributes[mid].candles += 1;
-    localStorage.setItem('virtual_tributes', JSON.stringify(virtualTributes));
-    
-    // Play light sound/tone
-    try {
-        if (window.AudioContext || window.webkitAudioContext) {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(440, ctx.currentTime); // Standard La note
-            osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.3);
-            gain.gain.setValueAtTime(0.1, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-            osc.start();
-            osc.stop(ctx.currentTime + 0.3);
-        }
-    } catch(e) {}
-
-    // Show animation
-    const animArea = document.getElementById('candle-animation-area');
-    if (animArea) {
-        animArea.classList.remove('hidden');
-        setTimeout(() => animArea.classList.add('hidden'), 2000);
-    }
-
-    updateTributeUI();
-}
-
-function updateTributeUI() {
-    if (!currentMartyrObj) return;
-    const mid = currentMartyrObj.id;
-    const item = virtualTributes[mid] || { candles: 0, messages: [] };
-    
-    const countLabel = document.getElementById('tribute-candle-count');
-    if (countLabel) countLabel.innerText = item.candles;
-
-    const listContainer = document.getElementById('tributes-list-container');
-    if (listContainer) {
-        if (!item.messages || item.messages.length === 0) {
-            listContainer.innerHTML = `<div class="text-gray-500 text-center py-2">لا توجد رسائل تضامن حالياً. كن أول من يترك أثراً.</div>`;
-        } else {
-            listContainer.innerHTML = item.messages.map(msg => `
-                <div class="bg-white/5 border border-white/5 p-2 rounded-lg mb-1">
-                    <div class="flex justify-between text-gray-400 text-[9px] mb-0.5">
-                        <strong class="text-red-400">${msg.name}</strong>
-                        <span>${msg.date}</span>
-                    </div>
-                    <p class="text-gray-200">${msg.text}</p>
-                </div>
-            `).join('');
-        }
-    }
-}
-
-function submitVirtualTribute() {
-    if (!currentMartyrObj) return;
-    const mid = currentMartyrObj.id;
-    const nameInput = document.getElementById('tribute-name-input');
-    const msgInput = document.getElementById('tribute-msg-input');
-    
-    const name = nameInput.value.trim() || (currentLang === 'ar' ? 'زائر تضامني' : 'Solidarity Visitor');
-    const text = msgInput.value.trim();
-    if (!text) return;
-
-    if (!virtualTributes[mid]) {
-        virtualTributes[mid] = { candles: 0, messages: [] };
-    }
-    
-    const newMsg = {
-        name: name,
-        text: text,
-        date: new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US')
-    };
-    
-    virtualTributes[mid].messages.unshift(newMsg);
-    localStorage.setItem('virtual_tributes', JSON.stringify(virtualTributes));
-    
-    msgInput.value = '';
-    nameInput.value = '';
-    updateTributeUI();
-}
-
-// Crowdsourcing Functions
-function openCrowdsourcingModal() {
-    document.getElementById('crowdsourcing-modal-overlay').style.display = 'flex';
-    generateCSCaptcha();
-}
-
-function generateCSCaptcha() {
-    csCaptchaVal1 = Math.floor(Math.random() * 10) + 1;
-    csCaptchaVal2 = Math.floor(Math.random() * 10) + 1;
-    const questionEl = document.getElementById('cs-captcha-question');
-    if (questionEl) {
-        questionEl.innerText = `${csCaptchaVal1} + ${csCaptchaVal2} = ?`;
-    }
-}
-
-function submitCrowdsourcing(e) {
-    e.preventDefault();
-    const name = document.getElementById('cs-martyr-name').value.trim();
-    const age = document.getElementById('cs-martyr-age').value;
-    const idNum = document.getElementById('cs-martyr-id').value.trim();
-    const details = document.getElementById('cs-details').value.trim();
-    const docUrl = document.getElementById('cs-doc-url').value.trim();
-    const captchaAns = parseInt(document.getElementById('cs-captcha-answer').value, 10);
-
-    if (captchaAns !== (csCaptchaVal1 + csCaptchaVal2)) {
-        alert(currentLang === 'ar' ? 'إجابة سؤال الحماية غير صحيحة، يرجى المحاولة مرة أخرى.' : 'Incorrect protection question answer. Please try again.');
-        generateCSCaptcha();
-        return;
-    }
-
-    const submission = {
-        id: Date.now(),
-        name,
-        age,
-        idNum,
-        details,
-        docUrl,
-        status: 'pending', // pending, approved, rejected
-        date: new Date().toLocaleDateString('ar-EG')
-    };
-
-    crowdsourcingSubmissions.push(submission);
-    localStorage.setItem('cs_submissions', JSON.stringify(crowdsourcingSubmissions));
-
-    alert(currentLang === 'ar' ? 'تم إرسال مساهمتك بنجاح وهي قيد المراجعة الآن.' : 'Your submission has been sent successfully and is under review.');
-    
-    // Clear Form
-    document.getElementById('crowdsourcing-form').reset();
-    document.getElementById('crowdsourcing-modal-overlay').style.display = 'none';
-
-    // Show Admin Button since there are pending requests
-    const adminBtn = document.getElementById('admin-panel-btn');
-    if (adminBtn) adminBtn.classList.remove('hidden');
-}
-
-function openAdminModal() {
-    document.getElementById('admin-modal-overlay').style.display = 'flex';
-    renderAdminSubmissions();
-}
-
-function renderAdminSubmissions() {
-    const listContainer = document.getElementById('admin-submissions-list');
-    if (!listContainer) return;
-
-    if (crowdsourcingSubmissions.length === 0) {
-        listContainer.innerHTML = `<div class="text-gray-500 text-center py-12">لا توجد مساهمات معلقة حالياً للمراجعة.</div>`;
-        return;
-    }
-
-    listContainer.innerHTML = crowdsourcingSubmissions.map(sub => `
-        <div class="bg-black/40 border ${sub.status === 'approved' ? 'border-green-500/30' : sub.status === 'rejected' ? 'border-red-500/30' : 'border-white/10'} p-4 rounded-xl mb-3 space-y-2">
-            <div class="flex justify-between items-center">
-                <strong class="text-sm text-white">${sub.name} (العمر: ${sub.age || '-'})</strong>
-                <span class="text-[10px] bg-red-600/20 text-red-400 px-2 py-0.5 rounded-full">${sub.status.toUpperCase()}</span>
-            </div>
-            <p class="text-gray-300 leading-relaxed">${sub.details}</p>
-            ${sub.idNum ? `<div><span class="text-gray-500">رقم الهوية:</span> <code class="text-white">${sub.idNum}</code></div>` : ''}
-            ${sub.docUrl ? `<div><span class="text-gray-500">رابط وثيقة:</span> <a href="${sub.docUrl}" target="_blank" class="text-red-400 underline">مشاهدة المرفق</a></div>` : ''}
-            
-            ${sub.status === 'pending' ? `
-                <div class="flex gap-2 justify-end pt-2 border-t border-white/5">
-                    <button onclick="approveSubmission(${sub.id})" class="px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 font-bold">موافقة وإضافة</button>
-                    <button onclick="rejectSubmission(${sub.id})" class="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 font-bold">رفض</button>
-                </div>
-            ` : ''}
-        </div>
-    `).join('');
-}
-
-function approveSubmission(id) {
-    const sub = crowdsourcingSubmissions.find(s => s.id === id);
-    if (sub) {
-        sub.status = 'approved';
-        // Add to active Gaza souls list dynamically to show up in search/canvas!
-        const newMartyr = {
-            id: sub.idNum || sub.id.toString(),
-            name: sub.name,
-            name_ar: sub.name,
-            age: sub.age || 'غير معروف',
-            x: Math.random(),
-            y: Math.random()
-        };
-        gazaSouls.unshift(newMartyr);
-        document.getElementById('number').innerText = gazaSouls.length.toLocaleString();
-        initCanvasPoints(gazaSouls);
-        isDirty = true;
-
-        localStorage.setItem('cs_submissions', JSON.stringify(crowdsourcingSubmissions));
-        renderAdminSubmissions();
-        alert('تمت الموافقة وإضافة الشهيد بنجاح!');
-    }
-}
-
-function rejectSubmission(id) {
-    const sub = crowdsourcingSubmissions.find(s => s.id === id);
-    if (sub) {
-        sub.status = 'rejected';
-        localStorage.setItem('cs_submissions', JSON.stringify(crowdsourcingSubmissions));
-        renderAdminSubmissions();
-        alert('تم رفض المساهمة.');
-    }
-}
-
-// Check on startup if admin button should show
-$(document).ready(() => {
-    if (crowdsourcingSubmissions.length > 0) {
-        const adminBtn = document.getElementById('admin-panel-btn');
-        if (adminBtn) adminBtn.classList.remove('hidden');
-    }
-});
 let width, height, points = [];
 let cachedItems = []; // 2. التخزين المؤقت للإحداثيات والخصائص
 let isDirty = true;   // 1. نظام إعادة الرسم المشروط (Dirty Flag)
@@ -1859,79 +1265,6 @@ function openMilestoneModal(item) {
     modal.style.display = 'flex';
 }
 
-function timelineShowOnMap(lat, lng, title) {
-    switchMainMode('map');
-    setTimeout(() => {
-        if (map) {
-            // Remove bounds constraints temporarily if coordinates are outside Gaza
-            map.setMaxBounds(null);
-            map.setView([lat, lng], 14, { animate: true });
-            L.popup()
-                .setLatLng([lat, lng])
-                .setContent(`
-                    <div class="p-2 text-right font-['Cairo'] text-xs text-white bg-neutral-900/95 border border-red-600/30 rounded-lg">
-                        <h4 class="font-bold text-red-400 text-sm mb-1">${title}</h4>
-                        <p class="text-gray-300">حدث تاريخي مرتبط بالقضية الفلسطينية.</p>
-                    </div>
-                `)
-                .openOn(map);
-        }
-    }, 300);
-}
-
-function initScrollytellingObserver() {
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.2
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Scrollytelling effect: Add active classes
-                entry.target.classList.remove('opacity-40', 'scale-95');
-                entry.target.classList.add('opacity-100', 'scale-100');
-                
-                const bgImg = entry.target.querySelector('.tlc-bg');
-                if (bgImg) {
-                    bgImg.classList.remove('scale-100');
-                    bgImg.classList.add('scale-110'); // subtle scrollytelling zoom
-                }
-
-                // Play simple soft audio hum for visual narrative depth
-                try {
-                    if (window.AudioContext || window.webkitAudioContext) {
-                        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                        const osc = ctx.createOscillator();
-                        const gain = ctx.createGain();
-                        osc.connect(gain);
-                        gain.connect(ctx.destination);
-                        osc.type = 'sine';
-                        osc.frequency.setValueAtTime(150, ctx.currentTime);
-                        gain.gain.setValueAtTime(0.04, ctx.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1);
-                        osc.start();
-                        osc.stop(ctx.currentTime + 1);
-                    }
-                } catch(e) {}
-            } else {
-                entry.target.classList.remove('opacity-100', 'scale-100');
-                entry.target.classList.add('opacity-40', 'scale-95');
-                const bgImg = entry.target.querySelector('.tlc-bg');
-                if (bgImg) {
-                    bgImg.classList.remove('scale-110');
-                    bgImg.classList.add('scale-100');
-                }
-            }
-        });
-    }, observerOptions);
-
-    document.querySelectorAll('.tlc-scene').forEach(sec => {
-        observer.observe(sec);
-    });
-}
-
 function renderCinematicTimeline() {
     const scenesContainer = document.getElementById('tlc-scenes-container');
     if(!scenesContainer) return;
@@ -1977,27 +1310,15 @@ function renderCinematicTimeline() {
             }
 
             const sceneEl = document.createElement('section');
-            sceneEl.className = 'tlc-scene transition-all duration-700 transform opacity-40 scale-95';
+            sceneEl.className = 'tlc-scene';
             sceneEl.id = item.id;
-            // Coordinate definitions to bind smart map linking
-            let lat = 31.5;
-            let lng = 34.45;
-            if (item.title.includes("دير ياسين")) { lat = 31.786; lng = 35.170; }
-            else if (item.title.includes("البراق") || item.title.includes("الأقصى") || item.title.includes("يوم الأرض") || item.title.includes("الحرم الإبراهيمي")) { lat = 31.776; lng = 35.235; }
-            else if (item.title.includes("جباليا") || item.title.includes("غزة")) { lat = 31.51; lng = 34.46; }
-
             sceneEl.innerHTML = `
-                <div class="tlc-bg transform transition-transform duration-1000 scale-100" aria-hidden="true">
+                <div class="tlc-bg" aria-hidden="true">
                     <img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.style.display='none'">
                     <div class="tlc-bg-tint"></div>
                 </div>
                 <article class="tlc-panel">
-                    <div class="flex justify-between items-center mb-2">
-                        <time class="tlc-date">${item.year}</time>
-                        <button onclick="timelineShowOnMap(${lat}, ${lng}, '${item.title}')" class="btn-main text-[10px] px-2.5 py-1 bg-red-600 border border-red-500 rounded-full text-white flex items-center gap-1">
-                            📍 عرض على الخريطة
-                        </button>
-                    </div>
+                    <time class="tlc-date">${item.year}</time>
                     <h2 class="tlc-title">${item.title}</h2>
                     ${item.alt ? `<p class="tlc-alt">${item.alt}</p>` : ''}
                     <p class="tlc-excerpt">${item.excerpt}</p>
@@ -2006,7 +1327,10 @@ function renderCinematicTimeline() {
                             <span class="tlc-stat-num">${item.stat}</span>
                             <span class="tlc-stat-label">عدد الشهداء والضحايا:</span>
                         </div>
-                        <button type="button" class="tlc-more"><span>اقرأ المزيد</span><span aria-hidden="true">→</span></button>
+                        <div class="flex gap-1.5 items-center">
+                            <button type="button" class="tlc-more"><span>اقرأ المزيد</span><span aria-hidden="true">→</span></button>
+                            <button type="button" onclick="timelineShowOnMap('${item.title.replace(/'/g, "\\'")}')" class="btn-main text-[10px] px-2.5 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded-full flex items-center gap-1">🗺️ الخريطة</button>
+                        </div>
                     </div>
                 </article>
             `;
@@ -2015,9 +1339,259 @@ function renderCinematicTimeline() {
             else scenesContainer.appendChild(sceneEl);
         }
     });
-
-    // Initialize Intersection Observer for Scrollytelling
+    
+    // Initialize Scrollytelling IntersectionObserver
     setTimeout(initScrollytellingObserver, 100);
+}
+
+// ----------------------------------------------------
+// Category 2 JS: Immersive Scrollytelling Map Connection
+// ----------------------------------------------------
+const milestoneCoords = {
+    "هبّة البراق": { lat: 31.7767, lng: 35.2345, zoom: 14, name: "حائط البراق - القدس الشريف" },
+    "الثورة الفلسطينية الكبرى": { lat: 31.9038, lng: 35.2034, zoom: 11, name: "فلسطين المحتلة" },
+    "مرحلة التطهير العرقي في فلسطين": { lat: 31.5, lng: 34.4667, zoom: 10, name: "فلسطين التاريخية" },
+    "مجزرة دير ياسين": { lat: 31.7864, lng: 35.1764, zoom: 15, name: "قرية دير ياسين المهجرة" },
+    "مجزرة الطنطورة": { lat: 32.6139, lng: 34.9228, zoom: 14, name: "الطنطورة المهجرة" },
+    "مجزرة قبية": { lat: 31.9867, lng: 34.9917, zoom: 14, name: "قرية قبية المهجرة" },
+    "مجزرة كفر قاسم": { lat: 32.115, lng: 34.9753, zoom: 14, name: "كفر قاسم" },
+    "عدوان 1956 ومجزرة خان يونس": { lat: 31.3458, lng: 34.3025, zoom: 13, name: "خان يونس - قطاع غزة" },
+    "نكسة حزيران 1967": { lat: 31.7767, lng: 35.2345, zoom: 10, name: "الضفة الغربية وقطاع غزة" },
+    "يوم الأرض الخالد 1976": { lat: 32.8647, lng: 35.2806, zoom: 12, name: "سخنين وعرابة ودير حنا" },
+    "مجزرة صبرا وشاتيلا 1982": { lat: 33.8644, lng: 35.4967, zoom: 14, name: "مخيم صبرا وشاتيلا" },
+    "الانتفاضة الأولى (انتفاضة الحجارة) 1987": { lat: 31.5017, lng: 34.4581, zoom: 11, name: "جباليا وقطاع غزة والضفة" },
+    "مجزرة الحرم الإبراهيمي 1994": { lat: 31.5244, lng: 35.1081, zoom: 15, name: "الحرم الإبراهيمي - الخليل" },
+    "الانتفاضة الثانية (انتفاضة الأقصى) 2000": { lat: 31.7761, lng: 35.2358, zoom: 14, name: "المسجد الأقصى - القدس الشريف" },
+    "مجزرة جنين 2002": { lat: 32.4614, lng: 35.2936, zoom: 14, name: "مخيم جنين" },
+    "حروب وغارات غزة المتكررة (2008 - 2021)": { lat: 31.45, lng: 34.4, zoom: 11, name: "قطاع غزة" },
+    "طوفان الأقصى والعدوان الشامل": { lat: 31.42, lng: 34.38, zoom: 11, name: "غزة الصامدة" }
+};
+
+function timelineShowOnMap(milestoneTitle) {
+    const coords = milestoneCoords[milestoneTitle];
+    if (!coords) return;
+    
+    switchMainMode('map');
+    initMapIfNeeded();
+    
+    setTimeout(() => {
+        if (map) {
+            map.setView([coords.lat, coords.lng], coords.zoom);
+            L.popup()
+                .setLatLng([coords.lat, coords.lng])
+                .setContent(`<div class="font-['Cairo'] text-right text-xs p-1">
+                    <strong class="text-red-500">${milestoneTitle}</strong><br>
+                    <span>الموقع: ${coords.name}</span>
+                </div>`)
+                .openOn(map);
+        }
+    }, 300);
+}
+
+function initScrollytellingObserver() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                
+                const titleEl = entry.target.querySelector('.tlc-title');
+                if (titleEl) {
+                    const title = titleEl.innerText.trim();
+                    const coords = milestoneCoords[title];
+                    if (coords && map) {
+                        map.panTo([coords.lat, coords.lng]);
+                    }
+                }
+            } else {
+                entry.target.classList.remove('active');
+            }
+        });
+    }, {
+        threshold: 0.25,
+        rootMargin: "-10% 0px -20% 0px"
+    });
+    
+    document.querySelectorAll('.tlc-scene').forEach(scene => {
+        observer.observe(scene);
+    });
+}
+
+// ----------------------------------------------------
+// Category 3 JS: Voice Search (Web Speech API)
+// ----------------------------------------------------
+function startVoiceSearch(inputId, callback) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        alert(currentLang === 'ar' ? 'البحث الصوتي غير مدعوم في متصفحك. يرجى استخدام متصفح Chrome أو Safari.' : 'Voice Search is not supported in your browser. Please use Chrome or Safari.');
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    let micBtn = null;
+    if (inputId === 'search-input') {
+        micBtn = document.getElementById('voice-search-btn');
+    } else {
+        micBtn = document.getElementById('map-voice-btn');
+    }
+    
+    if (micBtn) {
+        micBtn.classList.add('bg-red-600', 'animate-pulse');
+        micBtn.innerText = '🔴';
+    }
+
+    recognition.onstart = () => {
+        console.log("Voice recognition started...");
+    };
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        console.log("Voice input transcribed:", transcript);
+        const inputEl = document.getElementById(inputId);
+        if (inputEl) {
+            inputEl.value = transcript;
+            if (callback) callback(transcript);
+        }
+    };
+
+    recognition.onerror = (err) => {
+        console.error("Speech recognition error:", err);
+    };
+
+    recognition.onend = () => {
+        if (micBtn) {
+            micBtn.classList.remove('bg-red-600', 'animate-pulse');
+            micBtn.innerText = '🎤';
+        }
+    };
+
+    recognition.start();
+}
+
+// ----------------------------------------------------
+// Category 3 JS: Text-To-Speech (Speech Synthesis)
+// ----------------------------------------------------
+let isMartyrSpeaking = false;
+let isMilestoneSpeaking = false;
+let currentMilestoneObj = null;
+
+function playMartyrTTS() {
+    if (!currentMartyrObj) return;
+    
+    if (isMartyrSpeaking) {
+        window.speechSynthesis.cancel();
+        isMartyrSpeaking = false;
+        document.getElementById('tts-btn-text').innerText = currentLang === 'ar' ? 'استماع للسيرة' : 'Listen Biography';
+        return;
+    }
+    
+    window.speechSynthesis.cancel();
+    isMilestoneSpeaking = false;
+    
+    const bioText = currentMartyrObj.notes || (currentLang === 'ar' ? 'شهيد من أبناء فلسطين الأوفياء' : 'A martyr of the loyal sons of Palestine');
+    
+    const utterance = new SpeechSynthesisUtterance(bioText);
+    utterance.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+    
+    utterance.onstart = () => {
+        isMartyrSpeaking = true;
+        document.getElementById('tts-btn-text').innerText = currentLang === 'ar' ? 'إيقاف الصوت' : 'Stop Listening';
+    };
+    
+    utterance.onend = () => {
+        isMartyrSpeaking = false;
+        document.getElementById('tts-btn-text').innerText = currentLang === 'ar' ? 'استماع للسيرة' : 'Listen Biography';
+    };
+    
+    utterance.onerror = () => {
+        isMartyrSpeaking = false;
+        document.getElementById('tts-btn-text').innerText = currentLang === 'ar' ? 'استماع للسيرة' : 'Listen Biography';
+    };
+    
+    window.speechSynthesis.speak(utterance);
+}
+
+function playMilestoneTTS() {
+    if (!currentMilestoneObj) return;
+    
+    if (isMilestoneSpeaking) {
+        window.speechSynthesis.cancel();
+        isMilestoneSpeaking = false;
+        document.getElementById('milestone-tts-btn-text').innerText = currentLang === 'ar' ? 'استماع للحدث التاريخي' : 'Listen Event';
+        return;
+    }
+    
+    window.speechSynthesis.cancel();
+    isMartyrSpeaking = false;
+    
+    const text = currentMilestoneObj.excerpt || '';
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+    
+    utterance.onstart = () => {
+        isMilestoneSpeaking = true;
+        document.getElementById('milestone-tts-btn-text').innerText = currentLang === 'ar' ? 'إيقاف الصوت' : 'Stop Listening';
+    };
+    
+    utterance.onend = () => {
+        isMilestoneSpeaking = false;
+        document.getElementById('milestone-tts-btn-text').innerText = currentLang === 'ar' ? 'استماع للحدث التاريخي' : 'Listen Event';
+    };
+    
+    utterance.onerror = () => {
+        isMilestoneSpeaking = false;
+        document.getElementById('milestone-tts-btn-text').innerText = currentLang === 'ar' ? 'استماع للحدث التاريخي' : 'Listen Event';
+    };
+    
+    window.speechSynthesis.speak(utterance);
+}
+
+// ----------------------------------------------------
+// Category 4 JS: Solidarity Card Generator
+// ----------------------------------------------------
+function updateCertificatePreview() {
+    const name = document.getElementById('cert-name').value.trim() || 'متضامن مع فلسطين';
+    const slogan = document.getElementById('cs-slogan').value.trim() || '';
+    
+    document.getElementById('preview-cert-name').innerText = name;
+    document.getElementById('preview-cs-slogan').innerText = slogan;
+}
+
+function updateCertificateTheme(theme) {
+    const keffiyehBg = document.getElementById('cert-bg-keffiyeh');
+    const flagBg = document.getElementById('cert-bg-flag');
+    const oliveBg = document.getElementById('cert-bg-olive');
+    
+    keffiyehBg.classList.add('hidden');
+    flagBg.classList.add('hidden');
+    oliveBg.classList.add('hidden');
+    
+    if (theme === 'keffiyeh') {
+        keffiyehBg.classList.remove('hidden');
+    } else if (theme === 'flag') {
+        flagBg.classList.remove('hidden');
+    } else if (theme === 'olive') {
+        oliveBg.classList.remove('hidden');
+    }
+}
+
+function downloadCertificate() {
+    const element = document.getElementById('certificate-preview');
+    if (!element) return;
+    
+    html2canvas(element, {
+        backgroundColor: '#1a1a1a',
+        scale: 2,
+        useCORS: true
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'Palestinian_Souls_Solidarity_Card.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    });
 }
 
 function initMapIfNeeded() {
@@ -2251,10 +1825,6 @@ window.switchMainMode = function(mode) {
         renderCinematicTimeline();
     } else if(mode === 'stats') {
         document.getElementById('stats-view').style.display = 'block';
-        setTimeout(() => {
-            initAnalyticsCharts();
-            updateCertificatePreview();
-        }, 100);
     } else if(mode === 'videos') {
         document.getElementById('videos-view').style.display = 'block';
     } else if(mode === 'map') {
@@ -2561,9 +2131,311 @@ function drawCanvas() {
 // بدء حلقة الرسم المشروط
 requestAnimationFrame(drawCanvas);
 
+// ----------------------------------------------------
+// Category 1 JS: Crowdsourcing & Submissions
+// ----------------------------------------------------
+let captchaNum1 = 0;
+let captchaNum2 = 0;
+
+function openCrowdsourceModal() {
+    captchaNum1 = Math.floor(Math.random() * 9) + 1;
+    captchaNum2 = Math.floor(Math.random() * 9) + 1;
+    const qEl = document.getElementById('cs-captcha-question');
+    if (qEl) {
+        qEl.innerText = `${captchaNum1} + ${captchaNum2} =`;
+    }
+    const ansEl = document.getElementById('cs-captcha-answer');
+    if (ansEl) ansEl.value = '';
+    
+    document.getElementById('cs-submitter').value = '';
+    document.getElementById('cs-martyr-name').value = '';
+    document.getElementById('cs-martyr-city').value = '';
+    document.getElementById('cs-notes').value = '';
+    document.getElementById('cs-photo').value = '';
+
+    document.getElementById('crowdsource-modal-overlay').style.display = 'flex';
+}
+
+function submitCrowdsourceForm(e) {
+    e.preventDefault();
+    const ansVal = parseInt(document.getElementById('cs-captcha-answer').value);
+    if (ansVal !== (captchaNum1 + captchaNum2)) {
+        alert(currentLang === 'ar' ? 'إجابة سؤال الحماية غير صحيحة، يرجى المحاولة مرة أخرى.' : 'Incorrect protection question answer. Please try again.');
+        return;
+    }
+
+    const submitter = document.getElementById('cs-submitter').value.trim();
+    const name = document.getElementById('cs-martyr-name').value.trim();
+    const city = document.getElementById('cs-martyr-city').value.trim();
+    const notes = document.getElementById('cs-notes').value.trim();
+    const image = document.getElementById('cs-photo').value.trim();
+
+    const submission = {
+        id: 'cs_' + Date.now(),
+        submitter,
+        name,
+        city,
+        notes,
+        image,
+        status: 'pending',
+        date: new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US')
+    };
+
+    let list = [];
+    try {
+        const stored = localStorage.getItem('crowdsourced_submissions');
+        if (stored) list = JSON.parse(stored);
+    } catch (err) {
+        console.error(err);
+    }
+    list.push(submission);
+    localStorage.setItem('crowdsourced_submissions', JSON.stringify(list));
+
+    alert(currentLang === 'ar' ? 'تم إرسال مساهمتك بنجاح وهي قيد المراجعة الآن.' : 'Your submission has been sent successfully and is under review.');
+    document.getElementById('crowdsource-modal-overlay').style.display = 'none';
+}
+
+function openAdminReviewPanel() {
+    const password = prompt(currentLang === 'ar' ? 'الرجاء إدخال كلمة مرور الإدارة لتسجيل الدخول:' : 'Please enter the admin password to log in:', '');
+    if (password !== 'admin123') {
+        alert(currentLang === 'ar' ? 'كلمة المرور غير صحيحة!' : 'Incorrect password!');
+        return;
+    }
+    document.getElementById('crowdsource-modal-overlay').style.display = 'none';
+    document.getElementById('admin-review-overlay').style.display = 'flex';
+    renderAdminSubmissions();
+}
+
+function renderAdminSubmissions() {
+    const container = document.getElementById('admin-submissions-list');
+    if (!container) return;
+
+    let list = [];
+    try {
+        const stored = localStorage.getItem('crowdsourced_submissions');
+        if (stored) list = JSON.parse(stored);
+    } catch (err) {
+        console.error(err);
+    }
+
+    if (list.length === 0) {
+        container.innerHTML = `<div class="text-gray-500 text-center py-6">لا توجد مساهمات معلقة للمراجعة حالياً.</div>`;
+        return;
+    }
+
+    container.innerHTML = list.map(item => `
+        <div class="bg-white/5 border border-white/10 p-3 rounded-xl space-y-2 relative text-right">
+            <span class="absolute top-3 left-3 px-2 py-0.5 rounded text-[9px] font-bold ${
+                item.status === 'approved' ? 'bg-green-600/20 border border-green-500 text-green-400' :
+                item.status === 'rejected' ? 'bg-red-600/20 border border-red-500 text-red-400' :
+                'bg-amber-600/20 border border-amber-500 text-amber-400'
+            }">${item.status === 'approved' ? 'معتمد' : item.status === 'rejected' ? 'مرفوض' : 'معلق'}</span>
+            
+            <div class="text-red-400 font-bold mb-1">المساهم: ${item.submitter} (${item.date})</div>
+            <div><strong>اسم الشهيد:</strong> ${item.name}</div>
+            <div><strong>المدينة / المحافظة:</strong> ${item.city}</div>
+            <div><strong>التفاصيل:</strong> ${item.notes}</div>
+            ${item.image ? `<div class="mt-1"><a href="${item.image}" target="_blank" class="text-blue-400 underline">عرض الصورة المرفقة</a></div>` : ''}
+            
+            ${item.status === 'pending' ? `
+                <div class="flex gap-2 mt-2 pt-2 border-t border-white/10">
+                    <button onclick="approveSubmission('${item.id}')" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded font-bold text-[10px]">اعتماد وقبول</button>
+                    <button onclick="rejectSubmission('${item.id}')" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded font-bold text-[10px]">رفض</button>
+                </div>
+            ` : ''}
+        </div>
+    `).join('');
+}
+
+function approveSubmission(id) {
+    let list = [];
+    try {
+        const stored = localStorage.getItem('crowdsourced_submissions');
+        if (stored) list = JSON.parse(stored);
+    } catch (err) {}
+
+    const index = list.findIndex(item => item.id === id);
+    if (index !== -1) {
+        list[index].status = 'approved';
+        localStorage.setItem('crowdsourced_submissions', JSON.stringify(list));
+        
+        const sub = list[index];
+        const newSoulsObj = {
+            id: 'cs_approved_' + Date.now(),
+            name: sub.name,
+            city: sub.city,
+            age: 'غير معروف',
+            notes: sub.notes,
+            image: sub.image || ''
+        };
+        
+        if (typeof gazaSouls !== 'undefined') {
+            gazaSouls.unshift(newSoulsObj);
+        }
+        if (typeof cachedItems !== 'undefined') {
+            cachedItems.unshift(newSoulsObj);
+        }
+        
+        alert(currentLang === 'ar' ? 'تم قبول واعتماد المساهمة، وتمت إضافتها بنجاح إلى أرشيف الشهداء!' : 'Submission approved and successfully added to the archive!');
+        renderAdminSubmissions();
+    }
+}
+
+function rejectSubmission(id) {
+    let list = [];
+    try {
+        const stored = localStorage.getItem('crowdsourced_submissions');
+        if (stored) list = JSON.parse(stored);
+    } catch (err) {}
+
+    const index = list.findIndex(item => item.id === id);
+    if (index !== -1) {
+        list[index].status = 'rejected';
+        localStorage.setItem('crowdsourced_submissions', JSON.stringify(list));
+        alert(currentLang === 'ar' ? 'تم رفض المساهمة.' : 'Submission rejected.');
+        renderAdminSubmissions();
+    }
+}
+
+// ----------------------------------------------------
+// Category 1 JS: Virtual Tributes & Local Storage
+// ----------------------------------------------------
+function loadMartyrTributes(martyrKey) {
+    let allTributes = {};
+    try {
+        const stored = localStorage.getItem('martyr_tributes');
+        if (stored) {
+            allTributes = JSON.parse(stored);
+        }
+    } catch (e) {
+        console.error(e);
+    }
+    if (!allTributes[martyrKey]) {
+        allTributes[martyrKey] = { candles: 0, comments: [] };
+    }
+    return allTributes[martyrKey];
+}
+
+function saveMartyrTributes(martyrKey, data) {
+    let allTributes = {};
+    try {
+        const stored = localStorage.getItem('martyr_tributes');
+        if (stored) {
+            allTributes = JSON.parse(stored);
+        }
+    } catch (e) {
+        console.error(e);
+    }
+    allTributes[martyrKey] = data;
+    localStorage.setItem('martyr_tributes', JSON.stringify(allTributes));
+}
+
+function updateTributeUI() {
+    if (!currentMartyrObj) return;
+    const key = currentMartyrObj.name || 'unknown';
+    const data = loadMartyrTributes(key);
+    
+    // Update candle counter
+    const candleCountEl = document.getElementById('tribute-candle-count');
+    if (candleCountEl) {
+        candleCountEl.innerText = data.candles;
+    }
+    
+    // Render comments list
+    const container = document.getElementById('tributes-list-container');
+    if (container) {
+        if (data.comments && data.comments.length > 0) {
+            container.innerHTML = data.comments.map(c => `
+                <div class="bg-white/5 p-1.5 rounded text-right border-r-2 border-red-500">
+                    <div class="flex justify-between items-center text-[9px] text-gray-400 font-bold mb-0.5">
+                        <span>${c.name}</span>
+                        <span>${c.date}</span>
+                    </div>
+                    <p class="text-gray-200 text-[10px] leading-tight">${c.text}</p>
+                </div>
+            `).join('');
+        } else {
+            container.innerHTML = `<div class="text-gray-500 text-center py-2">لا توجد رسائل تضامن حالياً. كن أول من يترك أثراً.</div>`;
+        }
+    }
+}
+
+function lightTributeCandle() {
+    if (!currentMartyrObj) return;
+    const key = currentMartyrObj.name || 'unknown';
+    const data = loadMartyrTributes(key);
+    data.candles += 1;
+    saveMartyrTributes(key, data);
+    
+    // Play light bell sound using Web Audio API simple oscillator
+    try {
+        if (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined') {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            const ctx = new AudioContextClass();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(659.25, ctx.currentTime); // E5
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.2);
+            
+            osc.start();
+            osc.stop(ctx.currentTime + 1.2);
+        }
+    } catch(e) {
+        console.log("Audio trigger error:", e);
+    }
+    
+    // Show visual candle flame pop
+    const animArea = document.getElementById('candle-animation-area');
+    if (animArea) {
+        animArea.classList.remove('hidden');
+        animArea.classList.add('flex');
+        setTimeout(() => {
+            animArea.classList.add('hidden');
+            animArea.classList.remove('flex');
+        }, 1500);
+    }
+    
+    updateTributeUI();
+}
+
+function submitVirtualTribute() {
+    if (!currentMartyrObj) return;
+    const nameInput = document.getElementById('tribute-name-input');
+    const msgInput = document.getElementById('tribute-msg-input');
+    if (!nameInput || !msgInput) return;
+    
+    const name = nameInput.value.trim() || 'زائر تضامني';
+    const text = msgInput.value.trim();
+    if (!text) return;
+    
+    const key = currentMartyrObj.name || 'unknown';
+    const data = loadMartyrTributes(key);
+    
+    const today = new Date();
+    const dateStr = today.getFullYear() + '/' + (today.getMonth()+1) + '/' + today.getDate();
+    
+    data.comments.unshift({ name, text, date: dateStr });
+    saveMartyrTributes(key, data);
+    
+    // Reset msg
+    msgInput.value = '';
+    nameInput.value = '';
+    
+    updateTributeUI();
+}
+
 function openMartyrModal(person) {
     currentMartyrObj = person;
     updateTributeUI();
+    if (typeof translateMartyrModal === 'function') {
+        translateMartyrModal(currentLang);
+    }
+    
     document.getElementById('martyr-modal-name').innerText = person.name || 'شهيد مجهول';
     const nameEnEl = document.getElementById('martyr-modal-name-en');
     if (person.name_en) {
@@ -2580,18 +2452,6 @@ function openMartyrModal(person) {
         photoEl.innerHTML = `<img src="${person.image}" style="width:100%; height:100%; object-fit:cover;" crossorigin="anonymous">`;
     } else {
         photoEl.innerHTML = `<span id="modal-photo-text">${translations[currentLang].modalPhotoText}</span>`;
-    }
-
-    // Apply Instant Translations to bio/notes inside modal
-    if (person.notes) {
-        const translatedNotes = translateContentInstantly(person.notes, person.name);
-        const container = document.getElementById('tributes-list-container');
-        if (container) {
-            const notesDiv = document.createElement('div');
-            notesDiv.className = 'bg-red-950/20 border border-red-500/20 p-2.5 rounded-lg mb-3 text-right text-xs text-gray-200 font-semibold';
-            notesDiv.innerHTML = `🌟 <strong>سيرة الشهيد المترجمة:</strong><p class="mt-1 font-normal">${translatedNotes}</p>`;
-            container.parentNode.insertBefore(notesDiv, container);
-        }
     }
     
     document.getElementById('martyr-modal-overlay').style.display = 'flex';
@@ -2621,28 +2481,34 @@ canvas.addEventListener('click', (e) => {
 
 // ربط أحداث الإغلاق للنوافذ المنبثقة
 document.getElementById('milestone-modal-close').addEventListener('click', () => {
+    window.speechSynthesis.cancel();
+    isMilestoneSpeaking = false;
     document.getElementById('milestone-modal-overlay').style.display = 'none';
 });
 document.getElementById('milestone-modal-overlay').addEventListener('click', (e) => {
     if (e.target === document.getElementById('milestone-modal-overlay')) {
+        window.speechSynthesis.cancel();
+        isMilestoneSpeaking = false;
         document.getElementById('milestone-modal-overlay').style.display = 'none';
     }
 });
 
 document.getElementById('martyr-modal-close').addEventListener('click', () => {
+    window.speechSynthesis.cancel();
+    isMartyrSpeaking = false;
     document.getElementById('martyr-modal-overlay').style.display = 'none';
 });
 document.getElementById('martyr-modal-overlay').addEventListener('click', (e) => {
     if (e.target === document.getElementById('martyr-modal-overlay')) {
+        window.speechSynthesis.cancel();
+        isMartyrSpeaking = false;
         document.getElementById('martyr-modal-overlay').style.display = 'none';
     }
 });
 
 // تحميل البيانات الافتراضية عند البدء
 $(document).ready(() => {
-    initAdaptiveTheme();
     switchMainMode('souls');
-    initOnThisDayWidget();
 });
 </script>
 </body>
