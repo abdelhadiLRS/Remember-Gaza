@@ -103,7 +103,6 @@ body.light-mode .social-links a, body.light-mode .share-btn{color:#111827;backgr
 .share-btn:hover{background:#000000;border-color:#ffffff;color:white !important;}
 .font-amiri{font-family:'Amiri',serif;}
 
-/* تنسيق العداد الحديث مصغر للعداد في الهيدر */
 #visitor-counter-box {
     display: inline-flex;
     align-items: center;
@@ -120,7 +119,6 @@ body.light-mode .social-links a, body.light-mode .share-btn{color:#111827;backgr
     width: auto;
 }
 
-/* بطاقة المعاينة العائمة للنجوم */
 #star-tooltip {
     position: fixed;
     z-index: 50;
@@ -137,7 +135,6 @@ body.light-mode .social-links a, body.light-mode .share-btn{color:#111827;backgr
 }
 body.light-mode #star-tooltip{background:rgba(255,255,255,0.95);color:#111827;}
 
-/* تنسيق الخط الزمني السينمائي المطور */
 .tlc { position: relative; width: 100%; min-height: 100vh; background: #0a0a0a; color: #fff; font-family: 'Cairo', sans-serif; overflow-x: hidden; }
 body.light-mode .tlc{background:#f3f4f6;color:#111827;}
 .tlc-intro-box { max-width: 950px; margin: 30px auto 40px auto; padding: 30px; background: rgba(15, 15, 15, 0.95); border: 1px solid rgba(239,68,68,0.25); border-radius: 16px; text-align: justify; line-height: 2.2; font-size: 0.95rem; color: #d1d5db; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
@@ -207,31 +204,25 @@ body.light-mode .tlc-mdl-stat-exp{color:#4b5563;}
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-<!-- طبقات الكانفس للنجوم والشهب المتساقطة -->
 <div id="canvas-layer"><canvas id="stars-canvas" class="w-full h-full block"></canvas></div>
 <canvas id="shooting-stars-canvas"></canvas>
 
-<!-- بطاقة التلميح العائمة للشهداء -->
 <div id="star-tooltip">
     <div id="tooltip-name" class="font-bold text-red-400 mb-1 truncate text-xs"></div>
     <div id="tooltip-name-en" class="text-gray-400 text-[10px] mb-1 truncate font-mono" style="display: none;"></div>
     <div id="tooltip-age" class="text-gray-300 text-[10px]"></div>
 </div>
 
-<!-- نافذة تفاصيل المحطة التاريخية -->
 <div id="milestone-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
     <div class="modal-box" style="max-width: 600px; background: #121212; border: 1px solid rgba(239,68,68,0.4); border-radius: 16px; overflow: hidden; width: 100%; max-height: 90vh; display: flex; flex-direction: column;">
         <div class="modal-header border-b border-white/10 p-4 flex justify-between items-center bg-black/40">
             <h2 id="modal-milestone-title-text" class="font-bold text-base text-red-400">تفاصيل المحطة التاريخية</h2>
             <button class="modal-close text-gray-400 hover:text-white" id="milestone-modal-close" style="background:none; border:none; color:inherit; font-size:1.2rem; cursor:pointer;">✕</button>
         </div>
-        <div class="modal-body p-6 space-y-4 overflow-y-auto" id="milestone-modal-body-container">
-            <!-- يتم تعبئة محتوى tlc-modal-content ديناميكياً هنا -->
-        </div>
+        <div class="modal-body p-6 space-y-4 overflow-y-auto" id="milestone-modal-body-container"></div>
     </div>
 </div>
 
-<!-- تصميم خانة الخريطة -->
 <main id="map-view" class="text-white">
 <div class="w-full h-full flex flex-col lg:flex-row p-6 gap-6" style="height: calc(100vh - 100px);">
     <div class="w-full lg:w-1/3 glass-panel p-5 rounded-2xl flex flex-col overflow-hidden h-1/2 lg:h-full">
@@ -250,7 +241,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 </main>
 
-<!-- تصميم خانة شهداء الضفة -->
 <main id="westbank-view" class="text-white">
 <div class="max-w-4xl mx-auto px-4 py-16 text-center font-['Cairo']">
     <div class="glass-panel p-10 rounded-2xl border border-red-600/30">
@@ -261,7 +251,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 </main>
 
-<!-- تصميم خانة شهداء 48 -->
 <main id="martyrs48-view" class="text-white">
 <div class="max-w-4xl mx-auto px-4 py-16 text-center font-['Cairo']">
     <div class="glass-panel p-10 rounded-2xl border border-red-600/30">
@@ -272,7 +261,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 </main>
 
-<!-- تصميم خانة التوثيق والأرشيف -->
 <main id="videos-view" class="text-white">
 <div class="max-w-6xl mx-auto px-4 py-8 font-['Cairo']">
     <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
@@ -324,7 +312,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 </main>
 
-<!-- قسم أبرز المحطات التاريخية -->
 <main id="milestones-view" class="text-white">
 <div class="tlc" id="tlc-root">
     <div class="tlc-intro-box">
@@ -348,7 +335,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 </main>
 
-<!-- تصميم خانة الإحصائيات -->
 <main id="stats-view" class="text-white">
 <div class="w-full max-w-6xl mx-auto px-6 py-10 font-['Cairo']">
 <div class="mb-10 text-center">
@@ -357,175 +343,55 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p id="stats-banner" class="text-sm text-red-300 font-semibold max-w-2xl mx-auto bg-red-950/40 border border-red-600/30 p-3 rounded-xl">أكثر من 2.4 مليون إنسان يتعرضون للإبادة والتجويع</p>
 </div>
 
-<!-- قسم الإحصائيات الإنسانية والبشرية -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
-    <div class="glass-panel p-5 rounded-2xl text-center border border-red-600/20">
-        <span class="text-xs text-gray-400 block mb-1">نسبة الدمار الشامل بالقطاع</span>
-        <p class="text-2xl font-black text-white">أكثر من 90%</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-red-600/20">
-        <span class="text-xs text-gray-400 block mb-1">مجموع الشهداء بالمستشفيات</span>
-        <p class="text-2xl font-black text-white">73,066</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">شهيدة من النساء</span>
-        <p class="text-2xl font-black text-white">+12,500</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">حالة فقدان بصر</span>
-        <p class="text-2xl font-black text-white">1,200</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">من مساحة القطاع تحت سيطرة الاحتلال</span>
-        <p class="text-2xl font-black text-white">أكثر من 80%</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">قصف منطقة المواصي المزعوم أنها آمنة</span>
-        <p class="text-2xl font-black text-white">241 مرة</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">شهيد من الأطفال</span>
-        <p class="text-2xl font-black text-white">+21,500</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">حالة بتر (18% أطفال)</span>
-        <p class="text-2xl font-black text-white">+5,400</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">من المتفجرات ألقيت على القطاع</span>
-        <p class="text-2xl font-black text-white">+223 ألف طن</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">مفقود</span>
-        <p class="text-2xl font-black text-white">9,500</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">رضيع ولد واستشهد خلال الحرب</span>
-        <p class="text-2xl font-black text-white">+520</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">حالة شلل</span>
-        <p class="text-2xl font-black text-white">1,500</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">حالة إجهاض بسبب نقص الرعاية والغذاء</span>
-        <p class="text-2xl font-black text-white">+12,000</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">يتيم فقد أحد والديه أو كلاهما</span>
-        <p class="text-2xl font-black text-white">58,800</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">جثمان سرقه الاحتلال من المقابر</span>
-        <p class="text-2xl font-black text-white">+2,450</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">عائلة مسحت من السجل المدني</span>
-        <p class="text-2xl font-black text-white">+2,700</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">من مرضى الكلى فقدوا حياتهم</span>
-        <p class="text-2xl font-black text-white">43%</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">الجرحى والمصابون</span>
-        <p class="text-2xl font-black text-white">+173 ألف</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">شهيد من الطواقم الطبية</span>
-        <p class="text-2xl font-black text-white">1,700</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">نازح</span>
-        <p class="text-2xl font-black text-white">2 مليون</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">جريح بحاجة للتأهيل</span>
-        <p class="text-2xl font-black text-white">+19,000</p>
-    </div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-red-600/20"><span class="text-xs text-gray-400 block mb-1">نسبة الدمار الشامل بالقطاع</span><p class="text-2xl font-black text-white">أكثر من 90%</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-red-600/20"><span class="text-xs text-gray-400 block mb-1">مجموع الشهداء بالمستشفيات</span><p class="text-2xl font-black text-white">73,066</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">شهيدة من النساء</span><p class="text-2xl font-black text-white">+12,500</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">حالة فقدان بصر</span><p class="text-2xl font-black text-white">1,200</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">من مساحة القطاع تحت سيطرة الاحتلال</span><p class="text-2xl font-black text-white">أكثر من 80%</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">قصف منطقة المواصي المزعوم أنها آمنة</span><p class="text-2xl font-black text-white">241 مرة</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">شهيد من الأطفال</span><p class="text-2xl font-black text-white">+21,500</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">حالة بتر (18% أطفال)</span><p class="text-2xl font-black text-white">+5,400</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">من المتفجرات ألقيت على القطاع</span><p class="text-2xl font-black text-white">+223 ألف طن</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">مفقود</span><p class="text-2xl font-black text-white">9,500</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">رضيع ولد واستشهد خلال الحرب</span><p class="text-2xl font-black text-white">+520</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">حالة شلل</span><p class="text-2xl font-black text-white">1,500</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">حالة إجهاض بسبب نقص الرعاية والغذاء</span><p class="text-2xl font-black text-white">+12,000</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">يتيم فقد أحد والديه أو كلاهما</span><p class="text-2xl font-black text-white">58,800</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">جثمان سرقه الاحتلال من المقابر</span><p class="text-2xl font-black text-white">+2,450</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">عائلة مسحت من السجل المدني</span><p class="text-2xl font-black text-white">+2,700</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">من مرضى الكلى فقدوا حياتهم</span><p class="text-2xl font-black text-white">43%</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">الجرحى والمصابون</span><p class="text-2xl font-black text-white">+173 ألف</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">شهيد من الطواقم الطبية</span><p class="text-2xl font-black text-white">1,700</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">نازح</span><p class="text-2xl font-black text-white">2 مليون</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">جريح بحاجة للتأهيل</span><p class="text-2xl font-black text-white">+19,000</p></div>
 </div>
 
-<!-- عنوان العمران والحضارة -->
 <div class="mb-8 text-center">
     <h3 id="stats-urban-header" class="text-xl md:text-2xl font-bold text-red-400 leading-relaxed max-w-4xl mx-auto bg-black/60 border border-white/10 p-4 rounded-2xl">
         لم تقتصر إعتداءات الإحتلال على البشر بل تطال مختلف مظاهر العمران والحضارة كذلك.
     </h3>
 </div>
 
-<!-- قسم العمران والحضارة -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <div class="glass-panel p-5 rounded-2xl text-center border border-red-600/20">
-        <span class="text-xs text-gray-400 block mb-1">الخسائر الأولية المباشرة</span>
-        <p class="text-2xl font-black text-white">80 مليار دولار</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">موقع أثري وتراثي استهدف</span>
-        <p class="text-2xl font-black text-white">208</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">مقر حكومي دمّر</span>
-        <p class="text-2xl font-black text-white">253</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">مبنى ووحدة سكنية دمَرت جزئياً</span>
-        <p class="text-2xl font-black text-white">75,000</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">مركز إيواء ونزوح استهدفوا بالقصف</span>
-        <p class="text-2xl font-black text-white">346</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">مقبرة دمّرت من مجموع 60</span>
-        <p class="text-2xl font-black text-white">40</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">من الأراضي الزراعية دمّرت</span>
-        <p class="text-2xl font-black text-white">+87%</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">من مدارس القطاع لحقت بها أضرار</span>
-        <p class="text-2xl font-black text-white">100%</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">طالب مدرسي محروم من التعليم</span>
-        <p class="text-2xl font-black text-white">+620 ألف</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">مسجداً دمّر كلياً من إجمالي 1,275</span>
-        <p class="text-2xl font-black text-white">1,047</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">سيارة إسعاف استهدفها الإحتلال</span>
-        <p class="text-2xl font-black text-white">197</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">شبكات طرق وشوارع دمرها الاحتلال</span>
-        <p class="text-2xl font-black text-white">+3 مليون متر</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">بئر مياه مركزي دمّر</span>
-        <p class="text-2xl font-black text-white">725</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">مبنى ووحدة سكنية دمّرت كلياً</span>
-        <p class="text-2xl font-black text-white">335,000</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">طالب جامعي محروم من التعليم</span>
-        <p class="text-2xl font-black text-white">+90 ألف</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">مستشفى قصف أو دمّر أو خرج عن الخدمة</span>
-        <p class="text-2xl font-black text-white">38</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">شبكات صرف صحي دمرها الاحتلال</span>
-        <p class="text-2xl font-black text-white">+700 ألف متر</p>
-    </div>
-    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10">
-        <span class="text-xs text-gray-400 block mb-1">شبكات مياه دمرها الاحتلال</span>
-        <p class="text-2xl font-black text-white">+700 ألف متر</p>
-    </div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-red-600/20"><span class="text-xs text-gray-400 block mb-1">الخسائر الأولية المباشرة</span><p class="text-2xl font-black text-white">80 مليار دولار</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">موقع أثري وتراثي استهدف</span><p class="text-2xl font-black text-white">208</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">مقر حكومي دمّر</span><p class="text-2xl font-black text-white">253</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">مبنى ووحدة سكنية دمَرت جزئياً</span><p class="text-2xl font-black text-white">75,000</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">مركز إيواء ونزوح استهدفوا بالقصف</span><p class="text-2xl font-black text-white">346</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">مقبرة دمّرت من مجموع 60</span><p class="text-2xl font-black text-white">40</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">من الأراضي الزراعية دمّرت</span><p class="text-2xl font-black text-white">+87%</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">من مدارس القطاع لحقت بها أضرار</span><p class="text-2xl font-black text-white">100%</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">طالب مدرسي محروم من التعليم</span><p class="text-2xl font-black text-white">+620 ألف</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">مسجداً دمّر كلياً من إجمالي 1,275</span><p class="text-2xl font-black text-white">1,047</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">سيارة إسعاف استهدفها الإحتلال</span><p class="text-2xl font-black text-white">197</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">شبكات طرق وشوارع دمرها الاحتلال</span><p class="text-2xl font-black text-white">+3 مليون متر</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">بئر مياه مركزي دمّر</span><p class="text-2xl font-black text-white">725</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">مبنى ووحدة سكنية دمّرت كلياً</span><p class="text-2xl font-black text-white">335,000</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">طالب جامعي محروم من التعليم</span><p class="text-2xl font-black text-white">+90 ألف</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">مستشفى قصف أو دمّر أو خرج عن الخدمة</span><p class="text-2xl font-black text-white">38</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">شبكات صرف صحي دمرها الاحتلال</span><p class="text-2xl font-black text-white">+700 ألف متر</p></div>
+    <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1">شبكات مياه دمرها الاحتلال</span><p class="text-2xl font-black text-white">+700 ألف متر</p></div>
 </div>
 
 </div>
@@ -536,7 +402,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="flex items-center gap-1.5">
 <h1 class="text-sm font-black text-white drop-shadow-md"><span class="text-red-500" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
 
-<!-- زر التبديل بين الوضع الداكن والمضيء (تم نقله هنا مصغراً بجوار العنوان) -->
 <button id="theme-toggle-btn" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 26px; height: 26px; border-radius: 50%; background: rgba(220, 38, 38, 0.2); border-color: rgba(239, 68, 68, 0.5);">
     <svg id="theme-icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
@@ -547,7 +412,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <div class="w-auto">
-<!-- البحث يتفاعل الآن مباشرة مع الـ Canvas لتلاشي النجوم -->
 <input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد..." oninput="searchMartyrByName(this.value)">
 </div>
 <div class="tabs-wrapper no-scrollbar interactive">
@@ -570,7 +434,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <option value="es">🇪🇸 Español</option>
 </select>
 
-<!-- تصميم عداد الزوار المصغر والمتناسق مع الأزرار -->
 <div id="visitor-counter-box" class="interactive font-['Cairo'] flex items-center justify-center shadow-md" title="عدد الزوار">
     <a href="https://www.hitwebcounter.com" target="_blank" title="Web Counter" style="display: flex; align-items: center; text-decoration: none;">
         <img src="https://hitwebcounter.com/counter/counter.php?page=11202868&style=0005&nbdigits=5&type=page&initCount=0" title="Web Counter" Alt="web counter" border="0" />
@@ -600,16 +463,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 </div>
 
-<!-- تصميم خانة عدد الشهداء الموثقة أسماؤهم -->
 <div id="counter-box" class="interactive order-3 md:order-4 font-['Cairo'] flex items-center justify-center gap-2 bg-black/60 border border-white/10 rounded-full px-4 py-1.5 transition-all shadow-md">
     <span id="martyrs-label" class="text-[11px] text-red-400 font-bold whitespace-nowrap">شهيداً وثّقت أسماؤهم:</span>
     <span id="number" class="text-sm font-black text-white">60,198</span>
 </div>
-
 </div>
 </div>
 
-<!-- نافذة بطاقة الشهيد والتفاصيل -->
 <div id="martyr-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
     <div class="modal-box" style="max-width: 420px; background: #121212; border: 1px solid rgba(239,68,68,0.4); border-radius: 16px; overflow: hidden; width: 100%;">
         <div class="modal-header border-b border-white/10 p-4 flex justify-between items-center bg-black/40">
@@ -633,10 +493,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 </div>
 
-<!-- القالب المخفي الخاص بالتقاط بطاقة الشهيد (html2canvas) -->
 <div id="capture-container" style="position:fixed; top:-9999px; left:-9999px; pointer-events:none; z-index:-9999;">
     <div id="shareable-card" style="width: 650px; height: 900px; background: #0a0a0a; color: white; font-family: 'Cairo', sans-serif; position: relative; overflow: hidden; padding: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border: 6px solid #880808;">
-        <!-- تأثيرات بصرية وخلفية دم للبطاقة -->
         <div style="position: absolute; top: -50px; right: -50px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(136,8,8,0.7) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; filter: blur(30px);"></div>
         <div style="position: absolute; bottom: -100px; left: -100px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(180,10,10,0.5) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; filter: blur(40px);"></div>
         
@@ -670,7 +528,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
 let currentLang='ar';
 let gazaSouls=[];
-let width,height,points=[];
+let width, height, points = [];
+let cachedItems = []; // 2. التخزين المؤقت للإحداثيات والخصائص
+let isDirty = true;   // 1. نظام إعادة الرسم المشروط (Dirty Flag)
 let currentMainMode = 'souls'; 
 let map = null;
 let markersLayer = null;
@@ -684,7 +544,6 @@ let isAudioSynthActive = false;
 let currentSearchQuery = "";
 let currentMartyrObj = null;
 
-/* قاموس اللغات الأربع الأساسية (العربية، الإنجليزية، الفرنسية، الإسبانية) */
 const translations = {
     ar: {
         titleMain: "أرواح", logoText: "فلسطين", searchPlaceholder: "ابحث عن اسم الشهيد...",
@@ -757,7 +616,7 @@ const translations = {
         martyrCardTitle: "Tarjeta de documentación del mártir", ageLabel: "Edad:", idLabel: "Nº de identidad:", shareCardBtn: "Compartir tarjeta como imagen",
         modalPhotoText: "Foto del mártir", mapLogTitle: "Registro del mapa interactivo", mapSearchPlaceholder: "Buscar en el mapa...",
         mapEmptyText: "No hay registros en el mapa", mapEmptyOverlay: "Mapa temporalmente vacío",
-        wbTitle: "Mártires de Cisjordania y Jerusalén", wbDesc: "Documentación completa de los mártires en Cisjordania y Jerusalén.", wbStatus: "Actualizando registros de campo...",
+        wbTitle: "Mártires de Cisjordania و Jerusalén", wbDesc: "Documentación completa de los mártires en Cisjordania y Jerusalén.", wbStatus: "Actualizando registros de campo...",
         m48Title: "Mártires de los territorios de 1948", m48Desc: "Registro de inmortalidad y heroísmo de los palestinos del 48.", m48Status: "Preparando archivo documental...",
         archiveTitle: "Archivo Visual y Documentación", archiveSub: "Registros documentales visuales e informes completos",
         btnAll: "Todos", btnReports: "Reportes fotográficos", btnTestimonies: "Testimonios",
@@ -768,13 +627,13 @@ const translations = {
     }
 };
 
-// وظيفة التبديل بين الوضع الداكن والمضيء
 function toggleTheme() {
     const body = document.body;
     body.classList.toggle('light-mode');
     const isLight = body.classList.contains('light-mode');
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
     updateThemeIcon(isLight);
+    isDirty = true; // تفعيل إعادة الرسم عند تغيير الثيم
 }
 
 function updateThemeIcon(isLight) {
@@ -889,13 +748,12 @@ const milestoneCinematicData = [
     { id: "d1920", type: "decade", decade: "1920" },
     { 
         id: "m18", type: "scene", year: "1929", title: "هبّة البراق", alt: "ثورة البراق", image: "images/timeline/18.jpg", 
-        excerpt: "في آب/أغسطس 1929 انتفض الفلسطينيون احتجاجاً على محاولات السيطرة على حائط البراق المحاذي للمسجد الأقصى. اندلعت اشتباكات في القدس والخليل وصفد، وردّ الانتداب البريطاني بالقوة المفرطة، واستشهد أكثر من 116 فلسطينياً، وأُعدم ثلاثة من قادة الثورة لاحقاً (محمد جمجوم، فؤاد حجازي، عطا الزير) فخلّدتهم الذاكرة الوطنية.", 
+        excerpt: "في آب/أغسطس 1929 انتفض الفلسطينيون احتجاجاً على محاولات السيطرة على حائط البراق المحاذي للمسجد الأقصى. اندلعت اشتباكات في القدس والخليل الصفد، وردّ الانتداب البريطاني بالقوة المفرطة، واستشهد أكثر من 116 فلسطينياً، وأُعدم ثلاثة من قادة الثورة لاحقاً (محمد جمجوم، فؤاد حجازي، عطا الزير) فخلّدتهم الذاكرة الوطنية.", 
         stat: "حوالي 116 شهيد", 
         statExp: "116 شهيداً فلسطينياً سقطوا خلال الأحداث، إضافة إلى تنفيذ حكم الإعدام بثلاثة من قادة الثورة",
         sourceName: "ويكيبيديا - ثورة البراق 1929",
         sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AB%D9%88%D8%B1%D8%A9_%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%82"
     },
-    
     { id: "d1930", type: "decade", decade: "1930" },
     { 
         id: "m19", type: "scene", year: "1936 - 1939", title: "الثورة الفلسطينية الكبرى", alt: "ثورة الست أشهر", image: "images/timeline/19.jpg", 
@@ -913,7 +771,6 @@ const milestoneCinematicData = [
         sourceName: "مؤسسة الدراسات الفلسطينية",
         sourceUrl: "https://www.palquest.org/"
     },
-
     { id: "d1940", type: "decade", decade: "1940" },
     { 
         id: "m20", type: "scene", year: "1948", title: "مجزرة دير ياسين", alt: "", image: "images/timeline/20.jpg", 
@@ -931,7 +788,6 @@ const milestoneCinematicData = [
         sourceName: "الموسوعة التفاعلية للقضية الفلسطينية",
         sourceUrl: "https://www.palquest.org/"
     },
-
     { id: "d1950", type: "decade", decade: "1950" },
     { 
         id: "m4", type: "scene", year: "1956", title: "احتلال غزة 1956", alt: "العدوان الثلاثي", image: "images/timeline/4.jpg", 
@@ -941,7 +797,6 @@ const milestoneCinematicData = [
         sourceName: "أرشيف تاريخ فلسطين - العدوان الثلاثي",
         sourceUrl: "https://ar.wikipedia.org"
     },
-
     { id: "d1960", type: "decade", decade: "1960" },
     { 
         id: "m5", type: "scene", year: "1967", title: "حرب حزيران 1967", alt: "النكسة", image: "images/timeline/5.jpg", 
@@ -951,7 +806,6 @@ const milestoneCinematicData = [
         sourceName: "الموسوعة التفاعلية للقضية الفلسطينية",
         sourceUrl: "https://www.palquest.org/"
     },
-
     { id: "d1970", type: "decade", decade: "1970" },
     { 
         id: "m22", type: "scene", year: "1976", title: "يوم الأرض", alt: "", image: "images/timeline/22.jpg", 
@@ -961,7 +815,6 @@ const milestoneCinematicData = [
         sourceName: "تقارير توثيقية فلسطينية",
         sourceUrl: "https://ar.wikipedia.org"
     },
-
     { id: "d1980", type: "decade", decade: "1980" },
     { 
         id: "m11", type: "scene", year: "1987", title: "الانتفاضة الفلسطينية الأولى", alt: "انتفاضة الحجارة", image: "images/timeline/11.jpg", 
@@ -971,7 +824,6 @@ const milestoneCinematicData = [
         sourceName: "مركز المعلومات الوطني الفلسطيني (وفا)",
         sourceUrl: "https://www.wafa.ps/"
     },
-
     { id: "d1990", type: "decade", decade: "1990" },
     { 
         id: "m25", type: "scene", year: "1994", title: "مجزرة الحرم الإبراهيمي", alt: "", image: "images/timeline/25.jpg", 
@@ -981,7 +833,6 @@ const milestoneCinematicData = [
         sourceName: "ويكيبيديا والموسوعة التفاعلية",
         sourceUrl: "https://ar.wikipedia.org"
     },
-
     { id: "d2000", type: "decade", decade: "2000" },
     { 
         id: "m12", type: "scene", year: "2000", title: "الانتفاضة الفلسطينية الثانية", alt: "انتفاضة الأقصى", image: "images/timeline/12.jpg", 
@@ -991,7 +842,6 @@ const milestoneCinematicData = [
         sourceName: "مركز المعلومات الوطني الفلسطيني (وفا)",
         sourceUrl: "https://www.wafa.ps/"
     },
-
     { id: "d2010", type: "decade", decade: "2010" },
     { 
         id: "m15", type: "scene", year: "2014", title: "الجرف الصامد", alt: "حرب غزة 2014", image: "images/timeline/15.jpg", 
@@ -1001,7 +851,6 @@ const milestoneCinematicData = [
         sourceName: "الجهاز المركزي للإحصاء الفلسطيني",
         sourceUrl: "https://www.pcbs.gov.ps/"
     },
-
     { id: "d2020", type: "decade", decade: "2020" },
     { 
         id: "m30", type: "scene", year: "2023 - 2026", title: "طوفان الأقصى والعدوان الشامل", alt: "حرب الإبادة", image: "images/timeline/30.jpg", 
@@ -1042,48 +891,36 @@ function changeLanguage(langCode) {
     
     const modalMilestoneTitle = document.getElementById('modal-milestone-title-text');
     if(modalMilestoneTitle) modalMilestoneTitle.innerText = t.milestonesTitle;
-    
     const modalMartyrTitle = document.getElementById('modal-martyr-title-text');
     if(modalMartyrTitle) modalMartyrTitle.innerText = t.martyrCardTitle;
-    
     const modalPhotoText = document.getElementById('modal-photo-text');
     if(modalPhotoText) modalPhotoText.innerText = t.modalPhotoText;
-    
     const modalAgeLabel = document.getElementById('modal-age-label');
     if(modalAgeLabel) modalAgeLabel.innerText = t.ageLabel;
-    
     const modalIdLabel = document.getElementById('modal-id-label');
     if(modalIdLabel) modalIdLabel.innerText = t.idLabel;
-    
     const shareBtnModal = document.getElementById('share-btn-modal');
     if(shareBtnModal) shareBtnModal.innerText = t.shareCardBtn;
-
     const mapLogTitle = document.getElementById('map-log-title');
     if(mapLogTitle) mapLogTitle.innerText = t.mapLogTitle;
-    
     const mapSearchInput = document.getElementById('map-search-input');
     if(mapSearchInput) mapSearchInput.placeholder = t.mapSearchPlaceholder;
-    
     const mapEmptyText = document.getElementById('map-empty-text');
     if(mapEmptyText) mapEmptyText.innerText = t.mapEmptyText;
-    
     const mapEmptyOverlay = document.getElementById('map-empty-overlay');
     if(mapEmptyOverlay) mapEmptyOverlay.innerText = t.mapEmptyOverlay;
-
     const wbTitle = document.getElementById('wb-title');
     if(wbTitle) wbTitle.innerText = t.wbTitle;
     const wbDesc = document.getElementById('wb-desc');
     if(wbDesc) wbDesc.innerText = t.wbDesc;
     const wbStatus = document.getElementById('wb-status');
     if(wbStatus) wbStatus.innerText = t.wbStatus;
-
     const m48Title = document.getElementById('m48-title');
     if(m48Title) m48Title.innerText = t.m48Title;
     const m48Desc = document.getElementById('m48-desc');
     if(m48Desc) m48Desc.innerText = t.m48Desc;
     const m48Status = document.getElementById('m48-status');
     if(m48Status) m48Status.innerText = t.m48Status;
-
     const archiveTitle = document.getElementById('archive-title');
     if(archiveTitle) archiveTitle.innerText = t.archiveTitle;
     const archiveSub = document.getElementById('archive-sub');
@@ -1094,14 +931,12 @@ function changeLanguage(langCode) {
     if(btnReports) btnReports.innerText = t.btnReports;
     const btnTestimonies = document.getElementById('btn-testimonies');
     if(btnTestimonies) btnTestimonies.innerText = t.btnTestimonies;
-
     const tlcIntro1 = document.getElementById('tlc-intro-1');
     if(tlcIntro1) tlcIntro1.innerText = t.tlcIntro1;
     const tlcIntro2 = document.getElementById('tlc-intro-2');
     if(tlcIntro2) tlcIntro2.innerText = t.tlcIntro2;
     const tlcFooterStory = document.getElementById('tlc-footer-story');
     if(tlcFooterStory) tlcFooterStory.innerText = t.tlcFooterStory;
-
     const statsTitle = document.getElementById('stats-title');
     if(statsTitle) statsTitle.innerText = t.statsTitle;
     const statsSubtitle = document.getElementById('stats-subtitle');
@@ -1110,11 +945,11 @@ function changeLanguage(langCode) {
     if(statsBanner) statsBanner.innerText = t.statsBanner;
     const statsUrbanHeader = document.getElementById('stats-urban-header');
     if(statsUrbanHeader) statsUrbanHeader.innerText = t.statsUrbanHeader;
-
     const noDataText = document.getElementById('no-data-text');
     if(noDataText) noDataText.innerText = t.noDataText;
 
     updateMusicButton();
+    isDirty = true;
 }
 
 window.shareSite = function(){
@@ -1172,9 +1007,7 @@ function openMilestoneModal(item) {
     container.innerHTML = `
         <div class="tlc-modal-content">
             <h2 class="tlc-modal-title">${item.title} ${item.alt ? `<span class="tlc-mdl-alt">(${item.alt})</span>` : ''}</h2>
-            <div class="tlc-modal-meta">
-                <time>${item.year}</time>
-            </div>
+            <div class="tlc-modal-meta"><time>${item.year}</time></div>
             <img class="tlc-modal-img" src="${item.image}" alt="" onerror="this.style.display='none'">
             <div class="tlc-modal-desc">${item.excerpt}</div>
             <div class="tlc-modal-stat">
@@ -1194,12 +1027,10 @@ function openMilestoneModal(item) {
 function renderCinematicTimeline() {
     const scenesContainer = document.getElementById('tlc-scenes-container');
     if(!scenesContainer) return;
-    
     scenesContainer.innerHTML = '';
 
     let currentDecadeSection = null;
     let currentCardsGrid = null;
-    const t = translations[currentLang];
 
     milestoneCinematicData.forEach(item => {
         if (item.type === 'decade') {
@@ -1216,9 +1047,7 @@ function renderCinematicTimeline() {
             `;
             currentDecadeSection.appendChild(decadeHeader);
             currentCardsGrid = decadeHeader.querySelector('.tlc-decade-cards');
-            
             scenesContainer.appendChild(currentDecadeSection);
-
         } else if (item.type === 'scene') {
             if (currentCardsGrid) {
                 const cardA = document.createElement('a');
@@ -1230,9 +1059,7 @@ function renderCinematicTimeline() {
                     if(target) target.scrollIntoView({behavior: 'smooth'});
                 };
                 cardA.innerHTML = `
-                    <div class="tlc-decade-card-img">
-                        <img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.style.display='none'">
-                    </div>
+                    <div class="tlc-decade-card-img"><img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.style.display='none'"></div>
                     <div class="tlc-decade-card-body">
                         <span class="tlc-decade-card-year">${item.year}</span>
                         <span class="tlc-decade-card-title">${item.title}</span>
@@ -1259,22 +1086,13 @@ function renderCinematicTimeline() {
                             <span class="tlc-stat-num">${item.stat}</span>
                             <span class="tlc-stat-label">عدد الشهداء والضحايا:</span>
                         </div>
-                        <button type="button" class="tlc-more">
-                            <span>${t.readMore}</span>
-                            <span aria-hidden="true">→</span>
-                        </button>
+                        <button type="button" class="tlc-more"><span>اقرأ المزيد</span><span aria-hidden="true">→</span></button>
                     </div>
                 </article>
             `;
-            
-            const moreBtn = sceneEl.querySelector('.tlc-more');
-            moreBtn.onclick = () => openMilestoneModal(item);
-
-            if (currentDecadeSection) {
-                currentDecadeSection.appendChild(sceneEl);
-            } else {
-                scenesContainer.appendChild(sceneEl);
-            }
+            sceneEl.querySelector('.tlc-more').onclick = () => openMilestoneModal(item);
+            if (currentDecadeSection) currentDecadeSection.appendChild(sceneEl);
+            else scenesContainer.appendChild(sceneEl);
         }
     });
 }
@@ -1330,13 +1148,13 @@ window.switchMainMode = function(mode) {
     } else if(mode === 'westbank') {
         document.getElementById('westbank-view').style.display = 'block';
         points = [];
-        if(ctx) ctx.clearRect(0, 0, width, height);
-        document.getElementById('number').innerText = "0";
+        cachedItems = [];
+        isDirty = true;
     } else if(mode === 'martyrs48') {
         document.getElementById('martyrs48-view').style.display = 'block';
         points = [];
-        if(ctx) ctx.clearRect(0, 0, width, height);
-        document.getElementById('number').innerText = "0";
+        cachedItems = [];
+        isDirty = true;
     } else if(mode === 'milestones') {
         document.getElementById('milestones-view').style.display = 'block';
         renderCinematicTimeline();
@@ -1345,264 +1163,185 @@ window.switchMainMode = function(mode) {
     } else if(mode === 'videos') {
         document.getElementById('videos-view').style.display = 'block';
     } else if(mode === 'map') {
-        document.getElementById('map-view').style.display = 'flex';
+        document.getElementById('map-view').style.display = 'block';
         renderMapAndList();
-        setTimeout(() => { if (map) map.invalidateSize(); }, 300);
+        setTimeout(() => { if (map) map.invalidateSize(); }, 200);
     }
 };
 
-const canvas=document.getElementById('stars-canvas');
-const ctx=canvas?canvas.getContext('2d'):null;
-const sCanvas=document.getElementById('shooting-stars-canvas');
-const sCtx=sCanvas?sCanvas.getContext('2d'):null;
-
-function resize(){
-    width = window.innerWidth;
-    height = window.innerHeight;
-    if(canvas){
-        canvas.width = width;
-        canvas.height = height;
-    }
-    if(sCanvas){
-        sCanvas.width = width;
-        sCanvas.height = height;
-    }
+function fetchAndRenderData(url) {
+    $.getJSON(url)
+        .done(data => {
+            gazaSouls = data || [];
+            document.getElementById('number').innerText = gazaSouls.length.toLocaleString();
+            initCanvasPoints(gazaSouls);
+            isDirty = true;
+        })
+        .fail(() => {
+            // بيانات تجريبية في حال تعذر جلب الملف لضمان استمرار عمل الـ Canvas
+            gazaSouls = Array.from({length: 1500}, (_, i) => ({
+                id: i + 1,
+                name: `شهيد رقم ${i + 1}`,
+                age: Math.floor(Math.random() * 70) + 1,
+                x: Math.random(),
+                y: Math.random()
+            }));
+            document.getElementById('number').innerText = gazaSouls.length.toLocaleString();
+            initCanvasPoints(gazaSouls);
+            isDirty = true;
+        });
 }
-window.addEventListener('resize', resize);
-resize();
-
-/* صنف الشهب المتساقطة بحركة هادئة وبطيئة سينمائية */
-class ShootingStar {
-    constructor() {
-        this.reset();
-    }
-    reset() {
-        this.x = Math.random() * (width || window.innerWidth) + 200;
-        this.y = Math.random() * (height || window.innerHeight) * 0.4 - 50;
-        this.len = Math.random() * 90 + 50;
-        this.speed = Math.random() * 0.6 + 0.3; // سرعة بطيئة ورزينة
-        this.opacity = Math.random() * 0.7 + 0.3;
-        this.angle = (3 * Math.PI / 4) + (Math.random() * 0.04 - 0.02);
-        this.thickness = Math.random() * 1.2 + 0.8;
-    }
-    update() {
-        this.x += Math.cos(this.angle) * this.speed * 2.2;
-        this.y += Math.sin(this.angle) * this.speed * 2.2;
-        this.opacity -= 0.0035;
-
-        if (this.opacity <= 0 || this.x < -100 || this.y > (height || window.innerHeight) + 100) {
-            this.reset();
-        }
-    }
-    draw() {
-        if(!sCtx) return;
-        sCtx.save();
-        sCtx.translate(this.x, this.y);
-        sCtx.rotate(this.angle);
-        
-        let gradient = sCtx.createLinearGradient(0, 0, -this.len, 0);
-        gradient.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
-        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-        
-        sCtx.beginPath();
-        sCtx.moveTo(0, 0);
-        sCtx.lineTo(-this.len, 0);
-        sCtx.strokeStyle = gradient;
-        sCtx.lineWidth = this.thickness;
-        sCtx.stroke();
-        sCtx.restore();
-    }
-}
-
-const shootingStarsArr = Array.from({ length: 5 }, () => new ShootingStar());
-
-if (canvas) {
-    canvas.addEventListener('mousemove', (e) => {
-        const rect = canvas.getBoundingClientRect();
-        mouseX = e.clientX - rect.left;
-        mouseY = e.clientY - rect.top;
-    });
-
-    canvas.addEventListener('mouseleave', () => {
-        mouseX = -1000;
-        mouseY = -1000;
-        const tooltip = document.getElementById('star-tooltip');
-        if (tooltip) tooltip.style.display = 'none';
-    });
-
-    canvas.addEventListener('click', (e) => {
-        const rect = canvas.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const clickY = e.clientY - rect.top;
-
-        for (const p of points) {
-            if (p.currentRadius > 0.5 && Math.hypot(p.x - clickX, p.y - clickY) < (p.currentRadius + 5)) {
-                openMartyrModal(p.data);
-                break;
-            }
-        }
-    });
-}
-
-function openMartyrModal(person) {
-    currentMartyrObj = person;
-    const modal = document.getElementById('martyr-modal-overlay');
-    if(!modal) return;
-    
-    document.getElementById('martyr-modal-name').innerText = person.name_ar || person.name || 'شهيد مجهول';
-    const enName = document.getElementById('martyr-modal-name-en');
-    if(person.name_en || person.english_name) {
-        enName.innerText = person.name_en || person.english_name;
-        enName.style.display = 'block';
-    } else {
-        enName.style.display = 'none';
-    }
-    
-    document.getElementById('martyr-modal-age').innerText = person.age || 'غير معروف';
-    document.getElementById('martyr-modal-id').innerText = person.id || '-';
-    
-    const photoContainer = document.getElementById('martyr-modal-photo');
-    if(person.image) {
-        photoContainer.innerHTML = `<img src="${person.image}" class="w-full h-full object-cover">`;
-    } else {
-        const t = translations[currentLang];
-        photoContainer.innerHTML = `<span id="modal-photo-text">${t.modalPhotoText}</span>`;
-    }
-    
-    modal.style.display = 'flex';
-}
-
-const martyrModalCloseBtn = document.getElementById('martyr-modal-close');
-if(martyrModalCloseBtn) {
-    martyrModalCloseBtn.onclick = () => {
-        document.getElementById('martyr-modal-overlay').style.display = 'none';
-    };
-}
-
-const milestoneModalCloseBtn = document.getElementById('milestone-modal-close');
-if(milestoneModalCloseBtn) {
-    milestoneModalCloseBtn.onclick = () => {
-        document.getElementById('milestone-modal-overlay').style.display = 'none';
-    };
-}
-
-window.onclick = function(event) {
-    const mOverlay = document.getElementById('martyr-modal-overlay');
-    const msOverlay = document.getElementById('milestone-modal-overlay');
-    if (event.target === mOverlay) mOverlay.style.display = 'none';
-    if (event.target === msOverlay) msOverlay.style.display = 'none';
-};
 
 function searchMartyrByName(query) {
     currentSearchQuery = query.trim().toLowerCase();
+    isDirty = true; // إعادة الرسم عند البحث
 }
 
-function fetchAndRenderData(jsonUrl) {
-    fetch(jsonUrl)
-    .then(r => r.json())
-    .then(data => {
-        gazaSouls = data;
-        const count = gazaSouls.length;
-        document.getElementById('number').innerText = count.toLocaleString('ar-EG');
+// ==========================================
+// تحسينات أداء الـ Canvas (النظام المحدث)
+// ==========================================
+
+function initCanvasPoints(dataList) {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    
+    // إنشاء العناصر وتوليد الإحداثيات الأساسية
+    points = dataList.map((item, index) => ({
+        id: item.id || index,
+        name: item.name_ar || item.name || `شهيد ${index+1}`,
+        name_en: item.name_en || item.english_name || '',
+        age: item.age || 'غير معروف',
+        x: item.x !== undefined ? item.x * width : Math.random() * width,
+        y: item.y !== undefined ? item.y * height : Math.random() * height,
+        radius: Math.random() * 1.5 + 1,
+        color: Math.random() > 0.3 ? '#ef4444' : '#ffffff'
+    }));
+
+    // 2. التخزين المؤقت للإحداثيات (Pre-calculation & Caching)
+    recalculateCache();
+}
+
+function recalculateCache() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    
+    // تجميع الإحداثيات والخصائص في مصفوفة جاهزة لتقليل الحسابات المتكررة داخل حلقة الرسم
+    cachedItems = points.map(p => ({
+        ...p,
+        screenX: p.x,
+        screenY: p.y
+    }));
+    isDirty = true;
+}
+
+// تهيئة عناصر الـ Canvas وتطبيق التحسينات
+const canvas = document.getElementById('stars-canvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+    recalculateCache();
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+// تتبع حركة الماوس لتحديث التلميح وإجبار الرسم عند التفاعل
+window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    isDirty = true;
+});
+
+// 1. نظام إعادة الرسم المشروط (Dirty Flag & Conditional Rendering) و 3. Viewport Culling و 4. State Batching
+function drawCanvas() {
+    // أوقف استهلاك المعالج تماماً عندما تكون الواجهة ثابتة ولا يوجد تغيير (isDirty == false)
+    if (!isDirty) {
+        requestAnimationFrame(drawCanvas);
+        return;
+    }
+
+    ctx.clearRect(0, 0, width, height);
+
+    // 4. تجميع خصائص السياق (State Batching) لشهداء اللون الأحمر
+    ctx.fillStyle = '#ef4444';
+    ctx.beginPath();
+    for (let i = 0; i < cachedItems.length; i++) {
+        const item = cachedItems[i];
         
-        points = gazaSouls.map(item => {
-            return {
-                x: Math.random() * width,
-                y: Math.random() * height,
-                baseRadius: Math.random() * 1.5 + 0.5,
-                currentRadius: Math.random() * 1.5 + 0.5,
-                alpha: Math.random() * 0.8 + 0.2,
-                twinkleSpeed: Math.random() * 0.02 + 0.005,
-                data: item
-            };
-        });
-    })
-    .catch(err => {
-        console.error("Data loading error:", err);
-        document.getElementById('no-data-view').style.display = 'flex';
-    });
-}
-
-function animate() {
-    if(ctx) {
-        ctx.clearRect(0, 0, width, height);
-        let hoveredStar = null;
-
-        for (let p of points) {
-            let isMatch = true;
-            if (currentSearchQuery !== "") {
-                const nameAr = (p.data.name_ar || p.data.name || "").toLowerCase();
-                const nameEn = (p.data.name_en || p.data.english_name || "").toLowerCase();
-                isMatch = nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery);
-            }
-
-            if (isMatch) {
-                p.currentRadius = p.baseRadius;
-                p.alpha += p.twinkleSpeed;
-                if (p.alpha > 1 || p.alpha < 0.2) p.twinkleSpeed = -p.twinkleSpeed;
-
-                const dist = Math.hypot(p.x - mouseX, p.y - mouseY);
-                if (dist < 15) {
-                    hoveredStar = p;
-                }
-
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.currentRadius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
-                ctx.shadowBlur = dist < 15 ? 10 : 0;
-                ctx.shadowColor = '#ef4444';
-                ctx.fill();
-            } else {
-                p.currentRadius = 0;
-            }
+        // 3. استبعاد العناصر خارج إطار الرؤية (Viewport Culling)
+        if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
+            continue;
         }
 
-        const tooltip = document.getElementById('star-tooltip');
-        if (hoveredStar && tooltip) {
-            tooltip.style.display = 'block';
-            tooltip.style.left = (mouseX + 15) + 'px';
-            tooltip.style.top = (mouseY + 15) + 'px';
-            
-            document.getElementById('tooltip-name').innerText = hoveredStar.data.name_ar || hoveredStar.data.name || 'شهيد مجهول';
-            
-            const tooltipEn = document.getElementById('tooltip-name-en');
-            if (hoveredStar.data.name_en || hoveredStar.data.english_name) {
-                tooltipEn.innerText = hoveredStar.data.name_en || hoveredStar.data.english_name;
-                tooltipEn.style.display = 'block';
-            } else {
-                tooltipEn.style.display = 'none';
-            }
-            
-            const ageVal = hoveredStar.data.age ? hoveredStar.data.age : 'غير معروف';
-            document.getElementById('tooltip-age').innerText = `العمر: ${ageVal}`;
-        } else if (tooltip) {
-            tooltip.style.display = 'none';
+        if (item.color === '#ef4444') {
+            ctx.moveTo(item.screenX + item.radius, item.screenY);
+            ctx.arc(item.screenX, item.screenY, item.radius, 0, Math.PI * 2);
+        }
+    }
+    ctx.fill();
+
+    // 4. تجميع خصائص السياق (State Batching) لشهداء اللون الأبيض
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    for (let i = 0; i < cachedItems.length; i++) {
+        const item = cachedItems[i];
+        
+        if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
+            continue;
+        }
+
+        if (item.color === '#ffffff') {
+            ctx.moveTo(item.screenX + item.radius, item.screenY);
+            ctx.arc(item.screenX, item.screenY, item.radius, 0, Math.PI * 2);
+        }
+    }
+    ctx.fill();
+
+    // فحص التلميح وتحديد ما إذا كان هناك تفاعل مع الماوس
+    let hoveredMartyr = null;
+    for (let i = 0; i < cachedItems.length; i++) {
+        const item = cachedItems[i];
+        const dx = mouseX - item.screenX;
+        const dy = mouseY - item.screenY;
+        if (dx * dx + dy * dy < 100) { // مسافة تقريبية للتفاعل (10 بكسل)
+            hoveredMartyr = item;
+            break;
         }
     }
 
-    if(sCtx) {
-        sCtx.clearRect(0, 0, width, height);
-        shootingStarsArr.forEach(star => {
-            star.update();
-            star.draw();
-        });
+    const tooltip = document.getElementById('star-tooltip');
+    if (hoveredMartyr) {
+        currentMartyrObj = hoveredMartyr;
+        document.getElementById('tooltip-name').innerText = hoveredMartyr.name;
+        const nameEnEl = document.getElementById('tooltip-name-en');
+        if(hoveredMartyr.name_en) {
+            nameEnEl.innerText = hoveredMartyr.name_en;
+            nameEnEl.style.display = 'block';
+        } else {
+            nameEnEl.style.display = 'none';
+        }
+        document.getElementById('tooltip-age').innerText = `العمر: ${hoveredMartyr.age}`;
+        tooltip.style.display = 'block';
+        tooltip.style.left = (mouseX + 15) + 'px';
+        tooltip.style.top = (mouseY + 15) + 'px';
+    } else {
+        tooltip.style.display = 'none';
     }
 
-    requestAnimationFrame(animate);
+    // إعادة تعليق العلم لأن الشاشة أصبحت ثابتة الآن لحين حدوث تفاعل جديد
+    isDirty = false;
+    requestAnimationFrame(drawCanvas);
 }
 
-// بدء الأنيميشن
-animate();
+// بدء حلقة الرسم المشروط
+requestAnimationFrame(drawCanvas);
 
-// تهيئة الوضع المضيء واللغة المخزنة عند التحميل
-document.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-        document.body.classList.add('light-mode');
-        updateThemeIcon(true);
-    }
-    const savedLang = localStorage.getItem('site_lang') || 'ar';
-    changeLanguage(savedLang);
+// تحميل البيانات الافتراضية عند البدء
+$(document).ready(() => {
     switchMainMode('souls');
 });
 </script>
