@@ -761,7 +761,7 @@ let isDirty = true;   // 1. نظام إعادة الرسم المشروط (Dirty
 let currentMainMode = 'souls'; 
 let map = null;
 let markersLayer = null;
-let mapJournalists = [];
+let nakbaVillages = [];
 let mapMarkers = [];
 let gazaGeoJsonLayer = null;
 let mouseX = -1000, mouseY = -1000;
@@ -1620,8 +1620,7 @@ function downloadCertificate() {
 
 function initMapIfNeeded() {
     if (!map) {
-        const gazaBounds = [[31.22, 34.20], [31.60, 34.58]];
-        map = L.map('map', { maxBounds: gazaBounds, maxBoundsViscosity: 0.8, minZoom: 9 }).setView([31.45, 34.40], 11);
+        map = L.map('map', { minZoom: 7 }).setView([31.95, 35.15], 8);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '© OpenStreetMap contributors © CARTO',
             subdomains: 'abcd',
@@ -1631,36 +1630,39 @@ function initMapIfNeeded() {
     }
 }
 
-function loadGazaBorders() {
-    if (gazaGeoJsonLayer) return;
-    $.getJSON('./data/gaza.geo.json')
-        .done(geoData => {
-            if (map) {
-                gazaGeoJsonLayer = L.geoJSON(geoData, {
-                    style: {
-                        color: '#dc2626',
-                        weight: 2,
-                        fillColor: '#dc2626',
-                        fillOpacity: 0.08
-                    }
-                }).addTo(map);
-            }
-        })
-        .fail(err => console.log("Failed to load Gaza GeoJSON:", err));
-}
-
 function loadMapData() {
-    $.getJSON('./data/press_killed_in_gaza.json')
-        .done(data => {
-            mapJournalists = data || [];
+    $.getJSON('./data/villages.geojson')
+        .done(geoData => {
+            if (geoData && geoData.features) {
+                nakbaVillages = geoData.features.map(f => ({
+                    id: f.properties.id,
+                    name: f.properties.name,
+                    year: f.properties.year || 1948,
+                    fate: f.properties.fate || 'Depopulated',
+                    eventId: f.properties.eventId,
+                    lat: f.geometry.coordinates[1],
+                    lng: f.geometry.coordinates[0]
+                }));
+            }
             renderMapAndList();
         })
-        .fail(err => console.log("Failed to load journalists for map:", err));
+        .fail(err => {
+            console.log("Failed to load Nakba villages GeoJSON, using robust fallback:", err);
+            nakbaVillages = [
+                { id: "deir-yassin", name: "Deir Yassin", year: 1948, fate: "Massacre", lat: 31.7868, lng: 35.1784 },
+                { id: "tantura", name: "Tantura", year: 1948, fate: "Massacre", lat: 32.61, lng: 34.93 },
+                { id: "al-majdal", name: "Al-Majdal", year: 1948, fate: "Depopulated", lat: 31.6676, lng: 34.5657 },
+                { id: "lifta", name: "Lifta", year: 1948, fate: "Depopulated", lat: 31.7916, lng: 35.1958 },
+                { id: "ein-karem", name: "Ein Karem", year: 1948, fate: "Depopulated", lat: 31.7614, lng: 35.1654 },
+                { id: "saffuriyya", name: "Saffuriyya", year: 1948, fate: "Depopulated", lat: 32.7469, lng: 35.2788 },
+                { id: "beersheba", name: "Beersheba", year: 1948, fate: "Depopulated", lat: 31.2525, lng: 34.7915 }
+            ];
+            renderMapAndList();
+        });
 }
 
 function renderMapAndList() {
     initMapIfNeeded();
-    loadGazaBorders();
     
     if (markersLayer) markersLayer.clearLayers();
     mapMarkers = [];
@@ -1669,17 +1671,16 @@ function renderMapAndList() {
     const query = document.getElementById('map-search-input') ? document.getElementById('map-search-input').value.trim().toLowerCase() : '';
     const t = translations[currentLang];
     
-    const filtered = mapJournalists.filter(j => {
-        const nameAr = (j.name || '').toLowerCase();
-        const nameEn = (j.name_en || '').toLowerCase();
-        const notes = (j.notes || '').toLowerCase();
-        return nameAr.includes(query) || nameEn.includes(query) || notes.includes(query);
+    const filtered = nakbaVillages.filter(v => {
+        const name = (v.name || '').toLowerCase();
+        const fate = (v.fate || '').toLowerCase();
+        return name.includes(query) || fate.includes(query);
     });
     
     if (!listContainer) return;
     
     if (filtered.length === 0) {
-        listContainer.innerHTML = `<div class="text-center text-gray-500 py-20 text-xs">${t.mapEmptyText}</div>`;
+        listContainer.innerHTML = `<div class="text-center text-gray-500 py-20 text-xs">${t.mapEmptyText || 'لا توجد نتائج مطابقة'}</div>`;
         const overlay = document.getElementById('map-empty-overlay');
         if (overlay) overlay.style.display = 'block';
         return;
@@ -1688,55 +1689,37 @@ function renderMapAndList() {
     const overlay = document.getElementById('map-empty-overlay');
     if (overlay) overlay.style.display = 'none';
     
-    const gazaDistricts = [
-        { name: "شمال غزة", lat: 31.53, lng: 34.48, name_en: "North Gaza" },
-        { name: "مدينة غزة", lat: 31.50, lng: 34.46, name_en: "Gaza City" },
-        { name: "دير البلح", lat: 31.42, lng: 34.35, name_en: "Deir al-Balah" },
-        { name: "خان يونس", lat: 31.34, lng: 34.30, name_en: "Khan Younis" },
-        { name: "رفح", lat: 31.28, lng: 34.25, name_en: "Rafah" }
-    ];
-    
     let html = '';
-    filtered.forEach((j, index) => {
-        let districtIndex = index % gazaDistricts.length;
-        let district = gazaDistricts[districtIndex];
-        
-        let latOffset = (Math.sin(index * 123.4) * 0.012);
-        let lngOffset = (Math.cos(index * 567.8) * 0.012);
-        let lat = district.lat + latOffset;
-        let lng = district.lng + lngOffset;
-        
+    filtered.forEach((v, index) => {
         if (markersLayer) {
-            let marker = L.circleMarker([lat, lng], {
-                radius: 6,
+            let marker = L.circleMarker([v.lat, v.lng], {
+                radius: 7,
                 fillColor: '#dc2626',
                 color: '#ffffff',
-                weight: 1,
+                weight: 1.5,
                 opacity: 1,
-                fillOpacity: 0.8
+                fillOpacity: 0.85
             });
             
-            const districtName = currentLang === 'ar' ? district.name : district.name_en;
+            const fateAr = v.fate === 'Massacre' ? 'مجزرة وحشية' : 'قرية مهجرة بالكامل';
             const popupContent = `
-                <div class="p-2 text-right font-['Cairo'] text-xs text-white bg-neutral-900/95 border border-red-600/30 rounded-lg">
-                    <h4 class="font-bold text-red-400 text-sm mb-1">${j.name}</h4>
-                    ${j.name_en ? `<p class="text-gray-400 text-[10px] font-mono mb-2">${j.name_en}</p>` : ''}
-                    <p class="text-gray-200 leading-relaxed max-w-xs mb-2 text-[11px]">${j.notes || 'صحفي استشهد في سبيل توثيق الحقيقة ونقل الصورة للعالم.'}</p>
-                    <span class="inline-block bg-red-600/20 text-red-400 text-[10px] px-2 py-0.5 rounded-full">${districtName}</span>
+                <div class="p-2.5 text-right font-['Cairo'] text-xs text-white bg-neutral-900/95 border border-red-600/30 rounded-lg max-w-[200px]">
+                    <h4 class="font-bold text-red-400 text-sm mb-1">🇵🇸 ${v.name}</h4>
+                    <p class="text-gray-300 mb-1"><strong>سنة التهجير:</strong> ${v.year}</p>
+                    <p class="text-gray-300"><strong>المصير والوضع الحالي:</strong> ${fateAr}</p>
                 </div>
             `;
             marker.bindPopup(popupContent);
             marker.addTo(markersLayer);
             
-            mapMarkers.push({ name: j.name.toLowerCase(), marker: marker, lat: lat, lng: lng });
+            mapMarkers.push({ name: v.name.toLowerCase(), marker: marker, lat: v.lat, lng: v.lng });
         }
         
-        const districtName = currentLang === 'ar' ? district.name : district.name_en;
+        const fateLabel = v.fate === 'Massacre' ? 'مجزرة' : 'تهجير';
         html += `
-            <div class="map-item bg-black/40 border border-white/5 hover:border-red-500/30 p-2.5 rounded-xl cursor-pointer transition-all hover:bg-black/60 text-right" onclick="focusMapMarker(${lat}, ${lng}, '${j.name}')">
-                <div class="font-bold text-xs text-white">${j.name}</div>
-                ${j.name_en ? `<div class="text-[10px] text-gray-400 font-mono">${j.name_en}</div>` : ''}
-                <div class="text-[10px] text-red-400 mt-1">${districtName}</div>
+            <div class="map-item bg-black/40 border border-white/5 hover:border-red-500/30 p-2.5 rounded-xl cursor-pointer transition-all hover:bg-black/60 text-right" onclick="focusMapMarker(${v.lat}, ${v.lng}, '${v.name}')">
+                <div class="font-bold text-xs text-white">${v.name}</div>
+                <div class="text-[10px] text-gray-400 font-mono mt-1">الوضع: <span class="text-red-400">${fateLabel} (${v.year})</span></div>
             </div>
         `;
     });
@@ -1853,7 +1836,7 @@ window.switchMainMode = function(mode) {
         document.getElementById('videos-view').style.display = 'block';
     } else if(mode === 'map') {
         document.getElementById('map-view').style.display = 'block';
-        if (mapJournalists.length === 0) {
+        if (nakbaVillages.length === 0) {
             loadMapData();
         } else {
             renderMapAndList();
