@@ -1,0 +1,180 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "id": "deir-yassin", "name": "Deir Yassin", "year": 1948, "fate": "Massacre", "eventId": "nakba-1948" },
+      "geometry": { "type": "Point", "coordinates": [35.1784, 31.7868] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "tantura", "name": "Tantura", "year": 1948, "fate": "Massacre", "eventId": "nakba-1948" },
+      "geometry": { "type": "Point", "coordinates": [34.93, 32.61] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "al-majdal", "name": "Al-Majdal", "year": 1948, "fate": "Depopulated", "eventId": "nakba-1948" },
+      "geometry": { "type": "Point", "coordinates": [34.5657, 31.6676] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "lifta", "name": "Lifta", "year": 1948, "fate": "Depopulated", "eventId": "nakba-1948" },
+      "geometry": { "type": "Point", "coordinates": [35.1958, 31.7916] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "ein-karem", "name": "Ein Karem", "year": 1948, "fate": "Depopulated", "eventId": "nakba-1948" },
+      "geometry": { "type": "Point", "coordinates": [35.1654, 31.7614] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "saffuriyya", "name": "Saffuriyya", "year": 1948, "fate": "Depopulated", "eventId": "nakba-1948" },
+      "geometry": { "type": "Point", "coordinates": [35.2788, 32.7469] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "beersheba", "name": "Beersheba", "year": 1948, "fate": "Depopulated", "eventId": "nakba-1948" },
+      "geometry": { "type": "Point", "coordinates": [34.7915, 31.2525] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "al-faluja", "name": "Al-Faluja", "year": 1948, "fate": "Depopulated", "eventId": "nakba-1948" },
+      "geometry": { "type": "Point", "coordinates": [34.7464, 31.6239] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "al-kabri", "name": "Al-Kabri", "year": 1948, "fate": "Massacre", "eventId": "nakba-1948" },
+      "geometry": { "type": "Point", "coordinates": [35.1506, 33.0259] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "abu-shusha", "name": "Abu Shusha", "year": 1948, "fate": "Massacre", "eventId": "nakba-1948" },
+      "geometry": { "type": "Point", "coordinates": [34.9281, 31.8851] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "lydda", "name": "Lydda", "year": 1948, "fate": "Expelled", "eventId": "nakba-1948" },
+      "geometry": { "type": "Point", "coordinates": [34.8788, 31.9488] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "al-ramla", "name": "Al-Ramla", "year": 1948, "fate": "Expelled", "eventId": "nakba-1948" },
+      "geometry": { "type": "Point", "coordinates": [34.8727, 31.9328] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "al-qastal", "name": "Al-Qastal", "year": 1948, "fate": "Destroyed", "eventId": "nakba-1948" },
+      "geometry": { "type": "Point", "coordinates": [35.1406, 31.7916] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "imwas", "name": "Imwas", "year": 1967, "fate": "Erased", "eventId": "six-day-war-1967" },
+      "geometry": { "type": "Point", "coordinates": [35.0343, 31.8431] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "yalo", "name": "Yalo", "year": 1967, "fate": "Erased", "eventId": "six-day-war-1967" },
+      "geometry": { "type": "Point", "coordinates": [35.0464, 31.8367] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "beit-nuba", "name": "Beit Nuba", "year": 1967, "fate": "Erased", "eventId": "six-day-war-1967" },
+      "geometry": { "type": "Point", "coordinates": [35.0375, 31.8542] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "jenin-camp", "name": "Jenin Camp", "year": 2002, "fate": "Destroyed", "eventId": "second-intifada-2000" },
+      "geometry": { "type": "Point", "coordinates": [35.2861, 32.4601] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "nablus-old-city", "name": "Nablus Old City", "year": 2002, "fate": "Targeted", "eventId": "second-intifada-2000" },
+      "geometry": { "type": "Point", "coordinates": [35.259, 32.2208] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "balata-camp", "name": "Balata Camp", "year": 2002, "fate": "Targeted", "eventId": "second-intifada-2000" },
+      "geometry": { "type": "Point", "coordinates": [35.2901, 32.2119] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "gush-katif", "name": "Gush Katif", "year": 2005, "fate": "Evacuated", "eventId": "gaza-disengagement-2005" },
+      "geometry": { "type": "Point", "coordinates": [34.2813, 31.3582] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "kfar-darom", "name": "Kfar Darom", "year": 2005, "fate": "Evacuated", "eventId": "gaza-disengagement-2005" },
+      "geometry": { "type": "Point", "coordinates": [34.3541, 31.4013] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "netzarim", "name": "Netzarim", "year": 2005, "fate": "Evacuated", "eventId": "gaza-disengagement-2005" },
+      "geometry": { "type": "Point", "coordinates": [34.4129, 31.4675] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "beit-hanoun", "name": "Beit Hanoun", "year": 2007, "fate": "Targeted", "eventId": "gaza-blockade-2007" },
+      "geometry": { "type": "Point", "coordinates": [34.5314, 31.535] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "gaza-port", "name": "Gaza Port", "year": 2007, "fate": "Targeted", "eventId": "gaza-blockade-2007" },
+      "geometry": { "type": "Point", "coordinates": [34.4362, 31.5279] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "beit-lahia", "name": "Beit Lahia", "year": 2008, "fate": "Destroyed", "eventId": "operation-cast-lead-2008" },
+      "geometry": { "type": "Point", "coordinates": [34.4978, 31.55] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "al-atatra", "name": "Al-Atatra", "year": 2008, "fate": "Destroyed", "eventId": "operation-cast-lead-2008" },
+      "geometry": { "type": "Point", "coordinates": [34.4805, 31.561] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "izbet-abed-rabbo", "name": "Izbet Abed Rabbo", "year": 2008, "fate": "Destroyed", "eventId": "operation-cast-lead-2008" },
+      "geometry": { "type": "Point", "coordinates": [34.48, 31.48] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "shujaiyya", "name": "Shuja'iyya", "year": 2014, "fate": "Destroyed", "eventId": "operation-protective-edge-2014" },
+      "geometry": { "type": "Point", "coordinates": [34.4826, 31.501] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "khuzaa", "name": "Khuza'a", "year": 2014, "fate": "Destroyed", "eventId": "operation-protective-edge-2014" },
+      "geometry": { "type": "Point", "coordinates": [34.3584, 31.3104] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "sheikh-jarrah", "name": "Sheikh Jarrah", "year": 2021, "fate": "Targeted", "eventId": "escalation-2021" },
+      "geometry": { "type": "Point", "coordinates": [35.2305, 31.7971] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "al-wehda-street", "name": "Al-Wehda Street", "year": 2021, "fate": "Destroyed", "eventId": "escalation-2021" },
+      "geometry": { "type": "Point", "coordinates": [34.4703, 31.5018] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "rafah", "name": "Rafah", "year": 2023, "fate": "Destroyed", "eventId": "gaza-genocide-2023" },
+      "geometry": { "type": "Point", "coordinates": [34.2443, 31.2836] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "khan-younis", "name": "Khan Younis", "year": 2023, "fate": "Destroyed", "eventId": "gaza-genocide-2023" },
+      "geometry": { "type": "Point", "coordinates": [34.3161, 31.3468] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "jabalia-camp", "name": "Jabalia Camp", "year": 2023, "fate": "Destroyed", "eventId": "gaza-genocide-2023" },
+      "geometry": { "type": "Point", "coordinates": [34.4956, 31.5294] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "al-rimal", "name": "Al-Rimal", "year": 2023, "fate": "Destroyed", "eventId": "gaza-genocide-2023" },
+      "geometry": { "type": "Point", "coordinates": [34.4367, 31.5043] }
+    }
+  ]
+}
