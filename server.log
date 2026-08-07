@@ -1,6 +1,4 @@
-127.0.0.1 - - [27/Jul/2026 15:30:11] "HEAD / HTTP/1.1" 200 -
-127.0.0.1 - - [27/Jul/2026 15:31:47] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [27/Jul/2026 15:31:47] "GET /css/tailwind-compat.css HTTP/1.1" 200 -
-127.0.0.1 - - [27/Jul/2026 15:31:47] "GET /css/bootstrap.min.css HTTP/1.1" 200 -
-127.0.0.1 - - [27/Jul/2026 15:31:49] "GET /data/victims.json HTTP/1.1" 200 -
-
+127.0.0.1 - - [07/Aug/2026 13:50:07] "HEAD / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Aug/2026 13:51:55] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Aug/2026 13:51:55] "GET /css/tailwind-compat.css HTTP/1.1" 200 -
+127.0.0.1 - - [07/Aug/2026 13:51:55] "GET /css/bootstrap.min.css HTTP/1.1" 200 -
