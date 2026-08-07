@@ -13,6 +13,13 @@ def verify_app():
             page.screenshot(path="verification/landing_view.png")
             print("Landing page screenshot taken successfully!")
 
+            # Click Solidarity tab
+            print("Clicking Solidarity tab...")
+            page.click("#tab-solidarity")
+            page.wait_for_timeout(3000)
+            page.screenshot(path="verification/solidarity_view.png")
+            print("Solidarity page screenshot taken successfully!")
+
             # Click Statistics tab
             print("Clicking Stats tab...")
             page.click("#tab-stats")
