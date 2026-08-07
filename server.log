@@ -112,3 +112,14 @@
 127.0.0.1 - - [07/Aug/2026 21:32:29] "GET /images/timeline/2.jpg HTTP/1.1" 200 -
 127.0.0.1 - - [07/Aug/2026 21:32:29] "GET /images/timeline/1.jpg HTTP/1.1" 200 -
 127.0.0.1 - - [07/Aug/2026 21:32:32] "GET /data/victims.json HTTP/1.1" 200 -
+127.0.0.1 - - [07/Aug/2026 22:54:11] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [07/Aug/2026 22:54:11] "GET /css/bootstrap.min.css HTTP/1.1" 200 -
+127.0.0.1 - - [07/Aug/2026 22:54:11] "GET /css/tailwind-compat.css HTTP/1.1" 200 -
+127.0.0.1 - - [07/Aug/2026 22:54:12] "GET /data/victims.json HTTP/1.1" 200 -
+127.0.0.1 - - [07/Aug/2026 22:54:20] "GET /data/villages.geojson HTTP/1.1" 200 -
+127.0.0.1 - - [07/Aug/2026 22:54:24] "GET /images/timeline/19.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [07/Aug/2026 22:54:24] "GET /images/timeline/18.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [07/Aug/2026 22:54:24] "GET /images/timeline/1.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [07/Aug/2026 22:54:24] "GET /images/timeline/20.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [07/Aug/2026 22:54:24] "GET /images/timeline/2.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [07/Aug/2026 22:54:28] "GET /data/victims.json HTTP/1.1" 200 -
