@@ -216,6 +216,121 @@ body.light-mode .tlc-mdl-stat-exp{color:#4b5563;}
 .tlc-scene.active .tlc-bg img {
     transform: scale(1.1);
 }
+
+body.stars-hidden #canvas-layer,
+body.stars-hidden #shooting-stars-canvas {
+    display: none !important;
+    opacity: 0 !important;
+    z-index: -1000 !important;
+}
+
+/* ==========================================
+   نظام التكيف التلقائي للهواتف (Mobile Responsiveness)
+   ========================================== */
+@media (max-width: 768px) {
+    /* هيدر مخصص للهواتف */
+    #header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding: 8px 12px !important;
+        gap: 8px !important;
+    }
+    #header > div.flex {
+        justify-content: space-between !important;
+        width: 100% !important;
+    }
+
+    /* شريط البحث */
+    #header > .w-auto {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+    #search-input {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 1 !important;
+        font-size: 0.75rem !important;
+    }
+    #search-input:focus {
+        width: 100% !important;
+    }
+
+    /* التبويبات القابلة للسحب الأفقي */
+    .tabs-wrapper {
+        width: 100% !important;
+        overflow-x: auto !important;
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        padding: 2px 0 !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    .tabs-wrapper > div {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        gap: 4px !important;
+        background: transparent !important;
+        border: none !important;
+    }
+    .btn-main {
+        font-size: 0.62rem !important;
+        padding: 4px 8px !important;
+        border-radius: 12px !important;
+    }
+
+    /* تكبير بادئة الأقسام لتجنب التداخل تحت الهيدر العمودي */
+    #stats-view, #videos-view, #no-data-view, #map-view, #milestones-view, #westbank-view, #martyrs48-view {
+        padding-top: 155px !important;
+        padding-bottom: 110px !important;
+    }
+
+    /* البار السفلي الذكي للهواتف */
+    #bottom-bar {
+        padding: 8px 12px !important;
+        gap: 8px !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        bottom: 0 !important;
+        position: fixed !important;
+        left: 0 !important;
+        width: 100% !important;
+        background: rgba(10, 10, 10, 0.96) !important;
+        border-top: 1px solid rgba(255,255,255,0.08) !important;
+        z-index: 1005 !important;
+        pointer-events: auto !important;
+    }
+    #verse-container {
+        display: none !important; /* إخفاء الآية لتوفير مساحة */
+    }
+    #counter-box {
+        width: 100% !important;
+        justify-content: center !important;
+        background: rgba(220, 38, 38, 0.15) !important;
+        border-color: rgba(239, 68, 68, 0.3) !important;
+    }
+    #bottom-bar > .interactive {
+        margin-right: unset !important;
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    /* ضبط خريطة الهواتف */
+    #map-view > div {
+        flex-direction: column !important;
+        height: calc(100vh - 280px) !important;
+        padding: 8px !important;
+        gap: 8px !important;
+    }
+    #map-view .lg\:w-1/3 {
+        width: 100% !important;
+        height: 40% !important;
+    }
+    #map-view .flex-1 {
+        height: 60% !important;
+    }
+}
 </style>
 </head>
 <body>
@@ -338,91 +453,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 </main>
 
-<main id="solidarity-view" class="text-white" style="display: none;">
-<div class="w-full max-w-6xl mx-auto px-6 py-10 font-['Cairo']">
-
-<!-- قسم توليد بطاقات التضامن والشهادات -->
-<div class="mb-12 glass-panel p-8 rounded-2xl border border-red-600/30 text-center">
-    <h3 class="text-2xl font-black text-red-400 mb-2">🎓 لوحة تصميم وتوليد شهادات التقدير وبطاقات التضامن المخصصة</h3>
-    <p class="text-xs text-gray-300 mb-6 leading-relaxed">صمم بطاقة تضامن مخصصة باسمك أو اسم مدينتك للتعبير عن تضامنك ومشاركتها عبر منصات التواصل الاجتماعي بضغطة زر واحدة.</p>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center text-right">
-        <div class="space-y-4">
-            <div class="space-y-1">
-                <label class="text-xs text-gray-400">اسم المتضامن / الجهة الداعمة:</label>
-                <input type="text" id="cert-name" value="متضامن مع فلسطين" oninput="updateCertificatePreview()" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
-            </div>
-            <div class="space-y-1">
-                <label class="text-xs text-gray-400">شعار أو عبارة تضامنية مخصصة:</label>
-                <textarea id="cs-slogan" rows="2" oninput="updateCertificatePreview()" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500 resize-none">عهد الأحرار للقدس الصامدة والأرض الطيبة 🇵🇸</textarea>
-            </div>
-            <div class="space-y-1">
-                <label class="text-xs text-gray-400">اختر الثيم والخلفية:</label>
-                <select id="cert-theme" onchange="updateCertificateTheme(this.value)" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none cursor-pointer">
-                    <option value="keffiyeh">🏁 نقشة الكوفية الفلسطينية العريقة</option>
-                    <option value="flag">🇵🇸 العلم الفلسطيني والحدود التاريخية</option>
-                    <option value="olive">🌿 غصن الزيتون ورمز السلام والصمود</option>
-                </select>
-            </div>
-            <button onclick="downloadCertificate()" class="w-full text-white font-bold py-2.5 px-4 rounded-xl transition-all bg-red-600 hover:bg-red-700 text-xs shadow-[0_0_15px_rgba(220,38,38,0.4)]">تحميل بطاقة التضامن كصورة 💾</button>
-        </div>
-        
-        <!-- Live Preview Board -->
-        <div class="flex justify-center">
-            <div id="certificate-preview" class="w-[320px] h-[440px] bg-[#1a1a1a] rounded-2xl relative border-4 border-red-600/50 p-6 flex flex-col justify-between text-center overflow-hidden shadow-2xl">
-                <!-- Background Overlays -->
-                <div id="cert-bg-keffiyeh" class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle, #fff 10%, transparent 11%), radial-gradient(circle, #fff 10%, transparent 11%); background-size: 15px 15px; background-position: 0 0, 7.5px 7.5px;"></div>
-                <div id="cert-bg-flag" class="absolute inset-0 opacity-10 pointer-events-none hidden" style="background: linear-gradient(180deg, #000 33.3%, #008000 33.3%, #008000 66.6%, #fff 66.6%);"></div>
-                <div id="cert-bg-olive" class="absolute inset-0 opacity-15 pointer-events-none hidden flex items-center justify-center"><span class="text-8xl">🌿</span></div>
-                
-                <!-- Border Details -->
-                <div class="absolute inset-2 border border-red-500/20 rounded-xl pointer-events-none"></div>
-                
-                <div class="z-10 space-y-2 mt-4">
-                    <span class="text-red-500 font-bold tracking-widest text-[10px] block font-['Cairo']">عهد الوفاء والتضامن</span>
-                    <h4 class="text-xl font-black text-white tracking-wide font-['Cairo']">شهادة تضامن شرفية</h4>
-                    <div class="w-12 h-0.5 bg-red-600 mx-auto my-2"></div>
-                </div>
-                
-                <div class="z-10 space-y-3">
-                    <p class="text-[11px] text-gray-400 font-['Cairo']">تُمنح هذه البطاقة تقديراً لموقف البذل والمؤازرة للحق والعدالة الإنسانية من:</p>
-                    <h5 id="preview-cert-name" class="text-lg font-black text-red-400 font-amiri tracking-wide">متضامن مع فلسطين</h5>
-                    <p id="preview-cs-slogan" class="text-[10px] text-gray-300 italic max-w-[240px] mx-auto leading-relaxed font-['Cairo']">عهد الأحرار للقدس الصامدة والأرض الطيبة 🇵🇸</p>
-                </div>
-                
-                <div class="z-10 mb-4 space-y-1 font-['Cairo']">
-                    <p class="text-[9px] text-gray-500">تم التوثيق والمشاركة عبر منصة أرواح فلسطين</p>
-                    <p class="text-[8px] text-gray-600 font-mono">palestiniansouls.com</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- بوابة المطورين وواجهة الربط البرمجي API Portal -->
-<div class="glass-panel p-8 rounded-2xl border border-red-500/20 text-right space-y-4 mt-8">
-    <h3 class="text-xl font-black text-red-400 flex items-center gap-2">🔌 بوابة المطورين البرمجية (Live Developer API)</h3>
-    <p class="text-xs text-gray-300 leading-relaxed">
-        بنيت هذه المنصة لتكون حية وقابلة للتطوير ومصدراً مفتوحاً للذاكرة الرقمية. يمكنك كمبرمج دمج وتوسيع محتوى المنصة برمجياً عبر واجهة الربط المباشرة <code class="bg-black/80 px-1.5 py-0.5 rounded text-red-300 font-mono text-[10px]">PalestinianSoulsAPI</code> المتاحة على مستوى الكائن العام <code class="bg-black/80 px-1.5 py-0.5 rounded text-red-300 font-mono text-[10px]">window</code>.
-    </p>
-    <div class="bg-black/70 border border-white/5 rounded-xl p-4 overflow-x-auto text-left">
-        <pre class="text-[11px] text-green-400 font-mono leading-relaxed select-all">
-<span class="text-gray-500">// 1. إضافة شهيد جديد حياً إلى سماء الأرواح والعداد المباشر فوراً</span>
-PalestinianSoulsAPI.addMartyr({
-    name: "ياسر عرفات أحمد",
-    age: 24,
-    city: "غزة (Gaza)",
-    notes: "طالب هندسة برمجيات استشهد رفقة عائلته"
-});
-
-<span class="text-gray-500">// 2. جلب إحصائيات العدوان الحية والمباشرة</span>
-console.log(PalestinianSoulsAPI.getStats());</pre>
-    </div>
-</div>
-
-</div>
-</main>
-
 <main id="stats-view" class="text-white">
 <div class="w-full max-w-6xl mx-auto px-6 py-10 font-['Cairo']">
 
@@ -507,6 +537,27 @@ console.log(PalestinianSoulsAPI.getStats());</pre>
     </div>
 </div>
 
+<!-- بوابة المطورين وواجهة الربط البرمجي API Portal -->
+<div class="glass-panel p-8 rounded-2xl border border-red-500/20 text-right space-y-4 mt-12 mb-8">
+    <h3 class="text-xl font-black text-red-400 flex items-center gap-2">🔌 بوابة المطورين البرمجية (Live Developer API)</h3>
+    <p class="text-xs text-gray-300 leading-relaxed">
+        بنيت هذه المنصة لتكون حية وقابلة للتطوير ومصدراً مفتوحاً للذاكرة الرقمية. يمكنك كمبرمج دمج وتوسيع محتوى المنصة برمجياً عبر واجهة الربط المباشرة <code class="bg-black/80 px-1.5 py-0.5 rounded text-red-300 font-mono text-[10px]">PalestinianSoulsAPI</code> المتاحة على مستوى الكائن العام <code class="bg-black/80 px-1.5 py-0.5 rounded text-red-300 font-mono text-[10px]">window</code>.
+    </p>
+    <div class="bg-black/70 border border-white/5 rounded-xl p-4 overflow-x-auto text-left font-mono">
+        <pre class="text-[11px] text-green-400 font-mono leading-relaxed select-all">
+<span class="text-gray-500">// 1. إضافة شهيد جديد حياً إلى سماء الأرواح والعداد المباشر فوراً</span>
+PalestinianSoulsAPI.addMartyr({
+    name: "ياسر عرفات أحمد",
+    age: 24,
+    city: "غزة (Gaza)",
+    notes: "طالب هندسة برمجيات استشهد رفقة عائلته"
+});
+
+<span class="text-gray-500">// 2. جلب إحصائيات العدوان الحية والمباشرة</span>
+console.log(PalestinianSoulsAPI.getStats());</pre>
+    </div>
+</div>
+
 </div>
 </main>
 
@@ -527,7 +578,6 @@ console.log(PalestinianSoulsAPI.getStats());</pre>
 <div class="w-auto relative flex items-center gap-1">
 <input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد..." oninput="searchMartyrByName(this.value)">
 <button id="voice-search-btn" onclick="startVoiceSearch('search-input', (val) => searchMartyrByName(val))" class="btn-main px-2 py-2 text-xs rounded-xl" title="البحث الصوتي">🎤</button>
-<button id="toggle-search-filter-btn" onclick="toggleHideNonMatching()" class="btn-main px-2 py-2 text-xs rounded-xl active" title="إخفاء غير المطابقين من السماء" style="background: #dc2626; border-color: #ef4444;">👁️</button>
 <div id="search-results-dropdown" class="absolute left-0 right-0 mt-2 max-h-80 overflow-y-auto bg-[#0a0a0af2] border border-red-500/30 rounded-xl shadow-2xl hidden z-[1001] text-right font-['Cairo'] text-xs"></div>
 </div>
 <div class="tabs-wrapper no-scrollbar interactive">
@@ -537,7 +587,6 @@ console.log(PalestinianSoulsAPI.getStats());</pre>
 <button class="btn-main" id="tab-westbank" onclick="switchMainMode('westbank')">شهداء الضفة</button>
 <button class="btn-main" id="tab-48" onclick="switchMainMode('martyrs48')">شهداء 48</button>
 <button class="btn-main" id="tab-milestones" onclick="switchMainMode('milestones')">أبرز المحطات</button>
-<button class="btn-main" id="tab-solidarity" onclick="switchMainMode('solidarity')">التضامن</button>
 <button class="btn-main" id="tab-stats" onclick="switchMainMode('stats')">الإحصائيات</button>
 <button class="btn-main" id="tab-videos" onclick="switchMainMode('videos')">التوثيق والأرشيف</button>
 <button class="btn-main" id="tab-map" onclick="switchMainMode('map')">الخريطة</button>
@@ -786,27 +835,6 @@ let currentSearchQuery = "";
 let currentMartyrObj = null;
 let hideNonMatching = true;
 
-function toggleHideNonMatching() {
-    hideNonMatching = !hideNonMatching;
-    const btn = document.getElementById('toggle-search-filter-btn');
-    if (btn) {
-        if (hideNonMatching) {
-            btn.classList.add('active');
-            btn.style.background = '#dc2626';
-            btn.style.borderColor = '#ef4444';
-            btn.innerHTML = '👁️';
-            btn.title = currentLang === 'ar' ? 'إخفاء غير المطابقين' : 'Hiding non-matching';
-        } else {
-            btn.classList.remove('active');
-            btn.style.background = 'rgba(255, 255, 255, 0.05)';
-            btn.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-            btn.innerHTML = '👁️‍🗨️';
-            btn.title = currentLang === 'ar' ? 'إظهار الكل (باهت)' : 'Show all (faded)';
-        }
-    }
-    isDirty = true;
-}
-
 window.PalestinianSoulsAPI = {
     getMartyrs: function() {
         return gazaSouls || [];
@@ -860,7 +888,7 @@ const translations = {
     ar: {
         titleMain: "أرواح", logoText: "فلسطين", searchPlaceholder: "ابحث عن اسم الشهيد...",
         tabSouls: "شهداء غزة", tabJournalists: "شهداء الصحافة", tabWestBank: "شهداء الضفة", tab48: "شهداء 48",
-        tabMilestones: "أبرز المحطات", tabSolidarity: "التضامن", tabStats: "الإحصائيات", tabVideos: "التوثيق والأرشيف", tabMap: "الخريطة",
+        tabMilestones: "أبرز المحطات", tabStats: "الإحصائيات", tabVideos: "التوثيق والأرشيف", tabMap: "الخريطة",
         donate: "❤️ إدعمنا لنستمر", musicOn: "🎵 الصوت", musicOff: "🔇 إيقاف", visitorLabel: "عدد الزوار:",
         verse: "\"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ\"",
         devText: "تطوير: عبد الهادي", shareBtn: "مشاركة المنصة", martyrsLabel: "شهيداً وثّقت أسماؤهم:",
@@ -880,7 +908,7 @@ const translations = {
     en: {
         titleMain: "Palestinian", logoText: "Souls", searchPlaceholder: "Search martyr...",
         tabSouls: "Gaza Souls", tabJournalists: "Gaza Journalists", tabWestBank: "West Bank", tab48: "48 Martyrs",
-        tabMilestones: "Milestones", tabSolidarity: "Solidarity", tabStats: "Statistics", tabVideos: "Footage", tabMap: "Map",
+        tabMilestones: "Milestones", tabStats: "Statistics", tabVideos: "Footage", tabMap: "Map",
         donate: "❤️ Support Us", musicOn: "🎵 Audio", musicOff: "Mute", visitorLabel: "Visitors:",
         verse: "\"Think not of those who are slain in Allah's way as dead, but living with their Lord...\"",
         devText: "Dev: Abdelhadi", shareBtn: "Share Platform", martyrsLabel: "Martyrs Documented:",
@@ -900,7 +928,7 @@ const translations = {
     fr: {
         titleMain: "Âmes", logoText: "Palestiniennes", searchPlaceholder: "Rechercher un martyr...",
         tabSouls: "Âmes de Gaza", tabJournalists: "Journalistes", tabWestBank: "Cisjordanie", tab48: "Martyrs de 48",
-        tabMilestones: "Étapes clés", tabSolidarity: "Solidarité", tabStats: "Statistiques", tabVideos: "Archives", tabMap: "Carte",
+        tabMilestones: "Étapes clés", tabStats: "Statistiques", tabVideos: "Archives", tabMap: "Carte",
         donate: "❤️ Soutenez-nous", musicOn: "🎵 Audio", musicOff: "Muet", visitorLabel: "Visiteurs :",
         verse: "\"Ne pensez pas que ceux qui ont été tués dans le sentier d'Allah soient morts...\"",
         devText: "Développement : Abdelhadi", shareBtn: "Partager", martyrsLabel: "Martyrs documentés :",
@@ -920,7 +948,7 @@ const translations = {
     es: {
         titleMain: "Almas", logoText: "Palestinas", searchPlaceholder: "Buscar mártir...",
         tabSouls: "Almas de Gaza", tabJournalists: "Periodistas", tabWestBank: "Cisjordania", tab48: "Mártires del 48",
-        tabMilestones: "Hitos", tabSolidarity: "Solidaridad", tabStats: "Estadísticas", tabVideos: "Archivos", tabMap: "Mapa",
+        tabMilestones: "Hitos", tabStats: "Estadísticas", tabVideos: "Archivos", tabMap: "Mapa",
         donate: "❤️ Apóyanos", musicOn: "🎵 Audio", musicOff: "Silenciar", visitorLabel: "Visitas:",
         verse: "\"No creáis que los que han muerto por la causa de Dios están muertos...\"",
         devText: "Desarrollo: Abdelhadi", shareBtn: "Compartir", martyrsLabel: "Mártires documentados:",
@@ -1213,8 +1241,6 @@ function changeLanguage(langCode) {
     document.getElementById('tab-westbank').innerText = t.tabWestBank;
     document.getElementById('tab-48').innerText = t.tab48;
     document.getElementById('tab-milestones').innerText = t.tabMilestones;
-    const tabSol = document.getElementById('tab-solidarity');
-    if (tabSol) tabSol.innerText = t.tabSolidarity;
     document.getElementById('tab-stats').innerText = t.tabStats;
     document.getElementById('tab-videos').innerText = t.tabVideos;
     document.getElementById('tab-map').innerText = t.tabMap;
@@ -2152,14 +2178,21 @@ window.switchMainMode = function(mode) {
     const activeBtn = document.getElementById(`tab-${mode === 'martyrs48' ? '48' : mode}`);
     if (activeBtn) activeBtn.classList.add('active');
     
-    ['map-view', 'stats-view', 'videos-view', 'no-data-view', 'milestones-view', 'westbank-view', 'martyrs48-view', 'solidarity-view'].forEach(id => {
+    ['map-view', 'stats-view', 'videos-view', 'no-data-view', 'milestones-view', 'westbank-view', 'martyrs48-view'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
     });
 
     const canvasLayer = document.getElementById('canvas-layer');
     const shootingCanvas = document.getElementById('shooting-stars-canvas');
-    const showStars = ['souls', 'journalists'].includes(mode);
+    const showStars = ['souls', 'journalists', 'westbank', 'martyrs48'].includes(mode);
+
+    if (showStars) {
+        document.body.classList.remove('stars-hidden');
+    } else {
+        document.body.classList.add('stars-hidden');
+    }
+
     if (canvasLayer) canvasLayer.style.display = showStars ? '' : 'none';
     if (shootingCanvas) shootingCanvas.style.display = showStars ? '' : 'none';
 
@@ -2189,8 +2222,6 @@ window.switchMainMode = function(mode) {
     } else if(mode === 'milestones') {
         document.getElementById('milestones-view').style.display = 'block';
         renderCinematicTimeline();
-    } else if(mode === 'solidarity') {
-        document.getElementById('solidarity-view').style.display = 'block';
     } else if(mode === 'stats') {
         document.getElementById('stats-view').style.display = 'block';
         setTimeout(() => {
@@ -2385,6 +2416,13 @@ function drawCanvas() {
             continue;
         }
 
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            if (item.screenY < 155 || item.screenY > height - 110) {
+                continue;
+            }
+        }
+
         if (item.color === '#ef4444') {
             let isMatch = false;
             if (queryActive) {
@@ -2416,6 +2454,13 @@ function drawCanvas() {
             continue;
         }
 
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            if (item.screenY < 155 || item.screenY > height - 110) {
+                continue;
+            }
+        }
+
         if (item.color === '#ffffff') {
             let isMatch = false;
             if (queryActive) {
@@ -2444,6 +2489,13 @@ function drawCanvas() {
             
             if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
                 continue;
+            }
+
+            const isMobile = window.innerWidth <= 768;
+            if (isMobile) {
+                if (item.screenY < 155 || item.screenY > height - 110) {
+                    continue;
+                }
             }
 
             const nameAr = (item.name_ar || item.name || "").toLowerCase();
@@ -3005,6 +3057,10 @@ function translateMilestoneModal(lang) {
 // تحميل البيانات الافتراضية عند البدء
 window.initOnThisDayWidget = window.initOnThisDayWidget || function() {
     console.log("initOnThisDayWidget placeholder called");
+};
+
+window.loadGazaBorders = window.loadGazaBorders || function() {
+    console.log("loadGazaBorders placeholder called");
 };
 
 $(document).ready(() => {
