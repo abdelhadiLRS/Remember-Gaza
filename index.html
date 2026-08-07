@@ -2131,9 +2131,9 @@ function openLightbox(id) {
     desc.innerText = currentLang === 'ar' ? item.desc_ar : item.desc_en;
 
     if (item.type === 'video') {
-        content.innerHTML = \`<iframe class="w-full h-full" src="https://www.youtube.com/embed/\${item.url}?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\`;
+        content.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${item.url}?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
     } else {
-        content.innerHTML = \`<img src="\${item.url}" class="max-w-full max-h-full object-contain rounded-lg" />\`;
+        content.innerHTML = `<img src="${item.url}" class="max-w-full max-h-full object-contain rounded-lg" />`;
     }
 
     modal.style.display = 'flex';
@@ -3003,6 +3003,10 @@ function translateMilestoneModal(lang) {
 }
 
 // تحميل البيانات الافتراضية عند البدء
+window.initOnThisDayWidget = window.initOnThisDayWidget || function() {
+    console.log("initOnThisDayWidget placeholder called");
+};
+
 $(document).ready(() => {
     initAdaptiveTheme();
     switchMainMode('souls');
