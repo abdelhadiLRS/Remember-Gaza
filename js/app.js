@@ -1,5 +1,15 @@
 
-let currentLang='ar';
+// Automatically detect system language or load preferred
+const browserLang = (navigator.language || navigator.userLanguage || 'ar').toLowerCase();
+let systemLang = 'ar';
+if (browserLang.startsWith('en')) systemLang = 'en';
+else if (browserLang.startsWith('fr')) systemLang = 'fr';
+else if (browserLang.startsWith('es')) systemLang = 'es';
+
+if (!localStorage.getItem('site_lang')) {
+    localStorage.setItem('site_lang', systemLang);
+}
+let currentLang = localStorage.getItem('site_lang') || systemLang;
 let gazaSouls=[];
 let width, height, points = [];
 let cachedItems = []; // 2. التخزين المؤقت للإحداثيات والخصائص
@@ -19,62 +29,13 @@ let isAudioSynthActive = false;
 
 let currentSearchQuery = "";
 let currentMartyrObj = null;
-let hideNonMatching = true;
-
-window.PalestinianSoulsAPI = {
-    getMartyrs: function() {
-        return gazaSouls || [];
-    },
-    getStats: function() {
-        return {
-            documented_count: gazaSouls ? gazaSouls.length : 60198,
-            gaza_total_estimated: 186000,
-            direct_damage_est: "80 Billion USD",
-            demolished_units: 335000,
-            hospitals_destroyed: 38
-        };
-    },
-    addMartyr: function(martyr) {
-        if (!martyr || !martyr.name) {
-            console.error("Invalid martyr data. Must include name.");
-            return false;
-        }
-        const newObj = {
-            id: martyr.id || "api_added_" + Date.now(),
-            name: martyr.name,
-            name_ar: martyr.name_ar || martyr.name,
-            name_en: martyr.name_en || "",
-            age: martyr.age || "غير معروف",
-            city: martyr.city || "غزة",
-            notes: martyr.notes || "تمت الإضافة عبر واجهة المطورين البرمجية",
-            x: Math.random(),
-            y: Math.random()
-        };
-
-        gazaSouls.unshift(newObj);
-
-        const numEl = document.getElementById('number');
-        if (numEl) numEl.innerText = gazaSouls.length.toLocaleString();
-
-        initCanvasPoints(gazaSouls);
-        isDirty = true;
-
-        console.log("Successfully added new martyr to the live celestial archive:", newObj);
-        return newObj;
-    },
-    getMapPoints: function() {
-        return nakbaVillages || [];
-    },
-    getVideos: function() {
-        return visualArchiveData || [];
-    }
-};
 
 const translations = {
     ar: {
         titleMain: "أرواح", logoText: "فلسطين", searchPlaceholder: "ابحث عن اسم الشهيد...",
         tabSouls: "شهداء غزة", tabJournalists: "شهداء الصحافة", tabWestBank: "شهداء الضفة", tab48: "شهداء 48",
         tabMilestones: "أبرز المحطات", tabStats: "الإحصائيات", tabVideos: "التوثيق والأرشيف", tabMap: "الخريطة",
+        tabSolidarity: "التضامن",
         donate: "❤️ إدعمنا لنستمر", musicOn: "🎵 الصوت", musicOff: "🔇 إيقاف", visitorLabel: "عدد الزوار:",
         verse: "\"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ\"",
         devText: "تطوير: عبد الهادي", shareBtn: "مشاركة المنصة", martyrsLabel: "شهيداً وثّقت أسماؤهم:",
@@ -95,6 +56,7 @@ const translations = {
         titleMain: "Palestinian", logoText: "Souls", searchPlaceholder: "Search martyr...",
         tabSouls: "Gaza Souls", tabJournalists: "Gaza Journalists", tabWestBank: "West Bank", tab48: "48 Martyrs",
         tabMilestones: "Milestones", tabStats: "Statistics", tabVideos: "Footage", tabMap: "Map",
+        tabSolidarity: "Solidarity",
         donate: "❤️ Support Us", musicOn: "🎵 Audio", musicOff: "Mute", visitorLabel: "Visitors:",
         verse: "\"Think not of those who are slain in Allah's way as dead, but living with their Lord...\"",
         devText: "Dev: Abdelhadi", shareBtn: "Share Platform", martyrsLabel: "Martyrs Documented:",
@@ -115,6 +77,7 @@ const translations = {
         titleMain: "Âmes", logoText: "Palestiniennes", searchPlaceholder: "Rechercher un martyr...",
         tabSouls: "Âmes de Gaza", tabJournalists: "Journalistes", tabWestBank: "Cisjordanie", tab48: "Martyrs de 48",
         tabMilestones: "Étapes clés", tabStats: "Statistiques", tabVideos: "Archives", tabMap: "Carte",
+        tabSolidarity: "Solidarité",
         donate: "❤️ Soutenez-nous", musicOn: "🎵 Audio", musicOff: "Muet", visitorLabel: "Visiteurs :",
         verse: "\"Ne pensez pas que ceux qui ont été tués dans le sentier d'Allah soient morts...\"",
         devText: "Développement : Abdelhadi", shareBtn: "Partager", martyrsLabel: "Martyrs documentés :",
@@ -135,6 +98,7 @@ const translations = {
         titleMain: "Almas", logoText: "Palestinas", searchPlaceholder: "Buscar mártir...",
         tabSouls: "Almas de Gaza", tabJournalists: "Periodistas", tabWestBank: "Cisjordania", tab48: "Mártires del 48",
         tabMilestones: "Hitos", tabStats: "Estadísticas", tabVideos: "Archivos", tabMap: "Mapa",
+        tabSolidarity: "Solidaridad",
         donate: "❤️ Apóyanos", musicOn: "🎵 Audio", musicOff: "Silenciar", visitorLabel: "Visitas:",
         verse: "\"No creáis que los que han muerto por la causa de Dios están muertos...\"",
         devText: "Desarrollo: Abdelhadi", shareBtn: "Compartir", martyrsLabel: "Mártires documentados:",
@@ -296,17 +260,15 @@ const milestoneCinematicData = [
     {
         id: "m18", type: "scene", year: "1929", title: "هبّة البراق", alt: "ثورة البراق", image: "images/timeline/18.jpg",
         excerpt: "في آب/أغسطس 1929 انتفض الفلسطينيون احتجاجاً على محاولات السيطرة على حائط البراق المحاذي للمسجد الأقصى. اندلعت اشتباكات في القدس والخليل الصفد، وردّ الانتداب البريطاني بالقوة المفرطة، واستشهد أكثر من 116 فلسطينياً، وأُعدم ثلاثة من قادة الثورة لاحقاً (محمد جمجوم، فؤاد حجازي، عطا الزير) فخلّدتهم الذاكرة الوطنية.",
-        detailedExplanation: "هبّة البراق هي أول انتفاضة فلسطينية شعبية كبرى ضد المحاولات الصهيونية للسيطرة على حائط البراق في القدس المحتلة. تفجرت الأحداث في منتصف آب 1929 بعد تظاهرات صهيونية استفزازية عند الحائط، مما أشعل غضباً جماهيرياً عارماً امتد سريعاً إلى الخليل، يافا، غزة، والصفد. واجهت قوات الانتداب البريطاني الجماهير الفلسطينية الغاضبة بعنف مفرط وقسوة بالغة لحماية الصهاينة، مما أسفر عن استشهاد 116 فلسطينياً وإصابة المئات. لاحقاً في عام 1930، نفذت بريطانيا حكم الإعدام بحق ثلاثة من أبطال الثورة (محمد جمجوم، فؤاد حجازي، وعطا الزير) في سجن عكا الشهير، والذين واجهوا المشنقة ببطولة وبسالة خلدها التاريخ وشعراء فلسطين.",
         stat: "حوالي 116 شهيد",
         statExp: "116 شهيداً فلسطينياً سقطوا خلال الأحداث، إضافة إلى تنفيذ حكم الإعدام بثلاثة من قادة الثورة",
         sourceName: "ويكيبيديا - ثورة البراق 1929",
-        sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AB%D9%88%D8%B1%D8%A9_%D8%A9_%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%82"
+        sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AB%D9%88%D8%B1%D8%A9_%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%82"
     },
     { id: "d1930", type: "decade", decade: "1930" },
     {
         id: "m19", type: "scene", year: "1936 - 1939", title: "الثورة الفلسطينية الكبرى", alt: "ثورة الست أشهر", image: "images/timeline/19.jpg",
         excerpt: "انطلقت الثورة الفلسطينية الكبرى في نيسان/أبريل 1936 بإضراب عام شامل امتد ستة أشهر، ثم تحولت إلى مقاومة مسلحة استمرت حتى 1939. استهدفت الانتداب البريطاني والمشروع الصهيوني، وقمعتها بريطانيا بعنف عبر قانون الطوارئ ونسف القرى والإعدامات.",
-        detailedExplanation: "تعد الثورة الفلسطينية الكبرى (1936-1939) من أروع وأطول صفحات النضال الوطني الفلسطيني ضد الانتداب البريطاني والمشروع الصهيوني. بدأت الثورة بإعلان اللجنة العربية العليا بقيادة الحاج أمين الحسيني إضراباً عاماً شاملاً استمر لستة أشهر متواصلة وهو أطول إضراب جماعي في التاريخ الحديث. تطورت الثورة لاحقاً إلى مقاومة مسلحة عنيفة غطت جميع المدن والقرى والبلدات الفلسطينية. استخدم الجيش البريطاني أقصى درجات البطش العسكري، بما في ذلك القصف الجوي، نسف منازل وقرى بأكملها، وفرض عقوبات جماعية وإعدامات ميدانية، مما أدى إلى استشهاد أكثر من 5,000 فلسطيني وجرح عشرات الآلاف ونفي القيادات الوطنية.",
         stat: "5,000 شهيد",
         statExp: "آلاف الشهداء والجرحى نتيجة العمليات العسكرية وقمع الاحتلال البريطاني للثورة",
         sourceName: "الموسوعة التفاعلية للقضية الفلسطينية",
@@ -315,7 +277,6 @@ const milestoneCinematicData = [
     {
         id: "m1", type: "scene", year: "1936 - 1948", title: "مرحلة التطهير العرقي في فلسطين", alt: "النكبة", image: "images/timeline/1.jpg",
         excerpt: "بدأت المجازر الاسرائيلية بحق الفلسطينيين قبل الاعلان عن قيام دولة اسرائيل بنحو 11 عاما منذ كانت فلسطين تحت وصاية الانتداب البريطاني الذي كان يتحمل مسؤولية حماية حياة المواطنين الفلسطينيين.",
-        detailedExplanation: "شهدت فلسطين منذ ثلاثينيات القرن الماضي وحتى عام 1948 عملية تهجير قسري وتطهير عرقي ممنهج قادته العصابات الصهيونية المسلحة (مثل الهاغانا، الأرغون، وشتيرن) برعاية وغطاء كامل من الانتداب البريطاني قبل الإعلان الرسمي عن قيام دولة الاحتلال بسنوات. تمثلت هذه المرحلة بشن هجمات ليلية مروعة على القرى الآمنة، زرع المتفجرات في الأسواق المكتظة، وقتل المدنيين لترهيب السكان ودفعهم إلى الرحيل قسراً. شملت هذه المجازر وعمليات التطهير العرقي المبكرة أكثر من 70 بلدة ومدينة فلسطينية ممهدة الطريق لجريمة النكبة الكبرى وتشريد ثلثي الشعب الفلسطيني.",
         stat: "حوالي 5000 شهيد",
         statExp: "ضحايا المجازر وعمليات التطهير العرقي المبكرة قبل عام 1948",
         sourceName: "مؤسسة الدراسات الفلسطينية",
@@ -325,7 +286,6 @@ const milestoneCinematicData = [
     {
         id: "m20", type: "scene", year: "1948", title: "مجزرة دير ياسين", alt: "", image: "images/timeline/20.jpg",
         excerpt: "في فجر التاسع من نيسان 1948، اقتحمت عصابتا الإرغون وشتيرن قرية دير ياسين غرب القدس وارتكبتا مجزرة وحشية بحق سكانها، شملت إعدامات ميدانية وتمثيلاً بالجثث وتهجيراً.",
-        detailedExplanation: "وقعت مجزرة دير ياسين في قرية دير ياسين غرب القدس في 9 نيسان 1948، ونفذتها عصابتا الإرغون وشتيرن الصهيونيتان بدعم من الهاغانا. اقتحم المسلحون الصهاينة القرية الآمنة ونفذوا مجزرة وحشية مروعة شملت إعدامات جماعية ميدانية، التمثيل بالجثث، وبقر بطون الحوامل والنساء العزل. ارتقى في هذه المأساة ما يزيد عن 250 شهيداً فلسطينياً، واستخدمت هذه المجزرة كأداة لبث الرعب ونشر الدعاية الحربية الصهيونية لإجبار القرى والبلدات المجاورة على النزوح قسراً عن أراضيهم ومنازلهم خوفاً من الإبادة الجماعية المباشرة.",
         stat: "254 - 300 شهيد",
         statExp: "أكثر من 250 شهيداً من الأطفال والنساء والرجال عزل الأسلحة",
         sourceName: "ويكيبيديا - مجزرة دير ياسين",
@@ -334,7 +294,6 @@ const milestoneCinematicData = [
     {
         id: "m2", type: "scene", year: "1948", title: "الحرب العربية الإسرائيلية 1948", alt: "حرب النكبة", image: "images/timeline/2.jpg",
         excerpt: "أول حروب العرب مع إسرائيل، دارت عقب إنهاء الانتداب البريطاني على فلسطين وإعلان قيام إسرائيل، منتصف مايو/أيار 1948، وارتقى خلالها آلاف الشهداء.",
-        detailedExplanation: "حرب عام 1948 (النكبة) دارت رحاها عقب إعلان قيام دولة إسرائيل وانسحاب بريطانيا، وشاركت فيها جيوش عربية متطوعة لمساندة الشعب الفلسطيني بوجه العصابات الصهيونية المسلحة. تمخضت الحرب عن احتلال الكيان الإسرائيلي لـ 78% من مساحة فلسطين التاريخية، وتدمير 530 بلدة وقرية بالكامل ومسحها من الوجود ومصادرة كل أراضيها، وارتكاب أكثر من 70 مجزرة موثقة بحق المدنيين العزل، ما أسفر عن تهجير وتشريد قرابة مليون فلسطيني خارج أرضهم ليتحولوا إلى لاجئين مشتتين حول العالم متمسكين بمفتاح العودة وحقهم التاريخي.",
         stat: "20 - 22 ألف شهيد",
         statExp: "شهداء المعارك والدفاع عن المدن والقرى الفلسطينية أثناء النكبة",
         sourceName: "الموسوعة التفاعلية للقضية الفلسطينية",
@@ -344,7 +303,6 @@ const milestoneCinematicData = [
     {
         id: "m4", type: "scene", year: "1956", title: "احتلال غزة 1956", alt: "العدوان الثلاثي", image: "images/timeline/4.jpg",
         excerpt: "خلال العدوان الثلاثيّ على مصر بعد تأميم قناة السويس، احتلّ جيش الاحتلال قطاع غزّة قادماً من رفح، حيث ارتقى مئات الشهداء في مجازر بشعة.",
-        detailedExplanation: "خلال العدوان الثلاثي على مصر عام 1956، اجتاح جيش الاحتلال الإسرائيلي قطاع غزة وارتكب فيه مجازر مروعة وسلسلة من جرائم الحرب البشعة بحق المدنيين العزل ورجال المقاومة، لا سيما في مدينتي خان يونس ورفح، حيث جرى تنفيذ إعدامات ميدانية جماعية لآلاف الشباب والرجال ضد الجدران وفي الساحات العامة. استمر هذا الاحتلال الوحشي عدة أشهر مخلفاً أكثر من 1,500 شهيد ودماراً هائلاً في المنازل والممتلكات قبل أن يجبر الجيش الصهيوني على الانسحاب تحت الضغط الدولي.",
         stat: "حوالي 1500 شهيد",
         statExp: "شهداء المجازر في خان يونس ورفح وغزة خلال العدوان",
         sourceName: "أرشيف تاريخ فلسطين - العدوان الثلاثي",
@@ -354,7 +312,6 @@ const milestoneCinematicData = [
     {
         id: "m5", type: "scene", year: "1967", title: "حرب حزيران 1967", alt: "النكسة", image: "images/timeline/5.jpg",
         excerpt: "يطلق مصطلح النكسة على الهزيمة التي منيت بها الجيوش العربية أمام إسرائيل واحتلال كامل فلسطين وأراضٍ سورية ومصرية.",
-        detailedExplanation: "حرب الأيام الستة أو النكسة عام 1967 شكلت نقطة تحول مأساوية، حيث احتل الكيان الصهيوني ما تبقى من فلسطين (الضفة الغربية بما فيها القدس الشرقية، وقطاع غزة)، إضافة إلى شبه جزيرة سيناء المصرية وهضبة الجولان السورية. أسفرت الحرب عن استشهاد ما بين 15,000 إلى 25,000 جندي ومواطن عربي وفلسطيني، وتهجير أكثر من 300,000 فلسطيني جديد تحولوا إلى نازحين، وبدء مرحلة الاستيطان والتهويد الممنهج للقدس والمقدسات ومصادرة الأراضي التي لا تزال مستمرة حتى اليوم تحت وطأة الاحتلال العسكري المباشر.",
         stat: "15,000 - 25,000 شهيد",
         statExp: "شهداء العمليات العسكرية والدفاع عن الأراضي العربية والفلسطينية",
         sourceName: "الموسوعة التفاعلية للقضية الفلسطينية",
@@ -364,7 +321,6 @@ const milestoneCinematicData = [
     {
         id: "m22", type: "scene", year: "1976", title: "يوم الأرض", alt: "", image: "images/timeline/22.jpg",
         excerpt: "هبة جماهيرية فلسطينية شاملة رداً على مصادرة سلطات الاحتلال لآلاف الدونمات من أراضي الجليل والمثلث.",
-        detailedExplanation: "في 30 آذار 1976، انتفض الفلسطينيون بالداخل المحتل احتجاجاً على تهويد الجليل ومصادرة آلاف الدونمات من أراضي الجليل والمثلث والنقب. عم الإضراب والاحتجاجات السلمية مختلف البلدات، وواجهها جيش الاحتلال الإسرائيلي بالرصاص الحي وفرض حظر التجول، ما أسفر عن ارتقاء ستة شهداء أبطال في سخنين وعرابة وكفر كنا وإصابة واعتقال المئات. تحول هذا اليوم التاريخي إلى ذكرى سنوية جامعة ومقدسة تخلد التحام الهوية بالتراب والوجود الفلسطيني وصموده الأزلي بوجه الاقتلاع والتهجير.",
         stat: "6 شهداء",
         statExp: "ستة شهداء سقطوا دفاعاً عن الأرض في أراضي الداخل المحتل عام 1948",
         sourceName: "تقارير توثيقية فلسطينية",
@@ -374,7 +330,6 @@ const milestoneCinematicData = [
     {
         id: "m11", type: "scene", year: "1987", title: "الانتفاضة الفلسطينية الأولى", alt: "انتفاضة الحجارة", image: "images/timeline/11.jpg",
         excerpt: "هبة شعبية كبرى انطلقت من مخيم جباليا في قطاع غزة وامتدت لكافة المدن والقرى الفلسطينية.",
-        detailedExplanation: "انتفاضة الحجارة عام 1987 هي ثورة شعبية عارمة تفجرت في مخيم جباليا لتبث الروح الكفاحية في كل شبر من أراضي فلسطين التاريخية المحتلة. تفجرت الأحداث إثر إقدام مستوطن على دهس مجموعة عمال فلسطينيين بشاحنته. تميزت الانتفاضة بمشاركة شعبية شاملة، من أطفال يرمون دبابات الاحتلال بالحجارة وعصيان مدني شامل ومقاطعة البضائع الإسرائيلية. ارتكب الاحتلال جرائم وحشية وسياسات قمع مفرطة مثل 'تكسير العظام'، واستشهد خلالها أكثر من 1,300 فلسطيني وجرح وأسر عشرات الآلاف.",
         stat: "أكثر من 1300 شهيد",
         statExp: "شهداء رصاص الاحتلال والمواجهات الشعبية والحجارة خلال الانتفاضة الأولى",
         sourceName: "مركز المعلومات الوطني الفلسطيني (وفا)",
@@ -384,7 +339,6 @@ const milestoneCinematicData = [
     {
         id: "m25", type: "scene", year: "1994", title: "مجزرة الحرم الإبراهيمي", alt: "", image: "images/timeline/25.jpg",
         excerpt: "إطلاق نار متطرف داخل الحرم الإبراهيمي الشريف في مدينة الخليل أثناء صلاة الفجر.",
-        detailedExplanation: "في فجر يوم الجمعة 25 شباط 1994، اقتحم المستوطن الإرهابي والطبيب العسكري باروخ غولدشتاين المسجد الإبراهيمي في الخليل بتواطؤ وتسهيل من جنود الاحتلال. فتح المجرم نيران بندقيته الرشاشة باتجاه المئات من المصلين الركوع السجود أثناء صلاة الفجر بدم بارد. ارتقى 29 شهيداً داخل المسجد على الفور قبل أن ينقض المصلون عليه ويقضون عليه، وتلا ذلك مواجهات عارمة في الخليل وفلسطين ارتقى فيها عشرات الشهداء الآخرين، وعاقب الاحتلال الضحايا بتقسيم المسجد الإبراهيمي وإغلاق قلب مدينة الخليل.",
         stat: "29 شهيداً",
         statExp: "29 شهيداً ارتقوا داخل المسجد أثناء صلاة الفجر",
         sourceName: "ويكيبيديا والموسوعة التفاعلية",
@@ -394,7 +348,6 @@ const milestoneCinematicData = [
     {
         id: "m12", type: "scene", year: "2000", title: "الانتفاضة الفلسطينية الثانية", alt: "انتفاضة الأقصى", image: "images/timeline/12.jpg",
         excerpt: "اندلعت عقب اقتحام أرييل شارون للمسجد الأقصى، وشهدت مواجهات مسلحة واجتياحات واسعة لمدن الضفة وغزة.",
-        detailedExplanation: "انتفاضة الأقصى اندلعت في 28 أيلول 2000 عقب اقتحام المجرم أرييل شارون لساحات المسجد الأقصى المبارك مستفزاً مشاعر المسلمين والفلسطينيين. تطورت الاحتجاجات السلمية بسرعة إلى انتفاضة مسلحة دامت عدة سنوات بوجه القوة الصهيونية الباطشة. شهدت الانتفاضة تدمير واجتياح مخيم جنين، ومحاصرة الرئيس ياسر عرفات في المقاطعة برام الله، واغتيال الطائرات لكبار القادة واجتياح مدن وقرى الضفة وغزة بالكامل، مخلفة أكثر من 4,400 شهيد فلسطيني وعشرات الآلاف من الجرحى والأسرى البواسل.",
         stat: "آلاف الشهداء",
         statExp: "أكثر من 4000 شهيد وثقتهم السجلات الرسمية خلال انتفاضة الأقصى",
         sourceName: "مركز المعلومات الوطني الفلسطيني (وفا)",
@@ -404,7 +357,6 @@ const milestoneCinematicData = [
     {
         id: "m15", type: "scene", year: "2014", title: "الجرف الصامد", alt: "حرب غزة 2014", image: "images/timeline/15.jpg",
         excerpt: "حرب مدمرة استمرت 51 يوماً ضد قطاع غزة، وشهدت مجازر مروعة بحق العائلات وتدميراً واسعاً.",
-        detailedExplanation: "العدوان العسكري الواسع النطاق على قطاع غزة عام 2014 استمر 51 يوماً وأسفر عن تدمير هائل وإبادة عائلات بأكملها. أطلقت دبابات وطائرات الاحتلال مئات الآلاف من القذائف الحربية، مرتكبة مجازر رهيبة في حي الشجاعية ورفح وخزاعة ومسحت أحياء ومربعات سكنية كاملة من الوجود، مخلفة ما يزيد عن 2,200 شهيد معظمهم أطفال ونساء، ومسح أكثر من 144 عائلة بأكملها من السجلات المدنية وشلت مرافق الحياة تماماً وسط صمود تاريخي للقطاع.",
         stat: "2,200+ شهيد",
         statExp: "أكثر من 2200 شهيد بينهم مئات الأطفال والنساء وعائلات بأكملها مسحت من السجل المدني",
         sourceName: "الجهاز المركزي للإحصاء الفلسطيني",
@@ -414,7 +366,6 @@ const milestoneCinematicData = [
     {
         id: "m30", type: "scene", year: "2023 - 2026", title: "طوفان الأقصى والعدوان الشامل", alt: "حرب الإبادة", image: "images/timeline/30.jpg",
         excerpt: "الملحمة التاريخية الكبرى وطوفان الأقصى وما تلاه من حرب إبادة جماعية وعدوان غير مسبوق على قطاع غزة والضفة والمنطقة.",
-        detailedExplanation: "الملحمة التاريخية وحرب الإبادة المستمرة منذ السابع من أكتوبر، حيث يتعرض قطاع غزة والكل الفلسطيني لأبشع إبادة جماعية وتطهير عرقي وجغرافي في العصر الحديث. انطلقت معركة طوفان الأقصى رداً على الحصار والانتهاكات المستمرة للمسجد الأقصى والقدس، فقابلها الاحتلال بالقمع والإبادة الشاملة والتجويع المتعمد ملقياً مئات آلاف الأطنان من المتفجرات الكيميائية والحارقة على رؤوس المدنيين، ومدمراً المستشفيات والمدارس ودور العبادة، ليتخطى أعداد الشهداء والمفقودين والجرحى حاجز الـ 200 ألف معظمهم من الأطفال والرضع والنساء والكوادر الطبية والإعلامية في ملحمة صمود أسطورية ترويها الأجيال.",
         stat: "عشرات الآلاف من الشهداء",
         statExp: "أكثر من 158,000 إلى 291,000 شهيد ومفقود وجريح ومستشهد تحت الأنقاض وفي حرب الإبادة الجماعية المستمرة",
         sourceName: "الجهاز المركزي للإحصاء الفلسطيني وتقارير الأمم المتحدة",
@@ -428,26 +379,40 @@ function changeLanguage(langCode) {
     localStorage.setItem('site_lang', langCode);
     const t = translations[currentLang];
 
-    document.getElementById('html-root').lang = currentLang;
-    document.getElementById('html-root').dir = (currentLang === 'ar') ? 'rtl' : 'ltr';
-    document.getElementById('language-select').value = currentLang;
+    const htmlRoot = document.getElementById('html-root');
+    if (htmlRoot) {
+        htmlRoot.lang = currentLang;
+        htmlRoot.dir = (currentLang === 'ar') ? 'rtl' : 'ltr';
+    }
+    const langSelect = document.getElementById('language-select');
+    if (langSelect) langSelect.value = currentLang;
 
-    document.getElementById('title-main').innerText = t.titleMain;
-    document.getElementById('logo-text').innerText = t.logoText;
-    document.getElementById('search-input').placeholder = t.searchPlaceholder;
-    document.getElementById('tab-souls').innerText = t.tabSouls;
-    document.getElementById('tab-journalists').innerText = t.tabJournalists;
-    document.getElementById('tab-westbank').innerText = t.tabWestBank;
-    document.getElementById('tab-48').innerText = t.tab48;
-    document.getElementById('tab-milestones').innerText = t.tabMilestones;
-    document.getElementById('tab-stats').innerText = t.tabStats;
-    document.getElementById('tab-videos').innerText = t.tabVideos;
-    document.getElementById('tab-map').innerText = t.tabMap;
-    document.getElementById('donate-desktop').innerText = t.donate;
-    document.getElementById('verse-text').innerText = t.verse;
-    document.getElementById('dev-text').innerText = t.devText;
-    document.getElementById('share-btn-text').innerText = t.shareBtn;
-    document.getElementById('martyrs-label').innerText = t.martyrsLabel;
+    const setInnerText = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = text;
+    };
+    const setPlaceholder = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.placeholder = text;
+    };
+
+    setInnerText('title-main', t.titleMain);
+    setInnerText('logo-text', t.logoText);
+    setPlaceholder('search-input', t.searchPlaceholder);
+    setInnerText('tab-souls', t.tabSouls);
+    setInnerText('tab-journalists', t.tabJournalists);
+    setInnerText('tab-westbank', t.tabWestBank);
+    setInnerText('tab-48', t.tab48);
+    setInnerText('tab-milestones', t.tabMilestones);
+    setInnerText('tab-stats', t.tabStats);
+    setInnerText('tab-videos', t.tabVideos);
+    setInnerText('tab-map', t.tabMap);
+    setInnerText('tab-solidarity', t.tabSolidarity || (currentLang === 'ar' ? 'التضامن' : 'Solidarity'));
+    setInnerText('donate-desktop', t.donate);
+    setInnerText('verse-text', t.verse);
+    setInnerText('dev-text', t.devText);
+    setInnerText('share-btn-text', t.shareBtn);
+    setInnerText('martyrs-label', t.martyrsLabel);
 
     const modalMilestoneTitle = document.getElementById('modal-milestone-title-text');
     if(modalMilestoneTitle) modalMilestoneTitle.innerText = t.milestonesTitle;
@@ -576,35 +541,19 @@ function openMilestoneModal(item) {
     const t = translations[currentLang];
 
     container.innerHTML = `
-        <div class="tlc-modal-content text-right text-xs">
-            <div class="flex items-center gap-2 mb-2">
-                <span style="background: #ef4444; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; font-family: 'Cairo';">${item.year}</span>
-                <span style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; font-family: 'Cairo';">محطة تاريخية بارزة</span>
+        <div class="tlc-modal-content">
+            <h2 class="tlc-modal-title">${item.title} ${item.alt ? `<span class="tlc-mdl-alt">(${item.alt})</span>` : ''}</h2>
+            <div class="tlc-modal-meta"><time>${item.year}</time></div>
+            <img class="tlc-modal-img" src="${item.image}" alt="" onerror="this.style.display='none'">
+            <div class="tlc-modal-desc">${item.excerpt}</div>
+            <div class="tlc-modal-stat">
+                <span class="tlc-mdl-stat-label">عدد الشهداء:</span>
+                <span class="tlc-mdl-stat-num">${item.stat}</span>
+                <p class="tlc-mdl-stat-exp">${item.statExp || item.excerpt}</p>
             </div>
-            <h2 class="tlc-modal-title" style="font-size: 1.4rem; font-weight: 900; color: #ef4444; line-height: 1.4; margin-bottom: 8px;">${item.title} ${item.alt ? `<span class="tlc-mdl-alt text-gray-400 text-sm font-medium">(${item.alt})</span>` : ''}</h2>
-
-            <img class="tlc-modal-img rounded-xl max-h-56 w-full object-cover border border-red-500/30 shadow-lg" src="${item.image}" alt="" onerror="this.style.display='none'">
-
-            <div class="tlc-modal-desc mt-4 leading-relaxed text-gray-100" style="font-size: 0.9rem; border-right: 3px solid #ef4444; padding-right: 12px; margin-bottom: 12px;">
-                <strong>لمحة عامة:</strong><br>
-                ${item.excerpt}
-            </div>
-
-            ${item.detailedExplanation ? `
-            <div class="tlc-modal-detailed-explanation mt-4 p-4 bg-black/40 rounded-xl border border-white/5 leading-relaxed text-gray-300" style="font-size: 0.85rem; text-align: justify;">
-                <h4 class="font-bold text-red-400 mb-2 flex items-center gap-1.5" style="font-size: 0.95rem;">📖 تفاصيل الحدث وشرحه التاريخي الموثق:</h4>
-                <p style="text-indent: 15px;">${item.detailedExplanation}</p>
-            </div>
-            ` : ''}
-
-            <div class="tlc-modal-stat mt-4 bg-red-950/20 border border-red-500/20 p-4 rounded-xl flex flex-col gap-1">
-                <span class="tlc-mdl-stat-label text-gray-400 block font-bold text-[10px] tracking-wider uppercase">📊 الإحصائيات والأثر البشري الموثق:</span>
-                <span class="tlc-mdl-stat-num text-red-400 font-black text-lg">${item.stat}</span>
-                <p class="tlc-mdl-stat-exp text-gray-300 mt-1" style="font-size: 0.8rem; line-height: 1.4;">${item.statExp || item.excerpt}</p>
-            </div>
-
-            <div class="tlc-modal-source mt-4 border-t border-white/10 pt-3 text-[11px] text-gray-500 flex justify-between items-center">
-                <span>📚 <strong>${t.source || 'المصدر التوثيقي:'}</strong> <a href="${item.sourceUrl || 'https://www.palquest.org/'}" target="_blank" class="text-red-400 hover:underline inline-flex items-center gap-0.5">${item.sourceName || 'الموسوعة التفاعلية للقضية الفلسطينية'} 🔗</a></span>
+            <div class="tlc-modal-source">
+                <span>${t.source}</span>
+                <a href="${item.sourceUrl || 'https://www.palquest.org/'}" target="_blank" rel="noopener">${item.sourceName || 'الموسوعة التفاعلية للقضية الفلسطينية'}</a>
             </div>
         </div>
     `;
@@ -955,21 +904,6 @@ function initMapIfNeeded() {
     }
 }
 
-const enrichedMapData = [
-    { id: "deir-yassin", name: "دير ياسين (Deir Yassin)", year: 1948, fate: "Massacre", lat: 31.7868, lng: 35.1784, desc: "مجزرة وحشية وتطهير عرقي ارتكبته الجماعات الإرهابية الصهيونية (الأرغون وشتيرن).", linkedMilestoneId: "m20" },
-    { id: "tantura", name: "الطنطورة (Tantura)", year: 1948, fate: "Massacre", lat: 32.61, lng: 34.93, desc: "مجزرة بشعة وتصفية مئات المدنيين العزل من أهالي القرية الساحلية.", linkedMilestoneId: "m1" },
-    { id: "al-majdal", name: "المجدل عسقلان (Al-Majdal)", year: 1948, fate: "Depopulated", lat: 31.6676, lng: 34.5657, desc: "مدينة كنعانية تاريخية جرى تهجير سكانها بالكامل وتحويلها لمدينة عسكرية للاحتلال.", linkedMilestoneId: "m2" },
-    { id: "lifta", name: "لفتا (Lifta)", year: 1948, fate: "Depopulated", lat: 31.7916, lng: 35.1958, desc: "درة القرى الفلسطينية المهجرة بالقدس، لا تزال منازلها الحجرية ونبع مياهها شاهداً على الهوية والتاريخ.", linkedMilestoneId: "m2" },
-    { id: "ein-karem", name: "عين كارم (Ein Karem)", year: 1948, fate: "Depopulated", lat: 31.7614, lng: 35.1654, desc: "بلدة مقدسية عريقة، مهد ولادة يوحنا المعمدان، جرى تهجير أهلها قسراً ومصادرة بيوتهم الأثرية.", linkedMilestoneId: "m2" },
-    { id: "saffuriyya", name: "صفورية (Saffuriyya)", year: 1948, fate: "Depopulated", lat: 32.7469, lng: 35.2788, desc: "قرية تاريخية كبرى في الجليل الغربي، هُجّر أهلها بالكامل وقُصفت بالطائرات.", linkedMilestoneId: "m2" },
-    { id: "beersheba", name: "بئر السبع (Beersheba)", year: 1948, fate: "Depopulated", lat: 31.2525, lng: 34.7915, desc: "عاصمة النقب التاريخية، جرى تهجير عشائرها العربية البدوية وسلب أراضيهم الشاسعة.", linkedMilestoneId: "m2" },
-    { id: "kufr-qasem", name: "كفر قاسم (Kufr Qasem)", year: 1956, fate: "Massacre", lat: 32.115, lng: 34.975, desc: "مجزرة ارتكبها حرس الحدود الإسرائيلي ضد العمال الفلاحين العائدين لقريتهم أثناء حظر التجوال المفاجئ.", linkedMilestoneId: "m4" },
-    { id: "sabra-shatila", name: "صبرا وشاتيلا (Sabra & Shatila)", year: 1982, fate: "Massacre", lat: 33.865, lng: 35.485, desc: "مجزرة دموية وحشية استمرت ثلاثة أيام بحق اللاجئين الفلسطينيين في مخيمات صبرا وشاتيلا بلبنان بتسهيل من جيش الاحتلال.", linkedMilestoneId: "m11" },
-    { id: "jenin-camp", name: "مخيم جنين (Jenin Camp)", year: 2002, fate: "Massacre", lat: 32.462, lng: 35.286, desc: "اجتياح ومجزرة مخيم جنين الشهيرة التي قادها جيش الاحتلال الإسرائيلي مسفراً عن تدمير المخيم بالكامل واستشهاد العشرات.", linkedMilestoneId: "m12" },
-    { id: "shuja-iyya", name: "حي الشجاعية غزة (Shuja'iyya)", year: 2014, fate: "Massacre", lat: 31.503, lng: 34.482, desc: "قصف مدفعي مروع وجوي أباد أحياء بأكملها في غزة واستشهد فيه المئات في ليلة واحدة.", linkedMilestoneId: "m15" },
-    { id: "rafah-tents", name: "خيام النازحين رفح (Rafah)", year: 2024, fate: "Massacre", lat: 31.296, lng: 34.242, desc: "مجزرة خيام النازحين المروعة في تل السلطان برفح بالقنابل الحارقة التي هزت الضمير الإنساني.", linkedMilestoneId: "m30" }
-];
-
 function loadMapData() {
     $.getJSON('./data/villages.geojson')
         .done(geoData => {
@@ -981,23 +915,22 @@ function loadMapData() {
                     fate: f.properties.fate || 'Depopulated',
                     eventId: f.properties.eventId,
                     lat: f.geometry.coordinates[1],
-                    lng: f.geometry.coordinates[0],
-                    desc: f.properties.desc || ''
+                    lng: f.geometry.coordinates[0]
                 }));
-                // Combine with our enriched data to maximize depth
-                enrichedMapData.forEach(item => {
-                    if (!nakbaVillages.find(v => v.id === item.id)) {
-                        nakbaVillages.push(item);
-                    }
-                });
-            } else {
-                nakbaVillages = enrichedMapData;
             }
             renderMapAndList();
         })
         .fail(err => {
             console.log("Failed to load Nakba villages GeoJSON, using robust fallback:", err);
-            nakbaVillages = enrichedMapData;
+            nakbaVillages = [
+                { id: "deir-yassin", name: "Deir Yassin", year: 1948, fate: "Massacre", lat: 31.7868, lng: 35.1784 },
+                { id: "tantura", name: "Tantura", year: 1948, fate: "Massacre", lat: 32.61, lng: 34.93 },
+                { id: "al-majdal", name: "Al-Majdal", year: 1948, fate: "Depopulated", lat: 31.6676, lng: 34.5657 },
+                { id: "lifta", name: "Lifta", year: 1948, fate: "Depopulated", lat: 31.7916, lng: 35.1958 },
+                { id: "ein-karem", name: "Ein Karem", year: 1948, fate: "Depopulated", lat: 31.7614, lng: 35.1654 },
+                { id: "saffuriyya", name: "Saffuriyya", year: 1948, fate: "Depopulated", lat: 32.7469, lng: 35.2788 },
+                { id: "beersheba", name: "Beersheba", year: 1948, fate: "Depopulated", lat: 31.2525, lng: 34.7915 }
+            ];
             renderMapAndList();
         });
 }
@@ -1015,8 +948,7 @@ function renderMapAndList() {
     const filtered = nakbaVillages.filter(v => {
         const name = (v.name || '').toLowerCase();
         const fate = (v.fate || '').toLowerCase();
-        const desc = (v.desc || '').toLowerCase();
-        return name.includes(query) || fate.includes(query) || desc.includes(query);
+        return name.includes(query) || fate.includes(query);
     });
 
     if (!listContainer) return;
@@ -1035,27 +967,20 @@ function renderMapAndList() {
     filtered.forEach((v, index) => {
         if (markersLayer) {
             let marker = L.circleMarker([v.lat, v.lng], {
-                radius: 8,
-                fillColor: '#ef4444',
+                radius: 7,
+                fillColor: '#dc2626',
                 color: '#ffffff',
-                weight: 2,
+                weight: 1.5,
                 opacity: 1,
-                fillOpacity: 0.9
+                fillOpacity: 0.85
             });
 
             const fateAr = v.fate === 'Massacre' ? 'مجزرة وحشية' : 'قرية مهجرة بالكامل';
-            const linkButton = v.linkedMilestoneId ? `
-                <button onclick="window.openLinkedMilestone('${v.linkedMilestoneId}')" class="mt-2.5 w-full py-1.5 px-3 bg-red-600 hover:bg-red-700 text-white font-bold text-[10px] rounded-lg transition-all flex items-center justify-center gap-1 shadow-md">
-                    📖 اقرأ تفاصيل هذا الحدث التاريخي
-                </button>
-            ` : '';
             const popupContent = `
-                <div class="p-3.5 text-right font-['Cairo'] text-xs text-white bg-neutral-950 border border-red-500/30 rounded-xl max-w-[250px] shadow-2xl">
-                    <h4 class="font-bold text-red-500 text-sm mb-1.5">🇵🇸 ${v.name}</h4>
-                    <p class="text-gray-300 mb-1"><strong>سنة الحدث:</strong> ${v.year}</p>
-                    <p class="text-gray-300 mb-2"><strong>المصير والوضع:</strong> ${fateAr}</p>
-                    ${v.desc ? `<p class="text-[10px] text-gray-400 leading-relaxed border-t border-white/5 pt-1.5 mt-1.5">${v.desc}</p>` : ''}
-                    ${linkButton}
+                <div class="p-2.5 text-right font-['Cairo'] text-xs text-white bg-neutral-900/95 border border-red-600/30 rounded-lg max-w-[200px]">
+                    <h4 class="font-bold text-red-400 text-sm mb-1">🇵🇸 ${v.name}</h4>
+                    <p class="text-gray-300 mb-1"><strong>سنة التهجير:</strong> ${v.year}</p>
+                    <p class="text-gray-300"><strong>المصير والوضع الحالي:</strong> ${fateAr}</p>
                 </div>
             `;
             marker.bindPopup(popupContent);
@@ -1083,27 +1008,6 @@ window.focusMapMarker = function(lat, lng, name) {
         if (match) {
             match.marker.openPopup();
         }
-    }
-};
-
-window.openLinkedMilestone = function(milestoneId) {
-    if (!window.location.pathname.includes('milestones.html')) {
-        window.location.href = 'milestones.html?milestone=' + encodeURIComponent(milestoneId);
-        return;
-    }
-
-    // Find the milestone object inside milestoneCinematicData
-    const foundMilestone = milestoneCinematicData.find(m => m.id === milestoneId);
-    if (foundMilestone) {
-        setTimeout(() => {
-            // Scroll to the milestone element
-            const element = document.getElementById(milestoneId);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-            // Open the detailed modal
-            openMilestoneModal(foundMilestone);
-        }, 300);
     }
 };
 
@@ -1164,256 +1068,6 @@ function renderTributeCards(containerId, dataset) {
     container.innerHTML = html;
 }
 
-let ageChart = null;
-let regionChart = null;
-
-function initRealStatsCharts() {
-    // 1. Chart for Age Distribution (Doughnut Chart)
-    const ctxAge = document.getElementById('chart-age-distribution');
-    if (ctxAge) {
-        if (ageChart) ageChart.destroy();
-        ageChart = new Chart(ctxAge, {
-            type: 'doughnut',
-            data: {
-                labels: ['أطفال ورضع (Children)', 'شباب ويافعون (Youth/Teens)', 'بالغون (Adults)', 'كبار السن (Elderly)'],
-                datasets: [{
-                    data: [44.2, 27.8, 20.4, 7.6],
-                    backgroundColor: [
-                        '#ef4444', // Red
-                        '#f87171', // Light Red
-                        '#ffffff', // White
-                        '#4b5563'  // Dark grey
-                    ],
-                    borderColor: '#121212',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            color: '#ffffff',
-                            font: { family: 'Cairo', size: 9 }
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return ` ${context.label}: %${context.parsed}`;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    // 2. Chart for Regional Targeting (Bar Chart)
-    const ctxRegion = document.getElementById('chart-regional-targeting');
-    if (ctxRegion) {
-        if (regionChart) regionChart.destroy();
-        regionChart = new Chart(ctxRegion, {
-            type: 'bar',
-            data: {
-                labels: ['غزة (Gaza)', 'شمال غزة (North)', 'خان يونس (Khan Younis)', 'الوسطى (Central)', 'رفح (Rafah)'],
-                datasets: [{
-                    label: 'نسبة الاستهداف الميداني للمناطق السكنية %',
-                    data: [35.6, 25.2, 19.8, 11.4, 8.0],
-                    backgroundColor: 'rgba(239, 68, 68, 0.85)',
-                    borderColor: '#ef4444',
-                    borderWidth: 1.5,
-                    borderRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                        ticks: { color: '#d1d5db', font: { family: 'Cairo', size: 9 } }
-                    },
-                    y: {
-                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                        ticks: { color: '#d1d5db', font: { family: 'Cairo', size: 9 } },
-                        beginAtZero: true
-                    }
-                },
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#ffffff',
-                            font: { family: 'Cairo', size: 10 }
-                        }
-                    }
-                }
-            }
-        });
-    }
-}
-
-const visualArchiveData = [
-    {
-        id: "v1",
-        type: "video",
-        category: "testimonies",
-        title_ar: "فيلم وثائقي: ليلة لا تنتهي - العدوان على غزة",
-        title_en: "Documentary: The Night Won't End - Biden's War on Gaza",
-        desc_ar: "وثائقي استقصائي شامل يوثق الهجمات والجرائم المروعة في قطاع غزة وشهادات حية من الناجين وعائلات الضحايا.",
-        desc_en: "An in-depth investigative documentary chronicling the devastating attacks on Gaza and featuring raw, firsthand testimonies from survivors and victims' families.",
-        duration: "1:18:25",
-        url: "_bI9b9O-bM0",
-        thumbnail: "https://img.youtube.com/vi/_bI9b9O-bM0/0.jpg"
-    },
-    {
-        id: "v2",
-        type: "video",
-        category: "reports",
-        title_ar: "أيام الإبادة: كيف غيرت الحرب ملامح الحياة في غزة؟",
-        title_en: "Gaza: How the Genocide Changed Every Aspect of Life",
-        desc_ar: "تقرير استقصائي يوثق تدمير البنية التحتية والمستشفيات والأحياء السكنية بالكامل، مستعرضاً حجم الجريمة بلغة الأرقام والصور.",
-        desc_en: "An analytical report documenting the complete destruction of infrastructure, hospitals, and residential neighborhoods, highlighting the scale of the crime in figures.",
-        duration: "15:40",
-        url: "69r5XW_pX98",
-        thumbnail: "https://img.youtube.com/vi/69r5XW_pX98/0.jpg"
-    },
-    {
-        id: "v3",
-        type: "image",
-        category: "reports",
-        title_ar: "صمود وسط الركام: حياة النازحين في الخيام",
-        title_en: "Resilience amidst the Ruins: Displacement and Tents in Gaza",
-        desc_ar: "صورة وثائقية تعكس صمود العائلات الفلسطينية التي نصبت خيامها فوق ركام منازلها المدمرة متمسكة بالأرض والوجود.",
-        desc_en: "A documentary photograph capturing the resilience of Palestinian families setting up their tents over the debris of their homes, holding on to their land and existence.",
-        duration: "صورة وثائقية",
-        url: "https://upload.wikimedia.org/wikipedia/commons/e/e3/Gaza_Strip_devastation_Oct_2023.jpg",
-        thumbnail: "https://upload.wikimedia.org/wikipedia/commons/e/e3/Gaza_Strip_devastation_Oct_2023.jpg"
-    },
-    {
-        id: "v4",
-        type: "video",
-        category: "testimonies",
-        title_ar: "شهادات أطباء مستشفى الشفاء والكوادر الطبية",
-        title_en: "Gaza Doctors: Testimonies of Survival and War at Al-Shifa Hospital",
-        desc_ar: "شهادات حية ومؤثرة تروي التفاصيل الدقيقة لمحاصرة واقتحام مستشفى الشفاء والجرائم التي ارتكبت داخل أسواره بحق المرضى والطواقم الطبية.",
-        desc_en: "Moving testimonies from doctors and paramedics recounting the brutal siege of Al-Shifa Hospital, detailing the hardships and courage of medical staff under fire.",
-        duration: "12:15",
-        url: "6R7t-8X1g7E",
-        thumbnail: "https://img.youtube.com/vi/6R7t-8X1g7E/0.jpg"
-    },
-    {
-        id: "v5",
-        type: "image",
-        category: "testimonies",
-        title_ar: "أطفال فلسطين: أمل يتحدى الإبادة والتجويع",
-        title_en: "Children of Palestine: Hope Defying Starvation and Death",
-        desc_ar: "صورة حية لأطفال غزة وهم يصنعون الابتسامة والأمل من داخل مراكز الإيواء بالرغم من وطأة العدوان والحصار المستمر.",
-        desc_en: "A documentary photo representing the enduring spirit of Gaza's children, seeking joy and education in displacement shelters despite the ongoing embargo and destruction.",
-        duration: "صورة وثائقية",
-        url: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Wounded_boy_Al_Shifa_hospital_Gaza_Strip.jpg",
-        thumbnail: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Wounded_boy_Al_Shifa_hospital_Gaza_Strip.jpg"
-    },
-    {
-        id: "v6",
-        type: "video",
-        category: "reports",
-        title_ar: "توثيق استهداف عائلات بأكملها ومسحها من السجل المدني",
-        title_en: "Documenting the Erasure of Whole Families from the Civil Registry",
-        desc_ar: "تقرير وثائقي يرصد مئات العائلات الغزية التي أبيدت بالكامل ومُسحت من السجلات الرسمية نتيجة القصف المباشر للمنازل الآمنة.",
-        desc_en: "A heartbreaking visual report detailing the wiping out of entire multi-generational families from official registries due to direct airstrikes on civilian housing.",
-        duration: "08:50",
-        url: "v3u9VvH-yE4",
-        thumbnail: "https://img.youtube.com/vi/v3u9VvH-yE4/0.jpg"
-    }
-];
-
-function renderVisualArchive(category = 'all') {
-    const container = document.getElementById('gallery');
-    if (!container) return;
-
-    const buttons = {
-        all: document.getElementById('btn-all'),
-        reports: document.getElementById('btn-reports'),
-        testimonies: document.getElementById('btn-testimonies')
-    };
-
-    Object.keys(buttons).forEach(key => {
-        const btn = buttons[key];
-        if (btn) {
-            if (key === category) {
-                btn.className = "px-3 py-1 rounded-lg text-xs bg-red-600 font-bold text-white transition-all";
-            } else {
-                btn.className = "px-3 py-1 rounded-lg text-xs text-gray-300 hover:text-white transition-all bg-black/40 border border-white/5";
-            }
-        }
-    });
-
-    const filtered = category === 'all'
-        ? visualArchiveData
-        : visualArchiveData.filter(item => item.category === category);
-
-    let html = '';
-    filtered.forEach(item => {
-        const title = currentLang === 'ar' ? item.title_ar : item.title_en;
-        const desc = currentLang === 'ar' ? item.desc_ar : item.desc_en;
-        const playIcon = item.type === 'video' ? '▶' : '🖼️';
-        const typeBadge = item.type === 'video' ? (currentLang === 'ar' ? 'فيديو توثيقي' : 'Video') : (currentLang === 'ar' ? 'صورة ميدانية' : 'Photograph');
-        const durationText = item.duration;
-
-        html += `
-            <div class="glass-panel rounded-2xl overflow-hidden border border-white/10 group hover:border-red-500/50 transition-all cursor-pointer flex flex-col justify-between" onclick="openLightbox('${item.id}')">
-                <div class="h-44 bg-neutral-900 relative overflow-hidden flex items-center justify-center">
-                    <img src="${item.thumbnail}" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                    <div class="w-12 h-12 rounded-full bg-red-600/80 flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform z-10 font-bold">
-                        ${playIcon}
-                    </div>
-                    <span class="absolute bottom-2 right-2 bg-black/70 text-[10px] px-2 py-0.5 rounded text-gray-300 font-mono z-10">${durationText}</span>
-                </div>
-                <div class="p-4 space-y-2 text-right">
-                    <span class="text-[9px] text-red-400 font-bold uppercase tracking-wider bg-red-500/10 px-2 py-0.5 rounded-full">${typeBadge}</span>
-                    <h3 class="font-bold text-sm text-white line-clamp-1 mt-1 font-['Cairo']">${title}</h3>
-                    <p class="text-xs text-gray-400 line-clamp-2 leading-relaxed font-['Cairo']">${desc}</p>
-                </div>
-            </div>
-        `;
-    });
-
-    container.innerHTML = html;
-}
-
-function openLightbox(id) {
-    const item = visualArchiveData.find(i => i.id === id);
-    if (!item) return;
-
-    const modal = document.getElementById('lightbox-modal');
-    const content = document.getElementById('lightbox-content');
-    const title = document.getElementById('lightbox-title');
-    const desc = document.getElementById('lightbox-desc');
-
-    if (!modal || !content || !title || !desc) return;
-
-    title.innerText = currentLang === 'ar' ? item.title_ar : item.title_en;
-    desc.innerText = currentLang === 'ar' ? item.desc_ar : item.desc_en;
-
-    if (item.type === 'video') {
-        content.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${item.url}?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
-    } else {
-        content.innerHTML = `<img src="${item.url}" class="max-w-full max-h-full object-contain rounded-lg" />`;
-    }
-
-    modal.style.display = 'flex';
-}
-
-function closeLightbox() {
-    const modal = document.getElementById('lightbox-modal');
-    const content = document.getElementById('lightbox-content');
-    if (modal) modal.style.display = 'none';
-    if (content) content.innerHTML = ''; // Stop video playback
-}
-
 window.switchMainMode = function(mode) {
     currentMainMode = mode;
     document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
@@ -1450,30 +1104,32 @@ window.switchMainMode = function(mode) {
     } else if(mode === 'journalists') {
         fetchAndRenderData('./data/journalists.json');
     } else if(mode === 'westbank') {
-        document.getElementById('westbank-view').style.display = 'block';
+        const el = document.getElementById('westbank-view');
+        if (el) el.style.display = 'block';
         renderTributeCards('wb-cards-container', westBankMartyrsData);
         document.getElementById('number').innerText = westBankMartyrsData.length.toLocaleString();
         initCanvasPoints(westBankMartyrsData);
         isDirty = true;
     } else if(mode === 'martyrs48') {
-        document.getElementById('martyrs48-view').style.display = 'block';
+        const el = document.getElementById('martyrs48-view');
+        if (el) el.style.display = 'block';
         renderTributeCards('m48-cards-container', martyrs48Data);
         document.getElementById('number').innerText = martyrs48Data.length.toLocaleString();
         initCanvasPoints(martyrs48Data);
         isDirty = true;
     } else if(mode === 'milestones') {
-        document.getElementById('milestones-view').style.display = 'block';
+        const el = document.getElementById('milestones-view');
+        if (el) el.style.display = 'block';
         renderCinematicTimeline();
     } else if(mode === 'stats') {
-        document.getElementById('stats-view').style.display = 'block';
-        setTimeout(() => {
-            initRealStatsCharts();
-        }, 50);
+        const el = document.getElementById('stats-view');
+        if (el) el.style.display = 'block';
     } else if(mode === 'videos') {
-        document.getElementById('videos-view').style.display = 'block';
-        renderVisualArchive('all');
+        const el = document.getElementById('videos-view');
+        if (el) el.style.display = 'block';
     } else if(mode === 'map') {
-        document.getElementById('map-view').style.display = 'block';
+        const el = document.getElementById('map-view');
+        if (el) el.style.display = 'block';
         if (nakbaVillages.length === 0) {
             loadMapData();
         } else {
@@ -1482,7 +1138,7 @@ window.switchMainMode = function(mode) {
         setTimeout(() => {
             if (map) {
                 map.invalidateSize();
-                loadGazaBorders();
+                if (typeof window.loadGazaBorders === 'function') { window.loadGazaBorders(); }
             }
         }, 200);
     }
@@ -1586,6 +1242,8 @@ function initCanvasPoints(dataList) {
         name: item.name_ar || item.name || `شهيد ${index+1}`,
         name_en: item.name_en || item.english_name || '',
         age: item.age || 'غير معروف',
+        image: item.image ? (item.image.startsWith('/') ? item.image.slice(1) : item.image) : '',
+        notes: item.notes || '',
         x: item.x !== undefined ? item.x * width : Math.random() * width,
         y: item.y !== undefined ? item.y * height : Math.random() * height,
         radius: Math.random() * 1.5 + 1,
@@ -1665,13 +1323,6 @@ function drawCanvas() {
             continue;
         }
 
-        const isMobile = window.innerWidth <= 768;
-        if (isMobile) {
-            if (item.screenY < 155 || item.screenY > height - 110) {
-                continue;
-            }
-        }
-
         if (item.color === '#ef4444') {
             let isMatch = false;
             if (queryActive) {
@@ -1684,10 +1335,8 @@ function drawCanvas() {
             }
 
             if (!isMatch) {
-                if (!(queryActive && hideNonMatching)) {
-                    ctx.moveTo(item.screenX + item.radius, item.screenY);
-                    ctx.arc(item.screenX, item.screenY, item.radius, 0, Math.PI * 2);
-                }
+                ctx.moveTo(item.screenX + item.radius, item.screenY);
+                ctx.arc(item.screenX, item.screenY, item.radius, 0, Math.PI * 2);
             }
         }
     }
@@ -1703,13 +1352,6 @@ function drawCanvas() {
             continue;
         }
 
-        const isMobile = window.innerWidth <= 768;
-        if (isMobile) {
-            if (item.screenY < 155 || item.screenY > height - 110) {
-                continue;
-            }
-        }
-
         if (item.color === '#ffffff') {
             let isMatch = false;
             if (queryActive) {
@@ -1722,10 +1364,8 @@ function drawCanvas() {
             }
 
             if (!isMatch) {
-                if (!(queryActive && hideNonMatching)) {
-                    ctx.moveTo(item.screenX + item.radius, item.screenY);
-                    ctx.arc(item.screenX, item.screenY, item.radius, 0, Math.PI * 2);
-                }
+                ctx.moveTo(item.screenX + item.radius, item.screenY);
+                ctx.arc(item.screenX, item.screenY, item.radius, 0, Math.PI * 2);
             }
         }
     }
@@ -1738,13 +1378,6 @@ function drawCanvas() {
 
             if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
                 continue;
-            }
-
-            const isMobile = window.innerWidth <= 768;
-            if (isMobile) {
-                if (item.screenY < 155 || item.screenY > height - 110) {
-                    continue;
-                }
             }
 
             const nameAr = (item.name_ar || item.name || "").toLowerCase();
@@ -2278,60 +1911,34 @@ function translateMilestoneModal(lang) {
     let transExcerpt = currentMilestoneObj.excerpt;
     let transStat = currentMilestoneObj.stat;
     let transStatExp = currentMilestoneObj.statExp || currentMilestoneObj.excerpt;
-    let transDetailed = currentMilestoneObj.detailedExplanation || '';
 
     if (lang !== 'ar') {
         transTitle = currentMilestoneObj.title_en || currentMilestoneObj.title;
         transExcerpt = "A prominent historical milestone documenting the struggles, resilience, and events in the history of the Palestinian cause.";
         transStat = "Thousands of Martyrs";
         transStatExp = "Detailed archival statistics showing targeting records and historical timelines.";
-        transDetailed = currentMilestoneObj.detailedExplanation ? "Historical milestone describing the events, sacrifice, and key moments. Please refer to Arabic text for full official documentation and deep records of this event." : "";
     }
 
     container.innerHTML = `
         <div class="tlc-modal-content text-right text-xs">
-            <div class="flex items-center gap-2 mb-2 ${lang !== 'ar' ? 'flex-row-reverse' : ''}">
-                <span style="background: #ef4444; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; font-family: 'Cairo';">${currentMilestoneObj.year}</span>
-                <span style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; font-family: 'Cairo';">${lang === 'ar' ? 'محطة تاريخية بارزة' : 'Historical Milestone'}</span>
+            <h2 class="tlc-modal-title" style="font-size: 1.1rem; font-weight: bold; color: #ef4444;">${transTitle}</h2>
+            <div class="tlc-modal-meta" style="color: #9ca3af; font-size: 0.75rem; margin-top: 4px;"><time>${currentMilestoneObj.year}</time></div>
+            <img class="tlc-modal-img mt-3 rounded-xl max-h-48 w-full object-cover" src="${currentMilestoneObj.image}" alt="" onerror="this.style.display='none'">
+            <div class="tlc-modal-desc mt-3 leading-relaxed text-gray-200" style="font-size: 0.8rem;">${transExcerpt}</div>
+            <div class="tlc-modal-stat mt-4 bg-red-950/20 border border-red-500/20 p-3 rounded-xl">
+                <span class="tlc-mdl-stat-label text-gray-400 block font-bold text-[10px]">عدد الشهداء:</span>
+                <span class="tlc-mdl-stat-num text-red-400 font-black text-sm">${transStat}</span>
+                <p class="tlc-mdl-stat-exp text-gray-300 mt-1" style="font-size: 0.75rem;">${transStatExp}</p>
             </div>
-            <h2 class="tlc-modal-title" style="font-size: 1.4rem; font-weight: 900; color: #ef4444; line-height: 1.4; margin-bottom: 8px; text-align: ${lang === 'ar' ? 'right' : 'left'};">${transTitle} ${currentMilestoneObj.alt ? `<span class="tlc-mdl-alt text-gray-400 text-sm font-medium">(${currentMilestoneObj.alt})</span>` : ''}</h2>
-
-            <img class="tlc-modal-img rounded-xl max-h-56 w-full object-cover border border-red-500/30 shadow-lg" src="${currentMilestoneObj.image}" alt="" onerror="this.style.display='none'">
-
-            <div class="tlc-modal-desc mt-4 leading-relaxed text-gray-100" style="font-size: 0.9rem; border-right: ${lang === 'ar' ? '3px' : '0'} solid #ef4444; border-left: ${lang !== 'ar' ? '3px' : '0'} solid #ef4444; padding-right: ${lang === 'ar' ? '12px' : '0'}; padding-left: ${lang !== 'ar' ? '12px' : '0'}; margin-bottom: 12px; text-align: ${lang === 'ar' ? 'right' : 'left'};">
-                <strong>${lang === 'ar' ? 'لمحة عامة:' : 'Overview:'}</strong><br>
-                ${transExcerpt}
-            </div>
-
-            ${transDetailed ? `
-            <div class="tlc-modal-detailed-explanation mt-4 p-4 bg-black/40 rounded-xl border border-white/5 leading-relaxed text-gray-300" style="font-size: 0.85rem; text-align: ${lang === 'ar' ? 'justify' : 'left'};">
-                <h4 class="font-bold text-red-400 mb-2 flex items-center gap-1.5 ${lang !== 'ar' ? 'flex-row-reverse' : ''}" style="font-size: 0.95rem;">📖 ${lang === 'ar' ? 'تفاصيل الحدث وشرحه التاريخي الموثق:' : 'Event details & documented historical explanation:'}</h4>
-                <p style="text-indent: 15px;">${transDetailed}</p>
-            </div>
-            ` : ''}
-
-            <div class="tlc-modal-stat mt-4 bg-red-950/20 border border-red-500/20 p-4 rounded-xl flex flex-col gap-1 text-right">
-                <span class="tlc-mdl-stat-label text-gray-400 block font-bold text-[10px] tracking-wider uppercase text-right">${lang === 'ar' ? '📊 الإحصائيات والأثر البشري الموثق:' : '📊 Statistics & Documented Human Impact:'}</span>
-                <span class="tlc-mdl-stat-num text-red-400 font-black text-lg text-right">${transStat}</span>
-                <p class="tlc-mdl-stat-exp text-gray-300 mt-1 text-right" style="font-size: 0.8rem; line-height: 1.4;">${transStatExp}</p>
-            </div>
-
-            <div class="tlc-modal-source mt-4 border-t border-white/10 pt-3 text-[11px] text-gray-500 flex justify-between items-center ${lang !== 'ar' ? 'flex-row-reverse' : ''}">
-                <span>📚 <strong>${lang === 'ar' ? 'المصدر التوثيقي:' : 'Source:'}</strong> <a href="${currentMilestoneObj.sourceUrl || 'https://www.palquest.org/'}" target="_blank" class="text-red-400 hover:underline inline-flex items-center gap-0.5">${currentMilestoneObj.sourceName || 'Interactive Encyclopedia of Palestine'} 🔗</a></span>
+            <div class="tlc-modal-source mt-4 border-t border-white/10 pt-2 text-[10px] text-gray-500">
+                <span>${t.source || 'المصدر:'}</span>
+                <a href="${currentMilestoneObj.sourceUrl || 'https://www.palquest.org/'}" target="_blank" class="text-red-400 underline">${currentMilestoneObj.sourceName || 'الموسوعة التفاعلية بالقضية الفلسطينية'}</a>
             </div>
         </div>
     `;
 }
 
 // تحميل البيانات الافتراضية عند البدء
-window.initOnThisDayWidget = window.initOnThisDayWidget || function() {
-    console.log("initOnThisDayWidget placeholder called");
-};
-
-window.loadGazaBorders = window.loadGazaBorders || function() {
-    console.log("loadGazaBorders placeholder called");
-};
-
 $(document).ready(() => {
     initAdaptiveTheme();
 
@@ -2343,12 +1950,14 @@ $(document).ready(() => {
     else if (path.includes('martyrs48.html')) activeMode = 'martyrs48';
     else if (path.includes('milestones.html')) activeMode = 'milestones';
     else if (path.includes('stats.html')) activeMode = 'stats';
-    else if (path.includes('videos.html')) activeMode = 'videos';
     else if (path.includes('map.html')) activeMode = 'map';
     else if (path.includes('solidarity.html')) activeMode = 'solidarity';
 
+    // Auto translate to user preferred system language
+    changeLanguage(currentLang);
+
     switchMainMode(activeMode);
-    initOnThisDayWidget();
+    if (typeof window.initOnThisDayWidget === 'function') { window.initOnThisDayWidget(); }
 
     // Check for Map-to-Milestone deep linking parameters
     if (activeMode === 'milestones') {
