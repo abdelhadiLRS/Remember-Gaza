@@ -72,12 +72,12 @@ body.light-mode .modern-counter{background:rgba(255, 255, 255, 0.9) !important;c
 #canvas-layer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;transition:opacity 0.4s ease;pointer-events:auto;cursor:pointer;}
 #shooting-stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;}
 #stats-view, #videos-view, #no-data-view, #map-view, #milestones-view, #westbank-view, #martyrs48-view{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:20;background:rgba(10,10,10,0.98);overflow-y:auto;pointer-events:auto;padding-top:90px;padding-bottom:100px;}
-body.light-mode #stats-view, 
-body.light-mode #videos-view, 
-body.light-mode #no-data-view, 
-body.light-mode #map-view, 
-body.light-mode #milestones-view, 
-body.light-mode #westbank-view, 
+body.light-mode #stats-view,
+body.light-mode #videos-view,
+body.light-mode #no-data-view,
+body.light-mode #map-view,
+body.light-mode #milestones-view,
+body.light-mode #westbank-view,
 body.light-mode #martyrs48-view{background:rgba(243, 244, 246, 0.98) !important;}
 
 #ui-layer{position:fixed;inset:0;z-index:30;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;}
@@ -406,8 +406,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 <div class="tabs-wrapper no-scrollbar interactive">
 <div class="flex gap-1 bg-black/40 p-1 rounded-full border border-white/5">
-<a href="index.html" class="btn-main active" id="tab-souls" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء غزة</a>
-<a href="journalists.html" class="btn-main" id="tab-journalists" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء الصحافة</a>
+<a href="index.html" class="btn-main" id="tab-souls" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء غزة</a>
+<a href="journalists.html" class="btn-main active" id="tab-journalists" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء الصحافة</a>
 <a href="westbank.html" class="btn-main" id="tab-westbank" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء الضفة</a>
 <a href="martyrs48.html" class="btn-main" id="tab-48" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء 48</a>
 <a href="milestones.html" class="btn-main" id="tab-milestones" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">أبرز المحطات</a>
@@ -493,7 +493,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <label class="text-gray-300 block">رابط صورة الشهيد أو مستند إثبات (اختياري):</label>
                 <input type="url" id="cs-photo" placeholder="https://example.com/photo.jpg" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
             </div>
-            
+
             <!-- اختبار الأمان Math Captcha -->
             <div class="bg-red-950/20 border border-red-500/20 p-2.5 rounded-xl space-y-1">
                 <label class="text-red-400 block font-bold">سؤال الأمان (لمنع البرامج التلقائية):</label>
@@ -502,7 +502,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <input type="number" id="cs-captcha-answer" required placeholder="الناتج?" class="w-20 bg-black/60 border border-white/20 text-white px-2 py-1.5 rounded-lg text-xs outline-none focus:border-red-500 text-center">
                 </div>
             </div>
-            
+
             <button type="submit" class="w-full text-white font-bold py-2 px-4 rounded-xl transition-all bg-red-600 hover:bg-red-700 text-xs shadow-[0_0_15px_rgba(220,38,38,0.3)]">إرسال للمراجعة والاعتماد</button>
         </form>
     </div>
@@ -540,7 +540,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </button>
                 </div>
             </div>
-            
+
             <div id="candle-animation-area" class="h-10 flex justify-center items-center hidden">
                 <div class="candle-flame text-2xl animate-pulse">🕯️🔥</div>
             </div>
@@ -595,17 +595,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="shareable-card" style="width: 650px; height: 900px; background: #0a0a0a; color: white; font-family: 'Cairo', sans-serif; position: relative; overflow: hidden; padding: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border: 6px solid #880808;">
         <div style="position: absolute; top: -50px; right: -50px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(136,8,8,0.7) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; filter: blur(30px);"></div>
         <div style="position: absolute; bottom: -100px; left: -100px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(180,10,10,0.5) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; filter: blur(40px);"></div>
-        
+
         <h1 style="color: #ef4444; font-size: 3.5rem; font-weight: 900; margin-bottom: 5px; z-index: 2;">أرواح فلسطين</h1>
         <p style="color: #d1d5db; font-size: 1.4rem; margin-bottom: 50px; z-index: 2;">سجل الخلود وتوثيق الأرواح</p>
-        
+
         <div id="capture-img-container" style="width: 250px; height: 250px; border-radius: 20px; border: 3px solid #ef4444; overflow: hidden; margin-bottom: 40px; z-index: 2; background: #1a1a1a; display:flex; align-items:center; justify-content:center; box-shadow: 0 10px 30px rgba(220,38,38,0.4);">
             <span style="color:#666; font-size: 1.2rem;">صورة الشهيد</span>
         </div>
-        
+
         <h2 id="capture-name" style="font-size: 3.2rem; font-weight: 900; margin-bottom: 10px; z-index: 2; text-shadow: 0 4px 10px rgba(0,0,0,0.8); line-height: 1.2;"></h2>
         <h3 id="capture-name-en" style="font-size: 1.8rem; color: #9ca3af; margin-bottom: 40px; font-family: monospace; z-index: 2;"></h3>
-        
+
         <div style="background: rgba(20,20,20,0.85); border: 1px solid rgba(255,255,255,0.15); padding: 25px 50px; border-radius: 15px; width: 100%; max-width: 450px; z-index: 2; display: flex; flex-direction: column; gap: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
             <div style="display: flex; justify-content: space-between; font-size: 1.6rem;">
                 <span style="color: #9ca3af;">العمر:</span>
@@ -616,7 +616,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <strong id="capture-id" style="color: #ef4444; font-family: monospace;"></strong>
             </div>
         </div>
-        
+
         <div style="position: absolute; bottom: 30px; width: 100%; text-align: center; color: #666; font-size: 1.2rem; z-index: 2;">
             تم التوثيق عبر منصة أرواح فلسطين | palestiniansouls.com
         </div>

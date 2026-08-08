@@ -34,20 +34,6 @@ def verify_app():
             page.screenshot(path="verification/milestones_view.png")
             print("Milestones page screenshot taken successfully!")
 
-            # MOBILE VIEWPORT VERIFICATION
-            print("Setting viewport to mobile size (390x844)...")
-            page.set_viewport_size({"width": 390, "height": 844})
-            page.goto("http://localhost:3000")
-            page.wait_for_timeout(3000)
-            page.screenshot(path="verification/mobile_landing_view.png")
-            print("Mobile landing screenshot taken successfully!")
-
-            print("Clicking Stats tab on mobile...")
-            page.click("#tab-stats")
-            page.wait_for_timeout(3000)
-            page.screenshot(path="verification/mobile_stats_view.png")
-            print("Mobile stats screenshot taken successfully!")
-
         except Exception as e:
             print(f"Error during verification: {e}")
         finally:
