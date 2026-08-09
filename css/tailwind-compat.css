@@ -132,3 +132,176 @@
 
 /* Misc */
 .cursor-pointer{cursor:pointer}
+
+/* =========================================================================
+   أرواح فلسطين | Palestinian Souls — Creative Mobile Design System (v2.0)
+   Highly optimized, premium glassmorphic mobile viewport enhancements.
+   Guarantees 100% data visibility while elevating UX to native-app quality.
+   ========================================================================= */
+@media (max-width: 768px) {
+    /* --- Premium Header & Navigation Glassmorphism --- */
+    #header {
+        background: rgba(10, 10, 10, 0.85) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        border-bottom: 1px solid rgba(220, 38, 38, 0.25) !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
+    }
+
+    body.light-mode #header {
+        background: rgba(255, 255, 255, 0.9) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        border-bottom: 1px solid rgba(220, 38, 38, 0.15) !important;
+    }
+
+    /* Elegant Horizontal Nav Scroller with Gradient Fade Masks */
+    .tabs-wrapper {
+        position: relative !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        -webkit-overflow-scrolling: touch !important;
+        mask-image: linear-gradient(to right, transparent, #000 15px, #000 calc(100% - 15px), transparent) !important;
+        -webkit-mask-image: linear-gradient(to right, transparent, #000 15px, #000 calc(100% - 15px), transparent) !important;
+        padding: 4px 6px !important;
+        margin: 0 4px !important;
+    }
+
+    /* --- Pulsing Interactive Navigation Tab Highlight --- */
+    @keyframes pulseActiveTab {
+        0%, 100% { box-shadow: 0 0 8px rgba(220, 38, 38, 0.4); transform: scale(1); }
+        50% { box-shadow: 0 0 18px rgba(220, 38, 38, 0.7); transform: scale(1.03); }
+    }
+
+    .btn-main.active {
+        animation: pulseActiveTab 2.5s infinite ease-in-out !important;
+        border-color: #ef4444 !important;
+    }
+
+    /* --- Organic Haptic Active States on Touch --- */
+    .btn-main:active, .share-btn:active, .social-links a:active, select:active, button:active {
+        transform: scale(0.93) !important;
+        transition: transform 0.08s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+
+    /* --- Premium Glassmorphic Cards & Neon Accent Strip --- */
+    .glass-panel, .tlc-panel, .tlc-decade-card, .tlc-modal-stat, .modal-box {
+        border-radius: 16px !important;
+        border: 1px solid rgba(220, 38, 38, 0.25) !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), inset 0 0 12px rgba(220, 38, 38, 0.05) !important;
+        position: relative !important;
+        overflow: hidden !important;
+        background: rgba(15, 15, 15, 0.88) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+    }
+
+    body.light-mode .glass-panel,
+    body.light-mode .tlc-panel,
+    body.light-mode .tlc-decade-card,
+    body.light-mode .tlc-modal-stat,
+    body.light-mode .modal-box {
+        background: rgba(255, 255, 255, 0.92) !important;
+        border: 1px solid rgba(220, 38, 38, 0.15) !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    /* Subtle Blood-Red Neon Accent Line on Top of Cards */
+    .glass-panel::before, .tlc-panel::before, .tlc-decade-card::before, .modal-box::before {
+        content: '' !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 2px !important;
+        background: linear-gradient(90deg, transparent, #dc2626, transparent) !important;
+        z-index: 10 !important;
+    }
+
+    /* --- Beautiful Bottom Docking Quick Action bar --- */
+    #bottom-bar {
+        position: fixed !important;
+        bottom: 14px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: calc(100% - 24px) !important;
+        max-width: 480px !important;
+        background: rgba(10, 10, 10, 0.85) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        border: 1px solid rgba(220, 38, 38, 0.3) !important;
+        border-radius: 24px !important;
+        padding: 8px 14px !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85), 0 0 15px rgba(220, 38, 38, 0.2) !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: 6px !important;
+        z-index: 999 !important;
+        pointer-events: auto !important;
+        margin: 0 !important;
+    }
+
+    body.light-mode #bottom-bar {
+        background: rgba(255, 255, 255, 0.9) !important;
+        border: 1px solid rgba(220, 38, 38, 0.2) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    #bottom-bar .social-links,
+    #bottom-bar div {
+        flex: 1 1 auto !important;
+        justify-content: center !important;
+        text-align: center !important;
+    }
+
+    #bottom-bar button,
+    #bottom-bar a {
+        padding: 5px 10px !important;
+        font-size: 10px !important;
+        border-radius: 12px !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+    }
+
+    body.light-mode #bottom-bar button,
+    body.light-mode #bottom-bar a {
+        background: rgba(0, 0, 0, 0.04) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        color: #111827 !important;
+    }
+
+    #bottom-bar button:hover,
+    #bottom-bar a:hover {
+        background: rgba(220, 38, 38, 0.2) !important;
+        border-color: rgba(239, 68, 68, 0.4) !important;
+    }
+
+    /* --- Adaptive Compact Viewports on Narrow Devices --- */
+    @media (max-width: 480px) {
+        #header {
+            flex-direction: column !important;
+            gap: 6px !important;
+            padding: 8px 10px !important;
+        }
+        #header > div {
+            width: 100% !important;
+            justify-content: space-between !important;
+        }
+        .tabs-wrapper {
+            width: 100% !important;
+            margin: 2px 0 !important;
+        }
+        #bottom-bar {
+            bottom: 8px !important;
+            width: calc(100% - 16px) !important;
+            padding: 6px 10px !important;
+            border-radius: 20px !important;
+        }
+        #bottom-bar button span,
+        #bottom-bar a span {
+            display: none !important; /* Keep icons only to save space on extremely tiny screens */
+        }
+    }
+}

@@ -5,41 +5,55 @@ def verify_app():
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
         try:
-            print("Going to http://localhost:3000...")
-            page.goto("http://localhost:3000")
-            page.wait_for_timeout(3000)
-
-            # Take screenshot of the main landing view (Gaza Souls)
+            # 1. Gaza Martyrs (index.html)
+            print("Going to index.html...")
+            page.goto("http://localhost:3000/index.html")
+            page.wait_for_timeout(4000)
             page.screenshot(path="verification/landing_view.png")
-            print("Landing page screenshot taken successfully!")
+            print("index.html screenshot taken successfully!")
 
-            # Click Solidarity tab
-            print("Clicking Solidarity tab...")
-            page.click("#tab-solidarity")
+            # 2. Journalists (journalists.html)
+            print("Going to journalists.html...")
+            page.goto("http://localhost:3000/journalists.html")
+            page.wait_for_timeout(4000)
+            page.screenshot(path="verification/journalists_view.png")
+            print("journalists.html screenshot taken successfully!")
+
+            # 3. West Bank (westbank.html)
+            print("Going to westbank.html...")
+            page.goto("http://localhost:3000/westbank.html")
             page.wait_for_timeout(3000)
-            page.screenshot(path="verification/solidarity_view.png")
-            print("Solidarity page screenshot taken successfully!")
+            page.screenshot(path="verification/westbank_view.png")
+            print("westbank.html screenshot taken successfully!")
 
-            # Click Statistics tab
-            print("Clicking Stats tab...")
-            page.click("#tab-stats")
-            page.wait_for_timeout(3000)
-            page.screenshot(path="verification/stats_view.png")
-            print("Stats page screenshot taken successfully!")
-
-            # Click Map tab
-            print("Clicking Map tab...")
-            page.click("#tab-map")
-            page.wait_for_timeout(4000) # Give extra time for map tiles and markers to render
-            page.screenshot(path="verification/map_view.png")
-            print("Map page screenshot taken successfully!")
-
-            # Click Timeline / Milestones tab
-            print("Clicking Milestones tab...")
-            page.click("#tab-milestones")
-            page.wait_for_timeout(3000)
+            # 4. Milestones (milestones.html)
+            print("Going to milestones.html...")
+            page.goto("http://localhost:3000/milestones.html")
+            page.wait_for_timeout(4000)
             page.screenshot(path="verification/milestones_view.png")
-            print("Milestones page screenshot taken successfully!")
+            print("milestones.html screenshot taken successfully!")
+
+            # 5. Stats (stats.html)
+            print("Going to stats.html...")
+            page.goto("http://localhost:3000/stats.html")
+            page.wait_for_timeout(4000)
+            page.screenshot(path="verification/stats_view.png")
+            print("stats.html screenshot taken successfully!")
+
+            # 6. Map (map.html)
+            print("Going to map.html...")
+            page.goto("http://localhost:3000/map.html")
+            page.wait_for_timeout(5000)
+            page.screenshot(path="verification/map_view.png")
+            print("map.html screenshot taken successfully!")
+
+            # 8. Mobile Viewport (index.html)
+            print("Setting viewport to mobile size (390x844) on index.html...")
+            page.set_viewport_size({"width": 390, "height": 844})
+            page.goto("http://localhost:3000/index.html")
+            page.wait_for_timeout(4000)
+            page.screenshot(path="verification/mobile_landing_view.png")
+            print("Mobile landing screenshot taken successfully!")
 
         except Exception as e:
             print(f"Error during verification: {e}")
