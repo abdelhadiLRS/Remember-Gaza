@@ -47,13 +47,6 @@ def verify_app():
             page.screenshot(path="verification/map_view.png")
             print("map.html screenshot taken successfully!")
 
-            # 7. Solidarity (solidarity.html)
-            print("Going to solidarity.html...")
-            page.goto("http://localhost:3000/solidarity.html")
-            page.wait_for_timeout(4000)
-            page.screenshot(path="verification/solidarity_view.png")
-            print("solidarity.html screenshot taken successfully!")
-
             # 8. Mobile Viewport (index.html)
             print("Setting viewport to mobile size (390x844) on index.html...")
             page.set_viewport_size({"width": 390, "height": 844})

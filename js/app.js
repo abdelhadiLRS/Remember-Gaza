@@ -35,7 +35,6 @@ const translations = {
         titleMain: "أرواح", logoText: "فلسطين", searchPlaceholder: "ابحث عن اسم الشهيد...",
         tabSouls: "شهداء غزة", tabJournalists: "شهداء الصحافة", tabWestBank: "شهداء الضفة", tab48: "شهداء 48",
         tabMilestones: "أبرز المحطات", tabStats: "الإحصائيات", tabVideos: "التوثيق والأرشيف", tabMap: "الخريطة",
-        tabSolidarity: "التضامن",
         donate: "❤️ إدعمنا لنستمر", musicOn: "🎵 الصوت", musicOff: "🔇 إيقاف", visitorLabel: "عدد الزوار:",
         verse: "\"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ\"",
         devText: "تطوير: عبد الهادي", shareBtn: "مشاركة المنصة", martyrsLabel: "شهيداً وثّقت أسماؤهم:",
@@ -56,7 +55,6 @@ const translations = {
         titleMain: "Palestinian", logoText: "Souls", searchPlaceholder: "Search martyr...",
         tabSouls: "Gaza Souls", tabJournalists: "Gaza Journalists", tabWestBank: "West Bank", tab48: "48 Martyrs",
         tabMilestones: "Milestones", tabStats: "Statistics", tabVideos: "Footage", tabMap: "Map",
-        tabSolidarity: "Solidarity",
         donate: "❤️ Support Us", musicOn: "🎵 Audio", musicOff: "Mute", visitorLabel: "Visitors:",
         verse: "\"Think not of those who are slain in Allah's way as dead, but living with their Lord...\"",
         devText: "Dev: Abdelhadi", shareBtn: "Share Platform", martyrsLabel: "Martyrs Documented:",
@@ -77,7 +75,6 @@ const translations = {
         titleMain: "Âmes", logoText: "Palestiniennes", searchPlaceholder: "Rechercher un martyr...",
         tabSouls: "Âmes de Gaza", tabJournalists: "Journalistes", tabWestBank: "Cisjordanie", tab48: "Martyrs de 48",
         tabMilestones: "Étapes clés", tabStats: "Statistiques", tabVideos: "Archives", tabMap: "Carte",
-        tabSolidarity: "Solidarité",
         donate: "❤️ Soutenez-nous", musicOn: "🎵 Audio", musicOff: "Muet", visitorLabel: "Visiteurs :",
         verse: "\"Ne pensez pas que ceux qui ont été tués dans le sentier d'Allah soient morts...\"",
         devText: "Développement : Abdelhadi", shareBtn: "Partager", martyrsLabel: "Martyrs documentés :",
@@ -98,7 +95,6 @@ const translations = {
         titleMain: "Almas", logoText: "Palestinas", searchPlaceholder: "Buscar mártir...",
         tabSouls: "Almas de Gaza", tabJournalists: "Periodistas", tabWestBank: "Cisjordania", tab48: "Mártires del 48",
         tabMilestones: "Hitos", tabStats: "Estadísticas", tabVideos: "Archivos", tabMap: "Mapa",
-        tabSolidarity: "Solidaridad",
         donate: "❤️ Apóyanos", musicOn: "🎵 Audio", musicOff: "Silenciar", visitorLabel: "Visitas:",
         verse: "\"No creáis que los que han muerto por la causa de Dios están muertos...\"",
         devText: "Desarrollo: Abdelhadi", shareBtn: "Compartir", martyrsLabel: "Mártires documentados:",
@@ -407,7 +403,6 @@ function changeLanguage(langCode) {
     setInnerText('tab-stats', t.tabStats);
     setInnerText('tab-videos', t.tabVideos);
     setInnerText('tab-map', t.tabMap);
-    setInnerText('tab-solidarity', t.tabSolidarity || (currentLang === 'ar' ? 'التضامن' : 'Solidarity'));
     setInnerText('donate-desktop', t.donate);
     setInnerText('verse-text', t.verse);
     setInnerText('dev-text', t.devText);
@@ -1271,12 +1266,81 @@ function recalculateCache() {
 const canvas = document.getElementById('stars-canvas');
 const ctx = canvas ? canvas.getContext('2d') : null;
 
+// تهيئة كانفاس الشهب المتساقطة
+const shootingCanvas = document.getElementById('shooting-stars-canvas');
+const shootingCtx = shootingCanvas ? shootingCanvas.getContext('2d') : null;
+let shootingStars = [];
+
+function createShootingStar() {
+    return {
+        x: Math.random() * width * 1.5,
+        y: Math.random() * height * 0.3,
+        length: Math.random() * 80 + 50,
+        speed: Math.random() * 0.4 + 0.3, // تساقط ببطء شديد للغاية
+        opacity: 0,
+        fadeState: 'in'
+    };
+}
+
+function updateAndDrawShootingStars() {
+    if (!shootingCtx) return;
+    shootingCtx.clearRect(0, 0, width, height);
+
+    // توليد شهاب جديد عشوائياً بمعدل منخفض جداً ليظهر ببطء وتباعد
+    if (shootingStars.length < 2 && Math.random() < 0.003) {
+        shootingStars.push(createShootingStar());
+    }
+
+    for (let i = shootingStars.length - 1; i >= 0; i--) {
+        const star = shootingStars[i];
+
+        // حركة مائلة وبطيئة للأسفل واليسار
+        star.x -= star.speed * 1.5;
+        star.y += star.speed;
+
+        if (star.fadeState === 'in') {
+            star.opacity += 0.01;
+            if (star.opacity >= 0.8) {
+                star.opacity = 0.8;
+                star.fadeState = 'out';
+            }
+        } else {
+            star.opacity -= 0.008;
+            if (star.opacity <= 0) {
+                shootingStars.splice(i, 1);
+                continue;
+            }
+        }
+
+        // رسم ذيل الشهاب بشكل متلاشٍ متدرج رائع (أبيض يميل للأحمر المتوهج)
+        const grad = shootingCtx.createLinearGradient(
+            star.x, star.y,
+            star.x + star.length * 0.8, star.y - star.length * 0.6
+        );
+        grad.addColorStop(0, `rgba(255, 255, 255, ${star.opacity})`);
+        grad.addColorStop(0.15, `rgba(239, 68, 68, ${star.opacity * 0.7})`);
+        grad.addColorStop(1, 'rgba(239, 68, 68, 0)');
+
+        shootingCtx.strokeStyle = grad;
+        shootingCtx.lineWidth = 1.8;
+        shootingCtx.lineCap = 'round';
+        shootingCtx.beginPath();
+        shootingCtx.moveTo(star.x, star.y);
+        shootingCtx.lineTo(star.x + star.length * 0.8, star.y - star.length * 0.6);
+        shootingCtx.stroke();
+    }
+}
+
 function resizeCanvas() {
     if (!canvas) return;
     width = window.innerWidth;
     height = window.innerHeight;
     canvas.width = width;
     canvas.height = height;
+    if (shootingCanvas) {
+        shootingCanvas.width = width;
+        shootingCanvas.height = height;
+    }
     recalculateCache();
 }
 
@@ -1431,10 +1495,24 @@ function drawCanvas() {
         tooltip.style.display = 'none';
     }
 
-    // إعادة تعليق العلم لأن الشاشة أصبحت ثابتة الآن لحين حدوث تفاعل جديد
-    if (!queryActive) {
-        isDirty = false;
+    // تحديث الإحداثيات لحركة النجوم البطيئة للغاية في الخلفية السماوية
+    const driftSpeed = 0.04;
+    for (let i = 0; i < cachedItems.length; i++) {
+        const item = cachedItems[i];
+        item.screenX -= driftSpeed * (i % 2 === 0 ? 0.8 : 1.2);
+        item.screenY += driftSpeed * 0.4;
+
+        if (item.screenX < -20) item.screenX = width + 20;
+        if (item.screenX > width + 20) item.screenX = -20;
+        if (item.screenY < -20) item.screenY = height + 20;
+        if (item.screenY > height + 20) item.screenY = -20;
     }
+
+    // تحديث ورسم الشهب المتساقطة
+    updateAndDrawShootingStars();
+
+    // نضمن بقاء العلم صحيحاً لاستمرار حركة النجوم والشهب ببطء دائم
+    isDirty = true;
     requestAnimationFrame(drawCanvas);
 }
 
@@ -1951,7 +2029,6 @@ $(document).ready(() => {
     else if (path.includes('milestones.html')) activeMode = 'milestones';
     else if (path.includes('stats.html')) activeMode = 'stats';
     else if (path.includes('map.html')) activeMode = 'map';
-    else if (path.includes('solidarity.html')) activeMode = 'solidarity';
 
     // Auto translate to user preferred system language
     changeLanguage(currentLang);

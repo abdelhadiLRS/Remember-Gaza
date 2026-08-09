@@ -267,63 +267,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <main id="stats-view" class="text-white" style="display: block;">
 <div class="w-full max-w-6xl mx-auto px-6 py-10 font-['Cairo']">
 
-<!-- قسم توليد بطاقات التضامن والشهادات -->
-<div class="mb-12 glass-panel p-8 rounded-2xl border border-red-600/30 text-center">
-    <h3 class="text-2xl font-black text-red-400 mb-2">🎓 لوحة تصميم وتوليد شهادات التقدير وبطاقات التضامن المخصصة</h3>
-    <p class="text-xs text-gray-300 mb-6 leading-relaxed">صمم بطاقة تضامن مخصصة باسمك أو اسم مدينتك للتعبير عن تضامنك ومشاركتها عبر منصات التواصل الاجتماعي بضغطة زر واحدة.</p>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center text-right">
-        <div class="space-y-4">
-            <div class="space-y-1">
-                <label class="text-xs text-gray-400">اسم المتضامن / الجهة الداعمة:</label>
-                <input type="text" id="cert-name" value="متضامن مع فلسطين" oninput="updateCertificatePreview()" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
-            </div>
-            <div class="space-y-1">
-                <label class="text-xs text-gray-400">شعار أو عبارة تضامنية مخصصة:</label>
-                <textarea id="cs-slogan" rows="2" oninput="updateCertificatePreview()" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500 resize-none">عهد الأحرار للقدس الصامدة والأرض الطيبة 🇵🇸</textarea>
-            </div>
-            <div class="space-y-1">
-                <label class="text-xs text-gray-400">اختر الثيم والخلفية:</label>
-                <select id="cert-theme" onchange="updateCertificateTheme(this.value)" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none cursor-pointer">
-                    <option value="keffiyeh">🏁 نقشة الكوفية الفلسطينية العريقة</option>
-                    <option value="flag">🇵🇸 العلم الفلسطيني والحدود التاريخية</option>
-                    <option value="olive">🌿 غصن الزيتون ورمز السلام والصمود</option>
-                </select>
-            </div>
-            <button onclick="downloadCertificate()" class="w-full text-white font-bold py-2.5 px-4 rounded-xl transition-all bg-red-600 hover:bg-red-700 text-xs shadow-[0_0_15px_rgba(220,38,38,0.4)]">تحميل بطاقة التضامن كصورة 💾</button>
-        </div>
-
-        <!-- Live Preview Board -->
-        <div class="flex justify-center">
-            <div id="certificate-preview" class="w-[320px] h-[440px] bg-[#1a1a1a] rounded-2xl relative border-4 border-red-600/50 p-6 flex flex-col justify-between text-center overflow-hidden shadow-2xl">
-                <!-- Background Overlays -->
-                <div id="cert-bg-keffiyeh" class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle, #fff 10%, transparent 11%), radial-gradient(circle, #fff 10%, transparent 11%); background-size: 15px 15px; background-position: 0 0, 7.5px 7.5px;"></div>
-                <div id="cert-bg-flag" class="absolute inset-0 opacity-10 pointer-events-none hidden" style="background: linear-gradient(180deg, #000 33.3%, #008000 33.3%, #008000 66.6%, #fff 66.6%);"></div>
-                <div id="cert-bg-olive" class="absolute inset-0 opacity-15 pointer-events-none hidden flex items-center justify-center"><span class="text-8xl">🌿</span></div>
-
-                <!-- Border Details -->
-                <div class="absolute inset-2 border border-red-500/20 rounded-xl pointer-events-none"></div>
-
-                <div class="z-10 space-y-2 mt-4">
-                    <span class="text-red-500 font-bold tracking-widest text-[10px] block font-['Cairo']">عهد الوفاء والتضامن</span>
-                    <h4 class="text-xl font-black text-white tracking-wide font-['Cairo']">شهادة تضامن شرفية</h4>
-                    <div class="w-12 h-0.5 bg-red-600 mx-auto my-2"></div>
-                </div>
-
-                <div class="z-10 space-y-3">
-                    <p class="text-[11px] text-gray-400 font-['Cairo']">تُمنح هذه البطاقة تقديراً لموقف البذل والمؤازرة للحق والعدالة الإنسانية من:</p>
-                    <h5 id="preview-cert-name" class="text-lg font-black text-red-400 font-amiri tracking-wide">متضامن مع فلسطين</h5>
-                    <p id="preview-cs-slogan" class="text-[10px] text-gray-300 italic max-w-[240px] mx-auto leading-relaxed font-['Cairo']">عهد الأحرار للقدس الصامدة والأرض الطيبة 🇵🇸</p>
-                </div>
-
-                <div class="z-10 mb-4 space-y-1 font-['Cairo']">
-                    <p class="text-[9px] text-gray-500">تم التوثيق والمشاركة عبر منصة أرواح فلسطين</p>
-                    <p class="text-[8px] text-gray-600 font-mono">palestiniansouls.com</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="mb-10 text-center">
     <h2 id="stats-title" class="text-4xl font-extrabold text-red-500 mb-3">حرب الإبادة الجماعية في غزة</h2>
@@ -437,7 +380,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <a href="milestones.html" class="btn-main" id="tab-milestones" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">أبرز المحطات</a>
 <a href="stats.html" class="btn-main active" id="tab-stats" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">الإحصائيات</a>
 <a href="map.html" class="btn-main" id="tab-map" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">الخريطة</a>
-<a href="solidarity.html" class="btn-main" id="tab-solidarity" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">التضامن</a>
 </div>
 </div>
 <div class="relative inline-block text-right flex items-center gap-2">
@@ -645,6 +587,154 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
     </div>
 </div>
+
+<!-- تهيئة الرسوم البيانية التفاعلية الحقيقية والمبتكرة -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Demographic Age Distribution Chart (Doughnut)
+    const ctxAge = document.getElementById('chart-age-distribution');
+    if (ctxAge) {
+        new Chart(ctxAge, {
+            type: 'doughnut',
+            data: {
+                labels: ['أطفال (0-14)', 'شباب (15-29)', 'بالغون (30-59)', 'كبار السن (60+)'],
+                datasets: [{
+                    data: [42.5, 30.1, 19.8, 7.6],
+                    backgroundColor: [
+                        'rgba(239, 68, 68, 0.85)',   // Bright Blood Red
+                        'rgba(248, 113, 113, 0.85)', // Coral Red
+                        'rgba(153, 27, 27, 0.85)',   // Dark Red
+                        'rgba(252, 165, 165, 0.85)'  // Light Pinkish Red
+                    ],
+                    borderColor: 'rgba(10, 10, 10, 0.8)',
+                    borderWidth: 2,
+                    hoverOffset: 15
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#e5e7eb',
+                            font: {
+                                family: 'Cairo',
+                                size: 11,
+                                weight: 'bold'
+                            },
+                            padding: 12,
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: 'rgba(15, 15, 15, 0.95)',
+                        titleColor: '#ef4444',
+                        titleFont: { family: 'Cairo', weight: 'bold', size: 12 },
+                        bodyColor: '#ffffff',
+                        bodyFont: { family: 'Cairo', size: 11 },
+                        borderColor: 'rgba(239, 68, 68, 0.4)',
+                        borderWidth: 1,
+                        padding: 10,
+                        displayColors: true,
+                        callbacks: {
+                            label: function(context) {
+                                return ` النسبة: ${context.raw}%`;
+                            }
+                        }
+                    }
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true,
+                    duration: 1800,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
+
+    // 2. Regional Targeting Chart (Horizontal Bar)
+    const ctxRegion = document.getElementById('chart-regional-targeting');
+    if (ctxRegion) {
+        new Chart(ctxRegion, {
+            type: 'bar',
+            data: {
+                labels: ['محافظة غزة', 'شمال غزة', 'خان يونس', 'المحافظة الوسطى', 'رفح', 'الضفة الغربية والقدس'],
+                datasets: [{
+                    label: 'نسبة الاستهداف الموثق %',
+                    data: [34.2, 22.8, 18.5, 13.1, 10.4, 1.0],
+                    backgroundColor: 'rgba(220, 38, 38, 0.75)',
+                    hoverBackgroundColor: 'rgba(239, 68, 68, 0.95)',
+                    borderColor: '#ef4444',
+                    borderWidth: 1.5,
+                    borderRadius: 8,
+                    borderSkipped: false,
+                    barPercentage: 0.6,
+                    categoryPercentage: 0.8
+                }]
+            },
+            options: {
+                indexAxis: 'y', // Horizontal bars
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: 'rgba(15, 15, 15, 0.95)',
+                        titleColor: '#ef4444',
+                        titleFont: { family: 'Cairo', weight: 'bold', size: 12 },
+                        bodyColor: '#ffffff',
+                        bodyFont: { family: 'Cairo', size: 11 },
+                        borderColor: 'rgba(239, 68, 68, 0.4)',
+                        borderWidth: 1,
+                        padding: 10,
+                        callbacks: {
+                            label: function(context) {
+                                return ` نسبة الاستهداف: ${context.raw}%`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)',
+                            borderColor: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: '#9ca3af',
+                            font: { family: 'Cairo', size: 10 },
+                            callback: function(value) { return value + '%'; }
+                        },
+                        max: 40
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#e5e7eb',
+                            font: { family: 'Cairo', size: 11, weight: 'bold' }
+                        }
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeOutElastic'
+                }
+            }
+        });
+    }
+});
+</script>
 
 <script src="js/app.js"></script>
 </body>
