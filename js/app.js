@@ -1101,16 +1101,18 @@ window.switchMainMode = function(mode) {
     } else if(mode === 'westbank') {
         const el = document.getElementById('westbank-view');
         if (el) el.style.display = 'block';
-        renderTributeCards('wb-cards-container', westBankMartyrsData);
-        document.getElementById('number').innerText = westBankMartyrsData.length.toLocaleString();
-        initCanvasPoints(westBankMartyrsData);
+        let wbData = applyApprovedSubmissions(westBankMartyrsData);
+        renderTributeCards('wb-cards-container', wbData);
+        document.getElementById('number').innerText = wbData.length.toLocaleString();
+        initCanvasPoints(wbData);
         isDirty = true;
     } else if(mode === 'martyrs48') {
         const el = document.getElementById('martyrs48-view');
         if (el) el.style.display = 'block';
-        renderTributeCards('m48-cards-container', martyrs48Data);
-        document.getElementById('number').innerText = martyrs48Data.length.toLocaleString();
-        initCanvasPoints(martyrs48Data);
+        let m48Data = applyApprovedSubmissions(martyrs48Data);
+        renderTributeCards('m48-cards-container', m48Data);
+        document.getElementById('number').innerText = m48Data.length.toLocaleString();
+        initCanvasPoints(m48Data);
         isDirty = true;
     } else if(mode === 'milestones') {
         const el = document.getElementById('milestones-view');
@@ -1142,7 +1144,8 @@ window.switchMainMode = function(mode) {
 function fetchAndRenderData(url) {
     $.getJSON(url)
         .done(data => {
-            gazaSouls = data || [];
+            let list = data || [];
+            gazaSouls = applyApprovedSubmissions(list);
             document.getElementById('number').innerText = gazaSouls.length.toLocaleString();
             initCanvasPoints(gazaSouls);
             isDirty = true;
@@ -1524,7 +1527,9 @@ requestAnimationFrame(drawCanvas);
 // ----------------------------------------------------
 let captchaNum1 = 0;
 let captchaNum2 = 0;
+let currentEditingMartyrId = null;
 
+// Dynamic and beautiful dual input injector (File Upload / Link)
 function openCrowdsourceModal() {
     captchaNum1 = Math.floor(Math.random() * 9) + 1;
     captchaNum2 = Math.floor(Math.random() * 9) + 1;
@@ -1539,10 +1544,53 @@ function openCrowdsourceModal() {
     document.getElementById('cs-martyr-name').value = '';
     document.getElementById('cs-martyr-city').value = '';
     document.getElementById('cs-notes').value = '';
-    document.getElementById('cs-photo').value = '';
+
+    // Dynamically inject the file upload input next to URL input if it doesn't exist
+    const oldPhotoInput = document.getElementById('cs-photo');
+    if (oldPhotoInput && oldPhotoInput.parentElement) {
+        const parent = oldPhotoInput.parentElement;
+        let fileInput = document.getElementById('cs-photo-file');
+        if (!fileInput) {
+            parent.innerHTML = `
+                <label class="text-gray-300 block">صورة الشهيد أو مستند الإثبات (ملف أو رابط):</label>
+                <div class="flex flex-col gap-1.5">
+                    <input type="file" id="cs-photo-file" accept="image/*" class="w-full bg-black/60 border border-white/20 text-white px-3 py-1.5 rounded-xl text-xs outline-none focus:border-red-500">
+                    <span class="text-gray-500 text-[10px] text-center">أو أدخل رابط الصورة مباشرة:</span>
+                    <input type="url" id="cs-photo" placeholder="https://example.com/photo.jpg" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
+                </div>
+            `;
+        }
+    }
+
+    const fileIn = document.getElementById('cs-photo-file');
+    if (fileIn) fileIn.value = '';
+    const urlIn = document.getElementById('cs-photo');
+    if (urlIn) urlIn.value = '';
 
     document.getElementById('crowdsource-modal-overlay').style.display = 'flex';
 }
+
+function triggerMartyrEdit() {
+    if (!currentMartyrObj) return;
+
+    // Close martyr modal
+    document.getElementById('martyr-modal-overlay').style.display = 'none';
+
+    // Open crowdsourcing modal
+    openCrowdsourceModal();
+
+    // Autofill fields
+    currentEditingMartyrId = currentMartyrObj.id;
+    document.getElementById('cs-martyr-name').value = currentMartyrObj.name || '';
+    document.getElementById('cs-martyr-city').value = currentMartyrObj.city || '';
+    document.getElementById('cs-notes').value = `طلب تعديل لبيانات الشهيد: ${currentMartyrObj.name} (رقم الهوية: ${currentMartyrObj.id || 'غير معروف'}). التفاصيل المراد تعديلها: `;
+
+    const urlIn = document.getElementById('cs-photo');
+    if (urlIn && currentMartyrObj.image) {
+        urlIn.value = currentMartyrObj.image;
+    }
+}
+window.triggerMartyrEdit = triggerMartyrEdit;
 
 function submitCrowdsourceForm(e) {
     e.preventDefault();
@@ -1556,19 +1604,55 @@ function submitCrowdsourceForm(e) {
     const name = document.getElementById('cs-martyr-name').value.trim();
     const city = document.getElementById('cs-martyr-city').value.trim();
     const notes = document.getElementById('cs-notes').value.trim();
-    const image = document.getElementById('cs-photo').value.trim();
 
-    const submission = {
-        id: 'cs_' + Date.now(),
-        submitter,
-        name,
-        city,
-        notes,
-        image,
-        status: 'pending',
-        date: new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US')
+    const fileInput = document.getElementById('cs-photo-file');
+    const urlInput = document.getElementById('cs-photo');
+    let image = urlInput ? urlInput.value.trim() : '';
+
+    const proceedSubmission = (imageData) => {
+        const submission = {
+            id: 'cs_' + Date.now(),
+            original_id: currentEditingMartyrId || null,
+            submitter,
+            name,
+            city,
+            notes,
+            image: imageData || image,
+            status: 'pending',
+            date: new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US')
+        };
+
+        let list = [];
+        try {
+            const stored = localStorage.getItem('crowdsourced_submissions');
+            if (stored) list = JSON.parse(stored);
+        } catch (err) {
+            console.error(err);
+        }
+        list.push(submission);
+        localStorage.setItem('crowdsourced_submissions', JSON.stringify(list));
+
+        alert(currentLang === 'ar' ? 'تم إرسال مساهمتك بنجاح وهي قيد المراجعة والاعتماد الآن.' : 'Your submission has been sent successfully and is under review.');
+        document.getElementById('crowdsource-modal-overlay').style.display = 'none';
+
+        // Reset state
+        currentEditingMartyrId = null;
     };
 
+    if (fileInput && fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            proceedSubmission(evt.target.result);
+        };
+        reader.readAsDataURL(file);
+    } else {
+        proceedSubmission(image);
+    }
+}
+
+// Global helper to merge approved edits and additions on load
+function applyApprovedSubmissions(targetList) {
     let list = [];
     try {
         const stored = localStorage.getItem('crowdsourced_submissions');
@@ -1576,12 +1660,44 @@ function submitCrowdsourceForm(e) {
     } catch (err) {
         console.error(err);
     }
-    list.push(submission);
-    localStorage.setItem('crowdsourced_submissions', JSON.stringify(list));
 
-    alert(currentLang === 'ar' ? 'تم إرسال مساهمتك بنجاح وهي قيد المراجعة الآن.' : 'Your submission has been sent successfully and is under review.');
-    document.getElementById('crowdsource-modal-overlay').style.display = 'none';
+    const approved = list.filter(item => item.status === 'approved');
+    let result = [...targetList];
+
+    approved.forEach(item => {
+        if (item.original_id) {
+            // Edit existing record
+            const idx = result.findIndex(p => String(p.id) === String(item.original_id));
+            if (idx !== -1) {
+                result[idx] = {
+                    ...result[idx],
+                    name: item.name || result[idx].name,
+                    city: item.city || result[idx].city,
+                    notes: item.notes || result[idx].notes,
+                    image: item.image || result[idx].image || ''
+                };
+            }
+        } else {
+            // Add brand new record
+            const exists = result.some(p => p.name === item.name);
+            if (!exists) {
+                result.unshift({
+                    id: item.id,
+                    name: item.name,
+                    city: item.city,
+                    age: item.age || 'غير معروف',
+                    notes: item.notes || '',
+                    image: item.image || '',
+                    x: Math.random(),
+                    y: Math.random()
+                });
+            }
+        }
+    });
+
+    return result;
 }
+window.applyApprovedSubmissions = applyApprovedSubmissions;
 
 function openAdminReviewPanel() {
     const password = prompt(currentLang === 'ar' ? 'الرجاء إدخال كلمة مرور الإدارة لتسجيل الدخول:' : 'Please enter the admin password to log in:', '');
@@ -1840,6 +1956,21 @@ function openMartyrModal(person) {
         photoEl.innerHTML = `<img src="${person.image}" style="width:100%; height:100%; object-fit:cover;" crossorigin="anonymous">`;
     } else {
         photoEl.innerHTML = `<span id="modal-photo-text">${translations[currentLang].modalPhotoText}</span>`;
+    }
+
+    // Dynamic injection of the premium "Edit Martyr" button in the modal
+    const candleBtn = document.getElementById('tribute-candle-btn');
+    if (candleBtn && candleBtn.parentElement) {
+        const parent = candleBtn.parentElement;
+        let editBtn = document.getElementById('tribute-edit-btn-dynamic');
+        if (!editBtn) {
+            editBtn = document.createElement('button');
+            editBtn.id = 'tribute-edit-btn-dynamic';
+            editBtn.className = 'btn-main text-[10px] px-2.5 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded-full flex items-center gap-1';
+            editBtn.innerHTML = '✍️ <span id="tribute-edit-text">تعديل البيانات</span>';
+            editBtn.onclick = function() { triggerMartyrEdit(); };
+            parent.appendChild(editBtn);
+        }
     }
 
     document.getElementById('martyr-modal-overlay').style.display = 'flex';
