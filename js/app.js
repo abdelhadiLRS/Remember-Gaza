@@ -6,6 +6,13 @@ if (browserLang.startsWith('en')) systemLang = 'en';
 else if (browserLang.startsWith('fr')) systemLang = 'fr';
 else if (browserLang.startsWith('es')) systemLang = 'es';
 
+// Detect query parameter lang override
+const urlParamsForLang = new URLSearchParams(window.location.search);
+const queryLang = urlParamsForLang.get('lang');
+if (queryLang && ['ar', 'en', 'fr', 'es'].includes(queryLang.toLowerCase())) {
+    localStorage.setItem('site_lang', queryLang.toLowerCase());
+}
+
 if (!localStorage.getItem('site_lang')) {
     localStorage.setItem('site_lang', systemLang);
 }
@@ -971,11 +978,24 @@ function renderMapAndList() {
             });
 
             const fateAr = v.fate === 'Massacre' ? 'مجزرة وحشية' : 'قرية مهجرة بالكامل';
+            const fateLabelPop = currentLang === 'ar' ? fateAr :
+                                 currentLang === 'en' ? (v.fate === 'Massacre' ? 'Brutal Massacre' : 'Completely Depopulated') :
+                                 currentLang === 'fr' ? (v.fate === 'Massacre' ? 'Massacre Brutal' : 'Complètement Dépeuplé') :
+                                                        (v.fate === 'Massacre' ? 'Masacre Brutal' : 'Completamente Despoblado');
+
+            const yearLabelPop = currentLang === 'ar' ? 'سنة التهجير' :
+                                 currentLang === 'en' ? 'Displacement Year' :
+                                 currentLang === 'fr' ? 'Année d\'expulsion' : 'Año de expulsión';
+
+            const fateHeaderPop = currentLang === 'ar' ? 'المصير والوضع الحالي' :
+                                  currentLang === 'en' ? 'Fate & Current Status' :
+                                  currentLang === 'fr' ? 'Destin et statut actuel' : 'Destino y estado actual';
+
             const popupContent = `
                 <div class="p-2.5 text-right font-['Cairo'] text-xs text-white bg-neutral-900/95 border border-red-600/30 rounded-lg max-w-[200px]">
                     <h4 class="font-bold text-red-400 text-sm mb-1">🇵🇸 ${v.name}</h4>
-                    <p class="text-gray-300 mb-1"><strong>سنة التهجير:</strong> ${v.year}</p>
-                    <p class="text-gray-300"><strong>المصير والوضع الحالي:</strong> ${fateAr}</p>
+                    <p class="text-gray-300 mb-1"><strong>${yearLabelPop}:</strong> ${v.year}</p>
+                    <p class="text-gray-300"><strong>${fateHeaderPop}:</strong> ${fateLabelPop}</p>
                 </div>
             `;
             marker.bindPopup(popupContent);
@@ -984,11 +1004,19 @@ function renderMapAndList() {
             mapMarkers.push({ name: v.name.toLowerCase(), marker: marker, lat: v.lat, lng: v.lng });
         }
 
-        const fateLabel = v.fate === 'Massacre' ? 'مجزرة' : 'تهجير';
+        const fateLabel = currentLang === 'ar' ? (v.fate === 'Massacre' ? 'مجزرة' : 'تهجير') :
+                          currentLang === 'en' ? (v.fate === 'Massacre' ? 'Massacre' : 'Depopulated') :
+                          currentLang === 'fr' ? (v.fate === 'Massacre' ? 'Massacre' : 'Dépeuplé') :
+                                                 (v.fate === 'Massacre' ? 'Masacre' : 'Despoblado');
+
+        const statusText = currentLang === 'ar' ? 'الوضع' :
+                           currentLang === 'en' ? 'Status' :
+                           currentLang === 'fr' ? 'Statut' : 'Estado';
+
         html += `
             <div class="map-item bg-black/40 border border-white/5 hover:border-red-500/30 p-2.5 rounded-xl cursor-pointer transition-all hover:bg-black/60 text-right" onclick="focusMapMarker(${v.lat}, ${v.lng}, '${v.name}')">
                 <div class="font-bold text-xs text-white">${v.name}</div>
-                <div class="text-[10px] text-gray-400 font-mono mt-1">الوضع: <span class="text-red-400">${fateLabel} (${v.year})</span></div>
+                <div class="text-[10px] text-gray-400 font-mono mt-1">${statusText}: <span class="text-red-400">${fateLabel} (${v.year})</span></div>
             </div>
         `;
     });
@@ -1039,10 +1067,14 @@ function renderTributeCards(containerId, dataset) {
         const dateLabel = currentLang === 'ar' ? 'التاريخ' : 'Date';
         const yearsLabel = currentLang === 'ar' ? 'سنة' : 'years';
 
-        const title = item.name;
-        const subtitle = item.name_en || '';
-        const notes = item.notes || '';
-        const city = item.city || '';
+        let title = item.name;
+        let subtitle = item.name_en || '';
+        if (currentLang !== 'ar') {
+            title = transliterateName(item.name, currentLang);
+            subtitle = item.name_en || transliterateName(item.name, 'en');
+        }
+        const notes = currentLang === 'ar' ? (item.notes || '') : translateContentInstantly(item.notes || '', item.name, currentLang);
+        const city = currentLang === 'ar' ? (item.city || '') : translateCity(item.city || '', currentLang);
 
         html += `
             <div class="glass-panel p-6 rounded-2xl border border-white/10 hover:border-red-500/50 transition-all text-right flex flex-col justify-between group hover:scale-[1.02] cursor-pointer" onclick="openMartyrModal(${JSON.stringify(item).replace(/"/g, '&quot;')})">
@@ -1187,19 +1219,31 @@ function searchMartyrByName(query) {
     }).slice(0, 15);
 
     if (matches.length === 0) {
-        dropdown.innerHTML = `<div class="p-3 text-center text-gray-500">لا توجد نتائج مطابقة</div>`;
+        const noResultsText = currentLang === 'ar' ? 'لا توجد نتائج مطابقة' :
+                              currentLang === 'en' ? 'No matching results found' :
+                              currentLang === 'fr' ? 'Aucun résultat' : 'No hay resultados';
+        dropdown.innerHTML = `<div class="p-3 text-center text-gray-500">${noResultsText}</div>`;
     } else {
         let html = '';
         matches.forEach(person => {
-            const displayName = person.name_ar || person.name || person.name_en || 'شهيد مجهول';
-            const displayAge = person.age || 'غير معروف';
+            let displayName = person.name_ar || person.name || person.name_en || 'شهيد مجهول';
+            let subtitle = person.name_en || person.english_name || '';
+            if (currentLang !== 'ar') {
+                displayName = transliterateName(person.name || '', currentLang);
+                subtitle = person.name_en || transliterateName(person.name || '', 'en');
+            }
+            const ageText = currentLang === 'ar' ? 'العمر' :
+                            currentLang === 'en' ? 'Age' :
+                            currentLang === 'fr' ? 'Âge' : 'Edad';
+            const displayAge = person.age || (currentLang === 'ar' ? 'غير معروف' : 'Unknown');
+
             html += `
                 <div class="search-result-item p-2.5 hover:bg-red-950/40 border-b border-white/5 cursor-pointer flex justify-between items-center transition-all" onclick="selectSearchMartyr(${JSON.stringify(person).replace(/"/g, '&quot;')})">
                     <div class="text-right flex-1">
                         <div class="font-bold text-white">${displayName}</div>
-                        ${person.name_en || person.english_name ? `<div class="text-[10px] text-gray-400 font-mono">${person.name_en || person.english_name}</div>` : ''}
+                        ${subtitle ? `<div class="text-[10px] text-gray-400 font-mono">${subtitle}</div>` : ''}
                     </div>
-                    <span class="bg-red-600/20 text-red-400 text-[10px] px-2 py-0.5 rounded-full mr-2 whitespace-nowrap">العمر: ${displayAge}</span>
+                    <span class="bg-red-600/20 text-red-400 text-[10px] px-2 py-0.5 rounded-full mr-2 whitespace-nowrap">${ageText}: ${displayAge}</span>
                 </div>
             `;
         });
@@ -2047,6 +2091,97 @@ const multilingualBios = {
         es: "Basil al-Araj fue un escritor intelectual, activista y farmacéutico. Defendió la resistencia cultural y murió como mártir tras una persecución de meses."
     }
 };
+
+const cityTranslations = {
+    "غزة": { ar: "غزة", en: "Gaza", fr: "Gaza", es: "Gaza" },
+    "خان يونس": { ar: "خان يونس", en: "Khan Younis", fr: "Khan Younès", es: "Jan Yunis" },
+    "رفح": { ar: "رفح", en: "Rafah", fr: "Rafah", es: "Rafah" },
+    "جباليا": { ar: "جباليا", en: "Jabalia", fr: "Jabalia", es: "Jabalya" },
+    "دير البلح": { ar: "دير البلح", en: "Deir al-Balah", fr: "Deir el-Balah", es: "Deir al-Balah" },
+    "شمال غزة": { ar: "شمال غزة", en: "North Gaza", fr: "Nord de Gaza", es: "Norte de Gaza" },
+    "مخيم جباليا": { ar: "مخيم جباليا", en: "Jabalia Camp", fr: "Camp de Jabalia", es: "Campamento de Jabalia" },
+    "جنين": { ar: "جنين", en: "Jenin", fr: "Jénine", es: "Yenín" },
+    "نابلس": { ar: "نابلس", en: "Nablus", fr: "Naplouse", es: "Nablus" },
+    "الخليل": { ar: "الخليل", en: "Hebron", fr: "Hébron", es: "Hebrón" },
+    "رام الله": { ar: "رام الله", en: "Ramallah", fr: "Ramallah", es: "Ramala" },
+    "القدس": { ar: "القدس", en: "Jerusalem", fr: "Jérusalem", es: "Jerusalén" },
+    "بيت لحم": { ar: "بيت لحم", en: "Bethlehem", fr: "Bethléem", es: "Belén" },
+    "طولكرم": { ar: "طولكرم", en: "Tulkarm", fr: "Tulkarem", es: "Tulkarem" },
+    "قلقيلية": { ar: "قلقيلية", en: "Qalqilya", fr: "Qalqilya", es: "Qalqilya" },
+    "طوباس": { ar: "طوباس", en: "Tubas", fr: "Tubas", es: "Tubas" },
+    "سلفيت": { ar: "سلفيت", en: "Salfit", fr: "Salfit", es: "Salfit" },
+    "أريحا": { ar: "أريحا", en: "Jericho", fr: "Jéricho", es: "Jericó" }
+};
+
+function transliterateName(arabicName, lang) {
+    if (!arabicName) return "";
+
+    // Common dictionary of full name overrides
+    const overrides = {
+        "باسل الأعرج": { en: "Basil al-Araj", fr: "Basil al-Araj", es: "Basil al-Araj" },
+        "شيرين أبو عاقلة": { en: "Shireen Abu Akleh", fr: "Shireen Abu Akleh", es: "Shireen Abu Akleh" },
+        "ياسر عرفات": { en: "Yasser Arafat", fr: "Yasser Arafat", es: "Yasser Arafat" },
+        "أحمد ياسين": { en: "Ahmed Yassin", fr: "Ahmed Yassin", es: "Ahmed Yassin" }
+    };
+
+    if (overrides[arabicName] && overrides[arabicName][lang]) {
+        return overrides[arabicName][lang];
+    }
+
+    const nameMap = {
+        "محمد": "Muhammad", "احمد": "Ahmad", "أحمد": "Ahmad", "محمود": "Mahmoud", "علي": "Ali", "على": "Ali",
+        "حسن": "Hassan", "حسين": "Hussein", "يوسف": "Youssef", "ابراهيم": "Ibrahim", "إبراهيم": "Ibrahim",
+        "عبد": "Abd", "الله": "Allah", "الرحمن": "Rahman", "الرحيم": "Rahim", "الملك": "Malik",
+        "خالد": "Khaled", "مصطفى": "Mustafa", "سعيد": "Saeed", "عمر": "Omar", "سليمان": "Soliman",
+        "فاطمة": "Fatima", "عائشة": "Aisha", "مريم": "Maryam", "زينب": "Zainab", "رانية": "Rania",
+        "جمال": "Jamal", "نبيل": "Nabil", "سليم": "Salim", "سمير": "Samir", "أمين": "Amin",
+        "رائد": "Raed", "شادي": "Shadi", "ماهر": "Maher", "أيمن": "Ayman", "تيسير": "Taysir",
+        "صالح": "Saleh", "ياسر": "Yasser", "سائد": "Saed", "طه": "Taha", "يحيى": "Yahya",
+        "زكريا": "Zakaria", "موسى": "Mousa", "عيسى": "Isa", "جابر": "Jaber", "سعد": "Saad",
+        "مسعود": "Masoud", "طارق": "Tariq", "زياد": "Ziad", "بهاء": "Bahaa", "ضياء": "Diyaa",
+        "كريم": "Karim", "رمزي": "Ramzi", "مروان": "Marwan", "سامي": "Sami", "سامر": "Samer",
+        "راني": "Rani", "عادل": "Adel", "عماد": "Imad", "عصام": "Essam", "حاتم": "Hatem",
+        "رشاد": "Rashad", "أنور": "Anwar", "أكرم": "Akram", "أمجد": "Amjad", "أشرف": "Ashraf",
+        "هاني": "Hani", "هشام": "Hisham", "منير": "Mounir", "وجيه": "Wajih", "فريد": "Farid",
+        "رئيسة": "Raeesa", "صابر": "Saber", "نعيم": "Naeem", "شريف": "Sherif", "فتحي": "Fathi"
+    };
+
+    const words = arabicName.split(/\s+/);
+    const translatedWords = words.map(word => {
+        const cleanWord = word.replace(/[^\u0621-\u064A]/g, "");
+        if (nameMap[cleanWord]) {
+            return nameMap[cleanWord];
+        }
+
+        let latin = "";
+        const chars = {
+            'ا': 'a', 'أ': 'a', 'إ': 'i', 'آ': 'a', 'ب': 'b', 'ت': 't', 'ث': 'th', 'ج': 'j',
+            'ح': 'h', 'خ': 'kh', 'د': 'd', 'ذ': 'dh', 'ر': 'r', 'ز': 'z', 'س': 's', 'ش': 'sh',
+            'ص': 's', 'ض': 'd', 'ط': 't', 'ظ': 'z', 'ع': 'a', 'غ': 'gh', 'ف': 'f', 'ق': 'q',
+            'ك': 'k', 'ل': 'l', 'م': 'm', 'ن': 'n', 'ه': 'h', 'و': 'w', 'ي': 'y', 'ى': 'a',
+            'ة': 'h', 'ء': 'a', 'ؤ': 'u', 'ئ': 'i'
+        };
+        for (let i = 0; i < cleanWord.length; i++) {
+            const c = cleanWord[i];
+            latin += chars[c] || c;
+        }
+        if (!latin) return word;
+        return latin.charAt(0).toUpperCase() + latin.slice(1);
+    });
+
+    return translatedWords.join(" ");
+}
+window.transliterateName = transliterateName;
+
+function translateCity(arabicCity, lang) {
+    if (!arabicCity) return "";
+    const cleanCity = arabicCity.trim();
+    if (cityTranslations[cleanCity]) {
+        return cityTranslations[cleanCity][lang] || cityTranslations[cleanCity].en;
+    }
+    return transliterateName(arabicCity, lang);
+}
+window.translateCity = translateCity;
 
 function translateContentInstantly(bioText, name, destLang) {
     const targetLang = destLang || currentLang;
