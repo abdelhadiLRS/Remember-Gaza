@@ -23,6 +23,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- مكتبات وخطوط خارجية -->
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/tailwind-compat.css">
+<link rel="stylesheet" href="css/bootstrap-icons.css">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={theme:{extend:{colors:{primary:'#dc2626',blood:'#0a0a0a',glass:'rgba(10, 10, 10, 0.9)'}}}}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
@@ -311,11 +312,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 </div>
 <div class="relative inline-block text-right flex items-center gap-2">
+<img id="selected-flag-img" src="images/icons/arab.png" class="w-4 h-3 object-cover rounded-sm" alt="flag">
 <select id="language-select" onchange="changeLanguage(this.value)" class="bg-black/60 border border-white/20 text-white text-[11px] rounded-full px-2 py-0.5 outline-none cursor-pointer font-['Cairo']">
-<option value="ar">🇸🇦 العربية</option>
-<option value="en">🇬🇧 English</option>
-<option value="fr">🇫🇷 Français</option>
-<option value="es">🇪🇸 Español</option>
+<option value="ar">العربية</option>
+<option value="en">English</option>
+<option value="fr">Français</option>
+<option value="es">Español</option>
 </select>
 
 <div id="visitor-counter-box" class="interactive font-['Cairo'] flex items-center justify-center shadow-md" title="عدد الزوار">
@@ -339,9 +341,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-[11px] bg-red-900 border-red-500 text-white px-2.5 py-1">❤️ إدعمنا لنستمر</a>
 <span id="dev-text" class="text-[11px] text-gray-400 font-bold border-l border-white/20 pl-3">تطوير: عبد الهادي</span>
 <div class="social-links flex gap-1.5">
-<a href="https://www.facebook.com/abdelhadilrs" target="_blank" class="text-[11px] px-2.5 py-1">Facebook</a>
-<a href="https://www.instagram.com/abdelhadilrs" target="_blank" class="text-[11px] px-2.5 py-1">Instagram</a>
-<a href="https://x.com/larrasabdelhadi" target="_blank" class="text-[11px] px-2.5 py-1">X</a>
+<a href="https://www.facebook.com/abdelhadilrs" target="_blank" class="px-2.5 py-1 flex items-center justify-center rounded-full hover:scale-105 transition-all" title="Facebook"><img src="images/icons/facebook.png" class="w-4 h-4 object-contain" alt="Facebook"></a>
+<a href="https://www.instagram.com/abdelhadilrs" target="_blank" class="px-2.5 py-1 flex items-center justify-center rounded-full hover:scale-105 transition-all" title="Instagram"><img src="images/icons/instagram.png" class="w-4 h-4 object-contain" alt="Instagram"></a>
+<a href="https://x.com/larrasabdelhadi" target="_blank" class="px-2.5 py-1 flex items-center justify-center rounded-full hover:scale-105 transition-all" title="X"><img src="images/icons/twitter.png" class="w-4 h-4 object-contain" alt="Twitter"></a>
 <button onclick="shareSite()" class="share-btn flex gap-1 items-center bg-black border-white font-bold text-[11px] px-2.5 py-1">
 <span id="share-btn-text">مشاركة المنصة</span>
 </button>

@@ -56,7 +56,61 @@ const translations = {
         tlcIntro1: "على مدى العقود الماضية، ارتقى عشرات الآلاف من الفلسطينيين شهداء على يد آلة البطش الإسرائيلية...",
         tlcIntro2: "فيما يلي نسرد لكم أهم المحطات في تاريخ القضية الفلسطينية...", tlcFooterStory: "وستبقى الحكاية...",
         statsTitle: "حرب الإبادة الجماعية في غزة", statsSubtitle: "1000 يوم من الإبادة الجماعية", statsBanner: "أكثر من 2.4 مليون إنسان يتعرضون للإبادة والتجويع", statsUrbanHeader: "لم تقتصر إعتداءات الإحتلال على البشر بل تطال مختلف مظاهر العمران والحضارة كذلك.",
-        noDataText: "لا توجد بيانات حالياً"
+        noDataText: "لا توجد بيانات حالياً",
+
+        // Crowdsourcing Form Modal
+        csTitle: "ركن المساهمات وتصحيح البيانات",
+        csAdminLink: "لوحة الإدارة 🔑",
+        csSubmitterLabel: "اسم مقدم المساهمة:",
+        csSubmitterPlaceholder: "مثلاً: يوسف أحمد",
+        csNameLabel: "اسم الشهيد الكامل:",
+        csNamePlaceholder: "أدخل اسم الشهيد رباعياً",
+        csCityLabel: "المدينة / المحافظة:",
+        csCityPlaceholder: "مثلاً: غزة، جنين، القدس",
+        csNotesLabel: "التصحيح أو السيرة التفصيلية / وثيقة:",
+        csNotesPlaceholder: "اكتب السيرة، تاريخ الاستشهاد، أو أي تفاصيل/تصحيحات ترغب في إضافتها...",
+        csPhotoLabel: "رابط صورة الشهيد أو مستند إثبات (ملف أو رابط):",
+        csCaptchaLabel: "سؤال الأمان (لمنع البرامج التلقائية):",
+        csCaptchaPlaceholder: "الناتج?",
+        csSubmitButton: "إرسال للمراجعة والاعتماد",
+
+        // Martyr Modal additional elements
+        tributeCandleText: "إضاءة شمعة",
+        tributeEditText: "تعديل البيانات",
+        tributeLeaveMark: "اترك أثراً تضامنياً (رسالة تعليق)",
+        tributeNamePlaceholder: "اسمك (أو زائر من حول العالم)",
+        tributeMsgPlaceholder: "اكتب كلمة تضامن مع عائلة الشهيد...",
+        tributeSubmitBtn: "إرسال التضامن",
+        tributeLatestLabel: "أحدث رسائل التضامن:",
+        tributeNoMessages: "لا توجد رسائل تضامن حالياً. كن أول من يترك أثراً.",
+
+        // Extra milestone labels
+        tlcStatLabel: "عدد الشهداء والضحايا:",
+        tlcReadMore: "اقرأ المزيد",
+        tlcMapBtn: "🗺️ الخريطة",
+
+        // Admin control panel inside app.js
+        adminPasswordPrompt: "الرجاء إدخال كلمة مرور الإدارة لتسجيل الدخول:",
+        adminIncorrectPassword: "كلمة المرور غير صحيحة!",
+        adminNoPendingSubmissions: "لا توجد مساهمات معلقة للمراجعة حالياً.",
+        adminPanelTitle: "لوحة مراجعة واعتماد المساهمات (Admin Control Panel)",
+        adminSubmitter: "المساهم:",
+        adminMartyrName: "اسم الشهيد:",
+        adminCity: "المدينة / المحافظة:",
+        adminDetails: "التفاصيل:",
+        adminViewPhoto: "عرض الصورة المرفقة",
+        adminApproveBtn: "اعتماد وقبول",
+        adminRejectBtn: "رفض",
+        adminStatusPending: "معلق",
+        adminStatusApproved: "معتمد",
+        adminStatusRejected: "مرفوض",
+        adminSuccessApproved: "تم قبول واعتماد المساهمة، وتمت إضافتها بنجاح إلى أرشيف الشهداء!",
+        adminSuccessRejected: "تم رفض المساهمة.",
+
+        // Copy link success alert
+        copyLinkSuccess: "تم نسخ رابط المنصة بنجاح!",
+        imagePreparing: "جاري تحضير الصورة...",
+        imageCaptureError: "حدث خطأ أثناء التقاط الصورة. يرجى المحاولة مرة أخرى."
     },
     en: {
         titleMain: "Palestinian", logoText: "Souls", searchPlaceholder: "Search martyr...",
@@ -76,7 +130,61 @@ const translations = {
         tlcIntro1: "Over past decades, tens of thousands of Palestinians have been martyred by the Israeli oppression machine...",
         tlcIntro2: "Below we list the most important milestones in the history of the Palestinian cause...", tlcFooterStory: "And the story will remain...",
         statsTitle: "Gaza Genocide War", statsSubtitle: "1000 Days of Genocide", statsBanner: "Over 2.4 million people facing extermination and starvation", statsUrbanHeader: "Occupation attacks are not limited to humans but also target urban and civil aspects.",
-        noDataText: "No data available currently"
+        noDataText: "No data available currently",
+
+        // Crowdsourcing Form Modal
+        csTitle: "Contributions & Data Correction Corner",
+        csAdminLink: "Admin Panel 🔑",
+        csSubmitterLabel: "Submitter Name:",
+        csSubmitterPlaceholder: "e.g., Youssef Ahmad",
+        csNameLabel: "Martyr Full Name:",
+        csNamePlaceholder: "Enter full name of the martyr",
+        csCityLabel: "City / Governorate:",
+        csCityPlaceholder: "e.g., Gaza, Jenin, Jerusalem",
+        csNotesLabel: "Correction, Biography, or Document:",
+        csNotesPlaceholder: "Write biography, martyrdom date, details, or corrections to add...",
+        csPhotoLabel: "Martyr Photo or Proof Document (File or URL):",
+        csCaptchaLabel: "Security Question (to prevent bots):",
+        csCaptchaPlaceholder: "Result?",
+        csSubmitButton: "Send for Review & Approval",
+
+        // Martyr Modal additional elements
+        tributeCandleText: "Light a Candle",
+        tributeEditText: "Edit Data",
+        tributeLeaveMark: "Leave a Solidarity Message",
+        tributeNamePlaceholder: "Your name (or visitor from around the world)",
+        tributeMsgPlaceholder: "Write a word of solidarity to the martyr's family...",
+        tributeSubmitBtn: "Send Solidarity",
+        tributeLatestLabel: "Latest Solidarity Messages:",
+        tributeNoMessages: "No solidarity messages currently. Be the first to leave one.",
+
+        // Extra milestone labels
+        tlcStatLabel: "Number of Martyrs & Victims:",
+        tlcReadMore: "Read More",
+        tlcMapBtn: "🗺️ Map",
+
+        // Admin control panel inside app.js
+        adminPasswordPrompt: "Please enter the admin password to log in:",
+        adminIncorrectPassword: "Incorrect password!",
+        adminNoPendingSubmissions: "No pending contributions for review currently.",
+        adminPanelTitle: "Contributions Review Panel (Admin Control Panel)",
+        adminSubmitter: "Submitter:",
+        adminMartyrName: "Martyr Full Name:",
+        adminCity: "City / Governorate:",
+        adminDetails: "Details:",
+        adminViewPhoto: "View Attached Photo",
+        adminApproveBtn: "Approve & Accept",
+        adminRejectBtn: "Reject",
+        adminStatusPending: "Pending",
+        adminStatusApproved: "Approved",
+        adminStatusRejected: "Rejected",
+        adminSuccessApproved: "Submission approved and successfully added to the archive!",
+        adminSuccessRejected: "Submission rejected.",
+
+        // Copy link success alert
+        copyLinkSuccess: "Platform link copied successfully!",
+        imagePreparing: "Preparing image...",
+        imageCaptureError: "An error occurred while capturing. Please try again."
     },
     fr: {
         titleMain: "Âmes", logoText: "Palestiniennes", searchPlaceholder: "Rechercher un martyr...",
@@ -96,7 +204,61 @@ const translations = {
         tlcIntro1: "Au fil des décennies, des dizaines de milliers de Palestiniens sont tombés en martyrs...",
         tlcIntro2: "Voici les étapes clés de l'histoire de la cause palestinienne...", tlcFooterStory: "Et l'histoire continuera...",
         statsTitle: "Guerre de génocide à Gaza", statsSubtitle: "1000 jours de génocide", statsBanner: "Plus de 2,4 millions de personnes confrontées à l'extermination", statsUrbanHeader: "Les attaques de l'occupation ciblent également l'urbanisme et la civilisation.",
-        noDataText: "Aucune donnée disponible"
+        noDataText: "Aucune donnée disponible",
+
+        // Crowdsourcing Form Modal
+        csTitle: "Espace de contribution et correction de données",
+        csAdminLink: "Panneau d'administration 🔑",
+        csSubmitterLabel: "Nom du contributeur :",
+        csSubmitterPlaceholder: "ex: Youssef Ahmad",
+        csNameLabel: "Nom complet du martyr :",
+        csNamePlaceholder: "Saisir le nom complet du martyr",
+        csCityLabel: "Ville / Gouvernorat :",
+        csCityPlaceholder: "ex: Gaza, Jénine, Jérusalem",
+        csNotesLabel: "Correction, biographie ou document :",
+        csNotesPlaceholder: "Écrire la biographie, date du martyre, détails, ou corrections à apporter...",
+        csPhotoLabel: "Photo du martyr ou document de preuve (fichier ou URL) :",
+        csCaptchaLabel: "Question de sécurité (pour empêcher les robots) :",
+        csCaptchaPlaceholder: "Résultat?",
+        csSubmitButton: "Envoyer pour examen et approbation",
+
+        // Martyr Modal additional elements
+        tributeCandleText: "Allumer une bougie",
+        tributeEditText: "Modifier les données",
+        tributeLeaveMark: "Laisser un message de solidarité",
+        tributeNamePlaceholder: "Votre nom (ou visiteur du monde)",
+        tributeMsgPlaceholder: "Écrire un mot de solidarité à la famille du martyr...",
+        tributeSubmitBtn: "Envoyer la solidarité",
+        tributeLatestLabel: "Derniers messages de solidarité :",
+        tributeNoMessages: "Aucun message de solidarité actuellement. Soyez le premier à en laisser un.",
+
+        // Extra milestone labels
+        tlcStatLabel: "Nombre de martyrs et de victimes :",
+        tlcReadMore: "Lire la suite",
+        tlcMapBtn: "🗺️ Carte",
+
+        // Admin control panel inside app.js
+        adminPasswordPrompt: "Veuillez entrer le mot de passe administrateur pour vous connecter :",
+        adminIncorrectPassword: "Mot de passe incorrect!",
+        adminNoPendingSubmissions: "Aucune contribution en attente d'examen pour le moment.",
+        adminPanelTitle: "Panneau de révision des contributions (Panneau de configuration Admin)",
+        adminSubmitter: "Contributeur :",
+        adminMartyrName: "Nom complet du martyr :",
+        adminCity: "Ville / Gouvernorat :",
+        adminDetails: "Détails :",
+        adminViewPhoto: "Voir la photo jointe",
+        adminApproveBtn: "Approuver et accepter",
+        adminRejectBtn: "Rejeter",
+        adminStatusPending: "En attente",
+        adminStatusApproved: "Approuvé",
+        adminStatusRejected: "Rejeté",
+        adminSuccessApproved: "Contribution approuvée et ajoutée avec succès aux archives!",
+        adminSuccessRejected: "Contribution rejetée.",
+
+        // Copy link success alert
+        copyLinkSuccess: "Lien de la plateforme copié avec succès!",
+        imagePreparing: "Préparation de l'image...",
+        imageCaptureError: "Une erreur s'est produite lors de la capture. Veuillez réessayer."
     },
     es: {
         titleMain: "Almas", logoText: "Palestinas", searchPlaceholder: "Buscar mártir...",
@@ -116,7 +278,61 @@ const translations = {
         tlcIntro1: "Durante las últimas décadas, decenas de miles de palestinos han muerto como mártires...",
         tlcIntro2: "A continuación detallamos los hitos más importantes de la causa palestina...", tlcFooterStory: "Y la historia continuará...",
         statsTitle: "Guerra de genocidio en Gaza", statsSubtitle: "1000 días de genocidio", statsBanner: "Más de 2,4 millones de personas enfrentan el exterminio y el hambre", statsUrbanHeader: "Los ataques de la ocupación también tienen como blanco el urbanismo y la civilización.",
-        noDataText: "No hay datos disponibles actualmente"
+        noDataText: "No hay datos disponibles actualmente",
+
+        // Crowdsourcing Form Modal
+        csTitle: "Rincón de aportaciones y corrección de datos",
+        csAdminLink: "Panel de administración 🔑",
+        csSubmitterLabel: "Nombre del colaborador:",
+        csSubmitterPlaceholder: "ej: Youssef Ahmad",
+        csNameLabel: "Nombre completo del mártir:",
+        csNamePlaceholder: "Ingrese el nombre completo del mártir",
+        csCityLabel: "Ciudad / Gobernación:",
+        csCityPlaceholder: "ej: Gaza, Yenín, Jerusalén",
+        csNotesLabel: "Corrección, biografía o documento:",
+        csNotesPlaceholder: "Escriba la biografía, fecha del martirio, detalles o correcciones a realizar...",
+        csPhotoLabel: "Foto del mártir o documento de prueba (archivo o URL):",
+        csCaptchaLabel: "Pregunta de seguridad (para evitar bots):",
+        csCaptchaPlaceholder: "Resultado?",
+        csSubmitButton: "Enviar para revisión y aprobación",
+
+        // Martyr Modal additional elements
+        tributeCandleText: "Encender vela",
+        tributeEditText: "Editar datos",
+        tributeLeaveMark: "Dejar un mensaje de solidaridad",
+        tributeNamePlaceholder: "Su nombre (o visitante del mundo)",
+        tributeMsgPlaceholder: "Escriba unas palabras de solidaridad para la familia...",
+        tributeSubmitBtn: "Enviar solidaridad",
+        tributeLatestLabel: "Últimos mensajes de solidaridad:",
+        tributeNoMessages: "No hay mensajes de solidaridad actualmente. Sé el primero en dejar uno.",
+
+        // Extra milestone labels
+        tlcStatLabel: "Número de mártires y víctimas:",
+        tlcReadMore: "Leer más",
+        tlcMapBtn: "🗺️ Mapa",
+
+        // Admin control panel inside app.js
+        adminPasswordPrompt: "Por favor, introduzca la contraseña de administrador para iniciar sesión:",
+        adminIncorrectPassword: "Contraseña incorrecta!",
+        adminNoPendingSubmissions: "No hay contribuciones pendientes para revisar en este momento.",
+        adminPanelTitle: "Panel de revisión de contribuciones (Panel de control del administrador)",
+        adminSubmitter: "Colaborador:",
+        adminMartyrName: "Nombre completo del mártir:",
+        adminCity: "Ciudad / Gobernación:",
+        adminDetails: "Detalles:",
+        adminViewPhoto: "Ver foto adjunta",
+        adminApproveBtn: "Aprobar y aceptar",
+        adminRejectBtn: "Rechazar",
+        adminStatusPending: "Pendiente",
+        adminStatusApproved: "Aprobado",
+        adminStatusRejected: "Rechazado",
+        adminSuccessApproved: "¡Aportación aprobada y agregada con éxito al archivo!",
+        adminSuccessRejected: "Aportación rechazada.",
+
+        // Copy link success alert
+        copyLinkSuccess: "¡Enlace de la plataforma copiado con éxito!",
+        imagePreparing: "Preparando imagen...",
+        imageCaptureError: "Ocurrió un error al capturar. Por favor, inténtelo de nuevo."
     }
 };
 
@@ -261,117 +477,286 @@ function updateMusicButton() {
 const milestoneCinematicData = [
     { id: "d1920", type: "decade", decade: "1920" },
     {
-        id: "m18", type: "scene", year: "1929", title: "هبّة البراق", alt: "ثورة البراق", image: "images/timeline/18.jpg",
-        excerpt: "في آب/أغسطس 1929 انتفض الفلسطينيون احتجاجاً على محاولات السيطرة على حائط البراق المحاذي للمسجد الأقصى. اندلعت اشتباكات في القدس والخليل الصفد، وردّ الانتداب البريطاني بالقوة المفرطة، واستشهد أكثر من 116 فلسطينياً، وأُعدم ثلاثة من قادة الثورة لاحقاً (محمد جمجوم، فؤاد حجازي، عطا الزير) فخلّدتهم الذاكرة الوطنية.",
-        stat: "حوالي 116 شهيد",
-        statExp: "116 شهيداً فلسطينياً سقطوا خلال الأحداث، إضافة إلى تنفيذ حكم الإعدام بثلاثة من قادة الثورة",
-        sourceName: "ويكيبيديا - ثورة البراق 1929",
+        id: "m18", type: "scene", year: "1929",
+        title: { ar: "هبّة البراق", en: "Buraq Uprising", fr: "Soulèvement du Bouraq", es: "Levantamiento del Buraq" },
+        alt: { ar: "ثورة البراق", en: "Buraq Revolution", fr: "Révolution du Bouraq", es: "Revolución del Buraq" },
+        image: "images/timeline/18.jpg",
+        excerpt: {
+            ar: "في آب/أغسطس 1929 انتفض الفلسطينيون احتجاجاً على محاولات السيطرة على حائط البراق المحاذي للمسجد الأقصى. اندلعت اشتباكات في القدس والخليل والصفد، وردّ الانتداب البريطاني بالقوة المفرطة، واستشهد أكثر من 116 فلسطينياً، وأُعدم ثلاثة من قادة الثورة لاحقاً (محمد جمجوم، فؤاد حجازي، عطا الزير) فخلّدتهم الذاكرة الوطنية.",
+            en: "In August 1929, Palestinians rose up protesting attempts to control the Buraq Wall adjacent to Al-Aqsa Mosque. Clashes erupted in Jerusalem, Hebron, and Safed. The British Mandate responded with excessive force, martyring over 116 Palestinians, and later executing three revolution leaders.",
+            fr: "En août 1929, les Palestiniens se sont soulevés pour protester contre les tentatives de contrôle du mur du Bouraq. Des affrontements ont éclaté à Jérusalem, Hébron et Safed. Le mandat britannique a répondu par une force excessive, martyrisant plus de 116 Palestiniens et exécutant plus tard trois dirigeants.",
+            es: "En agosto de 1929, los palestinos se levantaron en protesta por los intentos de controlar el Muro de Buraq. Estallaron enfrentamientos en Jerusalén, Hebrón y Safed. El Mandato Británico respondió con fuerza excesiva, martirizando a más de 116 palestinos y ejecutando posteriormente a tres líderes."
+        },
+        stat: { ar: "حوالي 116 شهيد", en: "Around 116 Martyrs", fr: "Environ 116 Martyrs", es: "Cerca de 116 Mártires" },
+        statExp: {
+            ar: "116 شهيداً فلسطينياً سقطوا خلال الأحداث، إضافة إلى تنفيذ حكم الإعدام بثلاثة من قادة الثورة",
+            en: "116 Palestinian martyrs fell during the events, in addition to the execution of three revolution leaders",
+            fr: "116 martyrs palestiniens sont tombés, en plus de l'exécution de trois dirigeants",
+            es: "116 mártires palestinos cayeron durante los hechos, además de la ejecución de tres líderes de la revolución"
+        },
+        sourceName: { ar: "ويكيبيديا - ثورة البراق 1929", en: "Wikipedia - Buraq Uprising 1929", fr: "Wikipédia - Soulèvement du Bouraq", es: "Wikipedia - Levantamiento del Buraq" },
         sourceUrl: "https://ar.wikipedia.org/wiki/%D8%AB%D9%88%D8%B1%D8%A9_%D8%A7%D9%84%D8%A8%D8%B1%D8%A7%D9%82"
     },
     { id: "d1930", type: "decade", decade: "1930" },
     {
-        id: "m19", type: "scene", year: "1936 - 1939", title: "الثورة الفلسطينية الكبرى", alt: "ثورة الست أشهر", image: "images/timeline/19.jpg",
-        excerpt: "انطلقت الثورة الفلسطينية الكبرى في نيسان/أبريل 1936 بإضراب عام شامل امتد ستة أشهر، ثم تحولت إلى مقاومة مسلحة استمرت حتى 1939. استهدفت الانتداب البريطاني والمشروع الصهيوني، وقمعتها بريطانيا بعنف عبر قانون الطوارئ ونسف القرى والإعدامات.",
-        stat: "5,000 شهيد",
-        statExp: "آلاف الشهداء والجرحى نتيجة العمليات العسكرية وقمع الاحتلال البريطاني للثورة",
-        sourceName: "الموسوعة التفاعلية للقضية الفلسطينية",
+        id: "m19", type: "scene", year: "1936 - 1939",
+        title: { ar: "الثورة الفلسطينية الكبرى", en: "The Great Palestinian Revolt", fr: "La Grande Révolte palestinienne", es: "La Gran Revuelta Palestina" },
+        alt: { ar: "ثورة الست أشهر", en: "The Six-Month Strike", fr: "La grève de six mois", es: "La huelga de seis meses" },
+        image: "images/timeline/19.jpg",
+        excerpt: {
+            ar: "انطلقت الثورة الفلسطينية الكبرى في نيسان/أبريل 1936 بإضراب عام شامل امتد ستة أشهر، ثم تحولت إلى مقاومة مسلحة استمرت حتى 1939. استهدفت الانتداب البريطاني والمشروع الصهيوني، وقمعتها بريطانيا بعنف عبر قانون الطوارئ ونسف القرى والإعدامات.",
+            en: "The Great Palestinian Revolt began in April 1936 with a comprehensive six-month strike, transforming into armed resistance until 1939, targeting the British mandate and Zionist project.",
+            fr: "La Grande Révolte palestinienne a commencé en avril 1936 par une grève générale de six mois, se transformant en résistance armée jusqu'en 1939 contre le mandat britannique et le projet sioniste.",
+            es: "La Gran Revuelta Palestina comenzó en abril de 1936 con una huelga general de seis meses, transformándose en resistencia armada hasta 1939 contra el mandato británico y el proyecto sionista."
+        },
+        stat: { ar: "5,000 شهيد", en: "5,000 Martyrs", fr: "5 000 Martyrs", es: "5.000 Mártires" },
+        statExp: {
+            ar: "آلاف الشهداء والجرحى نتيجة العمليات العسكرية وقمع الاحتلال البريطاني للثورة",
+            en: "Thousands of martyrs and wounded due to military operations and British suppression of the revolution",
+            fr: "Des milliers de martyrs et de blessés suite aux opérations militaires et à la répression britannique de la révolution",
+            es: "Miles de mártires y heridos debido a las operaciones militares y la represión británica de la revolución"
+        },
+        sourceName: { ar: "الموسوعة التفاعلية للقضية الفلسطينية", en: "Interactive Encyclopedia of the Palestine Question", fr: "Encyclopédie interactive de la question palestinienne", es: "Enciclopedia Interactiva de la Cuestión Palestina" },
         sourceUrl: "https://www.palquest.org/"
     },
     {
-        id: "m1", type: "scene", year: "1936 - 1948", title: "مرحلة التطهير العرقي في فلسطين", alt: "النكبة", image: "images/timeline/1.jpg",
-        excerpt: "بدأت المجازر الاسرائيلية بحق الفلسطينيين قبل الاعلان عن قيام دولة اسرائيل بنحو 11 عاما منذ كانت فلسطين تحت وصاية الانتداب البريطاني الذي كان يتحمل مسؤولية حماية حياة المواطنين الفلسطينيين.",
-        stat: "حوالي 5000 شهيد",
-        statExp: "ضحايا المجازر وعمليات التطهير العرقي المبكرة قبل عام 1948",
-        sourceName: "مؤسسة الدراسات الفلسطينية",
+        id: "m1", type: "scene", year: "1936 - 1948",
+        title: { ar: "مرحلة التطهير العرقي في فلسطين", en: "Ethnic Cleansing in Palestine", fr: "Nettoyage ethnique en Palestine", es: "Limpieza étnica en Palestina" },
+        alt: { ar: "النكبة", en: "The Nakba", fr: "La Nakba", es: "La Nakba" },
+        image: "images/timeline/1.jpg",
+        excerpt: {
+            ar: "بدأت المجازر الاسرائيلية بحق الفلسطينيين قبل الاعلان عن قيام دولة اسرائيل بنحو 11 عاما منذ كانت فلسطين تحت وصاية الانتداب البريطاني الذي كان يتحمل مسؤولية حماية حياة المواطنين الفلسطينيين.",
+            en: "Zionist massacres against Palestinians started 11 years before the declaration of Israel, during the British Mandate which was responsible for protecting Palestinian civilian lives.",
+            fr: "Les massacres sionistes contre les Palestiniens ont commencé 11 ans avant la déclaration d'Israël, sous le mandat britannique qui était responsable de la protection des civils palestiniens.",
+            es: "Las masacres sionistas contra los palestinos comenzaron 11 años antes de la declaración de Israel, bajo el mandato británico que era responsable de la protección de los civiles palestinos."
+        },
+        stat: { ar: "حوالي 5000 شهيد", en: "Around 5,000 Martyrs", fr: "Environ 5 000 Martyrs", es: "Cerca de 5.000 Mártires" },
+        statExp: {
+            ar: "ضحايا المجازر وعمليات التطهير العرقي المبكرة قبل عام 1948",
+            en: "Victims of early massacres and ethnic cleansing operations before 1948",
+            fr: "Victimes des premiers massacres et opérations de nettoyage ethnique avant 1948",
+            es: "Víctimas de las primeras masacres y operaciones de limpieza étnica antes de 1948"
+        },
+        sourceName: { ar: "مؤسسة الدراسات الفلسطينية", en: "Institute for Palestine Studies", fr: "Institut des études palestiniennes", es: "Instituto de Estudios Palestinos" },
         sourceUrl: "https://www.palquest.org/"
     },
     { id: "d1940", type: "decade", decade: "1940" },
     {
-        id: "m20", type: "scene", year: "1948", title: "مجزرة دير ياسين", alt: "", image: "images/timeline/20.jpg",
-        excerpt: "في فجر التاسع من نيسان 1948، اقتحمت عصابتا الإرغون وشتيرن قرية دير ياسين غرب القدس وارتكبتا مجزرة وحشية بحق سكانها، شملت إعدامات ميدانية وتمثيلاً بالجثث وتهجيراً.",
-        stat: "254 - 300 شهيد",
-        statExp: "أكثر من 250 شهيداً من الأطفال والنساء والرجال عزل الأسلحة",
-        sourceName: "ويكيبيديا - مجزرة دير ياسين",
+        id: "m20", type: "scene", year: "1948",
+        title: { ar: "مجزرة دير ياسين", en: "Deir Yassin Massacre", fr: "Massacre de Deir Yassin", es: "Masacre de Deir Yassin" },
+        alt: { ar: "", en: "", fr: "", es: "" },
+        image: "images/timeline/20.jpg",
+        excerpt: {
+            ar: "في فجر التاسع من نيسان 1948، اقتحمت عصابتا الإرغون وشتيرن قرية دير ياسين غرب القدس وارتكبتا مجزرة وحشية بحق سكانها، شملت إعدامات ميدانية وتمثيلاً بالجثث وتهجيراً.",
+            en: "At dawn on April 9, 1948, Irgun and Stern gangs stormed Deir Yassin village west of Jerusalem, committing a brutal massacre including field executions and displacement.",
+            fr: "À l'aube du 9 avril 1948, les gangs de l'Irgoun et de Stern ont pris d'assaut le village de Deir Yassin à l'ouest de Jérusalem, commettant un massacre brutal.",
+            es: "Al amanecer del 9 de abril de 1948, las bandas de Irgún y Stern asaltaron la aldea de Deir Yassin, al oeste de Jerusalén, cometiendo una brutal masacre."
+        },
+        stat: { ar: "254 - 300 شهيد", en: "254 - 300 Martyrs", fr: "254 - 300 Martyrs", es: "254 - 300 Mártires" },
+        statExp: {
+            ar: "أكثر من 250 شهيداً من الأطفال والنساء والرجال عزل الأسلحة",
+            en: "More than 250 unarmed martyrs of children, women, and men",
+            fr: "Plus de 250 martyrs non armés d'enfants, de femmes et d'hommes",
+            es: "Más de 250 mártires desarmados de niños, mujeres y hombres"
+        },
+        sourceName: { ar: "ويكيبيديا - مجزرة دير ياسين", en: "Wikipedia - Deir Yassin Massacre", fr: "Wikipédia - Massacre de Deir Yassin", es: "Wikipedia - Masacre de Deir Yassin" },
         sourceUrl: "https://ar.wikipedia.org"
     },
     {
-        id: "m2", type: "scene", year: "1948", title: "الحرب العربية الإسرائيلية 1948", alt: "حرب النكبة", image: "images/timeline/2.jpg",
-        excerpt: "أول حروب العرب مع إسرائيل، دارت عقب إنهاء الانتداب البريطاني على فلسطين وإعلان قيام إسرائيل، منتصف مايو/أيار 1948، وارتقى خلالها آلاف الشهداء.",
-        stat: "20 - 22 ألف شهيد",
-        statExp: "شهداء المعارك والدفاع عن المدن والقرى الفلسطينية أثناء النكبة",
-        sourceName: "الموسوعة التفاعلية للقضية الفلسطينية",
+        id: "m2", type: "scene", year: "1948",
+        title: { ar: "الحرب العربية الإسرائيلية 1948", en: "1948 Arab-Israeli War", fr: "Guerre israélo-arabe de 1948", es: "Guerra árabe-israelí de 1948" },
+        alt: { ar: "حرب النكبة", en: "The Nakba War", fr: "Guerre de la Nakba", es: "Guerra de la Nakba" },
+        image: "images/timeline/2.jpg",
+        excerpt: {
+            ar: "أول حروب العرب مع إسرائيل، دارت عقب إنهاء الانتداب البريطاني على فلسطين وإعلان قيام إسرائيل، منتصف مايو/أيار 1948، وارتقى خلالها آلاف الشهداء.",
+            en: "The first Arab-Israeli war took place after the end of the British Mandate and the declaration of Israel in mid-May 1948, during which thousands were martyred.",
+            fr: "La première guerre israélo-arabe s'est déroulée après la fin du mandat britannique et la déclaration d'Israël à mi-mai 1948, coûtant la vie à des milliers de martyrs.",
+            es: "La primera guerra árabe-israelí tuvo lugar tras el fin del mandato británico y la declaración de Israel a mediados de mayo de 1948, en la que miles fueron martirizados."
+        },
+        stat: { ar: "20 - 22 ألف شهيد", en: "20,000 - 22,000 Martyrs", fr: "20 000 - 22 000 Martyrs", es: "20.000 - 22.000 Mártires" },
+        statExp: {
+            ar: "شهداء المعارك والدفاع عن المدن والقرى الفلسطينية أثناء النكبة",
+            en: "Martyrs of battles and defense of Palestinian cities and villages during the Nakba",
+            fr: "Martyrs des batailles et de la défense des villes et villages palestiniens pendant la Nakba",
+            es: "Mártires de batallas y defensa de ciudades y pueblos palestinos durante la Nakba"
+        },
+        sourceName: { ar: "الموسوعة التفاعلية للقضية الفلسطينية", en: "Interactive Encyclopedia of the Palestine Question", fr: "Encyclopédie de la question palestinienne", es: "Enciclopedia de la Cuestión Palestina" },
         sourceUrl: "https://www.palquest.org/"
     },
     { id: "d1950", type: "decade", decade: "1950" },
     {
-        id: "m4", type: "scene", year: "1956", title: "احتلال غزة 1956", alt: "العدوان الثلاثي", image: "images/timeline/4.jpg",
-        excerpt: "خلال العدوان الثلاثيّ على مصر بعد تأميم قناة السويس، احتلّ جيش الاحتلال قطاع غزّة قادماً من رفح، حيث ارتقى مئات الشهداء في مجازر بشعة.",
-        stat: "حوالي 1500 شهيد",
-        statExp: "شهداء المجازر في خان يونس ورفح وغزة خلال العدوان",
-        sourceName: "أرشيف تاريخ فلسطين - العدوان الثلاثي",
+        id: "m4", type: "scene", year: "1956",
+        title: { ar: "احتلال غزة 1956", en: "Occupation of Gaza 1956", fr: "Occupation de Gaza 1956", es: "Ocupación de Gaza 1956" },
+        alt: { ar: "العدوان الثلاثي", en: "Suez Crisis", fr: "Crise de Suez", es: "Guerra de Suez" },
+        image: "images/timeline/4.jpg",
+        excerpt: {
+            ar: "خلال العدوان الثلاثيّ على مصر بعد تأميم قناة السويس، احتلّ جيش الاحتلال قطاع غزّة قادماً من رفح، حيث ارتقى مئات الشهداء في مجازر بشعة.",
+            en: "During the tripartite aggression on Egypt, the occupation army occupied Gaza coming from Rafah, committing terrible massacres where hundreds of martyrs fell.",
+            fr: "Lors de l'agression tripartite contre l'Égypte, l'armée d'occupation a occupé Gaza en venant de Rafah, commettant de terribles massacres.",
+            es: "Durante la agresión tripartita contra Egipto, el ejército de ocupación ocupó Gaza viniendo desde Rafah, cometiendo terribles masacres."
+        },
+        stat: { ar: "حوالي 1500 شهيد", en: "Around 1,500 Martyrs", fr: "Environ 1 500 Martyrs", es: "Cerca de 1.500 Mártires" },
+        statExp: {
+            ar: "شهداء المجازر في خان يونس ورفح وغزة خلال العدوان",
+            en: "Martyrs of massacres in Khan Younis, Rafah, and Gaza during the Suez Crisis",
+            fr: "Martyrs des massacres à Khan Younès, Rafah et Gaza pendant la crise",
+            es: "Mártires de las masacres en Jan Yunis, Rafah y Gaza durante la crisis"
+        },
+        sourceName: { ar: "أرشيف تاريخ فلسطين - العدوان الثلاثي", en: "Palestine History Archive - Suez Crisis", fr: "Archives de Palestine - Crise de Suez", es: "Archivo Histórico de Palestina" },
         sourceUrl: "https://ar.wikipedia.org"
     },
     { id: "d1960", type: "decade", decade: "1960" },
     {
-        id: "m5", type: "scene", year: "1967", title: "حرب حزيران 1967", alt: "النكسة", image: "images/timeline/5.jpg",
-        excerpt: "يطلق مصطلح النكسة على الهزيمة التي منيت بها الجيوش العربية أمام إسرائيل واحتلال كامل فلسطين وأراضٍ سورية ومصرية.",
-        stat: "15,000 - 25,000 شهيد",
-        statExp: "شهداء العمليات العسكرية والدفاع عن الأراضي العربية والفلسطينية",
-        sourceName: "الموسوعة التفاعلية للقضية الفلسطينية",
+        id: "m5", type: "scene", year: "1967",
+        title: { ar: "حرب حزيران 1967", en: "June War 1967", fr: "Guerre de Juin 1967", es: "Guerra de Junio 1967" },
+        alt: { ar: "النكسة", en: "The Naksa", fr: "La Naksa", es: "La Naksa" },
+        image: "images/timeline/5.jpg",
+        excerpt: {
+            ar: "يطلق مصطلح النكسة على الهزيمة التي منيت بها الجيوش العربية أمام إسرائيل وااحتلال كامل فلسطين وأراضٍ سورية ومصرية.",
+            en: "The term Naksa refers to the defeat of Arab armies by Israel and the occupation of the rest of Palestine, Syrian Golan, and Egyptian Sinai.",
+            fr: "Le terme Naksa fait référence à la défaite des armées arabes par Israël et à l'occupation du reste de la Palestine, du Golan et du Sinaï.",
+            es: "El término Naksa se refiere a la derrota de los ejércitos árabes ante Israel y la ocupación de toda Palestina, el Golán y el Sinaí."
+        },
+        stat: { ar: "15,000 - 25,000 شهيد", en: "15,000 - 25,000 Martyrs", fr: "15 000 - 25 000 Martyrs", es: "15.000 - 25.000 Mártires" },
+        statExp: {
+            ar: "شهداء العمليات العسكرية والدفاع عن الأراضي العربية والفلسطينية",
+            en: "Martyrs of military operations and defense of Arab and Palestinian lands",
+            fr: "Martyrs des opérations militaires et de la défense des terres arabes et palestiniennes",
+            es: "Mártires de operaciones militares y defensa de tierras árabes y palestinas"
+        },
+        sourceName: { ar: "الموسوعة التفاعلية للقضية الفلسطينية", en: "Interactive Encyclopedia of the Palestine Question", fr: "Encyclopédie de la question palestinienne", es: "Enciclopedia de la Cuestión Palestina" },
         sourceUrl: "https://www.palquest.org/"
     },
     { id: "d1970", type: "decade", decade: "1970" },
     {
-        id: "m22", type: "scene", year: "1976", title: "يوم الأرض", alt: "", image: "images/timeline/22.jpg",
-        excerpt: "هبة جماهيرية فلسطينية شاملة رداً على مصادرة سلطات الاحتلال لآلاف الدونمات من أراضي الجليل والمثلث.",
-        stat: "6 شهداء",
-        statExp: "ستة شهداء سقطوا دفاعاً عن الأرض في أراضي الداخل المحتل عام 1948",
-        sourceName: "تقارير توثيقية فلسطينية",
+        id: "m22", type: "scene", year: "1976",
+        title: { ar: "يوم الأرض", en: "Land Day", fr: "Journée de la Terre", es: "Día de la Tierra" },
+        alt: { ar: "", en: "", fr: "", es: "" },
+        image: "images/timeline/22.jpg",
+        excerpt: {
+            ar: "هبة جماهيرية فلسطينية شاملة رداً على مصادرة سلطات الاحتلال لآلاف الدونمات من أراضي الجليل والمثلث.",
+            en: "A comprehensive Palestinian popular uprising in response to the occupation's confiscation of thousands of dunams in Galilee.",
+            fr: "Un soulèvement populaire palestinien complet en réponse à la confiscation de milliers de dunams en Galilée par l'occupation.",
+            es: "Un levantamiento popular palestino completo en respuesta a la confiscación de miles de dunams en Galilea por parte de la ocupación."
+        },
+        stat: { ar: "6 شهداء", en: "6 Martyrs", fr: "6 Martyrs", es: "6 Mártires" },
+        statExp: {
+            ar: "ستة شهداء سقطوا دفاعاً عن الأرض في أراضي الداخل المحتل عام 1948",
+            en: "Six martyrs fell defending their land in the occupied territories of 1948",
+            fr: "Six martyrs sont tombés en défendant leur terre dans les territoires occupés de 1948",
+            es: "Seis mártires cayeron defendiendo su tierra en los territorios ocupados de 1948"
+        },
+        sourceName: { ar: "تقارير توثيقية فلسطينية", en: "Palestinian Documentary Reports", fr: "Rapports documentaires palestiniens", es: "Informes Documentales Palestinos" },
         sourceUrl: "https://ar.wikipedia.org"
     },
     { id: "d1980", type: "decade", decade: "1980" },
     {
-        id: "m11", type: "scene", year: "1987", title: "الانتفاضة الفلسطينية الأولى", alt: "انتفاضة الحجارة", image: "images/timeline/11.jpg",
-        excerpt: "هبة شعبية كبرى انطلقت من مخيم جباليا في قطاع غزة وامتدت لكافة المدن والقرى الفلسطينية.",
-        stat: "أكثر من 1300 شهيد",
-        statExp: "شهداء رصاص الاحتلال والمواجهات الشعبية والحجارة خلال الانتفاضة الأولى",
-        sourceName: "مركز المعلومات الوطني الفلسطيني (وفا)",
+        id: "m11", type: "scene", year: "1987",
+        title: { ar: "الانتفاضة الفلسطينية الأولى", en: "First Palestinian Intifada", fr: "Première Intifada palestinienne", es: "Primera Intifada Palestina" },
+        alt: { ar: "انتفاضة الحجارة", en: "Stone Intifada", fr: "Intifada des pierres", es: "Intifada de las Piedras" },
+        image: "images/timeline/11.jpg",
+        excerpt: {
+            ar: "هبة شعبية كبرى انطلقت من مخيم جباليا في قطاع غزة وامتدت لكافة المدن والقرى الفلسطينية.",
+            en: "A major popular uprising that began in Jabalia refugee camp in Gaza and spread to all Palestinian cities and villages.",
+            fr: "Un soulèvement populaire majeur qui a commencé au camp de Jabalia à Gaza et s'est étendu à toutes les villes palestiniennes.",
+            es: "Un gran levantamiento popular que comenzó en el campamento de Jabalia en Gaza y se extendió a todas las ciudades palestinas."
+        },
+        stat: { ar: "أكثر من 1300 شهيد", en: "Over 1,300 Martyrs", fr: "Plus de 1 300 Martyrs", es: "Más de 1.300 Mártires" },
+        statExp: {
+            ar: "شهداء رصاص الاحتلال والمواجهات الشعبية والحجارة خلال الانتفاضة الأولى",
+            en: "Martyrs of occupation bullets, popular clashes, and stones during the First Intifada",
+            fr: "Martyrs des balles d'occupation, affrontements populaires et pierres pendant la première Intifada",
+            es: "Mártires de balas de ocupación, enfrentamientos populares y piedras durante la Primera Intifada"
+        },
+        sourceName: { ar: "مركز المعلومات الوطني الفلسطيني (وفا)", en: "Palestinian National Information Center (Wafa)", fr: "Centre d'information national palestinien (Wafa)", es: "Centro de Información Nacional Palestino (Wafa)" },
         sourceUrl: "https://www.wafa.ps/"
     },
     { id: "d1990", type: "decade", decade: "1990" },
     {
-        id: "m25", type: "scene", year: "1994", title: "مجزرة الحرم الإبراهيمي", alt: "", image: "images/timeline/25.jpg",
-        excerpt: "إطلاق نار متطرف داخل الحرم الإبراهيمي الشريف في مدينة الخليل أثناء صلاة الفجر.",
-        stat: "29 شهيداً",
-        statExp: "29 شهيداً ارتقوا داخل المسجد أثناء صلاة الفجر",
-        sourceName: "ويكيبيديا والموسوعة التفاعلية",
+        id: "m25", type: "scene", year: "1994",
+        title: { ar: "مجزرة الحرم الإبراهيمي", en: "Ibrahimi Mosque Massacre", fr: "Massacre de la mosquée d'Ibrahim", es: "Masacre de la Mezquita Ibrahimi" },
+        alt: { ar: "", en: "", fr: "", es: "" },
+        image: "images/timeline/25.jpg",
+        excerpt: {
+            ar: "إطلاق نار متطرف داخل الحرم الإبراهيمي الشريف في مدينة الخليل أثناء صلاة الفجر.",
+            en: "An extremist mass shooting inside the Ibrahimi Mosque in Hebron during dawn prayers.",
+            fr: "Une fusillade de masse extrémiste à l'intérieur de la mosquée d'Ibrahim à Hébron pendant les prières de l'aube.",
+            es: "Un tiroteo masivo extremista dentro de la Mezquita Ibrahimi en Hebrón durante las oraciones del amanecer."
+        },
+        stat: { ar: "29 شهيداً", en: "29 Martyrs", fr: "29 Martyrs", es: "29 Mártires" },
+        statExp: {
+            ar: "29 شهيداً ارتقوا داخل المسجد أثناء صلاة الفجر",
+            en: "29 martyrs fell inside the mosque during dawn prayers",
+            fr: "29 martyrs sont tombés à l'intérieur de la mosquée pendant les prières de l'aube",
+            es: "29 mártires cayeron dentro de la mezquita durante las oraciones del amanecer"
+        },
+        sourceName: { ar: "ويكيبيديا والموسوعة التفاعلية", en: "Wikipedia & Interactive Encyclopedia", fr: "Wikipédia & Encyclopédie interactive", es: "Wikipedia y Enciclopedia Interactiva" },
         sourceUrl: "https://ar.wikipedia.org"
     },
     { id: "d2000", type: "decade", decade: "2000" },
     {
-        id: "m12", type: "scene", year: "2000", title: "الانتفاضة الفلسطينية الثانية", alt: "انتفاضة الأقصى", image: "images/timeline/12.jpg",
-        excerpt: "اندلعت عقب اقتحام أرييل شارون للمسجد الأقصى، وشهدت مواجهات مسلحة واجتياحات واسعة لمدن الضفة وغزة.",
-        stat: "آلاف الشهداء",
-        statExp: "أكثر من 4000 شهيد وثقتهم السجلات الرسمية خلال انتفاضة الأقصى",
-        sourceName: "مركز المعلومات الوطني الفلسطيني (وفا)",
+        id: "m12", type: "scene", year: "2000",
+        title: { ar: "الانتفاضة الفلسطينية الثانية", en: "Second Palestinian Intifada", fr: "Seconde Intifada palestinienne", es: "Segunda Intifada Palestina" },
+        alt: { ar: "انتفاضة الأقصى", en: "Al-Aqsa Intifada", fr: "Intifada d'Al-Aqsa", es: "Intifada de Al-Aqsa" },
+        image: "images/timeline/12.jpg",
+        excerpt: {
+            ar: "اندلعت عقب اقتحام أرييل شارون للمسجد الأقصى، وشهدت مواجهات مسلحة واجتياحات واسعة لمدن الضفة وغزة.",
+            en: "Erupted after Ariel Sharon's storming of Al-Aqsa Mosque, featuring armed clashes and widespread invasions of West Bank and Gaza cities.",
+            fr: "A éclaté après l'assaut d'Ariel Sharon sur la mosquée Al-Aqsa, avec des affrontements armés et de larges invasions de la Cisjordanie et de Gaza.",
+            es: "Estalló tras la incursión de Ariel Sharon en la Mezquita de Al-Aqsa, caracterizándose por enfrentamientos armados y amplias invasiones."
+        },
+        stat: { ar: "آلاف الشهداء", en: "Thousands of Martyrs", fr: "Des milliers de Martyrs", es: "Miles de Mártires" },
+        statExp: {
+            ar: "أكثر من 4000 شهيد وثقتهم السجلات الرسمية خلال انتفاضة الأقصى",
+            en: "Over 4,000 martyrs documented in official records during Al-Aqsa Intifada",
+            fr: "Plus de 4 000 martyrs documentés dans les registres officiels pendant l'Intifada d'Al-Aqsa",
+            es: "Más de 4.000 mártires documentados en registros oficiales durante la Intifada de Al-Aqsa"
+        },
+        sourceName: { ar: "مركز المعلومات الوطني الفلسطيني (وفا)", en: "Palestinian National Information Center (Wafa)", fr: "Wafa - Centre d'information", es: "Wafa - Centro de Información" },
         sourceUrl: "https://www.wafa.ps/"
     },
     { id: "d2010", type: "decade", decade: "2010" },
     {
-        id: "m15", type: "scene", year: "2014", title: "الجرف الصامد", alt: "حرب غزة 2014", image: "images/timeline/15.jpg",
-        excerpt: "حرب مدمرة استمرت 51 يوماً ضد قطاع غزة، وشهدت مجازر مروعة بحق العائلات وتدميراً واسعاً.",
-        stat: "2,200+ شهيد",
-        statExp: "أكثر من 2200 شهيد بينهم مئات الأطفال والنساء وعائلات بأكملها مسحت من السجل المدني",
-        sourceName: "الجهاز المركزي للإحصاء الفلسطيني",
+        id: "m15", type: "scene", year: "2014",
+        title: { ar: "الجرف الصامد", en: "Battle of Protective Edge", fr: "Bataille de la Bordure protectrice", es: "Guerra de Gaza de 2014" },
+        alt: { ar: "حرب غزة 2014", en: "2014 Gaza War", fr: "Guerre de Gaza 2014", es: "Guerra de Gaza 2014" },
+        image: "images/timeline/15.jpg",
+        excerpt: {
+            ar: "حرب مدمرة استمرت 51 يوماً ضد قطاع غزة، وشهدت مجازر مروعة بحق العائلات وتدميراً واسعاً.",
+            en: "A devastating 51-day war against the Gaza Strip, featuring horrific massacres against families and widespread destruction.",
+            fr: "Une guerre dévastatrice de 51 jours contre la bande de Gaza, marquée par d'horribles massacres de familles et une destruction généralisée.",
+            es: "Una devastadora guerra de 51 días contra la Franja de Gaza, con horribles masacres contra familias y destrucción generalizada."
+        },
+        stat: { ar: "2,200+ شهيد", en: "2,200+ Martyrs", fr: "2 200+ Martyrs", es: "2.200+ Mártires" },
+        statExp: {
+            ar: "أكثر من 2200 شهيد بينهم مئات الأطفال والنساء وعائلات بأكملها مسحت من السجل المدني",
+            en: "Over 2,200 martyrs, including hundreds of children and women, and entire families wiped from civil registry",
+            fr: "Plus de 2 200 martyrs, dont des centaines d'enfants et de femmes, et des familles entières effacées de l'état civil",
+            es: "Más de 2.200 mártires, incluidos cientos de niños y mujeres, y familias enteras borradas del registro civil"
+        },
+        sourceName: { ar: "الجهاز المركزي للإحصاء الفلسطيني", en: "Palestinian Central Bureau of Statistics", fr: "Bureau central palestinien des statistiques", es: "Oficina Central de Estadísticas de Palestina" },
         sourceUrl: "https://www.pcbs.gov.ps/"
     },
     { id: "d2020", type: "decade", decade: "2020" },
     {
-        id: "m30", type: "scene", year: "2023 - 2026", title: "طوفان الأقصى والعدوان الشامل", alt: "حرب الإبادة", image: "images/timeline/30.jpg",
-        excerpt: "الملحمة التاريخية الكبرى وطوفان الأقصى وما تلاه من حرب إبادة جماعية وعدوان غير مسبوق على قطاع غزة والضفة والمنطقة.",
-        stat: "عشرات الآلاف من الشهداء",
-        statExp: "أكثر من 158,000 إلى 291,000 شهيد ومفقود وجريح ومستشهد تحت الأنقاض وفي حرب الإبادة الجماعية المستمرة",
-        sourceName: "الجهاز المركزي للإحصاء الفلسطيني وتقارير الأمم المتحدة",
+        id: "m30", type: "scene", year: "2023 - 2026",
+        title: { ar: "طوفان الأقصى والعدوان الشامل", en: "Al-Aqsa Flood & Ongoing Genocide", fr: "Déluge d'Al-Aqsa & Génocide en cours", es: "Diluvio de Al-Aqsa y Genocidio en curso" },
+        alt: { ar: "حرب الإبادة", en: "The Genocide War", fr: "La guerre de génocide", es: "La guerra de genocidio" },
+        image: "images/timeline/30.jpg",
+        excerpt: {
+            ar: "الملحمة التاريخية الكبرى وطوفان الأقصى وما تلاه من حرب إبادة جماعية وعدوان غير مسبوق على قطاع غزة والضفة والمنطقة.",
+            en: "The historic epic and Al-Aqsa Flood, followed by the unprecedented genocidal war and aggression on Gaza, West Bank, and the region.",
+            fr: "L'épopée historique du déluge d'Al-Aqsa, suivie d'une guerre de génocide et d'une agression sans précédent sur Gaza, la Cisjordanie et la région.",
+            es: "La epopeya histórica del Diluvio de Al-Aqsa, seguida de una guerra genocida y agresión sin precedentes contra Gaza, Cisjordania y la región."
+        },
+        stat: { ar: "عشرات الآلاف من الشهداء", en: "Tens of Thousands of Martyrs", fr: "Des dizaines de milliers de Martyrs", es: "Decenas de miles de Mártires" },
+        statExp: {
+            ar: "أكثر من 158,000 إلى 291,000 شهيد ومفقود وجريح ومستشهد تحت الأنقاض وفي حرب الإبادة الجماعية المستمرة",
+            en: "Over 158,000 to 291,000 martyrs, missing, wounded, and victims under rubble in the ongoing genocidal war",
+            fr: "De 158 000 à 291 000 martyrs, disparus, blessés et victimes sous les décombres dans la guerre de génocide en cours",
+            es: "Más de 158.000 a 291.000 mártires, desaparecidos, heridos y víctimas bajo los escombros en la guerra de genocidio en curso"
+        },
+        sourceName: { ar: "الجهاز المركزي للإحصاء الفلسطيني وتقارير الأمم المتحدة", en: "Palestinian Bureau of Statistics & UN Reports", fr: "Bureau des statistiques palestinien & rapports de l'ONU", es: "Oficina de Estadísticas de Palestina e informes de la ONU" },
         sourceUrl: "https://www.pcbs.gov.ps/"
     }
 ];
@@ -389,6 +774,14 @@ function changeLanguage(langCode) {
     }
     const langSelect = document.getElementById('language-select');
     if (langSelect) langSelect.value = currentLang;
+
+    const flagImg = document.getElementById('selected-flag-img');
+    if (flagImg) {
+        if (currentLang === 'ar') flagImg.src = 'images/icons/arab.png';
+        else if (currentLang === 'en') flagImg.src = 'images/icons/royaume-uni.png';
+        else if (currentLang === 'fr') flagImg.src = 'images/icons/france.png';
+        else if (currentLang === 'es') flagImg.src = 'images/icons/espagne.png';
+    }
 
     const setInnerText = (id, text) => {
         const el = document.getElementById(id);
@@ -475,24 +868,98 @@ function changeLanguage(langCode) {
     const noDataText = document.getElementById('no-data-text');
     if(noDataText) noDataText.innerText = t.noDataText;
 
+    // Localize Crowdsource form elements
+    const csTitle = document.querySelector('#crowdsource-modal-overlay h2');
+    if (csTitle) csTitle.innerText = t.csTitle;
+
+    const csAdminLink = document.querySelector('#crowdsource-modal-overlay button[onclick="openAdminReviewPanel()"]');
+    if (csAdminLink) {
+        csAdminLink.innerHTML = `<img src="images/icons/administration-du-systeme.png" class="w-3.5 h-3.5 object-contain inline-block mr-1 align-middle" alt="admin"> ${t.csAdminLink}`;
+    }
+
+    const labels = document.querySelectorAll('#crowdsource-modal-overlay label');
+    if (labels.length >= 5) {
+        labels[0].innerText = t.csSubmitterLabel;
+        labels[1].innerText = t.csNameLabel;
+        labels[2].innerText = t.csCityLabel;
+        labels[3].innerText = t.csNotesLabel;
+        labels[4].innerText = t.csPhotoLabel;
+    }
+    const captchaLabel = document.querySelector('#crowdsource-modal-overlay .bg-red-950\\/20 label');
+    if (captchaLabel) captchaLabel.innerText = t.csCaptchaLabel;
+
+    setPlaceholder('cs-submitter', t.csSubmitterPlaceholder);
+    setPlaceholder('cs-martyr-name', t.csNamePlaceholder);
+    setPlaceholder('cs-martyr-city', t.csCityPlaceholder);
+    setPlaceholder('cs-notes', t.csNotesPlaceholder);
+    setPlaceholder('cs-photo', t.csPhotoLabel);
+    setPlaceholder('cs-captcha-answer', t.csCaptchaPlaceholder);
+
+    const csSubmitBtn = document.querySelector('#crowdsource-modal-overlay button[type="submit"]');
+    if (csSubmitBtn) csSubmitBtn.innerText = t.csSubmitButton;
+
+    // Localize Martyr Modal additional elements
+    const tributeCandleText = document.getElementById('tribute-candle-text');
+    if (tributeCandleText) tributeCandleText.innerText = t.tributeCandleText;
+    const tributeEditText = document.getElementById('tribute-edit-text');
+    if (tributeEditText) tributeEditText.innerText = t.tributeEditText;
+
+    const tributeLeaveMark = document.querySelector('#martyr-modal-overlay h4');
+    if (tributeLeaveMark) tributeLeaveMark.innerText = t.tributeLeaveMark;
+
+    setPlaceholder('tribute-name-input', t.tributeNamePlaceholder);
+    setPlaceholder('tribute-msg-input', t.tributeMsgPlaceholder);
+
+    const tributeSubmitBtn = document.querySelector('#martyr-modal-overlay button[onclick="submitVirtualTribute()"]');
+    if (tributeSubmitBtn) tributeSubmitBtn.innerText = t.tributeSubmitBtn;
+
+    const tributeLatestLabel = document.querySelector('#martyr-modal-overlay h5');
+    if (tributeLatestLabel) tributeLatestLabel.innerText = t.tributeLatestLabel;
+
+    // Localize bottom-bar Crowdsource buttons
+    const crowdsourceBtns = document.querySelectorAll('button[onclick="openCrowdsourceModal()"]');
+    crowdsourceBtns.forEach(btn => {
+        btn.innerHTML = `<img src="images/icons/editing info.png" class="w-3.5 h-3.5 object-contain inline-block mr-1 align-middle" alt="edit"> ${t.csTitle}`;
+    });
+
+    // Populate stats and charts if on stats view
+    if (currentMainMode === 'stats') {
+        renderStatisticsGrid();
+        renderStatsPageCharts(currentLang);
+    }
+
+    // Refresh active tab views if applicable
+    if (currentMainMode === 'westbank') {
+        renderTributeCards('wb-cards-container', applyApprovedSubmissions(westBankMartyrsData));
+    } else if (currentMainMode === 'martyrs48') {
+        renderTributeCards('m48-cards-container', applyApprovedSubmissions(martyrs48Data));
+    } else if (currentMainMode === 'milestones') {
+        renderCinematicTimeline();
+    }
+
     updateMusicButton();
     isDirty = true;
 }
 
 window.shareSite = function(){
-    navigator.clipboard.writeText(window.location.href).then(() => alert('تم نسخ رابط المنصة بنجاح!'));
+    const t = translations[currentLang] || translations.ar;
+    navigator.clipboard.writeText(window.location.href).then(() => alert(t.copyLinkSuccess));
 };
 
 window.shareMartyrCard = function(){
     if(!currentMartyrObj) return;
     const btn = document.getElementById('share-btn-modal');
     const originalText = btn.innerText;
-    btn.innerText = "جاري تحضير الصورة...";
+    const t = translations[currentLang] || translations.ar;
+    btn.innerText = t.imagePreparing;
     btn.disabled = true;
 
     const person = currentMartyrObj;
-    document.getElementById('capture-name').innerText = person.name_ar || person.name || 'شهيد مجهول';
-    document.getElementById('capture-name-en').innerText = person.name_en || person.english_name || '';
+    const dispName = typeof person.name === 'object' ? (person.name[currentLang] || person.name.ar) : (person.name_ar || person.name || 'شهيد مجهول');
+    const dispNameEn = typeof person.name === 'object' ? (person.name.en || '') : (person.name_en || person.english_name || person.en_name || '');
+
+    document.getElementById('capture-name').innerText = dispName;
+    document.getElementById('capture-name-en').innerText = dispNameEn;
     document.getElementById('capture-age').innerText = person.age || 'غير معروف';
     document.getElementById('capture-id').innerText = person.id || '-';
 
@@ -500,7 +967,7 @@ window.shareMartyrCard = function(){
     if (person.image) {
         imgContainer.innerHTML = `<img src="${person.image}" style="width:100%; height:100%; object-fit:cover;" crossorigin="anonymous">`;
     } else {
-        imgContainer.innerHTML = `<span style="color:#666; font-size: 1.2rem;">صورة الشهيد</span>`;
+        imgContainer.innerHTML = `<span style="color:#666; font-size: 1.2rem;">${t.modalPhotoText}</span>`;
     }
 
     const cardElement = document.getElementById('shareable-card');
@@ -511,7 +978,7 @@ window.shareMartyrCard = function(){
         backgroundColor: '#0a0a0a'
     }).then(canvas => {
         const link = document.createElement('a');
-        link.download = `توثيق_الشهيد_${(person.name_ar || 'مجهول').replace(/\s+/g, '_')}.png`;
+        link.download = `توثيق_الشهيد_${(dispName || 'مجهول').replace(/\s+/g, '_')}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
 
@@ -519,7 +986,7 @@ window.shareMartyrCard = function(){
         btn.disabled = false;
     }).catch(err => {
         console.error("Error generating card image:", err);
-        alert("حدث خطأ أثناء التقاط الصورة. يرجى المحاولة مرة أخرى.");
+        alert(t.imageCaptureError);
         btn.innerText = originalText;
         btn.disabled = false;
     });
@@ -542,20 +1009,27 @@ function openMilestoneModal(item) {
     if(!modal || !container) return;
     const t = translations[currentLang];
 
+    const transTitle = typeof item.title === 'object' ? (item.title[currentLang] || item.title.ar) : item.title;
+    const transAlt = typeof item.alt === 'object' ? (item.alt[currentLang] || item.alt.ar) : item.alt;
+    const transExcerpt = typeof item.excerpt === 'object' ? (item.excerpt[currentLang] || item.excerpt.ar) : item.excerpt;
+    const transStat = typeof item.stat === 'object' ? (item.stat[currentLang] || item.stat.ar) : item.stat;
+    const transStatExp = typeof item.statExp === 'object' ? (item.statExp[currentLang] || item.statExp.ar) : (item.statExp || transExcerpt);
+    const transSourceName = typeof item.sourceName === 'object' ? (item.sourceName[currentLang] || item.sourceName.ar) : (item.sourceName || 'الموسوعة التفاعلية للقضية الفلسطينية');
+
     container.innerHTML = `
         <div class="tlc-modal-content">
-            <h2 class="tlc-modal-title">${item.title} ${item.alt ? `<span class="tlc-mdl-alt">(${item.alt})</span>` : ''}</h2>
+            <h2 class="tlc-modal-title">${transTitle} ${transAlt ? `<span class="tlc-mdl-alt">(${transAlt})</span>` : ''}</h2>
             <div class="tlc-modal-meta"><time>${item.year}</time></div>
             <img class="tlc-modal-img" src="${item.image}" alt="" onerror="this.style.display='none'">
-            <div class="tlc-modal-desc">${item.excerpt}</div>
+            <div class="tlc-modal-desc">${transExcerpt}</div>
             <div class="tlc-modal-stat">
-                <span class="tlc-mdl-stat-label">عدد الشهداء:</span>
-                <span class="tlc-mdl-stat-num">${item.stat}</span>
-                <p class="tlc-mdl-stat-exp">${item.statExp || item.excerpt}</p>
+                <span class="tlc-mdl-stat-label">${t.tlcStatLabel || 'عدد الشهداء:'}</span>
+                <span class="tlc-mdl-stat-num">${transStat}</span>
+                <p class="tlc-mdl-stat-exp">${transStatExp}</p>
             </div>
             <div class="tlc-modal-source">
                 <span>${t.source}</span>
-                <a href="${item.sourceUrl || 'https://www.palquest.org/'}" target="_blank" rel="noopener">${item.sourceName || 'الموسوعة التفاعلية للقضية الفلسطينية'}</a>
+                <a href="${item.sourceUrl || 'https://www.palquest.org/'}" target="_blank" rel="noopener">${transSourceName}</a>
             </div>
         </div>
     `;
@@ -1039,21 +1513,165 @@ function filterMapList() {
 }
 
 const westBankMartyrsData = [
-    { id: "wb1", name: "شيرين أبو عاقلة", name_en: "Shireen Abu Akleh", age: 51, date: "2022-05-11", city: "القدس / جنين", notes: "صحفية فلسطينية مخضرمة عملت مع شبكة الجزيرة الإعلامية لأكثر من ربع قرن. استشهدت برصاص جيش الاحتلال الإسرائيلي أثناء تغطيتها لاجتياح مخيم جنين بالرغم من ارتدائها خوذة وسترة الصحافة المميّزة." },
-    { id: "wb2", name: "إبراهيم النابلسي", name_en: "Ibrahim al-Nabulsi", age: 18, date: "2022-08-09", city: "نابلس", notes: "أحد أبرز قادة المقاومة الشبابية في البلدة القديمة بنابلس. ارتقى شهيداً بعد محاصرة منزله وخوضه اشتباكاً بطولياً، تاركاً وصية وطنية خالدة تدعو للاستمرار وعدم ترك السلاح." },
-    { id: "wb3", name: "باسل الأعرج", name_en: "Basil al-Araj", age: 31, date: "2017-03-06", city: "بيت لحم / البيرة", notes: "مثقف مشتبك، وباحث ومؤرخ فلسطيني وصيدلي رائد. أسس لمفهوم الثقافة المقاومة ونال الشهادة بعد خوضه اشتباكاً مسلحاً مع قوات الاحتلال الخاصة بعد مطاردة دامت عدة أشهر." },
-    { id: "wb4", name: "جميل العموري", name_en: "Jamil al-Amouri", age: 25, date: "2021-06-10", city: "جنين", notes: "أحد مؤسسي كتيبة جنين، ارتقى شهيداً بعد استهدافه من قِبل قوة خاصة لجيش الاحتلال، ليتحول اسمه إلى أيقونة وملهم للحراك الشبابي المقاوم في مخيم جنين." },
-    { id: "wb5", name: "محمد الدرة", name_en: "Muhammad al-Durrah", age: 12, date: "2000-09-30", city: "القدس / غزة", notes: "أيقونة الانتفاضة الثانية، ارتقى شهيداً برصاص الاحتلال وهو يحتمي خلف والده في شارع صلاح الدين، في مشهد وثقته عدسات الكاميرات وهز الضمير العالمي." },
-    { id: "wb6", name: "أمير أبو خديجة", name_en: "Amir Abu Khadijah", age: 25, date: "2023-03-23", city: "طولكرم", notes: "مؤسس كتيبة الرد السريع في طولكرم، ارتقى شهيداً في أول أيام شهر رمضان المبارك بعد خوضه اشتباكاً مسلحاً بطولياً دفاعاً عن مدينته ومخيمها." }
+    {
+        id: "wb1",
+        name: { ar: "شيرين أبو عاقلة", en: "Shireen Abu Akleh", fr: "Shireen Abu Akleh", es: "Shireen Abu Akleh" },
+        age: 51,
+        date: "2022-05-11",
+        city: { ar: "القدس / جنين", en: "Jerusalem / Jenin", fr: "Jérusalem / Jénine", es: "Jerusalén / Yenín" },
+        notes: {
+            ar: "صحفية فلسطينية مخضرمة عملت مع شبكة الجزيرة الإعلامية لأكثر من ربع قرن. استشهدت برصاص جيش الاحتلال الإسرائيلي أثناء تغطيتها لاجتياح مخيم جنين بالرغم من ارتدائها خوذة وسترة الصحافة المميّزة.",
+            en: "A veteran Palestinian journalist with Al Jazeera who was martyred by Israeli bullets while covering the Jenin camp raid despite wearing her press vest and helmet.",
+            fr: "Une journaliste palestinienne chevronnée d'Al Jazeera martyrisée par des balles israéliennes lors du raid de Jénine.",
+            es: "Periodista palestina veterana de Al Jazeera martirizada por balas israelíes en Jenín."
+        }
+    },
+    {
+        id: "wb2",
+        name: { ar: "إبراهيم النابلسي", en: "Ibrahim al-Nabulsi", fr: "Ibrahim al-Nabulsi", es: "Ibrahim al-Nabulsi" },
+        age: 18,
+        date: "2022-08-09",
+        city: { ar: "نابلس", en: "Nablus", fr: "Naplouse", es: "Nablus" },
+        notes: {
+            ar: "أحد أبرز قادة المقاومة الشبابية في البلدة القديمة بنابلس. ارتقى شهيداً بعد محاصرة منزله وخوضه اشتباكاً بطولياً، تاركاً وصية وطنية خالدة تدعو للاستمرار وعدم ترك السلاح.",
+            en: "One of the prominent resistance commanders in Nablus, martyred after a heroic standoff during a raid on his home.",
+            fr: "L'un des commandants de la résistance à Naplouse, martyrisé lors d'un affrontement héroïque.",
+            es: "Destacado comandante de la resistencia en Nablus, martirizado en un heroico enfrentamiento."
+        }
+    },
+    {
+        id: "wb3",
+        name: { ar: "باسل الأعرج", en: "Basil al-Araj", fr: "Basil al-Araj", es: "Basil al-Araj" },
+        age: 31,
+        date: "2017-03-06",
+        city: { ar: "بيت لحم / البيرة", en: "Bethlehem / Al-Bireh", fr: "Bethléem / Al-Bireh", es: "Belén / Al-Bireh" },
+        notes: {
+            ar: "مثقف مشتبك، وباحث ومؤرخ فلسطيني وصيدلي رائد. أسس لمفهوم الثقافة المقاومة ونال الشهادة بعد خوضه اشتباكاً مسلحاً مع قوات الاحتلال الخاصة بعد مطاردة دامت عدة أشهر.",
+            en: "An intellectual, researcher, and pharmacist who championed cultural resistance and was martyred in an armed clash.",
+            fr: "Intellectuel, chercheur et pharmacien qui a défendu la résistance culturelle, martyrisé lors d'un affrontement.",
+            es: "Intelectual, investigador y farmacéutico que defendió la resistencia cultural, martirizado en un enfrentamiento."
+        }
+    },
+    {
+        id: "wb4",
+        name: { ar: "جميل العموري", en: "Jamil al-Amouri", fr: "Jamil al-Amouri", es: "Jamil al-Amouri" },
+        age: 25,
+        date: "2021-06-10",
+        city: { ar: "جنين", en: "Jenin", fr: "Jénine", es: "Yenín" },
+        notes: {
+            ar: "أحد مؤسسي كتيبة جنين، ارتقى شهيداً بعد استهدافه من قِبل قوة خاصة لجيش الاحتلال، ليتحول اسمه إلى أيقونة وملهم للحراك الشبابي المقاوم في مخيم جنين.",
+            en: "One of the founders of the Jenin Brigade, martyred after being targeted by a special Israeli force.",
+            fr: "L'un des fondateurs de la brigade de Jénine, martyrisé par les forces d'occupation.",
+            es: "Uno de los fundadores de la Brigada de Yenín, martirizado por fuerzas especiales de ocupación."
+        }
+    },
+    {
+        id: "wb5",
+        name: { ar: "محمد الدرة", en: "Muhammad al-Durrah", fr: "Muhammad al-Durrah", es: "Muhammad al-Durrah" },
+        age: 12,
+        date: "2000-09-30",
+        city: { ar: "القدس / غزة", en: "Jerusalem / Gaza", fr: "Jérusalem / Gaza", es: "Jerusalén / Gaza" },
+        notes: {
+            ar: "أيقونة الانتفاضة الثانية، ارتقى شهيداً برصاص الاحتلال وهو يحتمي خلف والده في شارع صلاح الدين، في مشهد وثقته عدسات الكاميرات وهز الضمير العالمي.",
+            en: "The icon of the Second Intifada, martyred by occupation bullets while shielding behind his father.",
+            fr: "Icône de la seconde Intifada, martyrisé par des balles alors qu'il s'abritait derrière son père.",
+            es: "Icono de la Segunda Intifada, martirizado por balas de ocupación mientras se protegía con su padre."
+        }
+    },
+    {
+        id: "wb6",
+        name: { ar: "أمير أبو خديجة", en: "Amir Abu Khadijah", fr: "Amir Abu Khadijah", es: "Amir Abu Khadijah" },
+        age: 25,
+        date: "2023-03-23",
+        city: { ar: "طولكرم", en: "Tulkarm", fr: "Tulkarem", es: "Tulkarem" },
+        notes: {
+            ar: "مؤسس كتيبة الرد السريع في طولكرم، ارتقى شهيداً في أول أيام شهر رمضان المبارك بعد خوضه اشتباكاً مسلحاً بطولياً دفاعاً عن مدينته ومخيمها.",
+            en: "Founder of the Tulkarm Rapid Response Brigade, martyred on the first day of Ramadan in a heroic clash.",
+            fr: "Fondateur de la brigade d'intervention rapide de Tulkarem, martyrisé lors d'un affrontement.",
+            es: "Fundador de la Brigada de Tulkarem, martirizado el primer día de Ramadán en un heroico enfrentamiento."
+        }
+    }
 ];
 
 const martyrs48Data = [
-    { id: "m48_1", name: "خديجة شواهنة", name_en: "Khadija Shawahneh", age: 23, date: "1976-03-30", city: "سخنين", notes: "إحدى شهداء هبة يوم الأرض الخالدة عام 1976، ارتدت ثوب الشهادة دفاعاً عن الأراضي والقرى الفلسطينية المهددة بالمصادرة والتهويد في الجليل." },
-    { id: "m48_2", name: "رجاء أبو الهيجا", name_en: "Raja Abu al-Heja", age: 21, date: "1976-03-30", city: "طمرة", notes: "شاب فلسطيني بطل ارتقى خلال مواجهات يوم الأرض البطولية في الجليل، مدافعاً عن الهوية العربية والوجود الفلسطيني بوجه سياسات التهجير والمصادرة." },
-    { id: "m48_3", name: "خير الدين حمدان", name_en: "Khair al-Din Hamdan", age: 22, date: "2014-11-08", city: "كفر كنا", notes: "شاب فلسطيني ارتقى شهيداً برصاص شرطة الاحتلال الإسرائيلي بدم بارد، لتعم الاحتجاجات والتظاهرات أراضي الداخل المحتل تنديداً بالاعتداءات المستمرة." },
-    { id: "m48_4", name: "رامز بشناق", name_en: "Ramez Bushnaq", age: 24, date: "2000-10-03", city: "كفر مندا", notes: "استشهد برصاص شرطة الاحتلال الإسرائيلي خلال هبة أكتوبر 2000، التي اندلعت تضامناً مع أبناء شعبنا في غزة والضفة مع بداية الانتفاضة الثانية." },
-    { id: "m48_5", name: "إياد لوابنة", name_en: "Eyad Lawabny", age: 26, date: "2000-10-02", city: "الناصرة", notes: "طبيب ومسعف فلسطيني ارتقى شهيداً في الناصرة أثناء تقديمه الإسعافات الأولية للجرحى خلال هبة أكتوبر 2000 البطولية بالداخل المحتل." },
-    { id: "m48_6", name: "أحمد جبارين", name_en: "Ahmed Jabarin", age: 18, date: "2000-10-01", city: "أم الفحم", notes: "شاب في مقتبل العمر ارتقى شهيداً برصاص القناصة خلال التظاهرات السلمية في أم الفحم دفاعاً عن المسجد الأقصى المبارك والهوية الوطنية." }
+    {
+        id: "m48_1",
+        name: { ar: "خديجة شواهنة", en: "Khadija Shawahneh", fr: "Khadija Shawahneh", es: "Khadija Shawahneh" },
+        age: 23,
+        date: "1976-03-30",
+        city: { ar: "سخنين", en: "Sakhnin", fr: "Sakhnin", es: "Sajnin" },
+        notes: {
+            ar: "إحدى شهداء هبة يوم الأرض الخالدة عام 1976، ارتدت ثوب الشهادة دفاعاً عن الأراضي والقرى الفلسطينية المهددة بالمصادرة والتهويد في الجليل.",
+            en: "One of the martyrs of the eternal Land Day uprising in 1976, defending Palestinian lands in Galilee against confiscation.",
+            fr: "L'une des martyres du soulèvement de la Journée de la Terre en 1976, défendant les terres de Galilée.",
+            es: "Una de las mártires del levantamiento del Día de la Tierra en 1976, defendiendo las tierras de Galilea."
+        }
+    },
+    {
+        id: "m48_2",
+        name: { ar: "رجاء أبو الهيجا", en: "Raja Abu al-Heja", fr: "Raja Abu al-Heja", es: "Raja Abu al-Heja" },
+        age: 21,
+        date: "1976-03-30",
+        city: { ar: "طمرة", en: "Tamra", fr: "Tamra", es: "Tamra" },
+        notes: {
+            ar: "شاب فلسطيني بطل ارتقى خلال مواجهات يوم الأرض البطولية في الجليل، مدافعاً عن الهوية العربية والوجود الفلسطيني بوجه سياسات التهجير والمصادرة.",
+            en: "A heroic young Palestinian martyred during Land Day confrontations in Galilee, defending Arab identity.",
+            fr: "Un jeune Palestinien héroïque martyrisé lors des affrontements de la Journée de la Terre en Galilée.",
+            es: "Un heroico joven palestino martirizado durante los enfrentamientos del Día de la Tierra en Galilea."
+        }
+    },
+    {
+        id: "m48_3",
+        name: { ar: "خير الدين حمدان", en: "Khair al-Din Hamdan", fr: "Khair al-Din Hamdan", es: "Khair al-Din Hamdan" },
+        age: 22,
+        date: "2014-11-08",
+        city: { ar: "كفر كنا", en: "Kafr Kanna", fr: "Kafr Kanna", es: "Kafr Kanna" },
+        notes: {
+            ar: "شاب فلسطيني ارتقى شهيداً برصاص شرطة الاحتلال الإسرائيلي بدم بارد، لتعم الاحتجاجات والتظاهرات أراضي الداخل المحتل تنديداً بالاعتداءات المستمرة.",
+            en: "A young Palestinian martyred by Israeli police bullets in cold blood, sparking widespread protests across the occupied territories.",
+            fr: "Un jeune Palestinien martyrisé de sang-froid par la police israélienne, provoquant de grandes manifestations.",
+            es: "Un joven palestino martirizado a sangre fría por la policía israelí, provocando grandes manifestaciones."
+        }
+    },
+    {
+        id: "m48_4",
+        name: { ar: "رامز بشناق", en: "Ramez Bushnaq", fr: "Ramez Bushnaq", es: "Ramez Bushnaq" },
+        age: 24,
+        date: "2000-10-03",
+        city: { ar: "كفر مندا", en: "Kafr Manda", fr: "Kafr Manda", es: "Kafr Manda" },
+        notes: {
+            ar: "استشهد برصاص شرطة الاحتلال الإسرائيلي خلال هبة أكتوبر 2000، التي اندلعت تضامناً مع أبناء شعبنا في غزة والضفة مع بداية الانتفاضة الثانية.",
+            en: "Martyred by Israeli police during the October 2000 protests, which erupted in solidarity with Palestinians in Gaza and West Bank.",
+            fr: "Martyrisé par la police lors des manifestations d'octobre 2000 en solidarité avec Gaza et la Cisjordanie.",
+            es: "Martirizado por la policía durante las protestas de octubre de 2000 en solidaridad con Gaza y Cisjordania."
+        }
+    },
+    {
+        id: "m48_5",
+        name: { ar: "إياد لوابنة", en: "Eyad Lawabny", fr: "Eyad Lawabny", es: "Eyad Lawabny" },
+        age: 26,
+        date: "2000-10-02",
+        city: { ar: "الناصرة", en: "Nazareth", fr: "Nazareth", es: "Nazaret" },
+        notes: {
+            ar: "طبيب ومسعف فلسطيني ارتقى شهيداً في الناصرة أثناء تقديمه الإسعافات الأولية للجرحى خلال هبة أكتوبر 2000 البطولية بالداخل المحتل.",
+            en: "A Palestinian paramedic and doctor martyred in Nazareth while providing first aid to the wounded during the October 2000 protests.",
+            fr: "Un ambulancier et médecin palestinien martyrisé à Nazareth alors qu'il soignait des blessés en octobre 2000.",
+            es: "Un paramédico y médico palestino martirizado en Nazaret mientras atendía a los heridos en octubre de 2000."
+        }
+    },
+    {
+        id: "m48_6",
+        name: { ar: "أحمد جبارين", en: "Ahmed Jabarin", fr: "Ahmed Jabarin", es: "Ahmed Jabarin" },
+        age: 18,
+        date: "2000-10-01",
+        city: { ar: "أم الفحم", en: "Umm al-Fahm", fr: "Umm al-Fahm", es: "Umm al-Fahm" },
+        notes: {
+            ar: "شاب في مقتبل العمر ارتقى شهيداً برصاص القناصة خلال التظاهرات السلمية في أم الفحم دفاعاً عن المسجد الأقصى المبارك والهوية الوطنية.",
+            en: "A young Palestinian martyred by sniper bullets during peaceful protests in Umm al-Fahm defending Al-Aqsa Mosque.",
+            fr: "Un jeune Palestinien martyrisé par un tireur d'élite lors de manifestations pacifiques à Umm al-Fahm pour Al-Aqsa.",
+            es: "Un joven palestino martirizado por un francotirador durante manifestaciones pacíficas en Umm al-Fahm por Al-Aqsa."
+        }
+    }
 ];
 
 function renderTributeCards(containerId, dataset) {
@@ -1067,14 +1685,20 @@ function renderTributeCards(containerId, dataset) {
         const dateLabel = currentLang === 'ar' ? 'التاريخ' : 'Date';
         const yearsLabel = currentLang === 'ar' ? 'سنة' : 'years';
 
-        let title = item.name;
-        let subtitle = item.name_en || '';
+        let title = typeof item.name === 'object' ? (item.name[currentLang] || item.name.ar) : item.name;
+        let subtitle = item.name_en || item.english_name || item.en_name || '';
         if (currentLang !== 'ar') {
-            title = transliterateName(item.name, currentLang);
-            subtitle = item.name_en || transliterateName(item.name, 'en');
+            if (typeof item.name === 'object') {
+                title = item.name[currentLang] || item.name.en;
+                subtitle = item.name.en;
+            } else {
+                title = transliterateName(item.name, currentLang);
+                subtitle = item.name_en || item.english_name || item.en_name || transliterateName(item.name, 'en');
+            }
         }
-        const notes = currentLang === 'ar' ? (item.notes || '') : translateContentInstantly(item.notes || '', item.name, currentLang);
-        const city = currentLang === 'ar' ? (item.city || '') : translateCity(item.city || '', currentLang);
+
+        const notes = typeof item.notes === 'object' ? (item.notes[currentLang] || item.notes.ar) : (currentLang === 'ar' ? (item.notes || '') : translateContentInstantly(item.notes || '', item.name, currentLang));
+        const city = typeof item.city === 'object' ? (item.city[currentLang] || item.city.ar) : (currentLang === 'ar' ? (item.city || '') : translateCity(item.city || '', currentLang));
 
         html += `
             <div class="glass-panel p-6 rounded-2xl border border-white/10 hover:border-red-500/50 transition-all text-right flex flex-col justify-between group hover:scale-[1.02] cursor-pointer" onclick="openMartyrModal(${JSON.stringify(item).replace(/"/g, '&quot;')})">
@@ -1153,6 +1777,8 @@ window.switchMainMode = function(mode) {
     } else if(mode === 'stats') {
         const el = document.getElementById('stats-view');
         if (el) el.style.display = 'block';
+        renderStatisticsGrid();
+        renderStatsPageCharts(currentLang);
     } else if(mode === 'videos') {
         const el = document.getElementById('videos-view');
         if (el) el.style.display = 'block';
@@ -1213,7 +1839,7 @@ function searchMartyrByName(query) {
     // البحث في البيانات النشطة
     const matches = gazaSouls.filter(person => {
         const nameAr = (person.name_ar || person.name || "").toLowerCase();
-        const nameEn = (person.name_en || person.english_name || "").toLowerCase();
+        const nameEn = (person.name_en || person.english_name || person.en_name || "").toLowerCase();
         const id = (person.id || "").toString();
         return nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery) || id.includes(currentSearchQuery);
     }).slice(0, 15);
@@ -1227,10 +1853,10 @@ function searchMartyrByName(query) {
         let html = '';
         matches.forEach(person => {
             let displayName = person.name_ar || person.name || person.name_en || 'شهيد مجهول';
-            let subtitle = person.name_en || person.english_name || '';
+            let subtitle = person.name_en || person.english_name || person.en_name || '';
             if (currentLang !== 'ar') {
                 displayName = transliterateName(person.name || '', currentLang);
-                subtitle = person.name_en || transliterateName(person.name || '', 'en');
+                subtitle = person.name_en || person.english_name || person.en_name || transliterateName(person.name || '', 'en');
             }
             const ageText = currentLang === 'ar' ? 'العمر' :
                             currentLang === 'en' ? 'Age' :
@@ -1282,7 +1908,7 @@ function initCanvasPoints(dataList) {
     points = displayList.map((item, index) => ({
         id: item.id || index,
         name: item.name_ar || item.name || `شهيد ${index+1}`,
-        name_en: item.name_en || item.english_name || '',
+        name_en: item.name_en || item.english_name || item.en_name || '',
         age: item.age || 'غير معروف',
         image: item.image ? (item.image.startsWith('/') ? item.image.slice(1) : item.image) : '',
         notes: item.notes || '',
@@ -1639,8 +2265,9 @@ window.triggerMartyrEdit = triggerMartyrEdit;
 function submitCrowdsourceForm(e) {
     e.preventDefault();
     const ansVal = parseInt(document.getElementById('cs-captcha-answer').value);
+    const t = translations[currentLang] || translations.ar;
     if (ansVal !== (captchaNum1 + captchaNum2)) {
-        alert(currentLang === 'ar' ? 'إجابة سؤال الحماية غير صحيحة، يرجى المحاولة مرة أخرى.' : 'Incorrect protection question answer. Please try again.');
+        alert(t.csCaptchaLabel);
         return;
     }
 
@@ -1676,7 +2303,10 @@ function submitCrowdsourceForm(e) {
         list.push(submission);
         localStorage.setItem('crowdsourced_submissions', JSON.stringify(list));
 
-        alert(currentLang === 'ar' ? 'تم إرسال مساهمتك بنجاح وهي قيد المراجعة والاعتماد الآن.' : 'Your submission has been sent successfully and is under review.');
+        alert(currentLang === 'ar' ? 'تم إرسال مساهمتك بنجاح وهي قيد المراجعة والاعتماد الآن.' :
+              currentLang === 'fr' ? 'Votre contribution a été envoyée avec succès et est en cours d\'examen.' :
+              currentLang === 'es' ? 'Su contribución ha sido enviada con éxito y está bajo revisión.' :
+              'Your submission has been sent successfully and is under review.');
         document.getElementById('crowdsource-modal-overlay').style.display = 'none';
 
         // Reset state
@@ -1744,19 +2374,27 @@ function applyApprovedSubmissions(targetList) {
 window.applyApprovedSubmissions = applyApprovedSubmissions;
 
 function openAdminReviewPanel() {
-    const password = prompt(currentLang === 'ar' ? 'الرجاء إدخال كلمة مرور الإدارة لتسجيل الدخول:' : 'Please enter the admin password to log in:', '');
+    const t = translations[currentLang] || translations.ar;
+    const password = prompt(t.adminPasswordPrompt, '');
     if (password !== 'admin123') {
-        alert(currentLang === 'ar' ? 'كلمة المرور غير صحيحة!' : 'Incorrect password!');
+        alert(t.adminIncorrectPassword);
         return;
     }
     document.getElementById('crowdsource-modal-overlay').style.display = 'none';
-    document.getElementById('admin-review-overlay').style.display = 'flex';
+    const adminOverlay = document.getElementById('admin-review-overlay');
+    if (adminOverlay) {
+        adminOverlay.style.display = 'flex';
+        const h2 = adminOverlay.querySelector('h2');
+        if (h2) h2.innerText = t.adminPanelTitle;
+    }
     renderAdminSubmissions();
 }
 
 function renderAdminSubmissions() {
     const container = document.getElementById('admin-submissions-list');
     if (!container) return;
+
+    const t = translations[currentLang] || translations.ar;
 
     let list = [];
     try {
@@ -1767,7 +2405,7 @@ function renderAdminSubmissions() {
     }
 
     if (list.length === 0) {
-        container.innerHTML = `<div class="text-gray-500 text-center py-6">لا توجد مساهمات معلقة للمراجعة حالياً.</div>`;
+        container.innerHTML = `<div class="text-gray-500 text-center py-6">${t.adminNoPendingSubmissions}</div>`;
         return;
     }
 
@@ -1777,18 +2415,18 @@ function renderAdminSubmissions() {
                 item.status === 'approved' ? 'bg-green-600/20 border border-green-500 text-green-400' :
                 item.status === 'rejected' ? 'bg-red-600/20 border border-red-500 text-red-400' :
                 'bg-amber-600/20 border border-amber-500 text-amber-400'
-            }">${item.status === 'approved' ? 'معتمد' : item.status === 'rejected' ? 'مرفوض' : 'معلق'}</span>
+            }">${item.status === 'approved' ? t.adminStatusApproved : item.status === 'rejected' ? t.adminStatusRejected : t.adminStatusPending}</span>
 
-            <div class="text-red-400 font-bold mb-1">المساهم: ${item.submitter} (${item.date})</div>
-            <div><strong>اسم الشهيد:</strong> ${item.name}</div>
-            <div><strong>المدينة / المحافظة:</strong> ${item.city}</div>
-            <div><strong>التفاصيل:</strong> ${item.notes}</div>
-            ${item.image ? `<div class="mt-1"><a href="${item.image}" target="_blank" class="text-blue-400 underline">عرض الصورة المرفقة</a></div>` : ''}
+            <div class="text-red-400 font-bold mb-1">${t.adminSubmitter} ${item.submitter} (${item.date})</div>
+            <div><strong>${t.adminMartyrName}</strong> ${item.name}</div>
+            <div><strong>${t.adminCity}</strong> ${item.city}</div>
+            <div><strong>${t.adminDetails}</strong> ${item.notes}</div>
+            ${item.image ? `<div class="mt-1"><a href="${item.image}" target="_blank" class="text-blue-400 underline">${t.adminViewPhoto}</a></div>` : ''}
 
             ${item.status === 'pending' ? `
                 <div class="flex gap-2 mt-2 pt-2 border-t border-white/10">
-                    <button onclick="approveSubmission('${item.id}')" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded font-bold text-[10px]">اعتماد وقبول</button>
-                    <button onclick="rejectSubmission('${item.id}')" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded font-bold text-[10px]">رفض</button>
+                    <button onclick="approveSubmission('${item.id}')" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded font-bold text-[10px]">${t.adminApproveBtn}</button>
+                    <button onclick="rejectSubmission('${item.id}')" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded font-bold text-[10px]">${t.adminRejectBtn}</button>
                 </div>
             ` : ''}
         </div>
@@ -1824,7 +2462,8 @@ function approveSubmission(id) {
             cachedItems.unshift(newSoulsObj);
         }
 
-        alert(currentLang === 'ar' ? 'تم قبول واعتماد المساهمة، وتمت إضافتها بنجاح إلى أرشيف الشهداء!' : 'Submission approved and successfully added to the archive!');
+        const t = translations[currentLang] || translations.ar;
+        alert(t.adminSuccessApproved);
         renderAdminSubmissions();
     }
 }
@@ -1840,7 +2479,8 @@ function rejectSubmission(id) {
     if (index !== -1) {
         list[index].status = 'rejected';
         localStorage.setItem('crowdsourced_submissions', JSON.stringify(list));
-        alert(currentLang === 'ar' ? 'تم رفض المساهمة.' : 'Submission rejected.');
+        const t = translations[currentLang] || translations.ar;
+        alert(t.adminSuccessRejected);
         renderAdminSubmissions();
     }
 }
@@ -1984,10 +2624,12 @@ function openMartyrModal(person) {
         translateMartyrModal(currentLang);
     }
 
-    document.getElementById('martyr-modal-name').innerText = person.name || 'شهيد مجهول';
+    const dispName = typeof person.name === 'object' ? (person.name[currentLang] || person.name.ar) : (person.name || 'شهيد مجهول');
+    document.getElementById('martyr-modal-name').innerText = dispName;
     const nameEnEl = document.getElementById('martyr-modal-name-en');
-    if (person.name_en) {
-        nameEnEl.innerText = person.name_en;
+    const dispNameEn = typeof person.name === 'object' ? (person.name.en || '') : (person.name_en || person.english_name || person.en_name || '');
+    if (dispNameEn) {
+        nameEnEl.innerText = dispNameEn;
         nameEnEl.style.display = 'block';
     } else {
         nameEnEl.style.display = 'none';
@@ -2011,7 +2653,7 @@ function openMartyrModal(person) {
             editBtn = document.createElement('button');
             editBtn.id = 'tribute-edit-btn-dynamic';
             editBtn.className = 'btn-main text-[10px] px-2.5 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded-full flex items-center gap-1';
-            editBtn.innerHTML = '✍️ <span id="tribute-edit-text">تعديل البيانات</span>';
+            editBtn.innerHTML = '<img src="images/icons/editing info.png" class="w-3.5 h-3.5 object-contain inline-block align-middle" alt="edit"> <span id="tribute-edit-text">تعديل البيانات</span>';
             editBtn.onclick = function() { triggerMartyrEdit(); };
             parent.appendChild(editBtn);
         }
@@ -2212,7 +2854,8 @@ function translateMartyrModal(lang) {
 
     const bioTextDiv = document.getElementById('martyr-modal-bio-text-div');
     if (currentMartyrObj.notes) {
-        const translatedNotes = translateContentInstantly(currentMartyrObj.notes, currentMartyrObj.name, lang);
+        const notesObj = currentMartyrObj.notes;
+        const translatedNotes = typeof notesObj === 'object' ? (notesObj[lang] || notesObj.ar) : translateContentInstantly(notesObj, currentMartyrObj.name, lang);
 
         const langLabels = {
             ar: { title: "سيرة الشهيد:", labelAge: "العمر:", labelId: "رقم الهوية:", ttsText: "استماع للسيرة" },
@@ -2251,17 +2894,11 @@ function translateMilestoneModal(lang) {
 
     const t = translations[lang] || translations.ar;
 
-    let transTitle = currentMilestoneObj.title;
-    let transExcerpt = currentMilestoneObj.excerpt;
-    let transStat = currentMilestoneObj.stat;
-    let transStatExp = currentMilestoneObj.statExp || currentMilestoneObj.excerpt;
-
-    if (lang !== 'ar') {
-        transTitle = currentMilestoneObj.title_en || currentMilestoneObj.title;
-        transExcerpt = "A prominent historical milestone documenting the struggles, resilience, and events in the history of the Palestinian cause.";
-        transStat = "Thousands of Martyrs";
-        transStatExp = "Detailed archival statistics showing targeting records and historical timelines.";
-    }
+    const transTitle = typeof currentMilestoneObj.title === 'object' ? (currentMilestoneObj.title[lang] || currentMilestoneObj.title.ar) : currentMilestoneObj.title;
+    const transExcerpt = typeof currentMilestoneObj.excerpt === 'object' ? (currentMilestoneObj.excerpt[lang] || currentMilestoneObj.excerpt.ar) : currentMilestoneObj.excerpt;
+    const transStat = typeof currentMilestoneObj.stat === 'object' ? (currentMilestoneObj.stat[lang] || currentMilestoneObj.stat.ar) : currentMilestoneObj.stat;
+    const transStatExp = typeof currentMilestoneObj.statExp === 'object' ? (currentMilestoneObj.statExp[lang] || currentMilestoneObj.statExp.ar) : (currentMilestoneObj.statExp || transExcerpt);
+    const transSourceName = typeof currentMilestoneObj.sourceName === 'object' ? (currentMilestoneObj.sourceName[lang] || currentMilestoneObj.sourceName.ar) : (currentMilestoneObj.sourceName || 'الموسوعة التفاعلية بالقضية الفلسطينية');
 
     container.innerHTML = `
         <div class="tlc-modal-content text-right text-xs">
@@ -2270,16 +2907,805 @@ function translateMilestoneModal(lang) {
             <img class="tlc-modal-img mt-3 rounded-xl max-h-48 w-full object-cover" src="${currentMilestoneObj.image}" alt="" onerror="this.style.display='none'">
             <div class="tlc-modal-desc mt-3 leading-relaxed text-gray-200" style="font-size: 0.8rem;">${transExcerpt}</div>
             <div class="tlc-modal-stat mt-4 bg-red-950/20 border border-red-500/20 p-3 rounded-xl">
-                <span class="tlc-mdl-stat-label text-gray-400 block font-bold text-[10px]">عدد الشهداء:</span>
+                <span class="tlc-mdl-stat-label text-gray-400 block font-bold text-[10px]">${t.tlcStatLabel || 'عدد الشهداء:'}</span>
                 <span class="tlc-mdl-stat-num text-red-400 font-black text-sm">${transStat}</span>
                 <p class="tlc-mdl-stat-exp text-gray-300 mt-1" style="font-size: 0.75rem;">${transStatExp}</p>
             </div>
             <div class="tlc-modal-source mt-4 border-t border-white/10 pt-2 text-[10px] text-gray-500">
                 <span>${t.source || 'المصدر:'}</span>
-                <a href="${currentMilestoneObj.sourceUrl || 'https://www.palquest.org/'}" target="_blank" class="text-red-400 underline">${currentMilestoneObj.sourceName || 'الموسوعة التفاعلية بالقضية الفلسطينية'}</a>
+                <a href="${currentMilestoneObj.sourceUrl || 'https://www.palquest.org/'}" target="_blank" class="text-red-400 underline">${transSourceName}</a>
             </div>
         </div>
     `;
+}
+
+const statsHumanData = [
+    {
+        label: {
+            ar: "نسبة الدمار الشامل بالقطاع",
+            en: "Total Destruction Rate",
+            fr: "Taux de destruction totale",
+            es: "Tasa de destrucción total"
+        },
+        value: {
+            ar: "أكثر من 90%",
+            en: "Over 90%",
+            fr: "Plus de 90%",
+            es: "Más de 90%"
+        },
+        border: "border-red-600/20"
+    },
+    {
+        label: {
+            ar: "مجموع الشهداء بالمستشفيات",
+            en: "Total Martyrs in Hospitals",
+            fr: "Total des martyrs dans les hôpitaux",
+            es: "Total de mártires en hospitales"
+        },
+        value: {
+            ar: "73,066",
+            en: "73,066",
+            fr: "73 066",
+            es: "73.066"
+        },
+        border: "border-red-600/20"
+    },
+    {
+        label: {
+            ar: "شهيدة من النساء",
+            en: "Martyred Women",
+            fr: "Femmes martyrisées",
+            es: "Mujeres martirizadas"
+        },
+        value: {
+            ar: "+12,500",
+            en: "+12,500",
+            fr: "+12 500",
+            es: "+12.500"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "حالة فقدان بصر",
+            en: "Cases of Vision Loss",
+            fr: "Cas de perte de vision",
+            es: "Casos de pérdida de visión"
+        },
+        value: {
+            ar: "1,200",
+            en: "1,200",
+            fr: "1 200",
+            es: "1.200"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "من مساحة القطاع تحت سيطرة الاحتلال",
+            en: "Gaza Area Under Occupation Control",
+            fr: "Zone de Gaza sous contrôle d'occupation",
+            es: "Área de Gaza bajo control de ocupación"
+        },
+        value: {
+            ar: "أكثر من 80%",
+            en: "Over 80%",
+            fr: "Plus de 80%",
+            es: "Más de 80%"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "قصف منطقة المواصي المزعوم أنها آمنة",
+            en: "Bombing of Allegedly Safe Mawasi Area",
+            fr: "Bombardement de la zone d'Al-Mawasi prétendument sûre",
+            es: "Bombardeo de la zona de Al-Mawasi supuestamente segura"
+        },
+        value: {
+            ar: "241 مرة",
+            en: "241 times",
+            fr: "241 fois",
+            es: "241 veces"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "شهيد من الأطفال",
+            en: "Martyred Children",
+            fr: "Enfants martyrisés",
+            es: "Niños martirizados"
+        },
+        value: {
+            ar: "+21,500",
+            en: "+21,500",
+            fr: "+21 500",
+            es: "+21.500"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "حالة بتر (18% أطفال)",
+            en: "Amputations (18% Children)",
+            fr: "Amputations (18% d'enfants)",
+            es: "Amputaciones (18% niños)"
+        },
+        value: {
+            ar: "+5,400",
+            en: "+5,400",
+            fr: "+5 400",
+            es: "+5.400"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "من متفجرات ألقيت على القطاع",
+            en: "Explosives Dropped on the Strip",
+            fr: "Explosifs largués sur la bande",
+            es: "Explosivos lanzados sobre la Franja"
+        },
+        value: {
+            ar: "+223 ألف طن",
+            en: "+223k Tons",
+            fr: "+223k Tonnes",
+            es: "+223k Toneladas"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "مفقود",
+            en: "Missing People",
+            fr: "Personnes disparues",
+            es: "Personas desaparecidas"
+        },
+        value: {
+            ar: "9,500",
+            en: "9,500",
+            fr: "9 500",
+            es: "9.500"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "رضيع ولد واستشهد خلال الحرب",
+            en: "Infants Born and Martyred in War",
+            fr: "Nourrissons nés et martyrisés pendant la guerre",
+            es: "Bebés nacidos y martirizados en la guerra"
+        },
+        value: {
+            ar: "+520",
+            en: "+520",
+            fr: "+520",
+            es: "+520"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "حالة شلل",
+            en: "Cases of Paralysis",
+            fr: "Cas de paralysie",
+            es: "Casos de parálisis"
+        },
+        value: {
+            ar: "1,500",
+            en: "1,500",
+            fr: "1 500",
+            es: "1.500"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "حالة إجهاض بسبب نقص الرعاية والغذاء",
+            en: "Miscarriages Due to Malnutrition & Lack of Care",
+            fr: "Fausses couches dues à la malnutrition et au manque de soins",
+            es: "Abortos espontáneos por desnutrición y falta de atención"
+        },
+        value: {
+            ar: "+12,000",
+            en: "+12,000",
+            fr: "+12 000",
+            es: "+12.000"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "يتيم فقد أحد والديه أو كلاهما",
+            en: "Orphans Who Lost One or Both Parents",
+            fr: "Orphelins ayant perdu un ou deux parents",
+            es: "Huérfanos que perdieron uno o ambos padres"
+        },
+        value: {
+            ar: "58,800",
+            en: "58,800",
+            fr: "58 800",
+            es: "58.800"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "جثمان سرقه الاحتلال من المقابر",
+            en: "Bodies Stolen by Occupation from Cemeteries",
+            fr: "Corps volés par l'occupation dans les cimetières",
+            es: "Cuerpos robados por la ocupación de los cementerios"
+        },
+        value: {
+            ar: "+2,450",
+            en: "+2,450",
+            fr: "+2 450",
+            es: "+2.450"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "عائلة مسحت من السجل المدني",
+            en: "Families Wiped from the Civil Registry",
+            fr: "Familles effacées du registre civil",
+            es: "Familias borradas del registro civil"
+        },
+        value: {
+            ar: "+2,700",
+            en: "+2,700",
+            fr: "+2 700",
+            es: "+2.700"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "من مرضى الكلى فقدوا حياتهم",
+            en: "Kidney Patients Who Lost Their Lives",
+            fr: "Patients rénaux ayant perdu la vie",
+            es: "Pacientes renales que perdieron la vida"
+        },
+        value: {
+            ar: "43%",
+            en: "43%",
+            fr: "43%",
+            es: "43%"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "الجرحى والمصابون",
+            en: "Wounded and Injured",
+            fr: "Blessés et blessures",
+            es: "Heridos y lesionados"
+        },
+        value: {
+            ar: "+173 ألف",
+            en: "+173k",
+            fr: "+173k",
+            es: "+173k"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "شهيد من الطواقم الطبية",
+            en: "Medical Personnel Martyred",
+            fr: "Membres du personnel médical martyrisés",
+            es: "Personal médico martirizado"
+        },
+        value: {
+            ar: "1,700",
+            en: "1,700",
+            fr: "1 700",
+            es: "1.700"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "نازح",
+            en: "Displaced Persons",
+            fr: "Personnes déplacées",
+            es: "Personas déplacées"
+        },
+        value: {
+            ar: "2 مليون",
+            en: "2 Million",
+            fr: "2 Millions",
+            es: "2 Millones"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "جريح بحاجة للتأهيل",
+            en: "Wounded in Need of Rehabilitation",
+            fr: "Blessés ayant besoin de réadaptation",
+            es: "Heridos que necesitan rehabilitación"
+        },
+        value: {
+            ar: "+19,000",
+            en: "+19,000",
+            fr: "+19 000",
+            es: "+19.000"
+        },
+        border: "border-white/10"
+    }
+];
+
+const statsUrbanData = [
+    {
+        label: {
+            ar: "الخسائر الأولية المباشرة",
+            en: "Direct Preliminary Financial Losses",
+            fr: "Pertes financières préliminaires directes",
+            es: "Pérdidas financieras preliminares directas"
+        },
+        value: {
+            ar: "80 مليار دولار",
+            en: "$80 Billion",
+            fr: "80 Milliards $",
+            es: "80 Mil Millones $"
+        },
+        border: "border-red-600/20"
+    },
+    {
+        label: {
+            ar: "موقع أثري وتراثي استهدف",
+            en: "Archaeological and Heritage Sites Targeted",
+            fr: "Sites archéologiques et patrimoniaux ciblés",
+            es: "Sitios arqueológicos y patrimoniales atacados"
+        },
+        value: {
+            ar: "208",
+            en: "208",
+            fr: "208",
+            es: "208"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "مقر حكومي دمّر",
+            en: "Government Buildings Destroyed",
+            fr: "Bâtiments gouvernementaux détruits",
+            es: "Edificios gubernamentales destruidos"
+        },
+        value: {
+            ar: "253",
+            en: "253",
+            fr: "253",
+            es: "253"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "مبنى ووحدة سكنية دمَرت جزئياً",
+            en: "Housing Units Partially Destroyed",
+            fr: "Logements partiellement détruits",
+            es: "Viviendas parcialmente destruidas"
+        },
+        value: {
+            ar: "75,000",
+            en: "75,000",
+            fr: "75 000",
+            es: "75.000"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "مركز إيواء ونزوح استهدفوا بالقصف",
+            en: "Shelter Centers Bombed",
+            fr: "Centres d'hébergement bombardés",
+            es: "Centros de refugio bombardeados"
+        },
+        value: {
+            ar: "346",
+            en: "346",
+            fr: "346",
+            es: "346"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "مقبرة دمّرت من مجموع 60",
+            en: "Cemeteries Destroyed (out of 60)",
+            fr: "Cimetières détruits (sur 60)",
+            es: "Cementerios destruidos (de 60)"
+        },
+        value: {
+            ar: "40",
+            en: "40",
+            fr: "40",
+            es: "40"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "من الأراضي الزراعية دمّرت",
+            en: "Agricultural Lands Destroyed",
+            fr: "Terres agricoles détruites",
+            es: "Tierras agrícolas destruidas"
+        },
+        value: {
+            ar: "+87%",
+            en: "+87%",
+            fr: "+87%",
+            es: "+87%"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "من مدارس القطاع لحقت بها أضرار",
+            en: "Schools Damaged/Destroyed",
+            fr: "Écoles endommagées/détruites",
+            es: "Escuelas dañadas/destruidas"
+        },
+        value: {
+            ar: "100%",
+            en: "100%",
+            fr: "100%",
+            es: "100%"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "طالب مدرسي محروم من التعليم",
+            en: "School Students Deprived of Education",
+            fr: "Élèves privés d'éducation",
+            es: "Estudiantes privados de educación"
+        },
+        value: {
+            ar: "+620 ألف",
+            en: "+620k",
+            fr: "+620k",
+            es: "+620k"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "مسجداً دمّر كلياً من إجمالي 1,275",
+            en: "Mosques Completely Destroyed (out of 1,275)",
+            fr: "Mosquées complètement détruites (sur 1 275)",
+            es: "Mezquitas completamente destruidas (de 1.275)"
+        },
+        value: {
+            ar: "1,047",
+            en: "1,047",
+            fr: "1 047",
+            es: "1.047"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "سيارة إسعاف استهدفها الإحتلال",
+            en: "Ambulances Targeted and Destroyed",
+            fr: "Ambulances ciblées et détruites",
+            es: "Ambulancias atacadas y destruidas"
+        },
+        value: {
+            ar: "197",
+            en: "197",
+            fr: "197",
+            es: "197"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "شبكات طرق وشوارع دمرها الاحتلال",
+            en: "Road Networks Destroyed",
+            fr: "Réseaux routiers détruits",
+            es: "Redes de carreteras destruidas"
+        },
+        value: {
+            ar: "+3 مليون متر",
+            en: "+3 Million Meters",
+            fr: "+3 Millions de Mètres",
+            es: "+3 Millones de Metros"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "بئر مياه مركزي دمّر",
+            en: "Central Water Wells Destroyed",
+            fr: "Puits d'eau centraux détruits",
+            es: "Pozos de agua centrales destruidos"
+        },
+        value: {
+            ar: "725",
+            en: "725",
+            fr: "725",
+            es: "725"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "مبنى ووحدة سكنية دمّرت كلياً",
+            en: "Housing Units Completely Destroyed",
+            fr: "Logements complètement détruits",
+            es: "Viviendas completamente destruidas"
+        },
+        value: {
+            ar: "335,000",
+            en: "335,000",
+            fr: "335 000",
+            es: "335.000"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "طالب جامعي محروم من التعليم",
+            en: "University Students Deprived of Education",
+            fr: "Étudiants universitaires privés d'éducation",
+            es: "Estudiantes universitarios privados de educación"
+        },
+        value: {
+            ar: "+90 ألف",
+            en: "+90k",
+            fr: "+90k",
+            es: "+90k"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "مستشفى قصف أو دمّر أو خرج عن الخدمة",
+            en: "Hospitals Destroyed or Out of Service",
+            fr: "Hôpitaux détruits ou hors service",
+            es: "Hospitales destruidos o fuera de servicio"
+        },
+        value: {
+            ar: "38",
+            en: "38",
+            fr: "38",
+            es: "38"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "شبكات صرف صحي دمرها الاحتلال",
+            en: "Sewage Networks Destroyed",
+            fr: "Réseaux d'assainissement détruits",
+            es: "Redes de alcantarillado destruidas"
+        },
+        value: {
+            ar: "+700 ألف متر",
+            en: "+700k Meters",
+            fr: "+700k Mètres",
+            es: "+700k Metros"
+        },
+        border: "border-white/10"
+    },
+    {
+        label: {
+            ar: "شبكات مياه دمرها الاحتلال",
+            en: "Water Pipes Destroyed",
+            fr: "Canalisations d'eau détruites",
+            es: "Tuberías de agua destruidas"
+        },
+        value: {
+            ar: "+700 ألف متر",
+            en: "+700k Meters",
+            fr: "+700k Mètres",
+            es: "+700k Metros"
+        },
+        border: "border-white/10"
+    }
+];
+
+function renderStatisticsGrid() {
+    const humanGrid = document.getElementById('human-stats-grid');
+    const urbanGrid = document.getElementById('urban-stats-grid');
+    if (!humanGrid || !urbanGrid) return;
+
+    const t = translations[currentLang];
+
+    // Populate Human stats
+    let humanHtml = '';
+    statsHumanData.forEach(item => {
+        const label = item.label[currentLang] || item.label.ar;
+        const val = item.value[currentLang] || item.value.ar;
+        humanHtml += `
+            <div class="glass-panel p-5 rounded-2xl text-center border ${item.border}">
+                <span class="text-xs text-gray-400 block mb-1">${label}</span>
+                <p class="text-2xl font-black text-white">${val}</p>
+            </div>
+        `;
+    });
+    humanGrid.innerHTML = humanHtml;
+
+    // Populate Urban stats
+    let urbanHtml = '';
+    statsUrbanData.forEach(item => {
+        const label = item.label[currentLang] || item.label.ar;
+        const val = item.value[currentLang] || item.value.ar;
+        urbanHtml += `
+            <div class="glass-panel p-5 rounded-2xl text-center border ${item.border}">
+                <span class="text-xs text-gray-400 block mb-1">${label}</span>
+                <p class="text-2xl font-black text-white">${val}</p>
+            </div>
+        `;
+    });
+    urbanGrid.innerHTML = urbanHtml;
+
+    // Headings
+    const chartsMainTitle = document.getElementById('charts-main-title');
+    if (chartsMainTitle) chartsMainTitle.innerText = t.chartsMainTitle;
+    const chartsMainDesc = document.getElementById('charts-main-desc');
+    if (chartsMainDesc) chartsMainDesc.innerText = t.chartsMainDesc;
+    const chartAgeTitle = document.getElementById('chart-age-title');
+    if (chartAgeTitle) chartAgeTitle.innerText = t.chartAgeTitle;
+    const chartRegionalTitle = document.getElementById('chart-regional-title');
+    if (chartRegionalTitle) chartRegionalTitle.innerText = t.chartRegionalTitle;
+}
+
+let chartAgeInstance = null;
+let chartRegionalInstance = null;
+
+function renderStatsPageCharts(lang) {
+    const ctxAge = document.getElementById('chart-age-distribution');
+    const ctxRegion = document.getElementById('chart-regional-targeting');
+    if (!ctxAge || !ctxRegion) return;
+
+    const t = translations[lang] || translations.ar;
+
+    // Destroy previous instances if they exist
+    if (chartAgeInstance) chartAgeInstance.destroy();
+    if (chartRegionalInstance) chartRegionalInstance.destroy();
+
+    // 1. Age Distribution Chart
+    chartAgeInstance = new Chart(ctxAge, {
+        type: 'doughnut',
+        data: {
+            labels: t.chartAgeLabels,
+            datasets: [{
+                data: [42.5, 30.1, 19.8, 7.6],
+                backgroundColor: [
+                    'rgba(239, 68, 68, 0.85)',
+                    'rgba(248, 113, 113, 0.85)',
+                    'rgba(153, 27, 27, 0.85)',
+                    'rgba(252, 165, 165, 0.85)'
+                ],
+                borderColor: 'rgba(10, 10, 10, 0.8)',
+                borderWidth: 2,
+                hoverOffset: 15
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#e5e7eb',
+                        font: {
+                            family: 'Cairo',
+                            size: 11,
+                            weight: 'bold'
+                        },
+                        padding: 12,
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: 'rgba(15, 15, 15, 0.95)',
+                    titleColor: '#ef4444',
+                    titleFont: { family: 'Cairo', weight: 'bold', size: 12 },
+                    bodyColor: '#ffffff',
+                    bodyFont: { family: 'Cairo', size: 11 },
+                    borderColor: 'rgba(239, 68, 68, 0.4)',
+                    borderWidth: 1,
+                    padding: 10,
+                    displayColors: true,
+                    callbacks: {
+                        label: function(context) {
+                            return ` ${t.chartAgeTooltipLabel}${context.raw}%`;
+                        }
+                    }
+                }
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true,
+                duration: 1200,
+                easing: 'easeOutQuart'
+            }
+        }
+    });
+
+    // 2. Regional Targeting Chart
+    chartRegionalInstance = new Chart(ctxRegion, {
+        type: 'bar',
+        data: {
+            labels: t.chartRegionalLabels,
+            datasets: [{
+                label: t.chartRegionalDatasetLabel,
+                data: [34.2, 22.8, 18.5, 13.1, 10.4, 1.0],
+                backgroundColor: 'rgba(220, 38, 38, 0.75)',
+                hoverBackgroundColor: 'rgba(239, 68, 68, 0.95)',
+                borderColor: '#ef4444',
+                borderWidth: 1.5,
+                borderRadius: 8,
+                borderSkipped: false,
+                barPercentage: 0.6,
+                categoryPercentage: 0.8
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: 'rgba(15, 15, 15, 0.95)',
+                    titleColor: '#ef4444',
+                    titleFont: { family: 'Cairo', weight: 'bold', size: 12 },
+                    bodyColor: '#ffffff',
+                    bodyFont: { family: 'Cairo', size: 11 },
+                    borderColor: 'rgba(239, 68, 68, 0.4)',
+                    borderWidth: 1,
+                    padding: 10,
+                    callbacks: {
+                        label: function(context) {
+                            return ` ${t.chartRegionalTooltipLabel}${context.raw}%`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)',
+                        borderColor: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#9ca3af',
+                        font: { family: 'Cairo', size: 10 },
+                        callback: function(value) { return value + '%'; }
+                    },
+                    max: 40
+                },
+                y: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#e5e7eb',
+                        font: { family: 'Cairo', size: 11, weight: 'bold' }
+                    }
+                }
+            },
+            animation: {
+                duration: 1500,
+                easing: 'easeOutElastic'
+            }
+        }
+    });
 }
 
 // تحميل البيانات الافتراضية عند البدء
