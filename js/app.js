@@ -37,6 +37,13 @@ let isAudioSynthActive = false;
 let currentSearchQuery = "";
 let currentMartyrObj = null;
 
+// Memory Corridors state & logic
+let corridorsActive = false;
+let familyGroups = {}; // Maps familyName -> Array of points
+let hoveredFamilyName = null;
+let spotlightStarId = null;
+let spotlightTimer = null;
+
 const translations = {
     ar: {
         titleMain: "أرواح", logoText: "فلسطين", searchPlaceholder: "ابحث عن اسم الشهيد...",
@@ -56,7 +63,11 @@ const translations = {
         tlcIntro1: "على مدى العقود الماضية، ارتقى عشرات الآلاف من الفلسطينيين شهداء على يد آلة البطش الإسرائيلية...",
         tlcIntro2: "فيما يلي نسرد لكم أهم المحطات في تاريخ القضية الفلسطينية...", tlcFooterStory: "وستبقى الحكاية...",
         statsTitle: "حرب الإبادة الجماعية في غزة", statsSubtitle: "1000 يوم من الإبادة الجماعية", statsBanner: "أكثر من 2.4 مليون إنسان يتعرضون للإبادة والتجويع", statsUrbanHeader: "لم تقتصر إعتداءات الإحتلال على البشر بل تطال مختلف مظاهر العمران والحضارة كذلك.",
-        noDataText: "لا توجد بيانات حالياً"
+        noDataText: "لا توجد بيانات حالياً",
+        corridorsOn: "ممرات الذاكرة (نشط)",
+        corridorsOff: "ممرات الذاكرة (معطل)",
+        familyTitle: "أفراد العائلة الموثقون:",
+        spotBtn: "🎯 رصد النجم"
     },
     en: {
         titleMain: "Palestinian", logoText: "Souls", searchPlaceholder: "Search martyr...",
@@ -76,7 +87,11 @@ const translations = {
         tlcIntro1: "Over past decades, tens of thousands of Palestinians have been martyred by the Israeli oppression machine...",
         tlcIntro2: "Below we list the most important milestones in the history of the Palestinian cause...", tlcFooterStory: "And the story will remain...",
         statsTitle: "Gaza Genocide War", statsSubtitle: "1000 Days of Genocide", statsBanner: "Over 2.4 million people facing extermination and starvation", statsUrbanHeader: "Occupation attacks are not limited to humans but also target urban and civil aspects.",
-        noDataText: "No data available currently"
+        noDataText: "No data available currently",
+        corridorsOn: "Memory Corridors (On)",
+        corridorsOff: "Memory Corridors (Off)",
+        familyTitle: "Documented Family Members:",
+        spotBtn: "🎯 Spot Star"
     },
     fr: {
         titleMain: "Âmes", logoText: "Palestiniennes", searchPlaceholder: "Rechercher un martyr...",
@@ -96,7 +111,11 @@ const translations = {
         tlcIntro1: "Au fil des décennies, des dizaines de milliers de Palestiniens sont tombés en martyrs...",
         tlcIntro2: "Voici les étapes clés de l'histoire de la cause palestinienne...", tlcFooterStory: "Et l'histoire continuera...",
         statsTitle: "Guerre de génocide à Gaza", statsSubtitle: "1000 jours de génocide", statsBanner: "Plus de 2,4 millions de personnes confrontées à l'extermination", statsUrbanHeader: "Les attaques de l'occupation ciblent également l'urbanisme et la civilisation.",
-        noDataText: "Aucune donnée disponible"
+        noDataText: "Aucune donnée disponible",
+        corridorsOn: "Couloirs de Mémoire (Activé)",
+        corridorsOff: "Couloirs de Mémoire (Désactivé)",
+        familyTitle: "Membres de Famille Documentés :",
+        spotBtn: "🎯 Repérer l'étoile"
     },
     es: {
         titleMain: "Almas", logoText: "Palestinas", searchPlaceholder: "Buscar mártir...",
@@ -116,7 +135,11 @@ const translations = {
         tlcIntro1: "Durante las últimas décadas, decenas de miles de palestinos han muerto como mártires...",
         tlcIntro2: "A continuación detallamos los hitos más importantes de la causa palestina...", tlcFooterStory: "Y la historia continuará...",
         statsTitle: "Guerra de genocidio en Gaza", statsSubtitle: "1000 días de genocidio", statsBanner: "Más de 2,4 millones de personas enfrentan el exterminio y el hambre", statsUrbanHeader: "Los ataques de la ocupación también tienen como blanco el urbanismo y la civilización.",
-        noDataText: "No hay datos disponibles actualmente"
+        noDataText: "No hay datos disponibles actualmente",
+        corridorsOn: "Corredores de Memoria (Activo)",
+        corridorsOff: "Corredores de Memoria (Inactivo)",
+        familyTitle: "Miembros de Familia Documentados:",
+        spotBtn: "🎯 Ubicar Estrella"
     }
 };
 
@@ -140,6 +163,29 @@ function initAdaptiveTheme() {
         updateThemeIcon(isLight);
     }
 }
+
+function toggleCorridors() {
+    corridorsActive = !corridorsActive;
+    const btn = document.getElementById('corridors-toggle-btn');
+    if (btn) {
+        if (corridorsActive) {
+            btn.classList.add('active');
+            btn.style.background = '#dc2626';
+            btn.style.borderColor = '#ef4444';
+        } else {
+            btn.classList.remove('active');
+            btn.style.background = 'rgba(220, 38, 38, 0.2)';
+            btn.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+        }
+    }
+    const t = translations[currentLang];
+    const corridorsBtnText = document.getElementById('corridors-btn-text');
+    if (corridorsBtnText) {
+        corridorsBtnText.innerText = corridorsActive ? t.corridorsOn : t.corridorsOff;
+    }
+    isDirty = true;
+}
+window.toggleCorridors = toggleCorridors;
 
 function toggleTheme() {
     const body = document.body;
@@ -415,6 +461,11 @@ function changeLanguage(langCode) {
     setInnerText('dev-text', t.devText);
     setInnerText('share-btn-text', t.shareBtn);
     setInnerText('martyrs-label', t.martyrsLabel);
+
+    const corridorsBtnText = document.getElementById('corridors-btn-text');
+    if (corridorsBtnText) {
+        corridorsBtnText.innerText = (typeof corridorsActive !== 'undefined' && corridorsActive) ? t.corridorsOn : t.corridorsOff;
+    }
 
     const modalMilestoneTitle = document.getElementById('modal-milestone-title-text');
     if(modalMilestoneTitle) modalMilestoneTitle.innerText = t.milestonesTitle;
@@ -1271,6 +1322,24 @@ document.addEventListener('click', (e) => {
 // تحسينات أداء الـ Canvas (النظام المحدث)
 // ==========================================
 
+// Function to extract family name from Arabic name
+function extractFamilyName(fullName) {
+    if (!fullName) return "";
+    let clean = fullName.replace(/[^\u0621-\u064A\s]/g, "").trim();
+    let parts = clean.split(/\s+/);
+    if (parts.length < 2) return "";
+
+    // We can fetch the last word or handle compound last names like "ابو ..." or "ابن ..." or "آل ..."
+    let last = parts[parts.length - 1];
+    let secondLast = parts[parts.length - 2];
+
+    const prefixes = ["ابو", "أبو", "ابن", "آل", "ام", "أم", "عبد", "بن"];
+    if (prefixes.includes(secondLast) && parts.length >= 3) {
+        return secondLast + " " + last;
+    }
+    return last;
+}
+
 function initCanvasPoints(dataList) {
     width = window.innerWidth;
     height = window.innerHeight;
@@ -1291,6 +1360,18 @@ function initCanvasPoints(dataList) {
         radius: Math.random() * 1.5 + 1,
         color: Math.random() > 0.3 ? '#ef4444' : '#ffffff'
     }));
+
+    // Group family members
+    familyGroups = {};
+    points.forEach(p => {
+        let fam = extractFamilyName(p.name);
+        if (fam && fam.length > 2) { // only group families with significant names
+            if (!familyGroups[fam]) {
+                familyGroups[fam] = [];
+            }
+            familyGroups[fam].push(p);
+        }
+    });
 
     // 2. التخزين المؤقت للإحداثيات (Pre-calculation & Caching)
     recalculateCache();
@@ -1511,6 +1592,74 @@ function drawCanvas() {
         }
     }
 
+    // Drawing Memory Corridors if active
+    if (corridorsActive && typeof familyGroups !== 'undefined') {
+        Object.keys(familyGroups).forEach(famName => {
+            const members = familyGroups[famName];
+            if (members.length < 2) return;
+
+            const isHoveredFam = (hoveredFamilyName === famName);
+            const isMatchingSearch = currentSearchQuery.length >= 2 && famName.toLowerCase().includes(currentSearchQuery);
+
+            // Styling variables based on interaction state
+            let strokeStyle = 'rgba(239, 68, 68, 0.08)';
+            let lineWidth = 0.8;
+
+            if (isHoveredFam) {
+                strokeStyle = 'rgba(239, 68, 68, 0.9)';
+                lineWidth = 2.5;
+            } else if (isMatchingSearch) {
+                strokeStyle = 'rgba(239, 68, 68, 0.5)';
+                lineWidth = 1.6;
+            }
+
+            ctx.strokeStyle = strokeStyle;
+            ctx.lineWidth = lineWidth;
+            ctx.beginPath();
+
+            if (members.length === 2) {
+                // Line connecting the two family members
+                ctx.moveTo(members[0].screenX, members[0].screenY);
+                ctx.lineTo(members[1].screenX, members[1].screenY);
+            } else {
+                // Sequential connection pattern to form constellation corridors
+                ctx.moveTo(members[0].screenX, members[0].screenY);
+                for (let j = 1; j < members.length; j++) {
+                    ctx.lineTo(members[j].screenX, members[j].screenY);
+                }
+                ctx.closePath();
+            }
+            ctx.stroke();
+
+            // Glow/Constellation highlight effect on vertices if hovered
+            if (isHoveredFam) {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                members.forEach(member => {
+                    ctx.beginPath();
+                    ctx.arc(member.screenX, member.screenY, 3.5, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            }
+        });
+    }
+
+    // Spot Star targeted highlighting focused on spotlightStarId
+    if (spotlightStarId) {
+        const target = cachedItems.find(p => p.id === spotlightStarId);
+        if (target) {
+            ctx.strokeStyle = '#ef4444';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(target.screenX, target.screenY, 15 + Math.sin(Date.now() / 100) * 4, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.beginPath();
+            ctx.arc(target.screenX, target.screenY, 25 + Math.sin(Date.now() / 80) * 6, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+    }
+
     // فحص التلميح وتحديد ما إذا كان هناك تفاعل مع الماوس
     let hoveredMartyr = null;
     for (let i = 0; i < cachedItems.length; i++) {
@@ -1521,6 +1670,12 @@ function drawCanvas() {
             hoveredMartyr = item;
             break;
         }
+    }
+
+    if (hoveredMartyr) {
+        hoveredFamilyName = extractFamilyName(hoveredMartyr.name);
+    } else {
+        hoveredFamilyName = null;
     }
 
     const tooltip = document.getElementById('star-tooltip');
@@ -1741,6 +1896,31 @@ function applyApprovedSubmissions(targetList) {
 
     return result;
 }
+function spotFamilyStar(starId) {
+    // Clear any previous spotlight
+    if (spotlightTimer) {
+        clearTimeout(spotlightTimer);
+    }
+
+    spotlightStarId = starId;
+    isDirty = true;
+
+    // Close the modal so the user can see the animated focal target in the sky
+    const modal = document.getElementById('martyr-modal-overlay');
+    if (modal) {
+        modal.style.display = 'none';
+        window.speechSynthesis.cancel();
+        isMartyrSpeaking = false;
+    }
+
+    // Set a timer to automatically fade out the target focus rings after 10 seconds
+    spotlightTimer = setTimeout(() => {
+        spotlightStarId = null;
+        isDirty = true;
+    }, 10000);
+}
+window.spotFamilyStar = spotFamilyStar;
+
 window.applyApprovedSubmissions = applyApprovedSubmissions;
 
 function openAdminReviewPanel() {
@@ -2000,6 +2180,39 @@ function openMartyrModal(person) {
         photoEl.innerHTML = `<img src="${person.image}" style="width:100%; height:100%; object-fit:cover;" crossorigin="anonymous">`;
     } else {
         photoEl.innerHTML = `<span id="modal-photo-text">${translations[currentLang].modalPhotoText}</span>`;
+    }
+
+    // Populate Family Corridors section
+    const famContainer = document.getElementById('martyr-modal-family-container');
+    const famList = document.getElementById('martyr-modal-family-list');
+    const famTitle = document.getElementById('family-container-title');
+
+    if (famContainer && famList && typeof familyGroups !== 'undefined') {
+        const famName = extractFamilyName(person.name);
+        const members = familyGroups[famName] || [];
+        const filteredMembers = members.filter(m => String(m.id) !== String(person.id));
+
+        if (corridorsActive && filteredMembers.length > 0) {
+            famTitle.innerText = translations[currentLang].familyTitle || "أفراد العائلة الموثقون:";
+            famContainer.classList.remove('hidden');
+
+            famList.innerHTML = filteredMembers.map(m => {
+                let displayName = m.name;
+                if (currentLang !== 'ar') {
+                    displayName = transliterateName(m.name, currentLang);
+                }
+                const spotText = translations[currentLang].spotBtn || "🎯 رصد النجم";
+                return `
+                    <div class="flex justify-between items-center bg-black/40 border border-white/5 p-1.5 rounded-lg">
+                        <span>${displayName} (${m.age || 'غير معروف'})</span>
+                        <button onclick="spotFamilyStar('${m.id}')" class="btn-main text-[9px] px-2 py-0.5 bg-red-600/30 border border-red-500/40 text-red-300 rounded-full">${spotText}</button>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            famContainer.classList.add('hidden');
+            famList.innerHTML = '';
+        }
     }
 
     // Dynamic injection of the premium "Edit Martyr" button in the modal

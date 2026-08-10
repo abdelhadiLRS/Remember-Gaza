@@ -282,6 +282,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>
     </svg>
 </button>
+
+<button id="corridors-toggle-btn" class="btn-main flex items-center justify-center gap-1 shadow-lg hover:scale-105 transition-all text-[10px]" onclick="toggleCorridors()" title="تفعيل ممرات الذاكرة (روابط العائلات)" style="height: 26px; padding: 0 10px; border-radius: 13px; background: rgba(220, 38, 38, 0.2); border-color: rgba(239, 68, 68, 0.5);">
+    <span class="text-xs">🌌</span> <span id="corridors-btn-text">ممرات الذاكرة</span>
+</button>
 </div>
 
 <div class="w-auto relative flex items-center gap-1">
@@ -450,6 +454,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <button onclick="translateMartyrModal('es')" class="px-1.5 py-0.5 rounded bg-gray-800 border border-white/10 text-gray-300 text-[9px]">Español</button>
                 </div>
                 <div id="martyr-modal-bio-text-div" class="bg-red-950/20 border border-red-500/20 p-2.5 rounded-lg text-gray-200 font-semibold hidden">
+                </div>
+            </div>
+
+            <!-- Family Constellation Corridor section -->
+            <div id="martyr-modal-family-container" class="bg-red-950/20 border border-red-500/30 p-3 rounded-xl text-right space-y-2 hidden">
+                <h4 class="font-bold text-xs text-red-400 flex items-center gap-1">🌌 <span id="family-container-title">أفراد العائلة الموثقون:</span></h4>
+                <div id="martyr-modal-family-list" class="flex flex-col gap-1.5 max-h-32 overflow-y-auto no-scrollbar text-[11px]">
                 </div>
             </div>
 
