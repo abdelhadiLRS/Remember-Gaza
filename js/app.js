@@ -1340,36 +1340,19 @@ function extractFamilyName(fullName) {
     return last;
 }
 
-let familyCentersCache = {};
+let familyCenters = {};
 
 function getFamilyCenterAndColor(familyName) {
     if (!familyName) return null;
-    if (familyCentersCache[familyName]) {
-        return familyCentersCache[familyName];
-    }
-    let hash = 0;
-    for (let i = 0; i < familyName.length; i++) {
-        hash = familyName.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    const hashX = Math.abs((hash * 13) % 1000) / 1000;
-    const hashY = Math.abs((hash * 37) % 1000) / 1000;
-
-    const xNorm = 0.15 + hashX * 0.7;
-    const yNorm = 0.15 + hashY * 0.7;
-
-    const hue = Math.abs(hash % 360);
-    const color = `hsl(${hue}, 95%, 68%)`;
-
-    familyCentersCache[familyName] = { xNorm, yNorm, color, hue };
-    return familyCentersCache[familyName];
+    return familyCenters[familyName] || null;
 }
 
 function getGalaxyTarget(item, time) {
     let fam = extractFamilyName(item.name);
-    if (!fam || fam.length <= 2) {
-        // Martyr doesn't have a valid family name, let them float as background stardust!
-        return { x: item.bgX, y: item.bgY, color: '#333333' }; // Beautiful dimmed stardust color
+    let info = getFamilyCenterAndColor(fam);
+    if (!fam || fam.length <= 2 || !info) {
+        // Martyr doesn't belong to a large family galaxy, let them float as background stardust!
+        return { x: item.bgX, y: item.bgY, color: '#27272a' }; // Beautiful dimmed stardust color (zinc-800)
     }
 
     let group = familyGroups[fam] || [];
@@ -1377,7 +1360,6 @@ function getGalaxyTarget(item, time) {
     let k = group.indexOf(item);
     if (k === -1) k = 0;
 
-    let info = getFamilyCenterAndColor(fam);
     let cX = info.xNorm * width;
     let cY = info.yNorm * height;
 
@@ -1482,6 +1464,39 @@ function recalculateCache() {
             }
             familyGroups[fam].push(p);
         }
+    });
+
+    // حساب مراكز متباعدة بصرياً وموزعة رياضياً باستخدام الحلزون الذهبي (Golden Spiral) لتجنب التداخل
+    familyCenters = {};
+    const minFamilySize = 3; // العائلات التي تضم 3 شهداء أو أكثر تحصل على مجرة خاصة بها متباعدة
+
+    const sortedFamilies = Object.keys(familyGroups)
+        .filter(fam => familyGroups[fam].length >= minFamilySize)
+        .sort((a, b) => familyGroups[b].length - familyGroups[a].length);
+
+    sortedFamilies.forEach((famName, idx) => {
+        let hash = 0;
+        for (let i = 0; i < famName.length; i++) {
+            hash = famName.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const hue = Math.abs(hash % 360);
+        const color = `hsl(${hue}, 95%, 68%)`;
+
+        // توزيع حلزوني ذهبي متناسق لمنع التداخل تماماً وتباعد مثالي
+        const angle = idx * 2.39996;
+        // زيادة مسافة التباعد التدريجية للحفاظ على الفراغات الجمالية
+        const spacing = 0.05 + (idx * 0.001);
+        const radius = Math.sqrt(idx + 1) * spacing;
+
+        const aspect = width / height;
+        let xNorm = 0.5 + Math.cos(angle) * radius;
+        let yNorm = 0.5 + Math.sin(angle) * radius * (aspect < 1 ? 1 : 1 / aspect);
+
+        // الحفاظ على المجرات داخل حدود الشاشة المرئية بمساحة أمان جمالية
+        xNorm = Math.max(0.12, Math.min(0.88, xNorm));
+        yNorm = Math.max(0.12, Math.min(0.88, yNorm));
+
+        familyCenters[famName] = { xNorm, yNorm, color, hue };
     });
 
     isDirty = true;
@@ -1795,34 +1810,6 @@ function drawCanvas() {
         }
     }
 
-    // رسم خطوط اتصال عائلية خفيفة جداً فقط عند تمرير الماوس فوق فرد من العائلة لجمالية تفاعلية استثنائية
-    if (typeof familyGroups !== 'undefined' && hoveredFamilyName) {
-        const members = familyGroups[hoveredFamilyName];
-        if (members && members.length >= 2) {
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            if (members.length === 2) {
-                ctx.moveTo(members[0].screenX, members[0].screenY);
-                ctx.lineTo(members[1].screenX, members[1].screenY);
-            } else {
-                ctx.moveTo(members[0].screenX, members[0].screenY);
-                for (let j = 1; j < members.length; j++) {
-                    ctx.lineTo(members[j].screenX, members[j].screenY);
-                }
-                ctx.closePath();
-            }
-            ctx.stroke();
-
-            // رسم هالات مضيئة لجميع أفراد تلك العائلة عند التمرير
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-            members.forEach(member => {
-                ctx.beginPath();
-                ctx.arc(member.screenX, member.screenY, 3.5, 0, Math.PI * 2);
-                ctx.fill();
-            });
-        }
-    }
 
     // Spot Star targeted highlighting focused on spotlightStarId
     if (spotlightStarId) {
