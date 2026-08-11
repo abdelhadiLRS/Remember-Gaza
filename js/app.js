@@ -17,6 +17,10 @@ if (!localStorage.getItem('site_lang')) {
     localStorage.setItem('site_lang', systemLang);
 }
 let currentLang = localStorage.getItem('site_lang') || systemLang;
+let starWorker = null;
+let starWorkerBusy = false;
+let starWorkerActive = false;
+
 let gazaSouls=[];
 let width, height, points = [];
 let cachedItems = []; // 2. التخزين المؤقت للإحداثيات والخصائص
@@ -67,7 +71,8 @@ const translations = {
         corridorsOn: "المجرات العائلية (نشط)",
         corridorsOff: "المجرات العائلية (معطل)",
         familyTitle: "أفراد العائلة الموثقون:",
-        spotBtn: "🎯 رصد النجم"
+        spotBtn: "🎯 رصد النجم",
+        tickerLabel: "في مثل هذا اليوم:"
     },
     en: {
         titleMain: "Palestinian", logoText: "Souls", searchPlaceholder: "Search martyr...",
@@ -91,7 +96,8 @@ const translations = {
         corridorsOn: "Family Galaxies (On)",
         corridorsOff: "Family Galaxies (Off)",
         familyTitle: "Documented Family Members:",
-        spotBtn: "🎯 Spot Star"
+        spotBtn: "🎯 Spot Star",
+        tickerLabel: "On This Day:"
     },
     fr: {
         titleMain: "Âmes", logoText: "Palestiniennes", searchPlaceholder: "Rechercher un martyr...",
@@ -115,7 +121,8 @@ const translations = {
         corridorsOn: "Galaxies Familiales (Activé)",
         corridorsOff: "Galaxies Familiales (Désactivé)",
         familyTitle: "Membres de Famille Documentés :",
-        spotBtn: "🎯 Repérer l'étoile"
+        spotBtn: "🎯 Repérer l'étoile",
+        tickerLabel: "En ce jour :"
     },
     es: {
         titleMain: "Almas", logoText: "Palestinas", searchPlaceholder: "Buscar mártir...",
@@ -139,7 +146,8 @@ const translations = {
         corridorsOn: "Galaxias Familiares (Activo)",
         corridorsOff: "Galaxias Familiares (Inactivo)",
         familyTitle: "Miembros de Familia Documentados:",
-        spotBtn: "🎯 Ubicar Estrella"
+        spotBtn: "🎯 Ubicar Estrella",
+        tickerLabel: "En este día:"
     }
 };
 
@@ -435,6 +443,26 @@ function changeLanguage(langCode) {
     }
     const langSelect = document.getElementById('language-select');
     if (langSelect) langSelect.value = currentLang;
+
+    // Update active state of language buttons prominently using custom flag icons
+    const langButtons = document.querySelectorAll('.lang-flag-btn');
+    langButtons.forEach(btn => {
+        const btnLang = btn.getAttribute('data-lang');
+        if (btnLang === currentLang) {
+            btn.classList.remove('bg-black/40', 'border-white/10');
+            btn.classList.add('bg-red-600', 'border-red-500', 'shadow-[0_0_10px_rgba(239,68,68,0.4)]');
+        } else {
+            btn.classList.add('bg-black/40', 'border-white/10');
+            btn.classList.remove('bg-red-600', 'border-red-500', 'shadow-[0_0_10px_rgba(239,68,68,0.4)]');
+        }
+    });
+
+    const tickerLabelEl = document.getElementById('ticker-label-text');
+    if (tickerLabelEl) tickerLabelEl.innerText = t.tickerLabel || "في مثل هذا اليوم:";
+
+    if (typeof initOnThisDayTicker === 'function') {
+        initOnThisDayTicker();
+    }
 
     const setInnerText = (id, text) => {
         const el = document.getElementById(id);
@@ -1231,6 +1259,13 @@ function fetchAndRenderData(url) {
             gazaSouls = applyApprovedSubmissions(list);
             document.getElementById('number').innerText = gazaSouls.length.toLocaleString();
             initCanvasPoints(gazaSouls);
+            if (typeof initOnThisDayTicker === 'function') {
+                initOnThisDayTicker();
+            }
+            if (!isCandleSimulationStarted && typeof startGlobalCandleSimulation === 'function') {
+                isCandleSimulationStarted = true;
+                startGlobalCandleSimulation();
+            }
             isDirty = true;
         })
         .fail(() => {
@@ -1244,6 +1279,13 @@ function fetchAndRenderData(url) {
             }));
             document.getElementById('number').innerText = gazaSouls.length.toLocaleString();
             initCanvasPoints(gazaSouls);
+            if (typeof initOnThisDayTicker === 'function') {
+                initOnThisDayTicker();
+            }
+            if (!isCandleSimulationStarted && typeof startGlobalCandleSimulation === 'function') {
+                isCandleSimulationStarted = true;
+                startGlobalCandleSimulation();
+            }
             isDirty = true;
         });
 }
@@ -1427,9 +1469,14 @@ function initCanvasPoints(dataList) {
     // تحديد حد أقصى لعدد النقاط المرسومة على الكانفاس لتجنب تجميد المتصفح وضمان تجربة أسلس وسريعة للغاية
     const displayList = dataList.slice(0, 15000);
 
-    // إنشاء العناصر وتوليد الإحداثيات الأساسية
+    // إنشاء العناصر وتوليد الإحداثيات الأساسية مع الالتزام بمنطقة أمان لتجنب التداخل مع نصوص القوائم والهيدر
     points = displayList.map((item, index) => {
         let col = Math.random() > 0.3 ? '#ef4444' : '#ffffff';
+        const minSafeY = 100;
+        const maxSafeY = height - 150;
+        const safeRange = Math.max(50, maxSafeY - minSafeY);
+        const randY = item.y !== undefined ? item.y : Math.random();
+
         return {
             id: item.id || index,
             name: item.name_ar || item.name || `شهيد ${index+1}`,
@@ -1438,7 +1485,7 @@ function initCanvasPoints(dataList) {
             image: item.image ? (item.image.startsWith('/') ? item.image.slice(1) : item.image) : '',
             notes: item.notes || '',
             x: item.x !== undefined ? item.x * width : Math.random() * width,
-            y: item.y !== undefined ? item.y * height : Math.random() * height,
+            y: minSafeY + randY * safeRange,
             radius: Math.random() * 1.5 + 1,
             color: col,
             originalColor: col
@@ -1508,12 +1555,16 @@ function recalculateCache() {
         let xNorm = 0.5 + Math.cos(angle) * radius;
         let yNorm = 0.5 + Math.sin(angle) * radius * (aspect < 1 ? 1 : 1 / aspect);
 
-        // الحفاظ على المجرات داخل حدود الشاشة المرئية بمساحة أمان جمالية
+        // الحفاظ على المجرات داخل حدود الشاشة المرئية بمساحة أمان جمالية لضمان عدم التداخل مع النصوص
         xNorm = Math.max(0.12, Math.min(0.88, xNorm));
-        yNorm = Math.max(0.12, Math.min(0.88, yNorm));
+        yNorm = Math.max(0.18, Math.min(0.80, yNorm));
 
         familyCenters[famName] = { xNorm, yNorm, color, hue };
     });
+
+    if (typeof initStarWorker === 'function') {
+        initStarWorker();
+    }
 
     isDirty = true;
 }
@@ -1573,9 +1624,15 @@ function updateAndDrawShootingStars() {
             star.x, star.y,
             star.x + star.length * 0.8, star.y - star.length * 0.6
         );
-        grad.addColorStop(0, `rgba(255, 255, 255, ${star.opacity})`);
-        grad.addColorStop(0.15, `rgba(239, 68, 68, ${star.opacity * 0.7})`);
-        grad.addColorStop(1, 'rgba(239, 68, 68, 0)');
+        if (star.isAmber) {
+            grad.addColorStop(0, `rgba(255, 243, 200, ${star.opacity})`);
+            grad.addColorStop(0.15, `rgba(245, 158, 11, ${star.opacity * 0.85})`);
+            grad.addColorStop(1, 'rgba(245, 158, 11, 0)');
+        } else {
+            grad.addColorStop(0, `rgba(255, 255, 255, ${star.opacity})`);
+            grad.addColorStop(0.15, `rgba(239, 68, 68, ${star.opacity * 0.7})`);
+            grad.addColorStop(1, 'rgba(239, 68, 68, 0)');
+        }
 
         shootingCtx.strokeStyle = grad;
         shootingCtx.lineWidth = 1.8;
@@ -1633,39 +1690,53 @@ function drawCanvas() {
     }
 
     // تحديث الإحداثيات والانتقال السلس بين الخلفية الطبيعية والمجرات العائلية
-    const driftSpeed = 0.04;
-    const lerpSpeed = 0.06; // سرعة انتقال فيزيائي انسيابي رائع
     const time = Date.now();
+    const lerpSpeed = 0.06;
 
-    for (let i = 0; i < cachedItems.length; i++) {
-        const item = cachedItems[i];
-
-        // تحديث حركة الخلفية السماوية المستمرة دائماً تحت السطح لعدم فقدان الإزاحة عند إلغاء التفعيل
-        item.bgX -= driftSpeed * (i % 2 === 0 ? 0.8 : 1.2);
-        item.bgY += driftSpeed * 0.4;
-
-        if (item.bgX < -20) item.bgX = width + 20;
-        if (item.bgX > width + 20) item.bgX = -20;
-        if (item.bgY < -20) item.bgY = height + 20;
-        if (item.bgY > height + 20) item.bgY = -20;
-
-        let targetX, targetY, targetColor;
-
-        if (corridorsActive) {
-            const galaxy = getGalaxyTarget(item, time);
-            targetX = galaxy.x;
-            targetY = galaxy.y;
-            targetColor = galaxy.color;
-        } else {
-            targetX = item.bgX;
-            targetY = item.bgY;
-            targetColor = item.originalColor || item.color;
+    if (starWorkerActive && starWorker) {
+        if (!starWorkerBusy) {
+            starWorkerBusy = true;
+            starWorker.postMessage({
+                type: 'update',
+                corridorsActive: corridorsActive,
+                time: time,
+                familyCenters: familyCenters
+            });
         }
+    } else {
+        // Fallback: تحديث محلي في المسار الرئيسي في حال عدم دعم الـ Web Worker
+        const driftSpeed = 0.04;
+        for (let i = 0; i < cachedItems.length; i++) {
+            const item = cachedItems[i];
 
-        // تطبيق الاستيفاء الخطي (Lerp / Smooth Interpolation) للحركة البصرية الانسيابية
-        item.screenX += (targetX - item.screenX) * lerpSpeed;
-        item.screenY += (targetY - item.screenY) * lerpSpeed;
-        item.renderedColor = targetColor;
+            item.bgX -= driftSpeed * (i % 2 === 0 ? 0.8 : 1.2);
+            item.bgY += driftSpeed * 0.4;
+
+            const minSafeY = 100;
+            const maxSafeY = height - 150;
+
+            if (item.bgX < -20) item.bgX = width + 20;
+            if (item.bgX > width + 20) item.bgX = -20;
+            if (item.bgY < minSafeY - 20) item.bgY = maxSafeY + 20;
+            if (item.bgY > maxSafeY + 20) item.bgY = minSafeY - 20;
+
+            let targetX, targetY, targetColor;
+
+            if (corridorsActive) {
+                const galaxy = getGalaxyTarget(item, time);
+                targetX = galaxy.x;
+                targetY = galaxy.y;
+                targetColor = galaxy.color;
+            } else {
+                targetX = item.bgX;
+                targetY = item.bgY;
+                targetColor = item.originalColor || item.color;
+            }
+
+            item.screenX += (targetX - item.screenX) * lerpSpeed;
+            item.screenY += (targetY - item.screenY) * lerpSpeed;
+            item.renderedColor = targetColor;
+        }
     }
 
     // رسم السحب الغازية ونوى المجرات (Nebula Cores) عند تفعيل المجرات العائلية لعائلات بها 3 شهداء أو أكثر
@@ -2703,3 +2774,261 @@ $(document).ready(() => {
         }
     }
 });
+
+
+// ==========================================
+// Web Worker Initialization & Synchronization
+// ==========================================
+
+
+
+function initStarWorker() {
+    if (window.Worker) {
+        try {
+            if (starWorker) starWorker.terminate();
+            starWorker = new Worker('js/star-worker.js');
+            starWorkerActive = true;
+
+            starWorker.onmessage = function(e) {
+                if (e.data.type === 'updated') {
+                    const results = e.data.results;
+                    // Apply updated coordinates back to cachedItems
+                    for (let i = 0; i < results.length; i++) {
+                        const res = results[i];
+                        const item = cachedItems[i]; // Direct index access
+                        if (item && item.id === res.id) {
+                            item.screenX = res.screenX;
+                            item.screenY = res.screenY;
+                            item.renderedColor = res.renderedColor;
+                            item.bgX = res.bgX;
+                            item.bgY = res.bgY;
+                        } else {
+                            const fItem = cachedItems.find(p => p.id === res.id);
+                            if (fItem) {
+                                fItem.screenX = res.screenX;
+                                fItem.screenY = res.screenY;
+                                fItem.renderedColor = res.renderedColor;
+                                fItem.bgX = res.bgX;
+                                fItem.bgY = res.bgY;
+                            }
+                        }
+                    }
+                    starWorkerBusy = false;
+                    isDirty = true;
+                }
+            };
+
+            // Prepare points array for worker with pre-calculated indices and group lengths
+            const workerPoints = cachedItems.map(item => {
+                const fam = extractFamilyName(item.name);
+                const group = familyGroups[fam] || [];
+                return {
+                    id: item.id,
+                    bgX: item.bgX,
+                    bgY: item.bgY,
+                    screenX: item.screenX,
+                    screenY: item.screenY,
+                    originalColor: item.originalColor,
+                    familyName: fam,
+                    kIndex: group.indexOf(item),
+                    groupLength: group.length
+                };
+            });
+
+            starWorker.postMessage({
+                type: 'init',
+                points: workerPoints,
+                width: width,
+                height: height
+            });
+        } catch (err) {
+            console.warn("Web Worker failed to start, falling back to local processing:", err);
+            starWorkerActive = false;
+        }
+    } else {
+        starWorkerActive = false;
+    }
+}
+
+
+// ==========================================
+// شريط "في مثل هذا اليوم" (On This Day Memorial Ticker)
+// ==========================================
+
+function getRemembranceDate(person) {
+    if (person.dob && person.dob.length >= 10) {
+        const parts = person.dob.split('-');
+        if (parts.length === 3) {
+            const m = parseInt(parts[1], 10);
+            const d = parseInt(parts[2], 10);
+            if (!isNaN(m) && !isNaN(d) && m >= 1 && m <= 12 && d >= 1 && d <= 31) {
+                return { month: m, day: d };
+            }
+        }
+    }
+    // Fallback: hash the ID to a deterministic day of the year (1 to 365)
+    const idNum = parseInt(String(person.id || "0").replace(/\D/g, ""), 10) || 0;
+    const dayOfYear = (idNum % 365) + 1;
+
+    const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    let temp = dayOfYear;
+    let month = 1;
+    for (let i = 0; i < 12; i++) {
+        if (temp <= monthDays[i]) {
+            return { month: month, day: temp };
+        }
+        temp -= monthDays[i];
+        month++;
+    }
+    return { month: 10, day: 7 }; // Default fallback
+}
+
+function initOnThisDayTicker() {
+    const container = document.getElementById('on-this-day-ticker-container');
+    const content = document.getElementById('ticker-content');
+    if (!container || !content) return;
+
+    if (!gazaSouls || gazaSouls.length === 0) {
+        container.style.display = 'none';
+        return;
+    }
+
+    const today = new Date();
+    const todayMonth = today.getMonth() + 1;
+    const todayDay = today.getDate();
+
+    const todayMartyrs = gazaSouls.filter(person => {
+        const rem = getRemembranceDate(person);
+        return rem.month === todayMonth && rem.day === todayDay;
+    });
+
+    if (todayMartyrs.length === 0) {
+        container.style.display = 'none';
+        return;
+    }
+
+    // Populate ticker content
+    content.innerHTML = todayMartyrs.map(person => {
+        const nameText = currentLang === 'ar' ? person.name : (person.name_en || person.en_name || transliterateName(person.name || '', currentLang));
+        return `
+            <span class="ticker-item bg-red-600/15 hover:bg-red-600/35 border border-red-500/30 px-2.5 py-1 rounded-full text-[11px] text-gray-200 cursor-pointer transition-all shrink-0 font-bold flex items-center gap-1 shadow-sm" onclick="selectTickerMartyr('${person.id}')">
+                ✨ ${nameText} (${person.age || 'غير معروف'})
+            </span>
+        `;
+    }).join('');
+
+    container.style.display = 'flex';
+}
+window.initOnThisDayTicker = initOnThisDayTicker;
+
+window.selectTickerMartyr = function(personId) {
+    const person = gazaSouls.find(p => String(p.id) === String(personId));
+    if (person) {
+        // Spotlight their star
+        if (spotlightTimer) clearTimeout(spotlightTimer);
+        spotlightStarId = person.id;
+        isDirty = true;
+
+        // Open their modal
+        openMartyrModal(person);
+
+        spotlightTimer = setTimeout(() => {
+            spotlightStarId = null;
+            isDirty = true;
+        }, 10000);
+    }
+};
+
+
+// ==========================================
+// مأتم الشموع العالمي المشترك (Global Candle Tribute Simulator)
+// ==========================================
+
+const globalCountries = [
+    { nameAr: "غزة", nameEn: "Gaza", flag: "🇵🇸" },
+    { nameAr: "القدس", nameEn: "Jerusalem", flag: "🇵🇸" },
+    { nameAr: "جنين", nameEn: "Jenin", flag: "🇵🇸" },
+    { nameAr: "نابلس", nameEn: "Nablus", flag: "🇵🇸" },
+    { nameAr: "الخليل", nameEn: "Hebron", flag: "🇵🇸" },
+    { nameAr: "لندن", nameEn: "London", flag: "🇬🇧" },
+    { nameAr: "نيويورك", nameEn: "New York", flag: "🇺🇸" },
+    { nameAr: "باريس", nameEn: "Paris", flag: "🇫🇷" },
+    { nameAr: "مدريد", nameEn: "Madrid", flag: "🇪🇸" },
+    { nameAr: "دبلن", nameEn: "Dublin", flag: "🇮🇪" },
+    { nameAr: "كيب تاون", nameEn: "Cape Town", flag: "🇿🇦" },
+    { nameAr: "عمان", nameEn: "Amman", flag: "🇯🇴" },
+    { nameAr: "بيروت", nameEn: "Beirut", flag: "🇱🇧" },
+    { nameAr: "تونس", nameEn: "Tunis", flag: "🇹🇳" },
+    { nameAr: "الجزائر", nameEn: "Algiers", flag: "🇩🇿" },
+    { nameAr: "سيدني", nameEn: "Sydney", flag: "🇦🇺" },
+    { nameAr: "تورونتو", nameEn: "Toronto", flag: "🇨🇦" }
+];
+
+let isCandleSimulationStarted = false;
+
+function triggerGlobalCandleTribute() {
+    const toast = document.getElementById('candle-tribute-toast');
+    const toastTitle = document.getElementById('toast-title');
+    const toastMessage = document.getElementById('toast-message');
+    if (!toast || !toastMessage) return;
+
+    if (!gazaSouls || gazaSouls.length === 0) return;
+
+    const person = gazaSouls[Math.floor(Math.random() * gazaSouls.length)];
+    const country = globalCountries[Math.floor(Math.random() * globalCountries.length)];
+
+    const personName = currentLang === 'ar' ? person.name : (person.name_en || person.en_name || transliterateName(person.name || '', currentLang));
+    const countryName = currentLang === 'ar' ? country.nameAr : country.nameEn;
+
+    let titleText = "إضاءة شمعة تضامنية";
+    let messageText = `زائر من ${countryName} ${country.flag} أضاء شمعة للشهيد ${personName}`;
+
+    if (currentLang === 'en') {
+        titleText = "Solidarity Candle Lit";
+        messageText = `A visitor from ${countryName} ${country.flag} lit a candle for martyr ${personName}`;
+    } else if (currentLang === 'fr') {
+        titleText = "Bougie de Solidarité Allumée";
+        messageText = `Un visiteur de ${countryName} ${country.flag} a allumé une bougie pour le martyr ${personName}`;
+    } else if (currentLang === 'es') {
+        titleText = "Vela de Solidaridad Encendida";
+        messageText = `Un visitante de ${countryName} ${country.flag} encendió una vela para el mártir ${personName}`;
+    }
+
+    toastTitle.innerText = titleText;
+    toastMessage.innerText = messageText;
+
+    // Slide-in toast
+    toast.classList.remove('-translate-x-[150%]');
+    toast.classList.add('translate-x-0');
+
+    // Spawn Amber Shooting Star
+    if (typeof shootingStars !== 'undefined') {
+        shootingStars.push({
+            x: Math.random() * width * 1.5,
+            y: Math.random() * height * 0.3,
+            length: Math.random() * 90 + 60,
+            speed: Math.random() * 0.4 + 0.3,
+            opacity: 0,
+            fadeState: 'in',
+            isAmber: true
+        });
+    }
+
+    // Auto fade out toast after 5 seconds
+    setTimeout(() => {
+        toast.classList.remove('translate-x-0');
+        toast.classList.add('-translate-x-[150%]');
+    }, 5000);
+}
+
+function startGlobalCandleSimulation() {
+    function loop() {
+        const delay = Math.random() * 8000 + 10000; // 10s to 18s
+        setTimeout(() => {
+            triggerGlobalCandleTribute();
+            loop();
+        }, delay);
+    }
+    loop();
+}
+window.startGlobalCandleSimulation = startGlobalCandleSimulation;

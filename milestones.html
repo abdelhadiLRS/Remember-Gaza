@@ -70,6 +70,17 @@ body.light-mode #verse-text{color:#111827 !important;}
 body.light-mode .modern-counter{background:rgba(255, 255, 255, 0.9) !important;color:#111827 !important;border-color:rgba(0, 0, 0, 0.1) !important;}
 
 #canvas-layer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;transition:opacity 0.4s ease;pointer-events:auto;cursor:pointer;}
+#canvas-layer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    background: linear-gradient(to bottom, #0a0a0a 0%, transparent 120px, transparent calc(100% - 160px), #0a0a0a 100%);
+}
+body.light-mode #canvas-layer::after {
+    background: linear-gradient(to bottom, #f3f4f6 0%, transparent 120px, transparent calc(100% - 160px), #f3f4f6 100%);
+}
 #shooting-stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;}
 #stats-view, #videos-view, #no-data-view, #map-view, #milestones-view, #westbank-view, #martyrs48-view{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:20;background:rgba(10,10,10,0.98);overflow-y:auto;pointer-events:auto;padding-top:90px;padding-bottom:100px;}
 body.light-mode #stats-view,
@@ -311,12 +322,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 </div>
 <div class="relative inline-block text-right flex items-center gap-2">
-<select id="language-select" onchange="changeLanguage(this.value)" class="bg-black/60 border border-white/20 text-white text-[11px] rounded-full px-2 py-0.5 outline-none cursor-pointer font-['Cairo']">
-<option value="ar">🇸🇦 العربية</option>
-<option value="en">🇬🇧 English</option>
-<option value="fr">🇫🇷 Français</option>
-<option value="es">🇪🇸 Español</option>
-</select>
+<div id="language-flags-container" class="flex items-center gap-1.5 font-['Cairo']">
+<button onclick="changeLanguage('ar')" data-lang="ar" class="lang-flag-btn flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] border border-white/10 bg-black/40 hover:bg-red-600/20 hover:border-red-500/40 transition-all text-white" title="العربية">
+    <img src="images/icons/arab.png" alt="Ar" class="w-3.5 h-3.5 object-contain"> <span class="hidden sm:inline font-bold">العربية</span>
+</button>
+<button onclick="changeLanguage('en')" data-lang="en" class="lang-flag-btn flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] border border-white/10 bg-black/40 hover:bg-red-600/20 hover:border-red-500/40 transition-all text-white" title="English">
+    <img src="images/icons/royaume-uni.png" alt="En" class="w-3.5 h-3.5 object-contain"> <span class="hidden sm:inline font-bold">English</span>
+</button>
+<button onclick="changeLanguage('fr')" data-lang="fr" class="lang-flag-btn flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] border border-white/10 bg-black/40 hover:bg-red-600/20 hover:border-red-500/40 transition-all text-white" title="Français">
+    <img src="images/icons/france.png" alt="Fr" class="w-3.5 h-3.5 object-contain"> <span class="hidden sm:inline font-bold">Français</span>
+</button>
+<button onclick="changeLanguage('es')" data-lang="es" class="lang-flag-btn flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] border border-white/10 bg-black/40 hover:bg-red-600/20 hover:border-red-500/40 transition-all text-white" title="Español">
+    <img src="images/icons/espagne.png" alt="Es" class="w-3.5 h-3.5 object-contain"> <span class="hidden sm:inline font-bold">Español</span>
+</button>
+</div>
 
 <div id="visitor-counter-box" class="interactive font-['Cairo'] flex items-center justify-center shadow-md" title="عدد الزوار">
     <a href="https://www.hitwebcounter.com" target="_blank" title="Web Counter" style="display: flex; align-items: center; text-decoration: none;">
@@ -338,12 +357,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <button onclick="openCrowdsourceModal()" class="btn-main font-bold text-[11px] bg-red-600/20 border border-red-500/40 text-red-400 px-2.5 py-1">✍️ مساهمة وتصحيح بيانات</button>
 <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-[11px] bg-red-900 border-red-500 text-white px-2.5 py-1">❤️ إدعمنا لنستمر</a>
 <span id="dev-text" class="text-[11px] text-gray-400 font-bold border-l border-white/20 pl-3">تطوير: عبد الهادي</span>
-<div class="social-links flex gap-1.5">
-<a href="https://www.facebook.com/abdelhadilrs" target="_blank" class="text-[11px] px-2.5 py-1">Facebook</a>
-<a href="https://www.instagram.com/abdelhadilrs" target="_blank" class="text-[11px] px-2.5 py-1">Instagram</a>
-<a href="https://x.com/larrasabdelhadi" target="_blank" class="text-[11px] px-2.5 py-1">X</a>
-<button onclick="shareSite()" class="share-btn flex gap-1 items-center bg-black border-white font-bold text-[11px] px-2.5 py-1">
-<span id="share-btn-text">مشاركة المنصة</span>
+<div class="social-links flex gap-1.5 items-center">
+<a href="https://www.facebook.com/abdelhadilrs" target="_blank" class="w-7 h-7 flex items-center justify-center rounded-full bg-black/40 border border-white/10 text-white hover:bg-blue-600 hover:border-blue-500 hover:shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all text-xs" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+<a href="https://www.instagram.com/abdelhadilrs" target="_blank" class="w-7 h-7 flex items-center justify-center rounded-full bg-black/40 border border-white/10 text-white hover:bg-gradient-to-tr hover:from-yellow-500 hover:via-red-500 hover:to-purple-600 hover:border-red-400 hover:shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all text-xs" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+<a href="https://x.com/larrasabdelhadi" target="_blank" class="w-7 h-7 flex items-center justify-center rounded-full bg-black/40 border border-white/10 text-white hover:bg-white hover:text-black hover:border-white hover:shadow-[0_0_10px_rgba(255,255,255,0.5)] transition-all text-xs" title="X"><i class="fa-brands fa-x-twitter"></i></a>
+<button onclick="shareSite()" class="share-btn flex gap-1 items-center bg-black/40 border border-white/10 hover:bg-red-600 hover:border-red-500 hover:shadow-[0_0_10px_rgba(239,68,68,0.5)] font-bold text-[11px] px-3 py-1 rounded-full transition-all text-white">
+<i class="fa-solid fa-share-nodes"></i> <span id="share-btn-text">مشاركة المنصة</span>
 </button>
 </div>
 </div>
