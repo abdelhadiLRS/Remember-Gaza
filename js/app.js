@@ -1361,18 +1361,6 @@ function initCanvasPoints(dataList) {
         color: Math.random() > 0.3 ? '#ef4444' : '#ffffff'
     }));
 
-    // Group family members
-    familyGroups = {};
-    points.forEach(p => {
-        let fam = extractFamilyName(p.name);
-        if (fam && fam.length > 2) { // only group families with significant names
-            if (!familyGroups[fam]) {
-                familyGroups[fam] = [];
-            }
-            familyGroups[fam].push(p);
-        }
-    });
-
     // 2. التخزين المؤقت للإحداثيات (Pre-calculation & Caching)
     recalculateCache();
 }
@@ -1387,6 +1375,19 @@ function recalculateCache() {
         screenX: p.x,
         screenY: p.y
     }));
+
+    // Group family members using cachedItems which are actively updated/drifting on screen
+    familyGroups = {};
+    cachedItems.forEach(p => {
+        let fam = extractFamilyName(p.name);
+        if (fam && fam.length > 2) { // only group families with significant names
+            if (!familyGroups[fam]) {
+                familyGroups[fam] = [];
+            }
+            familyGroups[fam].push(p);
+        }
+    });
+
     isDirty = true;
 }
 
