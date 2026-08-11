@@ -1352,7 +1352,13 @@ function getGalaxyTarget(item, time) {
     let info = getFamilyCenterAndColor(fam);
     if (!fam || fam.length <= 2 || !info) {
         // Martyr doesn't belong to a large family galaxy, let them float as background stardust!
-        return { x: item.bgX, y: item.bgY, color: '#27272a' }; // Beautiful dimmed stardust color (zinc-800)
+        // Beautiful dimmed field stars in cool white or soft red
+        const isRed = (item.originalColor === '#ef4444');
+        return {
+            x: item.bgX,
+            y: item.bgY,
+            color: isRed ? 'rgba(239, 68, 68, 0.12)' : 'rgba(255, 255, 255, 0.12)'
+        };
     }
 
     let group = familyGroups[fam] || [];
@@ -1365,43 +1371,53 @@ function getGalaxyTarget(item, time) {
 
     // Calculate slow rotation based on time and family hash to give each galaxy its own rotation speed/dir
     let rotationDir = (info.hue % 2 === 0) ? 1 : -1;
-    let rotationSpeed = 0.0003 + (info.hue % 5) * 0.0001;
+    let rotationSpeed = 0.0002 + (info.hue % 4) * 0.0001;
     let galaxyRotation = rotationDir * rotationSpeed * time;
 
-    // Choose galaxy shape type based on hue
-    let shapeType = info.hue % 3; // 0: spiral, 1: ring, 2: cluster
+    // Choose 2 or 3 spiral arms based on family hash (replicating spectacular multi-arm spiral galaxies)
+    let armCount = (info.hue % 2 === 0) ? 2 : 3;
+    let armIndex = k % armCount;
 
-    let targetX = cX;
-    let targetY = cY;
+    // Logarithmic spiral geometry: r = a * e^(b * theta) with beautiful fluffy arm dispersion
+    let maxRadius = 15 + Math.sqrt(N) * 6;
+    let progress = k / N;
+    let theta = progress * Math.PI * 2.5; // tightness of the swirl
 
-    if (shapeType === 0) {
-        // Spiral Galaxy
-        let angle = k * 2.39996; // Golden angle
-        let spacing = 3 + Math.min(6, 120 / Math.sqrt(N));
-        let radiusVal = Math.sqrt(k + 1) * spacing;
-        let finalAngle = angle + galaxyRotation + (radiusVal * 0.03);
-        targetX = cX + Math.cos(finalAngle) * radiusVal;
-        targetY = cY + Math.sin(finalAngle) * radiusVal;
-    } else if (shapeType === 1) {
-        // Ring Galaxy
-        let angle = (k / N) * Math.PI * 2;
-        let minRadius = 15 + Math.min(30, N * 0.5);
-        let ringWidth = 10 + Math.min(20, N * 0.2);
-        let radiusVal = minRadius + (Math.abs(Math.sin(k * 1.7)) * ringWidth);
-        let finalAngle = angle + galaxyRotation;
-        targetX = cX + Math.cos(finalAngle) * radiusVal;
-        targetY = cY + Math.sin(finalAngle) * radiusVal;
+    let baseRadius = 5 + Math.pow(progress, 0.7) * maxRadius;
+    let angle = theta + (armIndex * (Math.PI * 2 / armCount)) + galaxyRotation;
+
+    // Add fluffy arm dispersion (narrower near the center, wider at the ends of spiral arms)
+    let dispersion = (0.15 + progress * 0.3) * baseRadius;
+    let dispHashX = Math.sin(k * 13) * dispersion;
+    let dispHashY = Math.cos(k * 17) * dispersion;
+
+    let targetX = cX + Math.cos(angle) * baseRadius + dispHashX;
+    let targetY = cY + Math.sin(angle) * baseRadius + dispHashY;
+
+    // Beautiful celestial color scheme matching the provided reference image (pink-red stellar nurseries + cyan/blue/white stars)
+    let starColor = '#ffffff';
+    if (baseRadius < 18) {
+        // Dense glowing core of the galaxy: brilliant cyan-white
+        starColor = `hsl(180, 100%, 90%)`;
     } else {
-        // Cluster Galaxy (Spherical dense cluster)
-        let angle = k * 2.39996;
-        let maxRadius = 15 + Math.sqrt(N) * 5;
-        let radiusVal = Math.pow(k / N, 0.7) * maxRadius;
-        let finalAngle = angle + galaxyRotation;
-        targetX = cX + Math.cos(finalAngle) * radiusVal;
-        targetY = cY + Math.sin(finalAngle) * radiusVal;
+        // Color variation along the spiral arms
+        let colorNoise = Math.abs(Math.sin(k * 31));
+        if (colorNoise < 0.22) {
+            // Bright pinkish-red H II gas nurseries (like NGC 604)
+            starColor = `hsl(342, 95%, 62%)`;
+        } else if (colorNoise < 0.55) {
+            // Hot young blue/cyan stars
+            starColor = `hsl(195, 95%, 72%)`;
+        } else if (colorNoise < 0.8) {
+            // Bright cool white stars
+            starColor = `hsl(180, 30%, 95%)`;
+        } else {
+            // Main galaxy hue
+            starColor = info.color;
+        }
     }
 
-    return { x: targetX, y: targetY, color: info.color };
+    return { x: targetX, y: targetY, color: starColor };
 }
 
 function initCanvasPoints(dataList) {
@@ -1652,33 +1668,32 @@ function drawCanvas() {
         item.renderedColor = targetColor;
     }
 
-    // رسم السحب الغازية ونوى المجرات (Nebula Cores) عند تفعيل المجرات العائلية لعائلات بها 5 شهداء أو أكثر
+    // رسم السحب الغازية ونوى المجرات (Nebula Cores) عند تفعيل المجرات العائلية لعائلات بها 3 شهداء أو أكثر
     if (corridorsActive && typeof familyGroups !== 'undefined') {
         Object.keys(familyGroups).forEach(famName => {
             const members = familyGroups[famName];
-            if (members.length < 5) return;
+            if (members.length < 3) return;
 
             const info = getFamilyCenterAndColor(famName);
+            if (!info) return;
+
             const cX = info.xNorm * width;
             const cY = info.yNorm * height;
 
-            // توهج دائري ناعم يمثل نواة المجرة الملونة
-            const glowRadius = Math.min(80, 15 + members.length * 1.5);
+            // توهج دائري متعدد الطبقات يمثل نواة المجرة الساطعة والسدم المحيطة بها بدقة بالغة تطابق الصورة
+            const glowRadius = Math.min(90, 20 + members.length * 1.8);
             const grad = ctx.createRadialGradient(cX, cY, 0, cX, cY, glowRadius);
 
-            // استخراج الأرقام من HSL للحصول على درجات شفافية متباينة
-            const hslMatch = info.color.match(/\d+/g);
-            if (hslMatch && hslMatch.length >= 3) {
-                const h = hslMatch[0], s = hslMatch[1], l = hslMatch[2];
-                grad.addColorStop(0, `hsla(${h}, ${s}%, ${l}%, 0.15)`);
-                grad.addColorStop(0.5, `hsla(${h}, ${s}%, ${l}%, 0.05)`);
-                grad.addColorStop(1, `hsla(${h}, ${s}%, ${l}%, 0)`);
+            // تدرج لوني غازي ناعم (أبيض متوهج في المركز -> تركواز ساطع -> شفاف تماماً في الأطراف)
+            grad.addColorStop(0, 'rgba(255, 255, 255, 0.40)');
+            grad.addColorStop(0.15, 'rgba(153, 246, 228, 0.22)'); // Teal-200 / Cyan soft glow
+            grad.addColorStop(0.45, 'rgba(13, 148, 136, 0.06)');  // Teal-600 outer nebula dust
+            grad.addColorStop(1, 'rgba(13, 148, 136, 0)');
 
-                ctx.fillStyle = grad;
-                ctx.beginPath();
-                ctx.arc(cX, cY, glowRadius, 0, Math.PI * 2);
-                ctx.fill();
-            }
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(cX, cY, glowRadius, 0, Math.PI * 2);
+            ctx.fill();
         });
     }
 
