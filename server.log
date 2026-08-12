@@ -1,10 +1,2 @@
-127.0.0.1 - - [11/Aug/2026 15:51:45] "GET /index.html HTTP/1.1" 200 -
-127.0.0.1 - - [11/Aug/2026 15:51:45] "GET /css/tailwind-compat.css HTTP/1.1" 200 -
-127.0.0.1 - - [11/Aug/2026 15:51:45] "GET /images/icons/arab.png HTTP/1.1" 200 -
-127.0.0.1 - - [11/Aug/2026 15:51:45] "GET /css/bootstrap.min.css HTTP/1.1" 200 -
-127.0.0.1 - - [11/Aug/2026 15:51:45] "GET /images/icons/royaume-uni.png HTTP/1.1" 200 -
-127.0.0.1 - - [11/Aug/2026 15:51:45] "GET /images/icons/france.png HTTP/1.1" 200 -
-127.0.0.1 - - [11/Aug/2026 15:51:45] "GET /images/icons/espagne.png HTTP/1.1" 200 -
-127.0.0.1 - - [11/Aug/2026 15:51:45] "GET /js/app.js HTTP/1.1" 200 -
-127.0.0.1 - - [11/Aug/2026 15:51:46] "GET /js/star-worker.js HTTP/1.1" 200 -
-127.0.0.1 - - [11/Aug/2026 15:51:46] "GET /data/victims.json HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 15:35:31] code 404, message File not found
+127.0.0.1 - - [12/Aug/2026 15:35:31] "GET /tributes.html HTTP/1.1" 404 -

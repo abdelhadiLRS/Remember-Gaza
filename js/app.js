@@ -1932,6 +1932,147 @@ function drawCanvas() {
         hoveredFamilyName = null;
     }
 
+    // ========================================================
+    // COSMIC CONSTELLATIONS OF REMEMBRANCE (كوكبة نجوم الخلود)
+    // ========================================================
+    const isLight = document.body.classList.contains('light-mode');
+    const constellationRed = isLight ? 'rgba(220, 38, 38,' : 'rgba(239, 68, 68,';
+    const constellationBlue = isLight ? 'rgba(37, 99, 235,' : 'rgba(14, 165, 233,';
+
+    // 1. كوكبة الشهيد الذي يمر فوقه مؤشر الفأرة (Hovered Star Constellation)
+    if (hoveredMartyr) {
+        const famName = extractFamilyName(hoveredMartyr.name);
+        if (famName && famName.length > 2) {
+            const members = cachedItems.filter(p => {
+                if (p.id === hoveredMartyr.id) return false;
+                if (p.screenX < -10 || p.screenX > width + 10 || p.screenY < -10 || p.screenY > height + 10) return false;
+                return extractFamilyName(p.name) === famName;
+            });
+
+            if (members.length > 0) {
+                ctx.save();
+                ctx.shadowColor = isLight ? 'rgba(220, 38, 38, 0.4)' : 'rgba(239, 68, 68, 0.8)';
+                ctx.shadowBlur = 8;
+
+                members.forEach((m, idx) => {
+                    const alpha = 0.35 + Math.sin(Date.now() / 200 + idx) * 0.15;
+                    ctx.strokeStyle = `${constellationRed} ${alpha})`;
+                    ctx.lineWidth = 1.0;
+
+                    // رسم الخيط الكوني المضيء الذي يربط أفراد العائلة
+                    ctx.beginPath();
+                    ctx.moveTo(hoveredMartyr.screenX, hoveredMartyr.screenY);
+                    ctx.lineTo(m.screenX, m.screenY);
+                    ctx.stroke();
+
+                    // تدفق طاقة كوني نابض (Animated traveling light pulse)
+                    const travelFactor = (Date.now() / 2000 + idx * 0.3) % 1.0;
+                    const pulseX = hoveredMartyr.screenX + (m.screenX - hoveredMartyr.screenX) * travelFactor;
+                    const pulseY = hoveredMartyr.screenY + (m.screenY - hoveredMartyr.screenY) * travelFactor;
+
+                    ctx.fillStyle = isLight ? '#dc2626' : '#ffffff';
+                    ctx.beginPath();
+                    ctx.arc(pulseX, pulseY, 2.5, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // رسم هالة دائرية دقيقة لكل نجم عائلي متصل
+                    ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.25)';
+                    ctx.beginPath();
+                    ctx.arc(m.screenX, m.screenY, 7, 0, Math.PI * 2);
+                    ctx.stroke();
+                });
+                ctx.restore();
+            }
+        }
+    }
+
+    // 2. كوكبة النجم المستهدف بتركيز الضوء (Spotlighted Star Constellation)
+    if (spotlightStarId) {
+        const target = cachedItems.find(p => p.id == spotlightStarId);
+        if (target) {
+            const famName = extractFamilyName(target.name);
+            if (famName && famName.length > 2) {
+                const members = cachedItems.filter(p => {
+                    if (p.id === target.id) return false;
+                    if (p.screenX < -10 || p.screenX > width + 10 || p.screenY < -10 || p.screenY > height + 10) return false;
+                    return extractFamilyName(p.name) === famName;
+                });
+
+                if (members.length > 0) {
+                    ctx.save();
+                    ctx.shadowColor = isLight ? 'rgba(220, 38, 38, 0.3)' : 'rgba(239, 68, 68, 0.6)';
+                    ctx.shadowBlur = 6;
+
+                    members.forEach((m, idx) => {
+                        const alpha = 0.25 + Math.sin(Date.now() / 250 + idx) * 0.1;
+                        ctx.strokeStyle = `${constellationRed} ${alpha})`;
+                        ctx.lineWidth = 0.8;
+
+                        ctx.beginPath();
+                        ctx.moveTo(target.screenX, target.screenY);
+                        ctx.lineTo(m.screenX, m.screenY);
+                        ctx.stroke();
+
+                        // وميض الطاقة المتنقل للهدف المسلط عليه الضوء
+                        const travelFactor = (Date.now() / 2500 + idx * 0.4) % 1.0;
+                        const pulseX = target.screenX + (m.screenX - target.screenX) * travelFactor;
+                        const pulseY = target.screenY + (m.screenY - target.screenY) * travelFactor;
+
+                        ctx.fillStyle = isLight ? '#000000' : 'rgba(255, 255, 255, 0.9)';
+                        ctx.beginPath();
+                        ctx.arc(pulseX, pulseY, 2.0, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+                    ctx.restore();
+                }
+            }
+        }
+    }
+
+    // 3. كوكبة نجوم البحث المطابقة (Search Query Matches Constellation Ring)
+    if (queryActive) {
+        const matches = [];
+        for (let i = 0; i < cachedItems.length; i++) {
+            const item = cachedItems[i];
+            if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
+                continue;
+            }
+            const nameAr = (item.name_ar || item.name || "").toLowerCase();
+            const nameEn = (item.name_en || item.english_name || "").toLowerCase();
+            const id = (item.id || "").toString();
+            if (nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery) || id.includes(currentSearchQuery)) {
+                matches.push(item);
+            }
+        }
+
+        if (matches.length > 1) {
+            ctx.save();
+            ctx.shadowColor = isLight ? 'rgba(220, 38, 38, 0.25)' : 'rgba(255, 255, 255, 0.4)';
+            ctx.shadowBlur = 5;
+
+            // رسم خيوط متقطعة أنيقة تربط النجوم المطابقة بالترتيب
+            ctx.strokeStyle = isLight ? 'rgba(220, 38, 38, 0.35)' : 'rgba(255, 255, 255, 0.35)';
+            ctx.lineWidth = 0.8;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(matches[0].screenX, matches[0].screenY);
+            for (let i = 1; i < matches.length; i++) {
+                ctx.lineTo(matches[i].screenX, matches[i].screenY);
+            }
+            ctx.stroke();
+
+            // إغلاق الحلقة إذا كان عدد النتائج ملائماً لتعميق الإحساس بالكوكبة المتصلة
+            if (matches.length > 2) {
+                ctx.beginPath();
+                ctx.moveTo(matches[matches.length - 1].screenX, matches[matches.length - 1].screenY);
+                ctx.lineTo(matches[0].screenX, matches[0].screenY);
+                ctx.stroke();
+            }
+
+            ctx.restore();
+        }
+    }
+
     const tooltip = document.getElementById('star-tooltip');
     if (hoveredMartyr) {
         currentMartyrObj = hoveredMartyr;
@@ -2911,7 +3052,7 @@ function initOnThisDayTicker() {
     content.innerHTML = todayMartyrs.map(person => {
         const nameText = currentLang === 'ar' ? person.name : (person.name_en || person.en_name || transliterateName(person.name || '', currentLang));
         return `
-            <span class="ticker-item bg-red-600/15 hover:bg-red-600/35 border border-red-500/30 px-2.5 py-1 rounded-full text-[11px] text-gray-200 cursor-pointer transition-all shrink-0 font-bold flex items-center gap-1 shadow-sm" onclick="selectTickerMartyr('${person.id}')">
+            <span class="ticker-item bg-red-600/15 hover:bg-red-600/35 border border-red-500/30 px-2.5 py-0.5 rounded-full text-[11px] text-gray-200 cursor-pointer transition-all shrink-0 font-bold flex items-center gap-1 shadow-sm" onclick="selectTickerMartyr('${person.id}')">
                 ✨ ${nameText} (${person.age || 'غير معروف'})
             </span>
         `;

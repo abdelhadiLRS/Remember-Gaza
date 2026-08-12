@@ -82,7 +82,7 @@ body.light-mode #canvas-layer::after {
     background: linear-gradient(to bottom, #f3f4f6 0%, transparent 120px, transparent calc(100% - 160px), #f3f4f6 100%);
 }
 #shooting-stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;}
-#stats-view, #videos-view, #no-data-view, #map-view, #milestones-view, #westbank-view, #martyrs48-view{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:20;background:rgba(10,10,10,0.98);overflow-y:auto;pointer-events:auto;padding-top:90px;padding-bottom:100px;}
+#stats-view, #videos-view, #no-data-view, #map-view, #milestones-view, #westbank-view, #martyrs48-view{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:20;background:rgba(10,10,10,0.98);overflow-y:auto;pointer-events:auto;padding-top:135px;padding-bottom:100px;}
 body.light-mode #stats-view,
 body.light-mode #videos-view,
 body.light-mode #no-data-view,
@@ -282,65 +282,72 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
 <div id="ui-layer">
-<header id="header" class="glass-panel interactive">
-<div class="flex items-center gap-1.5">
-<h1 class="text-sm font-black text-white drop-shadow-md"><span class="text-red-500" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
-
-<button id="theme-toggle-btn" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 26px; height: 26px; border-radius: 50%; background: rgba(220, 38, 38, 0.2); border-color: rgba(239, 68, 68, 0.5);">
-    <svg id="theme-icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
-        <path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/>
-        <path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>
-    </svg>
-</button>
-
+<header id="header" class="glass-panel interactive flex flex-col gap-2 p-2" style="display: flex; flex-direction: column; gap: 8px; padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(10,10,10,0.95); position: fixed; top: 0; left: 0; right: 0; z-index: 1000;">
+  <!-- Row 1 -->
+  <div class="flex justify-between items-center w-full gap-2 flex-wrap">
+    <!-- Right block: Logo & Actions -->
+    <div class="flex items-center gap-1.5 flex-wrap">
+      <h1 class="text-sm font-black text-white drop-shadow-md"><span class="text-red-500" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
+      <button id="theme-toggle-btn" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 26px; height: 26px; border-radius: 50%; background: rgba(220, 38, 38, 0.2); border-color: rgba(239, 68, 68, 0.5);">
+          <svg id="theme-icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
+              <path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/>
+              <path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>
+          </svg>
+      </button>
 <button id="corridors-toggle-btn" class="btn-main flex items-center justify-center gap-1 shadow-lg hover:scale-105 transition-all text-[10px]" onclick="toggleCorridors()" title="تجميع النجوم في مجرات عائلية" style="height: 26px; padding: 0 10px; border-radius: 13px; background: rgba(220, 38, 38, 0.2); border-color: rgba(239, 68, 68, 0.5);">
     <span class="text-xs">🌌</span> <span id="corridors-btn-text">المجرات العائلية</span>
 </button>
-</div>
+    </div>
 
-<div class="w-auto relative flex items-center gap-1">
-<input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد..." oninput="searchMartyrByName(this.value)">
-<button id="voice-search-btn" onclick="startVoiceSearch('search-input', (val) => searchMartyrByName(val))" class="btn-main px-2 py-2 text-xs rounded-xl" title="البحث الصوتي">🎤</button>
-<div id="search-results-dropdown" class="absolute left-0 right-0 mt-2 max-h-80 overflow-y-auto bg-[#0a0a0af2] border border-red-500/30 rounded-xl shadow-2xl hidden z-[1001] text-right font-['Cairo'] text-xs"></div>
-</div>
-<div class="tabs-wrapper no-scrollbar interactive">
-<div class="flex gap-1 bg-black/40 p-1 rounded-full border border-white/5">
-<a href="index.html" class="btn-main" id="tab-souls" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء غزة</a>
-<a href="journalists.html" class="btn-main active" id="tab-journalists" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء الصحافة</a>
-<a href="westbank.html" class="btn-main" id="tab-westbank" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء الضفة</a>
-<a href="martyrs48.html" class="btn-main" id="tab-48" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء 48</a>
-<a href="milestones.html" class="btn-main" id="tab-milestones" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">أبرز المحطات</a>
-<a href="stats.html" class="btn-main" id="tab-stats" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">الإحصائيات</a>
-<a href="map.html" class="btn-main" id="tab-map" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">الخريطة</a>
-</div>
-</div>
-<div class="relative inline-block text-right flex items-center gap-2">
-<div id="language-flags-container" class="flex items-center gap-1.5 font-['Cairo']">
-<button onclick="changeLanguage('ar')" data-lang="ar" class="lang-flag-btn flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] border border-white/10 bg-black/40 hover:bg-red-600/20 hover:border-red-500/40 transition-all text-white" title="العربية">
-    <img src="images/icons/arab.png" alt="Ar" class="w-3.5 h-3.5 object-contain"> <span class="hidden sm:inline font-bold">العربية</span>
-</button>
-<button onclick="changeLanguage('en')" data-lang="en" class="lang-flag-btn flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] border border-white/10 bg-black/40 hover:bg-red-600/20 hover:border-red-500/40 transition-all text-white" title="English">
-    <img src="images/icons/royaume-uni.png" alt="En" class="w-3.5 h-3.5 object-contain"> <span class="hidden sm:inline font-bold">English</span>
-</button>
-<button onclick="changeLanguage('fr')" data-lang="fr" class="lang-flag-btn flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] border border-white/10 bg-black/40 hover:bg-red-600/20 hover:border-red-500/40 transition-all text-white" title="Français">
-    <img src="images/icons/france.png" alt="Fr" class="w-3.5 h-3.5 object-contain"> <span class="hidden sm:inline font-bold">Français</span>
-</button>
-<button onclick="changeLanguage('es')" data-lang="es" class="lang-flag-btn flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] border border-white/10 bg-black/40 hover:bg-red-600/20 hover:border-red-500/40 transition-all text-white" title="Español">
-    <img src="images/icons/espagne.png" alt="Es" class="w-3.5 h-3.5 object-contain"> <span class="hidden sm:inline font-bold">Español</span>
-</button>
-</div>
+    <!-- Middle block: Search Box -->
+    <div class="w-auto relative flex items-center gap-1">
+      <input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد..." oninput="searchMartyrByName(this.value)">
+      <button id="voice-search-btn" onclick="startVoiceSearch('search-input', (val) => searchMartyrByName(val))" class="btn-main px-2 py-2 text-xs rounded-xl" title="البحث الصوتي">🎤</button>
+      <div id="search-results-dropdown" class="absolute left-0 right-0 mt-2 max-h-80 overflow-y-auto bg-[#0a0a0af2] border border-red-500/30 rounded-xl shadow-2xl hidden z-[1001] text-right font-['Cairo'] text-xs"></div>
+    </div>
 
-<div id="visitor-counter-box" class="interactive font-['Cairo'] flex items-center justify-center shadow-md" title="عدد الزوار">
-    <a href="https://www.hitwebcounter.com" target="_blank" title="Web Counter" style="display: flex; align-items: center; text-decoration: none;">
-        <img src="https://hitwebcounter.com/counter/counter.php?page=11202868&style=0005&nbdigits=5&type=page&initCount=0" title="Web Counter" Alt="web counter" border="0" />
-    </a>
-</div>
+    <!-- Left block: Flags, Counter, Sound Toggle -->
+    <div class="relative inline-block text-right flex items-center gap-2 flex-wrap">
+      <div id="language-flags-container" class="flex items-center gap-1.5 font-['Cairo']">
+        <button onclick="changeLanguage('ar')" data-lang="ar" class="lang-flag-btn flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] border border-white/10 bg-black/40 hover:bg-red-600/20 hover:border-red-500/40 transition-all text-white" title="العربية">
+            <img src="images/icons/arab.png" alt="Ar" class="w-3.5 h-3.5 object-contain"> <span class="hidden sm:inline font-bold">العربية</span>
+        </button>
+        <button onclick="changeLanguage('en')" data-lang="en" class="lang-flag-btn flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] border border-white/10 bg-black/40 hover:bg-red-600/20 hover:border-red-500/40 transition-all text-white" title="English">
+            <img src="images/icons/royaume-uni.png" alt="En" class="w-3.5 h-3.5 object-contain"> <span class="hidden sm:inline font-bold">English</span>
+        </button>
+        <button onclick="changeLanguage('fr')" data-lang="fr" class="lang-flag-btn flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] border border-white/10 bg-black/40 hover:bg-red-600/20 hover:border-red-500/40 transition-all text-white" title="Français">
+            <img src="images/icons/france.png" alt="Fr" class="w-3.5 h-3.5 object-contain"> <span class="hidden sm:inline font-bold">Français</span>
+        </button>
+        <button onclick="changeLanguage('es')" data-lang="es" class="lang-flag-btn flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] border border-white/10 bg-black/40 hover:bg-red-600/20 hover:border-red-500/40 transition-all text-white" title="Español">
+            <img src="images/icons/espagne.png" alt="Es" class="w-3.5 h-3.5 object-contain"> <span class="hidden sm:inline font-bold">Español</span>
+        </button>
+      </div>
 
-<div class="flex gap-1.5 items-center">
-<button id="music-btn" class="btn-main" onclick="toggleMusic()">🎵 الصوت</button>
-</div>
-</div>
+      <div id="visitor-counter-box" class="interactive font-['Cairo'] flex items-center justify-center shadow-md" title="عدد الزوار">
+          <a href="https://www.hitwebcounter.com" target="_blank" title="Web Counter" style="display: flex; align-items: center; text-decoration: none;">
+              <img src="https://hitwebcounter.com/counter/counter.php?page=11202868&style=0005&nbdigits=5&type=page&initCount=0" title="Web Counter" Alt="web counter" border="0" />
+          </a>
+      </div>
+
+      <div class="flex gap-1.5 items-center">
+        <button id="music-btn" class="btn-main" onclick="toggleMusic()">🎵 الصوت</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2 -->
+  <div class="tabs-wrapper no-scrollbar interactive w-full flex justify-center mt-1">
+    <div class="flex gap-1 bg-black/40 p-1 rounded-full border border-white/5 flex-wrap justify-center">
+      <a href="index.html" class="btn-main " id="tab-souls" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء غزة</a>
+      <a href="journalists.html" class="btn-main active" id="tab-journalists" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء الصحافة</a>
+      <a href="westbank.html" class="btn-main " id="tab-westbank" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء الضفة</a>
+      <a href="martyrs48.html" class="btn-main " id="tab-48" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء 48</a>
+      <a href="milestones.html" class="btn-main " id="tab-milestones" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">أبرز المحطات</a>
+      <a href="stats.html" class="btn-main " id="tab-stats" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">الإحصائيات</a>
+      <a href="map.html" class="btn-main " id="tab-map" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">الخريطة</a>
+    </div>
+  </div>
 </header>
 <div id="bottom-bar">
 <div id="verse-container" class="interactive glass-panel p-3 px-6 rounded-lg border-r-4 border-r-red-600 order-2 md:order-1 hidden md:block bg-black/80 max-w-lg">
