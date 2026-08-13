@@ -70,19 +70,8 @@ body.light-mode #verse-text{color:#111827 !important;}
 body.light-mode .modern-counter{background:rgba(255, 255, 255, 0.9) !important;color:#111827 !important;border-color:rgba(0, 0, 0, 0.1) !important;}
 
 #canvas-layer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;transition:opacity 0.4s ease;pointer-events:auto;cursor:pointer;}
-#canvas-layer::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 5;
-    background: linear-gradient(to bottom, #0a0a0a 0%, transparent 120px, transparent calc(100% - 160px), #0a0a0a 100%);
-}
-body.light-mode #canvas-layer::after {
-    background: linear-gradient(to bottom, #f3f4f6 0%, transparent 120px, transparent calc(100% - 160px), #f3f4f6 100%);
-}
 #shooting-stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;}
-#stats-view, #videos-view, #no-data-view, #map-view, #milestones-view, #westbank-view, #martyrs48-view{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:20;background:rgba(10,10,10,0.98);overflow-y:auto;pointer-events:auto;padding-top:135px;padding-bottom:100px;}
+#stats-view, #videos-view, #no-data-view, #map-view, #milestones-view, #westbank-view, #martyrs48-view{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:20;background:rgba(10,10,10,0.98);overflow-y:auto;pointer-events:auto;padding-top:90px;padding-bottom:100px;}
 body.light-mode #stats-view,
 body.light-mode #videos-view,
 body.light-mode #no-data-view,
@@ -227,43 +216,6 @@ body.light-mode .tlc-mdl-stat-exp{color:#4b5563;}
 .tlc-scene.active .tlc-bg img {
     transform: scale(1.1);
 }
-
-/* Print-optimized media query stylesheet for PDF generation */
-@media print {
-    body {
-        background: #ffffff !important;
-        color: #111827 !important;
-        overflow: auto !important;
-    }
-    #header, #bottom-bar, .export-btn-container {
-        display: none !important;
-    }
-    #stats-view {
-        display: block !important;
-        position: static !important;
-        padding-top: 20px !important;
-        padding-bottom: 20px !important;
-        overflow: visible !important;
-        background: #ffffff !important;
-        color: #111827 !important;
-    }
-    .glass-panel {
-        background: #f9fafb !important;
-        border: 1px solid #d1d5db !important;
-        color: #111827 !important;
-        box-shadow: none !important;
-        page-break-inside: avoid;
-    }
-    .text-white {
-        color: #111827 !important;
-    }
-    .text-gray-200 {
-        color: #1f2937 !important;
-    }
-    .text-gray-300, .text-gray-400 {
-        color: #4b5563 !important;
-    }
-}
 </style>
 </head>
 <body>
@@ -320,16 +272,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <h2 id="stats-title" class="text-4xl font-extrabold text-red-500 mb-3">حرب الإبادة الجماعية في غزة</h2>
     <h3 id="stats-subtitle" class="text-2xl font-bold text-white mb-4">1000 يوم من الإبادة الجماعية</h3>
     <p id="stats-banner" class="text-sm text-red-300 font-semibold max-w-2xl mx-auto bg-red-950/40 border border-red-600/30 p-3 rounded-xl">أكثر من 2.4 مليون إنسان يتعرضون للإبادة والتجويع</p>
-
-    <!-- أدوات التصدير والتحميل والطباعة -->
-    <div class="export-btn-container mt-6 flex justify-center gap-3 flex-wrap interactive">
-        <button onclick="exportStatsAsImage(this)" class="btn-main font-bold text-xs bg-red-600/20 border border-red-500/40 text-red-400 px-4 py-2 rounded-full flex items-center gap-2 transition-all hover:bg-red-600 hover:text-white">
-            📷 <span id="btn-export-img-text">تحميل كصورة إنفوجرافيك عالية الدقة (PNG)</span>
-        </button>
-        <button onclick="exportStatsAsPDF()" class="btn-main font-bold text-xs bg-red-600/20 border border-red-500/40 text-red-400 px-4 py-2 rounded-full flex items-center gap-2 transition-all hover:bg-red-600 hover:text-white">
-            📄 <span id="btn-export-pdf-text">تحميل كتقرير إحصائي جاهز للطباعة (PDF)</span>
-        </button>
-    </div>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
@@ -411,93 +353,128 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </main>
 
 <div id="ui-layer">
-<header id="header" class="glass-panel interactive flex flex-col gap-2 p-2" style="display: flex; flex-direction: column; gap: 8px; padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(10,10,10,0.95); position: fixed; top: 0; left: 0; right: 0; z-index: 1000;">
-  <!-- Row 1 -->
-  <div class="flex justify-between items-center w-full gap-2 flex-wrap">
-    <!-- Right block: Logo & Actions -->
-    <div class="flex items-center gap-1.5 flex-wrap">
-      <h1 class="text-sm font-black text-white drop-shadow-md"><span class="text-red-500" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
-      <button id="theme-toggle-btn" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 26px; height: 26px; border-radius: 50%; background: rgba(220, 38, 38, 0.2); border-color: rgba(239, 68, 68, 0.5);">
-          <svg id="theme-icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
-              <path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/>
-              <path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>
-          </svg>
+<header id="header" class="glass-panel interactive">
+<div class="flex items-center gap-1.5">
+<h1 class="text-sm font-black text-white drop-shadow-md"><span class="text-red-500" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
+
+<button id="theme-toggle-btn" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 26px; height: 26px; border-radius: 50%; background: rgba(220, 38, 38, 0.2); border-color: rgba(239, 68, 68, 0.5);">
+    <svg id="theme-icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
+        <path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/>
+        <path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>
+    </svg>
+</button>
+</div>
+
+<div class="w-auto relative flex items-center gap-1">
+<input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد..." oninput="searchMartyrByName(this.value)">
+<button id="voice-search-btn" onclick="startVoiceSearch('search-input', (val) => searchMartyrByName(val))" class="btn-main px-2 py-2 text-xs rounded-xl" title="البحث الصوتي">🎤</button>
+<div id="search-results-dropdown" class="absolute left-0 right-0 mt-2 max-h-80 overflow-y-auto bg-[#0a0a0af2] border border-red-500/30 rounded-xl shadow-2xl hidden z-[1001] text-right font-['Cairo'] text-xs"></div>
+</div>
+<div class="tabs-wrapper no-scrollbar interactive">
+<div class="flex gap-1 bg-black/40 p-1 rounded-full border border-white/5">
+<a href="index.html" class="btn-main" id="tab-souls" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء غزة</a>
+<a href="journalists.html" class="btn-main" id="tab-journalists" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء الصحافة</a>
+<a href="westbank.html" class="btn-main" id="tab-westbank" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء الضفة</a>
+<a href="martyrs48.html" class="btn-main" id="tab-48" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء 48</a>
+<a href="milestones.html" class="btn-main" id="tab-milestones" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">أبرز المحطات</a>
+<a href="stats.html" class="btn-main active" id="tab-stats" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">الإحصائيات</a>
+<a href="map.html" class="btn-main" id="tab-map" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">الخريطة</a>
+</div>
+</div>
+<div class="relative inline-block text-right flex items-center gap-2">
+<div class="relative inline-block text-right" id="language-dropdown-container">
+  <button onclick="toggleLanguageDropdown(event)" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" title="Language" style="width: 26px; height: 26px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15);">
+      <svg class="text-white" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+      </svg>
+  </button>
+  <div id="language-dropdown-menu" class="absolute right-0 mt-2 w-32 bg-[#1e1f22]/95 border border-white/10 rounded-xl shadow-2xl hidden z-[1002] py-1 text-left font-['Cairo'] text-xs">
+      <button onclick="changeLanguage('ar'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-2 text-gray-200 hover:bg-white/10 transition-all font-bold">
+          <span>العربية</span>
+          <span class="active-check-lang text-red-500 hidden" id="check-ar">✓</span>
       </button>
-    </div>
+      <button onclick="changeLanguage('en'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-2 text-gray-200 hover:bg-white/10 transition-all font-bold">
+          <span>English</span>
+          <span class="active-check-lang text-red-500 hidden" id="check-en">✓</span>
+      </button>
+      <button onclick="changeLanguage('es'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-2 text-gray-200 hover:bg-white/10 transition-all font-bold">
+          <span>Español</span>
+          <span class="active-check-lang text-red-500 hidden" id="check-es">✓</span>
+      </button>
+      <button onclick="changeLanguage('fr'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-2 text-gray-200 hover:bg-white/10 transition-all font-bold">
+          <span>Français</span>
+          <span class="active-check-lang text-red-500 hidden" id="check-fr">✓</span>
+      </button>
+  </div>
+</div>
 
-    <!-- Middle block: Search Box -->
-    <div class="w-auto relative flex items-center gap-1">
-      <input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد..." oninput="searchMartyrByName(this.value)">
-      <button id="voice-search-btn" onclick="startVoiceSearch('search-input', (val) => searchMartyrByName(val))" class="btn-main px-2 py-2 text-xs rounded-xl" title="البحث الصوتي">🎤</button>
-      <div id="search-results-dropdown" class="absolute left-0 right-0 mt-2 max-h-80 overflow-y-auto bg-[#0a0a0af2] border border-red-500/30 rounded-xl shadow-2xl hidden z-[1001] text-right font-['Cairo'] text-xs"></div>
-    </div>
+<div id="visitor-counter-box" class="interactive font-['Cairo'] flex items-center justify-center shadow-md" title="عدد الزوار">
+    <a href="https://www.hitwebcounter.com" target="_blank" title="Web Counter" style="display: flex; align-items: center; text-decoration: none;">
+        <img src="https://hitwebcounter.com/counter/counter.php?page=11202868&style=0005&nbdigits=5&type=page&initCount=0" title="Web Counter" Alt="web counter" border="0" />
+    </a>
+</div>
 
-    <!-- Left block: Flags, Counter, Sound Toggle -->
-    <div class="relative inline-block text-right flex items-center gap-2 flex-wrap">
-      <div id="language-flags-container" class="flex items-center gap-1.5 font-['Cairo']">
-        <button onclick="changeLanguage('ar')" data-lang="ar" class="lang-flag-btn flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] border border-white/10 bg-black/40 hover:bg-red-600/20 hover:border-red-500/40 transition-all text-white" title="العربية">
-            <img src="images/icons/arab.png" alt="Ar" class="w-3.5 h-3.5 object-contain"> <span class="hidden sm:inline font-bold">العربية</span>
-        </button>
-        <button onclick="changeLanguage('en')" data-lang="en" class="lang-flag-btn flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] border border-white/10 bg-black/40 hover:bg-red-600/20 hover:border-red-500/40 transition-all text-white" title="English">
-            <img src="images/icons/royaume-uni.png" alt="En" class="w-3.5 h-3.5 object-contain"> <span class="hidden sm:inline font-bold">English</span>
-        </button>
-        <button onclick="changeLanguage('fr')" data-lang="fr" class="lang-flag-btn flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] border border-white/10 bg-black/40 hover:bg-red-600/20 hover:border-red-500/40 transition-all text-white" title="Français">
-            <img src="images/icons/france.png" alt="Fr" class="w-3.5 h-3.5 object-contain"> <span class="hidden sm:inline font-bold">Français</span>
-        </button>
-        <button onclick="changeLanguage('es')" data-lang="es" class="lang-flag-btn flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] border border-white/10 bg-black/40 hover:bg-red-600/20 hover:border-red-500/40 transition-all text-white" title="Español">
-            <img src="images/icons/espagne.png" alt="Es" class="w-3.5 h-3.5 object-contain"> <span class="hidden sm:inline font-bold">Español</span>
-        </button>
-      </div>
+<div class="flex gap-1.5 items-center">
+<button id="music-btn" class="btn-main" onclick="toggleMusic()">🎵 الصوت</button>
+</div>
+</div>
+</header>
+<div id="bottom-bar" class="w-full flex flex-col items-center gap-3 p-4 pointer-events-none fixed bottom-0 left-0 right-0 z-[1000] justify-end">
+  <!-- الآية القرآنية الشريفة المترجمة - مسترجعة ومحسنة في المنتصف فوق شريط الأزرار -->
+  <div id="verse-container" class="interactive glass-panel p-2 px-6 rounded-full border border-red-500/30 bg-black/85 max-w-2xl text-center shadow-lg pointer-events-auto">
+      <p id="verse-text" class="font-amiri text-red-400 text-xs sm:text-sm font-bold leading-relaxed">
+          "وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"
+      </p>
+  </div>
 
-      <div id="visitor-counter-box" class="interactive font-['Cairo'] flex items-center justify-center shadow-md" title="عدد الزوار">
-          <a href="https://www.hitwebcounter.com" target="_blank" title="Web Counter" style="display: flex; align-items: center; text-decoration: none;">
-              <img src="https://hitwebcounter.com/counter/counter.php?page=11202868&style=0005&nbdigits=5&type=page&initCount=0" title="Web Counter" Alt="web counter" border="0" />
+  <!-- شريط الأزرار والروابط السفلي المطابق تماماً لـ Capture3.PNG -->
+  <div class="interactive glass-panel p-2 px-4 rounded-full flex items-center gap-3 flex-wrap justify-center bg-black/90 font-['Cairo'] text-xs border border-white/10 shadow-2xl pointer-events-auto max-w-full">
+      <!-- مساهمة وتصحيح بيانات -->
+      <button onclick="openCrowdsourceModal()" class="btn-main font-bold text-[11px] bg-transparent border border-red-500 text-red-400 px-3.5 py-1.5 rounded-full hover:bg-red-500 hover:text-white transition-all duration-300">
+          ✍️ <span id="btn-contrib-text">مساهمة وتصحيح بيانات</span>
+      </button>
+
+      <!-- إدعمنا لنستمر -->
+      <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-[11px] bg-red-800 border-none text-white px-3.5 py-1.5 rounded-full hover:bg-red-900 transition-all duration-300 shadow-md shadow-red-900/30">
+          ❤️ إدعمنا لنستمر
+      </a>
+
+      <!-- تطوير: عبد الهادي -->
+      <span id="dev-text" class="text-[11px] text-gray-300 font-bold px-1">تطوير: عبد الهادي</span>
+
+      <!-- فاصل عمودي -->
+      <span class="text-white/20">|</span>
+
+      <!-- الروابط الاجتماعية الدائرية -->
+      <div class="social-links flex gap-2 items-center">
+          <a href="https://www.facebook.com/abdelhadilrs" target="_blank" class="w-6 h-6 flex items-center justify-center rounded-full bg-transparent border border-white/30 text-white hover:bg-blue-600 hover:border-blue-500 hover:shadow-[0_0_8px_rgba(59,130,246,0.5)] transition-all text-[11px] flex" style="align-items: center; justify-content: center;" title="Facebook">
+              <i class="fa-brands fa-facebook-f"></i>
+          </a>
+          <a href="https://www.instagram.com/abdelhadilrs" target="_blank" class="w-6 h-6 flex items-center justify-center rounded-full bg-transparent border border-white/30 text-white hover:bg-gradient-to-tr hover:from-yellow-500 hover:via-red-500 hover:to-purple-600 hover:border-red-400 hover:shadow-[0_0_8px_rgba(239,68,68,0.5)] transition-all text-[11px] flex" style="align-items: center; justify-content: center;" title="Instagram">
+              <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a href="https://x.com/larrasabdelhadi" target="_blank" class="w-6 h-6 flex items-center justify-center rounded-full bg-transparent border border-white/30 text-white hover:bg-white hover:text-black hover:border-white hover:shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all text-[11px] flex" style="align-items: center; justify-content: center;" title="X">
+              <i class="fa-brands fa-x-twitter"></i>
           </a>
       </div>
 
-      <div class="flex gap-1.5 items-center">
-        <button id="music-btn" class="btn-main" onclick="toggleMusic()">🎵 الصوت</button>
-      </div>
-    </div>
+      <!-- فاصل عمودي -->
+      <span class="text-white/20">|</span>
+
+      <!-- مشاركة المنصة -->
+      <button onclick="shareSite()" class="share-btn flex gap-1.5 items-center bg-transparent border border-white text-white font-bold text-[11px] px-3.5 py-1.5 rounded-full hover:bg-white hover:text-black transition-all duration-300">
+          <i class="fa-solid fa-share-nodes"></i> <span id="share-btn-text">مشاركة المنصة</span>
+      </button>
   </div>
-
-  <!-- Row 2 -->
-  <div class="tabs-wrapper no-scrollbar interactive w-full flex justify-center mt-1">
-    <div class="flex gap-1 bg-black/40 p-1 rounded-full border border-white/5 flex-wrap justify-center">
-      <a href="index.html" class="btn-main " id="tab-souls" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء غزة</a>
-      <a href="journalists.html" class="btn-main " id="tab-journalists" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء الصحافة</a>
-      <a href="westbank.html" class="btn-main " id="tab-westbank" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء الضفة</a>
-      <a href="martyrs48.html" class="btn-main " id="tab-48" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء 48</a>
-      <a href="milestones.html" class="btn-main " id="tab-milestones" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">أبرز المحطات</a>
-      <a href="stats.html" class="btn-main active" id="tab-stats" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">الإحصائيات</a>
-      <a href="map.html" class="btn-main " id="tab-map" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">الخريطة</a>
-    </div>
-  </div>
-</header>
-<div id="bottom-bar">
-<div id="verse-container" class="interactive glass-panel p-3 px-6 rounded-lg border-r-4 border-r-red-600 order-2 md:order-1 hidden md:block bg-black/80 max-w-lg">
-<p id="verse-text" class="font-amiri text-gray-200 text-lg font-bold leading-relaxed text-center">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</p>
 </div>
 
-<div class="interactive glass-panel p-2 px-3 rounded-lg flex items-center gap-2.5 flex-wrap justify-center order-4 md:order-3 bg-black/80 font-['Cairo']" style="margin-right: auto;">
-<button onclick="openCrowdsourceModal()" class="btn-main font-bold text-[11px] bg-red-600/20 border border-red-500/40 text-red-400 px-2.5 py-1">✍️ مساهمة وتصحيح بيانات</button>
-<a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-[11px] bg-red-900 border-red-500 text-white px-2.5 py-1">❤️ إدعمنا لنستمر</a>
-<span id="dev-text" class="text-[11px] text-gray-400 font-bold border-l border-white/20 pl-3">تطوير: عبد الهادي</span>
-<div class="social-links flex gap-1.5 items-center">
-<a href="https://www.facebook.com/abdelhadilrs" target="_blank" class="w-7 h-7 flex items-center justify-center rounded-full bg-black/40 border border-white/10 text-white hover:bg-blue-600 hover:border-blue-500 hover:shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all text-xs" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-<a href="https://www.instagram.com/abdelhadilrs" target="_blank" class="w-7 h-7 flex items-center justify-center rounded-full bg-black/40 border border-white/10 text-white hover:bg-gradient-to-tr hover:from-yellow-500 hover:via-red-500 hover:to-purple-600 hover:border-red-400 hover:shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all text-xs" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-<a href="https://x.com/larrasabdelhadi" target="_blank" class="w-7 h-7 flex items-center justify-center rounded-full bg-black/40 border border-white/10 text-white hover:bg-white hover:text-black hover:border-white hover:shadow-[0_0_10px_rgba(255,255,255,0.5)] transition-all text-xs" title="X"><i class="fa-brands fa-x-twitter"></i></a>
-<button onclick="shareSite()" class="share-btn flex gap-1 items-center bg-black/40 border border-white/10 hover:bg-red-600 hover:border-red-500 hover:shadow-[0_0_10px_rgba(239,68,68,0.5)] font-bold text-[11px] px-3 py-1 rounded-full transition-all text-white">
-<i class="fa-solid fa-share-nodes"></i> <span id="share-btn-text">مشاركة المنصة</span>
-</button>
-</div>
-</div>
-
-<div id="counter-box" class="interactive order-3 md:order-4 font-['Cairo'] flex items-center justify-center gap-2 bg-black/60 border border-white/10 rounded-full px-4 py-1.5 transition-all shadow-md">
+<!-- عداد توثيق الشهداء العائم لتفادي التداخل -->
+<div id="counter-box" class="interactive font-['Cairo'] flex items-center justify-center gap-2 bg-black/80 border border-white/10 rounded-full px-4 py-1.5 transition-all shadow-lg fixed bottom-20 left-4 z-[999] text-xs">
     <span id="martyrs-label" class="text-[11px] text-red-400 font-bold whitespace-nowrap">شهيداً وثّقت أسماؤهم:</span>
     <span id="number" class="text-sm font-black text-white">60,198</span>
-</div>
 </div>
 </div>
 
@@ -807,95 +784,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-
-    // منطق التدويل والترجمة التفاعلية لأزرار التصدير والتحميل والطباعة
-    const statsExportTranslations = {
-        ar: {
-            exportImg: "تحميل كصورة إنفوجرافيك عالية الدقة (PNG)",
-            exportPdf: "تحميل كتقرير إحصائي جاهز للطباعة (PDF)",
-            processing: "⏳ جاري المعالجة..."
-        },
-        en: {
-            exportImg: "Export as HD Infographic Image (PNG)",
-            exportPdf: "Export as Printable Statistical Report (PDF)",
-            processing: "⏳ Processing..."
-        },
-        fr: {
-            exportImg: "Exporter l'infographie en HD (PNG)",
-            exportPdf: "Exporter le rapport imprimable (PDF)",
-            processing: "⏳ En cours..."
-        },
-        es: {
-            exportImg: "Exportar como infografía HD (PNG)",
-            exportPdf: "Exportar como informe de impresión (PDF)",
-            processing: "⏳ Procesando..."
-        }
-    };
-
-    window.localizeExportButtons = function() {
-        const lang = localStorage.getItem('site_lang') || 'ar';
-        const t = statsExportTranslations[lang] || statsExportTranslations.ar;
-        const elImgText = document.getElementById('btn-export-img-text');
-        const elPdfText = document.getElementById('btn-export-pdf-text');
-        if (elImgText) elImgText.innerText = t.exportImg;
-        if (elPdfText) elPdfText.innerText = t.exportPdf;
-    };
-
-    localizeExportButtons();
-
-    // رصد أعلام تغيير اللغة لتحديث الأزرار في الوقت الحقيقي
-    document.querySelectorAll('.lang-flag-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            setTimeout(localizeExportButtons, 150);
-        });
-    });
 });
-
-// وظائف التصدير الإحصائي والإنفوجرافيك
-function exportStatsAsImage(btn) {
-    const lang = localStorage.getItem('site_lang') || 'ar';
-    const originalText = btn.innerHTML;
-    const processingText = (lang === 'en' ? '⏳ Processing...' : (lang === 'fr' ? '⏳ En cours...' : (lang === 'es' ? '⏳ Procesando...' : '⏳ جاري المعالجة...')));
-
-    btn.innerHTML = `<span>${processingText}</span>`;
-    btn.disabled = true;
-
-    // إخفاء الأزرار مؤقتاً لئلا تظهر في الصورة الملتقطة
-    const controls = document.querySelector('.export-btn-container');
-    if (controls) controls.style.opacity = '0';
-
-    const captureTarget = document.querySelector('#stats-view');
-
-    html2canvas(captureTarget, {
-        scale: 2, // دقة عالية عالية الوضوح
-        useCORS: true,
-        backgroundColor: document.body.classList.contains('light-mode') ? '#f3f4f6' : '#0a0a0a',
-        scrollX: 0,
-        scrollY: 0,
-        windowWidth: document.documentElement.offsetWidth,
-        windowHeight: document.documentElement.offsetHeight
-    }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'Palestinian_Souls_Genocide_Statistics_Report.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-
-        // استعادة العناصر
-        if (controls) controls.style.opacity = '1';
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-    }).catch(err => {
-        console.error("Error generating stats image:", err);
-        alert(lang === 'en' ? "An error occurred. Please try again." : "حدث خطأ أثناء تصدير الصورة، يرجى المحاولة لاحقاً.");
-        if (controls) controls.style.opacity = '1';
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-    });
-}
-
-function exportStatsAsPDF() {
-    window.print();
-}
 </script>
 
 <script src="js/app.js"></script>
