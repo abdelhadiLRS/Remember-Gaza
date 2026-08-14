@@ -6,6 +6,13 @@ if (browserLang.startsWith('en')) systemLang = 'en';
 else if (browserLang.startsWith('fr')) systemLang = 'fr';
 else if (browserLang.startsWith('es')) systemLang = 'es';
 
+// Detect query parameter lang override
+const urlParamsForLang = new URLSearchParams(window.location.search);
+const queryLang = urlParamsForLang.get('lang');
+if (queryLang && ['ar', 'en', 'fr', 'es'].includes(queryLang.toLowerCase())) {
+    localStorage.setItem('site_lang', queryLang.toLowerCase());
+}
+
 if (!localStorage.getItem('site_lang')) {
     localStorage.setItem('site_lang', systemLang);
 }
@@ -30,6 +37,13 @@ let isAudioSynthActive = false;
 let currentSearchQuery = "";
 let currentMartyrObj = null;
 
+// Memory Corridors state & logic
+let corridorsActive = false;
+let familyGroups = {}; // Maps familyName -> Array of points
+let hoveredFamilyName = null;
+let spotlightStarId = null;
+let spotlightTimer = null;
+
 const translations = {
     ar: {
         titleMain: "أرواح", logoText: "فلسطين", searchPlaceholder: "ابحث عن اسم الشهيد...",
@@ -49,7 +63,11 @@ const translations = {
         tlcIntro1: "على مدى العقود الماضية، ارتقى عشرات الآلاف من الفلسطينيين شهداء على يد آلة البطش الإسرائيلية...",
         tlcIntro2: "فيما يلي نسرد لكم أهم المحطات في تاريخ القضية الفلسطينية...", tlcFooterStory: "وستبقى الحكاية...",
         statsTitle: "حرب الإبادة الجماعية في غزة", statsSubtitle: "1000 يوم من الإبادة الجماعية", statsBanner: "أكثر من 2.4 مليون إنسان يتعرضون للإبادة والتجويع", statsUrbanHeader: "لم تقتصر إعتداءات الإحتلال على البشر بل تطال مختلف مظاهر العمران والحضارة كذلك.",
-        noDataText: "لا توجد بيانات حالياً"
+        noDataText: "لا توجد بيانات حالياً",
+        corridorsOn: "المجرات العائلية (نشط)",
+        corridorsOff: "المجرات العائلية (معطل)",
+        familyTitle: "أفراد العائلة الموثقون:",
+        spotBtn: "🎯 رصد النجم"
     },
     en: {
         titleMain: "Palestinian", logoText: "Souls", searchPlaceholder: "Search martyr...",
@@ -69,7 +87,11 @@ const translations = {
         tlcIntro1: "Over past decades, tens of thousands of Palestinians have been martyred by the Israeli oppression machine...",
         tlcIntro2: "Below we list the most important milestones in the history of the Palestinian cause...", tlcFooterStory: "And the story will remain...",
         statsTitle: "Gaza Genocide War", statsSubtitle: "1000 Days of Genocide", statsBanner: "Over 2.4 million people facing extermination and starvation", statsUrbanHeader: "Occupation attacks are not limited to humans but also target urban and civil aspects.",
-        noDataText: "No data available currently"
+        noDataText: "No data available currently",
+        corridorsOn: "Family Galaxies (On)",
+        corridorsOff: "Family Galaxies (Off)",
+        familyTitle: "Documented Family Members:",
+        spotBtn: "🎯 Spot Star"
     },
     fr: {
         titleMain: "Âmes", logoText: "Palestiniennes", searchPlaceholder: "Rechercher un martyr...",
@@ -89,7 +111,11 @@ const translations = {
         tlcIntro1: "Au fil des décennies, des dizaines de milliers de Palestiniens sont tombés en martyrs...",
         tlcIntro2: "Voici les étapes clés de l'histoire de la cause palestinienne...", tlcFooterStory: "Et l'histoire continuera...",
         statsTitle: "Guerre de génocide à Gaza", statsSubtitle: "1000 jours de génocide", statsBanner: "Plus de 2,4 millions de personnes confrontées à l'extermination", statsUrbanHeader: "Les attaques de l'occupation ciblent également l'urbanisme et la civilisation.",
-        noDataText: "Aucune donnée disponible"
+        noDataText: "Aucune donnée disponible",
+        corridorsOn: "Galaxies Familiales (Activé)",
+        corridorsOff: "Galaxies Familiales (Désactivé)",
+        familyTitle: "Membres de Famille Documentés :",
+        spotBtn: "🎯 Repérer l'étoile"
     },
     es: {
         titleMain: "Almas", logoText: "Palestinas", searchPlaceholder: "Buscar mártir...",
@@ -109,7 +135,11 @@ const translations = {
         tlcIntro1: "Durante las últimas décadas, decenas de miles de palestinos han muerto como mártires...",
         tlcIntro2: "A continuación detallamos los hitos más importantes de la causa palestina...", tlcFooterStory: "Y la historia continuará...",
         statsTitle: "Guerra de genocidio en Gaza", statsSubtitle: "1000 días de genocidio", statsBanner: "Más de 2,4 millones de personas enfrentan el exterminio y el hambre", statsUrbanHeader: "Los ataques de la ocupación también tienen como blanco el urbanismo y la civilización.",
-        noDataText: "No hay datos disponibles actualmente"
+        noDataText: "No hay datos disponibles actualmente",
+        corridorsOn: "Galaxias Familiares (Activo)",
+        corridorsOff: "Galaxias Familiares (Inactivo)",
+        familyTitle: "Miembros de Familia Documentados:",
+        spotBtn: "🎯 Ubicar Estrella"
     }
 };
 
@@ -133,6 +163,32 @@ function initAdaptiveTheme() {
         updateThemeIcon(isLight);
     }
 }
+
+function toggleCorridors() {
+    corridorsActive = !corridorsActive;
+    const btn = document.getElementById('corridors-toggle-btn');
+    if (btn) {
+        if (corridorsActive) {
+            btn.classList.add('active');
+            btn.style.background = '#dc2626';
+            btn.style.borderColor = '#ef4444';
+        } else {
+            btn.classList.remove('active');
+            btn.style.background = 'rgba(220, 38, 38, 0.2)';
+            btn.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+        }
+    }
+    const t = translations[currentLang];
+    const corridorsBtnText = document.getElementById('corridors-btn-text');
+    if (corridorsBtnText) {
+        corridorsBtnText.innerText = corridorsActive ? t.corridorsOn : t.corridorsOff;
+    }
+    if (btn) {
+        btn.setAttribute('title', corridorsActive ? t.corridorsOn : t.corridorsOff);
+    }
+    isDirty = true;
+}
+window.toggleCorridors = toggleCorridors;
 
 function toggleTheme() {
     const body = document.body;
@@ -369,6 +425,24 @@ const milestoneCinematicData = [
     }
 ];
 
+// ----------------------------------------------------
+// Custom Globe Language Dropdown Logic (Matching Capture.PNG & Capture1.PNG)
+// ----------------------------------------------------
+window.toggleLanguageDropdown = function(e) {
+    if (e) e.stopPropagation();
+    const menu = document.getElementById('language-dropdown-menu');
+    if (menu) menu.classList.toggle('hidden');
+};
+
+window.closeLanguageDropdown = function() {
+    const menu = document.getElementById('language-dropdown-menu');
+    if (menu) menu.classList.add('hidden');
+};
+
+document.addEventListener('click', () => {
+    window.closeLanguageDropdown();
+});
+
 function changeLanguage(langCode) {
     if (!translations[langCode]) langCode = 'ar';
     currentLang = langCode;
@@ -380,8 +454,15 @@ function changeLanguage(langCode) {
         htmlRoot.lang = currentLang;
         htmlRoot.dir = (currentLang === 'ar') ? 'rtl' : 'ltr';
     }
-    const langSelect = document.getElementById('language-select');
-    if (langSelect) langSelect.value = currentLang;
+
+    // Update custom dropdown checkmarks (matching checkmark style in Capture1.PNG)
+    document.querySelectorAll('.active-check-lang').forEach(el => {
+        el.classList.add('hidden');
+    });
+    const checkEl = document.getElementById(`check-${langCode}`);
+    if (checkEl) {
+        checkEl.classList.remove('hidden');
+    }
 
     const setInnerText = (id, text) => {
         const el = document.getElementById(id);
@@ -404,10 +485,24 @@ function changeLanguage(langCode) {
     setInnerText('tab-videos', t.tabVideos);
     setInnerText('tab-map', t.tabMap);
     setInnerText('donate-desktop', t.donate);
-    setInnerText('verse-text', t.verse);
+    const verseTextEl = document.getElementById('verse-text');
+    if (verseTextEl) {
+        if (langCode === 'ar') {
+            verseTextEl.innerText = '';
+            verseTextEl.classList.add('hidden');
+        } else {
+            verseTextEl.innerText = t.verse;
+            verseTextEl.classList.remove('hidden');
+        }
+    }
     setInnerText('dev-text', t.devText);
     setInnerText('share-btn-text', t.shareBtn);
     setInnerText('martyrs-label', t.martyrsLabel);
+
+    const corridorsBtnText = document.getElementById('corridors-btn-text');
+    if (corridorsBtnText) {
+        corridorsBtnText.innerText = (typeof corridorsActive !== 'undefined' && corridorsActive) ? t.corridorsOn : t.corridorsOff;
+    }
 
     const modalMilestoneTitle = document.getElementById('modal-milestone-title-text');
     if(modalMilestoneTitle) modalMilestoneTitle.innerText = t.milestonesTitle;
@@ -971,11 +1066,24 @@ function renderMapAndList() {
             });
 
             const fateAr = v.fate === 'Massacre' ? 'مجزرة وحشية' : 'قرية مهجرة بالكامل';
+            const fateLabelPop = currentLang === 'ar' ? fateAr :
+                                 currentLang === 'en' ? (v.fate === 'Massacre' ? 'Brutal Massacre' : 'Completely Depopulated') :
+                                 currentLang === 'fr' ? (v.fate === 'Massacre' ? 'Massacre Brutal' : 'Complètement Dépeuplé') :
+                                                        (v.fate === 'Massacre' ? 'Masacre Brutal' : 'Completamente Despoblado');
+
+            const yearLabelPop = currentLang === 'ar' ? 'سنة التهجير' :
+                                 currentLang === 'en' ? 'Displacement Year' :
+                                 currentLang === 'fr' ? 'Année d\'expulsion' : 'Año de expulsión';
+
+            const fateHeaderPop = currentLang === 'ar' ? 'المصير والوضع الحالي' :
+                                  currentLang === 'en' ? 'Fate & Current Status' :
+                                  currentLang === 'fr' ? 'Destin et statut actuel' : 'Destino y estado actual';
+
             const popupContent = `
                 <div class="p-2.5 text-right font-['Cairo'] text-xs text-white bg-neutral-900/95 border border-red-600/30 rounded-lg max-w-[200px]">
                     <h4 class="font-bold text-red-400 text-sm mb-1">🇵🇸 ${v.name}</h4>
-                    <p class="text-gray-300 mb-1"><strong>سنة التهجير:</strong> ${v.year}</p>
-                    <p class="text-gray-300"><strong>المصير والوضع الحالي:</strong> ${fateAr}</p>
+                    <p class="text-gray-300 mb-1"><strong>${yearLabelPop}:</strong> ${v.year}</p>
+                    <p class="text-gray-300"><strong>${fateHeaderPop}:</strong> ${fateLabelPop}</p>
                 </div>
             `;
             marker.bindPopup(popupContent);
@@ -984,11 +1092,19 @@ function renderMapAndList() {
             mapMarkers.push({ name: v.name.toLowerCase(), marker: marker, lat: v.lat, lng: v.lng });
         }
 
-        const fateLabel = v.fate === 'Massacre' ? 'مجزرة' : 'تهجير';
+        const fateLabel = currentLang === 'ar' ? (v.fate === 'Massacre' ? 'مجزرة' : 'تهجير') :
+                          currentLang === 'en' ? (v.fate === 'Massacre' ? 'Massacre' : 'Depopulated') :
+                          currentLang === 'fr' ? (v.fate === 'Massacre' ? 'Massacre' : 'Dépeuplé') :
+                                                 (v.fate === 'Massacre' ? 'Masacre' : 'Despoblado');
+
+        const statusText = currentLang === 'ar' ? 'الوضع' :
+                           currentLang === 'en' ? 'Status' :
+                           currentLang === 'fr' ? 'Statut' : 'Estado';
+
         html += `
             <div class="map-item bg-black/40 border border-white/5 hover:border-red-500/30 p-2.5 rounded-xl cursor-pointer transition-all hover:bg-black/60 text-right" onclick="focusMapMarker(${v.lat}, ${v.lng}, '${v.name}')">
                 <div class="font-bold text-xs text-white">${v.name}</div>
-                <div class="text-[10px] text-gray-400 font-mono mt-1">الوضع: <span class="text-red-400">${fateLabel} (${v.year})</span></div>
+                <div class="text-[10px] text-gray-400 font-mono mt-1">${statusText}: <span class="text-red-400">${fateLabel} (${v.year})</span></div>
             </div>
         `;
     });
@@ -1039,10 +1155,14 @@ function renderTributeCards(containerId, dataset) {
         const dateLabel = currentLang === 'ar' ? 'التاريخ' : 'Date';
         const yearsLabel = currentLang === 'ar' ? 'سنة' : 'years';
 
-        const title = item.name;
-        const subtitle = item.name_en || '';
-        const notes = item.notes || '';
-        const city = item.city || '';
+        let title = item.name;
+        let subtitle = item.name_en || '';
+        if (currentLang !== 'ar') {
+            title = transliterateName(item.name, currentLang);
+            subtitle = item.name_en || transliterateName(item.name, 'en');
+        }
+        const notes = currentLang === 'ar' ? (item.notes || '') : translateContentInstantly(item.notes || '', item.name, currentLang);
+        const city = currentLang === 'ar' ? (item.city || '') : translateCity(item.city || '', currentLang);
 
         html += `
             <div class="glass-panel p-6 rounded-2xl border border-white/10 hover:border-red-500/50 transition-all text-right flex flex-col justify-between group hover:scale-[1.02] cursor-pointer" onclick="openMartyrModal(${JSON.stringify(item).replace(/"/g, '&quot;')})">
@@ -1068,6 +1188,23 @@ window.switchMainMode = function(mode) {
     document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
     const activeBtn = document.getElementById(`tab-${mode === 'martyrs48' ? '48' : mode}`);
     if (activeBtn) activeBtn.classList.add('active');
+
+    // Restrict Family Galaxies gathering features strictly to Gaza Souls (index.html)
+    const corridorsBtn = document.getElementById('corridors-toggle-btn');
+    if (mode === 'souls') {
+        if (corridorsBtn) corridorsBtn.style.display = 'inline-flex';
+    } else {
+        corridorsActive = false;
+        if (corridorsBtn) {
+            corridorsBtn.style.display = 'none';
+            corridorsBtn.classList.remove('active');
+            corridorsBtn.style.background = 'rgba(220, 38, 38, 0.2)';
+            corridorsBtn.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+            const t = translations[currentLang];
+            const corridorsBtnText = document.getElementById('corridors-btn-text');
+            if (corridorsBtnText) corridorsBtnText.innerText = t ? t.corridorsOff : "Family Galaxies (Off)";
+        }
+    }
 
     ['map-view', 'stats-view', 'videos-view', 'no-data-view', 'milestones-view', 'westbank-view', 'martyrs48-view'].forEach(id => {
         const el = document.getElementById(id);
@@ -1187,19 +1324,31 @@ function searchMartyrByName(query) {
     }).slice(0, 15);
 
     if (matches.length === 0) {
-        dropdown.innerHTML = `<div class="p-3 text-center text-gray-500">لا توجد نتائج مطابقة</div>`;
+        const noResultsText = currentLang === 'ar' ? 'لا توجد نتائج مطابقة' :
+                              currentLang === 'en' ? 'No matching results found' :
+                              currentLang === 'fr' ? 'Aucun résultat' : 'No hay resultados';
+        dropdown.innerHTML = `<div class="p-3 text-center text-gray-500">${noResultsText}</div>`;
     } else {
         let html = '';
         matches.forEach(person => {
-            const displayName = person.name_ar || person.name || person.name_en || 'شهيد مجهول';
-            const displayAge = person.age || 'غير معروف';
+            let displayName = person.name_ar || person.name || person.name_en || 'شهيد مجهول';
+            let subtitle = person.name_en || person.english_name || '';
+            if (currentLang !== 'ar') {
+                displayName = transliterateName(person.name || '', currentLang);
+                subtitle = person.name_en || transliterateName(person.name || '', 'en');
+            }
+            const ageText = currentLang === 'ar' ? 'العمر' :
+                            currentLang === 'en' ? 'Age' :
+                            currentLang === 'fr' ? 'Âge' : 'Edad';
+            const displayAge = person.age || (currentLang === 'ar' ? 'غير معروف' : 'Unknown');
+
             html += `
                 <div class="search-result-item p-2.5 hover:bg-red-950/40 border-b border-white/5 cursor-pointer flex justify-between items-center transition-all" onclick="selectSearchMartyr(${JSON.stringify(person).replace(/"/g, '&quot;')})">
                     <div class="text-right flex-1">
                         <div class="font-bold text-white">${displayName}</div>
-                        ${person.name_en || person.english_name ? `<div class="text-[10px] text-gray-400 font-mono">${person.name_en || person.english_name}</div>` : ''}
+                        ${subtitle ? `<div class="text-[10px] text-gray-400 font-mono">${subtitle}</div>` : ''}
                     </div>
-                    <span class="bg-red-600/20 text-red-400 text-[10px] px-2 py-0.5 rounded-full mr-2 whitespace-nowrap">العمر: ${displayAge}</span>
+                    <span class="bg-red-600/20 text-red-400 text-[10px] px-2 py-0.5 rounded-full mr-2 whitespace-nowrap">${ageText}: ${displayAge}</span>
                 </div>
             `;
         });
@@ -1227,6 +1376,104 @@ document.addEventListener('click', (e) => {
 // تحسينات أداء الـ Canvas (النظام المحدث)
 // ==========================================
 
+// Function to extract family name from Arabic name
+function extractFamilyName(fullName) {
+    if (!fullName) return "";
+    let clean = fullName.replace(/[^\u0621-\u064A\s]/g, "").trim();
+    let parts = clean.split(/\s+/);
+    if (parts.length < 2) return "";
+
+    // We can fetch the last word or handle compound last names like "ابو ..." or "ابن ..." or "آل ..."
+    let last = parts[parts.length - 1];
+    let secondLast = parts[parts.length - 2];
+
+    const prefixes = ["ابو", "أبو", "ابن", "آل", "ام", "أم", "عبد", "بن"];
+    if (prefixes.includes(secondLast) && parts.length >= 3) {
+        return secondLast + " " + last;
+    }
+    return last;
+}
+
+let familyCenters = {};
+
+function getFamilyCenterAndColor(familyName) {
+    if (!familyName) return null;
+    return familyCenters[familyName] || null;
+}
+
+function getGalaxyTarget(item, time) {
+    let fam = extractFamilyName(item.name);
+    let info = getFamilyCenterAndColor(fam);
+    if (!fam || fam.length <= 2 || !info) {
+        // Martyr doesn't belong to a large family galaxy, let them float as background stardust!
+        // Beautiful dimmed field stars in cool white or soft red
+        const isRed = (item.originalColor === '#ef4444');
+        return {
+            x: item.bgX,
+            y: item.bgY,
+            color: isRed ? 'rgba(239, 68, 68, 0.12)' : 'rgba(255, 255, 255, 0.12)'
+        };
+    }
+
+    let group = familyGroups[fam] || [];
+    let N = group.length;
+    let k = group.indexOf(item);
+    if (k === -1) k = 0;
+
+    let cX = info.xNorm * width;
+    let cY = info.yNorm * height;
+
+    // Calculate slow rotation based on time and family hash to give each galaxy its own rotation speed/dir
+    let rotationDir = (info.hue % 2 === 0) ? 1 : -1;
+    let rotationSpeed = 0.0002 + (info.hue % 4) * 0.0001;
+    let galaxyRotation = rotationDir * rotationSpeed * time;
+
+    // Choose 2 or 3 spiral arms based on family hash (replicating spectacular multi-arm spiral galaxies)
+    let armCount = (info.hue % 2 === 0) ? 2 : 3;
+    let armIndex = k % armCount;
+
+    // Logarithmic spiral geometry: r = a * e^(b * theta) with beautiful fluffy arm dispersion
+    let maxRadius = 15 + Math.sqrt(N) * 6;
+    let progress = k / N;
+    let theta = progress * Math.PI * 2.5; // tightness of the swirl
+
+    let baseRadius = 5 + Math.pow(progress, 0.7) * maxRadius;
+    let angle = theta + (armIndex * (Math.PI * 2 / armCount)) + galaxyRotation;
+
+    // Add fluffy arm dispersion (narrower near the center, wider at the ends of spiral arms)
+    let dispersion = (0.15 + progress * 0.3) * baseRadius;
+    let dispHashX = Math.sin(k * 13) * dispersion;
+    let dispHashY = Math.cos(k * 17) * dispersion;
+
+    let targetX = cX + Math.cos(angle) * baseRadius + dispHashX;
+    let targetY = cY + Math.sin(angle) * baseRadius + dispHashY;
+
+    // Beautiful celestial color scheme matching the provided reference image (pink-red stellar nurseries + cyan/blue/white stars)
+    let starColor = '#ffffff';
+    if (baseRadius < 18) {
+        // Dense glowing core of the galaxy: brilliant cyan-white
+        starColor = `hsl(180, 100%, 90%)`;
+    } else {
+        // Color variation along the spiral arms
+        let colorNoise = Math.abs(Math.sin(k * 31));
+        if (colorNoise < 0.22) {
+            // Bright pinkish-red H II gas nurseries (like NGC 604)
+            starColor = `hsl(342, 95%, 62%)`;
+        } else if (colorNoise < 0.55) {
+            // Hot young blue/cyan stars
+            starColor = `hsl(195, 95%, 72%)`;
+        } else if (colorNoise < 0.8) {
+            // Bright cool white stars
+            starColor = `hsl(180, 30%, 95%)`;
+        } else {
+            // Main galaxy hue
+            starColor = info.color;
+        }
+    }
+
+    return { x: targetX, y: targetY, color: starColor };
+}
+
 function initCanvasPoints(dataList) {
     width = window.innerWidth;
     height = window.innerHeight;
@@ -1235,18 +1482,22 @@ function initCanvasPoints(dataList) {
     const displayList = dataList.slice(0, 15000);
 
     // إنشاء العناصر وتوليد الإحداثيات الأساسية
-    points = displayList.map((item, index) => ({
-        id: item.id || index,
-        name: item.name_ar || item.name || `شهيد ${index+1}`,
-        name_en: item.name_en || item.english_name || '',
-        age: item.age || 'غير معروف',
-        image: item.image ? (item.image.startsWith('/') ? item.image.slice(1) : item.image) : '',
-        notes: item.notes || '',
-        x: item.x !== undefined ? item.x * width : Math.random() * width,
-        y: item.y !== undefined ? item.y * height : Math.random() * height,
-        radius: Math.random() * 1.5 + 1,
-        color: Math.random() > 0.3 ? '#ef4444' : '#ffffff'
-    }));
+    points = displayList.map((item, index) => {
+        let col = Math.random() > 0.3 ? '#ef4444' : '#ffffff';
+        return {
+            id: item.id || index,
+            name: item.name_ar || item.name || `شهيد ${index+1}`,
+            name_en: item.name_en || item.english_name || '',
+            age: item.age || 'غير معروف',
+            image: item.image ? (item.image.startsWith('/') ? item.image.slice(1) : item.image) : '',
+            notes: item.notes || '',
+            x: item.x !== undefined ? item.x * width : Math.random() * width,
+            y: item.y !== undefined ? item.y * height : Math.random() * height,
+            radius: Math.random() * 1.5 + 1,
+            color: col,
+            originalColor: col
+        };
+    });
 
     // 2. التخزين المؤقت للإحداثيات (Pre-calculation & Caching)
     recalculateCache();
@@ -1257,17 +1508,105 @@ function recalculateCache() {
     height = window.innerHeight;
 
     // تجميع الإحداثيات والخصائص في مصفوفة جاهزة لتقليل الحسابات المتكررة داخل حلقة الرسم
-    cachedItems = points.map(p => ({
-        ...p,
-        screenX: p.x,
-        screenY: p.y
-    }));
+    cachedItems = points.map(p => {
+        const existing = (typeof cachedItems !== 'undefined') ? cachedItems.find(item => item.id === p.id) : null;
+        const bgX = existing ? existing.bgX : p.x;
+        const bgY = existing ? existing.bgY : p.y;
+        const screenX = existing ? existing.screenX : p.x;
+        const screenY = existing ? existing.screenY : p.y;
+        return {
+            ...p,
+            bgX,
+            bgY,
+            screenX,
+            screenY,
+            renderedColor: existing ? (existing.renderedColor || p.color) : p.color
+        };
+    });
+
+    // Group family members using cachedItems which are actively updated/drifting on screen
+    familyGroups = {};
+    cachedItems.forEach(p => {
+        let fam = extractFamilyName(p.name);
+        if (fam && fam.length > 2) { // only group families with significant names
+            if (!familyGroups[fam]) {
+                familyGroups[fam] = [];
+            }
+            familyGroups[fam].push(p);
+        }
+    });
+
+    // حساب مراكز متباعدة بصرياً وموزعة رياضياً باستخدام الحلزون الذهبي (Golden Spiral) لتجنب التداخل
+    familyCenters = {};
+    const minFamilySize = 3; // العائلات التي تضم 3 شهداء أو أكثر تحصل على مجرة خاصة بها متباعدة
+
+    const sortedFamilies = Object.keys(familyGroups)
+        .filter(fam => familyGroups[fam].length >= minFamilySize)
+        .sort((a, b) => familyGroups[b].length - familyGroups[a].length);
+
+    sortedFamilies.forEach((famName, idx) => {
+        let hash = 0;
+        for (let i = 0; i < famName.length; i++) {
+            hash = famName.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const hue = Math.abs(hash % 360);
+        const color = `hsl(${hue}, 95%, 68%)`;
+
+        // توزيع حلزوني ذهبي متناسق لمنع التداخل تماماً وتباعد مثالي
+        const angle = idx * 2.39996;
+        // زيادة مسافة التباعد التدريجية للحفاظ على الفراغات الجمالية
+        const spacing = 0.05 + (idx * 0.001);
+        const radius = Math.sqrt(idx + 1) * spacing;
+
+        const aspect = width / height;
+        let xNorm = 0.5 + Math.cos(angle) * radius;
+        let yNorm = 0.5 + Math.sin(angle) * radius * (aspect < 1 ? 1 : 1 / aspect);
+
+        // الحفاظ على المجرات داخل حدود الشاشة المرئية بمساحة أمان جمالية
+        xNorm = Math.max(0.12, Math.min(0.88, xNorm));
+        yNorm = Math.max(0.12, Math.min(0.88, yNorm));
+
+        familyCenters[famName] = { xNorm, yNorm, color, hue };
+    });
+
     isDirty = true;
 }
 
 // تهيئة عناصر الـ Canvas وتطبيق التحسينات
 const canvas = document.getElementById('stars-canvas');
 const ctx = canvas ? canvas.getContext('2d') : null;
+
+// تهيئة متغيرات استبعاد النجوم من التولد خلف الحاويات الزجاجية (Star Culling)
+let culledRects = [];
+let lastCullUpdate = 0;
+function updateCulledRects() {
+    culledRects = [];
+    const selectors = ['.glass-panel', '.glass-card', '#header', '#bottom-bar', '#counter-box', '#visitor-counter-box', '.tlc-panel', '.modal-content'];
+    selectors.forEach(sel => {
+        const els = document.querySelectorAll(sel);
+        els.forEach(el => {
+            if (el && el.offsetWidth > 0 && el.offsetHeight > 0) {
+                const rect = el.getBoundingClientRect();
+                culledRects.push({
+                    left: rect.left,
+                    top: rect.top,
+                    right: rect.right,
+                    bottom: rect.bottom
+                });
+            }
+        });
+    });
+}
+
+function isInsideCulledRect(x, y) {
+    for (let i = 0; i < culledRects.length; i++) {
+        const rect = culledRects[i];
+        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+            return true;
+        }
+    }
+    return false;
+}
 
 // تهيئة كانفاس الشهب المتساقطة
 const shootingCanvas = document.getElementById('shooting-stars-canvas');
@@ -1276,10 +1615,10 @@ let shootingStars = [];
 
 function createShootingStar() {
     return {
-        x: Math.random() * width * 1.5,
-        y: Math.random() * height * 0.3,
-        length: Math.random() * 80 + 50,
-        speed: Math.random() * 0.4 + 0.3, // تساقط ببطء شديد للغاية
+        x: Math.random() * width * 1.2,
+        y: Math.random() * height * 0.4,
+        length: Math.random() * 90 + 60,
+        speed: Math.random() * 1.2 + 0.8, // تساقط انسيابي رائع وخلاب
         opacity: 0,
         fadeState: 'in'
     };
@@ -1289,8 +1628,8 @@ function updateAndDrawShootingStars() {
     if (!shootingCtx) return;
     shootingCtx.clearRect(0, 0, width, height);
 
-    // توليد شهاب جديد عشوائياً بمعدل منخفض جداً ليظهر ببطء وتباعد
-    if (shootingStars.length < 2 && Math.random() < 0.003) {
+    // توليد شهب جديدة عشوائياً بمعدل أعلى وأجمل بكثير لتزيين الخلفية السماوية الشاعرية
+    if (shootingStars.length < 5 && Math.random() < 0.02) {
         shootingStars.push(createShootingStar());
     }
 
@@ -1371,6 +1710,13 @@ function drawCanvas() {
         return;
     }
 
+    // تحديث أبعاد واستبعاد الأسطح الزجاجية بشكل دوري لتوفير الأداء (Star Culling)
+    const nowCull = Date.now();
+    if (nowCull - lastCullUpdate > 250) {
+        updateCulledRects();
+        lastCullUpdate = nowCull;
+    }
+
     ctx.clearRect(0, 0, width, height);
 
     const queryActive = currentSearchQuery.length >= 2;
@@ -1379,64 +1725,178 @@ function drawCanvas() {
         isDirty = true; // لتفعيل حركة نبض الكوكبة باستمرار
     }
 
-    // 4. تجميع خصائص السياق (State Batching) لشهداء اللون الأحمر (العاديين أو الباهتين)
-    ctx.fillStyle = queryActive ? 'rgba(239, 68, 68, 0.15)' : '#ef4444';
-    ctx.beginPath();
+    // تحديث الإحداثيات والانتقال السلس بين الخلفية الطبيعية والمجرات العائلية
+    const driftSpeed = 0.04;
+    const lerpSpeed = 0.06; // سرعة انتقال فيزيائي انسيابي رائع
+    const time = Date.now();
+
     for (let i = 0; i < cachedItems.length; i++) {
         const item = cachedItems[i];
 
-        // 3. استبعاد العناصر خارج إطار الرؤية (Viewport Culling)
-        if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
-            continue;
+        // تحديث حركة الخلفية السماوية المستمرة دائماً تحت السطح لعدم فقدان الإزاحة عند إلغاء التفعيل
+        item.bgX -= driftSpeed * (i % 2 === 0 ? 0.8 : 1.2);
+        item.bgY += driftSpeed * 0.4;
+
+        if (item.bgX < -20) item.bgX = width + 20;
+        if (item.bgX > width + 20) item.bgX = -20;
+        if (item.bgY < -20) item.bgY = height + 20;
+        if (item.bgY > height + 20) item.bgY = -20;
+
+        let targetX, targetY, targetColor;
+
+        if (corridorsActive) {
+            const galaxy = getGalaxyTarget(item, time);
+            targetX = galaxy.x;
+            targetY = galaxy.y;
+            targetColor = galaxy.color;
+        } else {
+            targetX = item.bgX;
+            targetY = item.bgY;
+            targetColor = item.originalColor || item.color;
         }
 
-        if (item.color === '#ef4444') {
-            let isMatch = false;
+        // تطبيق الاستيفاء الخطي (Lerp / Smooth Interpolation) للحركة البصرية الانسيابية
+        item.screenX += (targetX - item.screenX) * lerpSpeed;
+        item.screenY += (targetY - item.screenY) * lerpSpeed;
+        item.renderedColor = targetColor;
+    }
+
+    // رسم السحب الغازية ونوى المجرات (Nebula Cores) عند تفعيل المجرات العائلية لعائلات بها 3 شهداء أو أكثر
+    if (corridorsActive && typeof familyGroups !== 'undefined') {
+        Object.keys(familyGroups).forEach(famName => {
+            const members = familyGroups[famName];
+            if (members.length < 3) return;
+
+            const info = getFamilyCenterAndColor(famName);
+            if (!info) return;
+
+            const cX = info.xNorm * width;
+            const cY = info.yNorm * height;
+
+            // توهج دائري متعدد الطبقات يمثل نواة المجرة الساطعة والسدم المحيطة بها بدقة بالغة تطابق الصورة
+            const glowRadius = Math.min(90, 20 + members.length * 1.8);
+            const grad = ctx.createRadialGradient(cX, cY, 0, cX, cY, glowRadius);
+
+            // تدرج لوني غازي ناعم (أبيض متوهج في المركز -> تركواز ساطع -> شفاف تماماً في الأطراف)
+            grad.addColorStop(0, 'rgba(255, 255, 255, 0.40)');
+            grad.addColorStop(0.15, 'rgba(153, 246, 228, 0.22)'); // Teal-200 / Cyan soft glow
+            grad.addColorStop(0.45, 'rgba(13, 148, 136, 0.06)');  // Teal-600 outer nebula dust
+            grad.addColorStop(1, 'rgba(13, 148, 136, 0)');
+
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(cX, cY, glowRadius, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    }
+
+    // رسم النجوم بناءً على وضع العرض
+    if (corridorsActive) {
+        // تجميع النجوم حسب اللون لتقليل عمليات الـ State Fills وضمان أداء خارق 60 FPS
+        let colorBuckets = {};
+        for (let i = 0; i < cachedItems.length; i++) {
+            const item = cachedItems[i];
+
+            // استبعاد خارج إطار الرؤية (Viewport Culling) والأسطح الزجاجية (Star Culling)
+            if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
+                continue;
+            }
+            if (isInsideCulledRect(item.screenX, item.screenY)) {
+                continue;
+            }
+
+            let col = item.renderedColor || '#ef4444';
             if (queryActive) {
                 const nameAr = (item.name_ar || item.name || "").toLowerCase();
                 const nameEn = (item.name_en || item.english_name || "").toLowerCase();
                 const id = (item.id || "").toString();
-                if (nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery) || id.includes(currentSearchQuery)) {
-                    isMatch = true;
-                }
+                const isMatch = nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery) || id.includes(currentSearchQuery);
+                col = isMatch ? col : 'rgba(255, 255, 255, 0.08)';
             }
 
-            if (!isMatch) {
+            if (!colorBuckets[col]) {
+                colorBuckets[col] = [];
+            }
+            colorBuckets[col].push(item);
+        }
+
+        // رسم كل دلو لوني في استدعاء Batch واحد
+        Object.keys(colorBuckets).forEach(col => {
+            ctx.fillStyle = col;
+            ctx.beginPath();
+            const items = colorBuckets[col];
+            for (let j = 0; j < items.length; j++) {
+                const item = items[j];
                 ctx.moveTo(item.screenX + item.radius, item.screenY);
                 ctx.arc(item.screenX, item.screenY, item.radius, 0, Math.PI * 2);
             }
-        }
-    }
-    ctx.fill();
+            ctx.fill();
+        });
+    } else {
+        // تجميع خصائص السياق (State Batching) لشهداء اللون الأحمر (العاديين أو الباهتين)
+        ctx.fillStyle = queryActive ? 'rgba(239, 68, 68, 0.15)' : '#ef4444';
+        ctx.beginPath();
+        for (let i = 0; i < cachedItems.length; i++) {
+            const item = cachedItems[i];
 
-    // 4. تجميع خصائص السياق (State Batching) لشهداء اللون الأبيض (العاديين أو الباهتين)
-    ctx.fillStyle = queryActive ? 'rgba(255, 255, 255, 0.15)' : '#ffffff';
-    ctx.beginPath();
-    for (let i = 0; i < cachedItems.length; i++) {
-        const item = cachedItems[i];
+            if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
+                continue;
+            }
+            if (isInsideCulledRect(item.screenX, item.screenY)) {
+                continue;
+            }
 
-        if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
-            continue;
-        }
+            if (item.color === '#ef4444') {
+                let isMatch = false;
+                if (queryActive) {
+                    const nameAr = (item.name_ar || item.name || "").toLowerCase();
+                    const nameEn = (item.name_en || item.english_name || "").toLowerCase();
+                    const id = (item.id || "").toString();
+                    if (nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery) || id.includes(currentSearchQuery)) {
+                        isMatch = true;
+                    }
+                }
 
-        if (item.color === '#ffffff') {
-            let isMatch = false;
-            if (queryActive) {
-                const nameAr = (item.name_ar || item.name || "").toLowerCase();
-                const nameEn = (item.name_en || item.english_name || "").toLowerCase();
-                const id = (item.id || "").toString();
-                if (nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery) || id.includes(currentSearchQuery)) {
-                    isMatch = true;
+                if (!isMatch) {
+                    ctx.moveTo(item.screenX + item.radius, item.screenY);
+                    ctx.arc(item.screenX, item.screenY, item.radius, 0, Math.PI * 2);
                 }
             }
+        }
+        ctx.fill();
 
-            if (!isMatch) {
-                ctx.moveTo(item.screenX + item.radius, item.screenY);
-                ctx.arc(item.screenX, item.screenY, item.radius, 0, Math.PI * 2);
+        // تجميع خصائص السياق (State Batching) لشهداء اللون الأبيض (العاديين أو الباهتين)
+        ctx.fillStyle = queryActive ? 'rgba(255, 255, 255, 0.15)' : '#ffffff';
+        ctx.beginPath();
+        for (let i = 0; i < cachedItems.length; i++) {
+            const item = cachedItems[i];
+
+            if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
+                continue;
+            }
+            if (isInsideCulledRect(item.screenX, item.screenY)) {
+                continue;
+            }
+
+            if (item.color === '#ffffff') {
+                let isMatch = false;
+                if (queryActive) {
+                    const nameAr = (item.name_ar || item.name || "").toLowerCase();
+                    const nameEn = (item.name_en || item.english_name || "").toLowerCase();
+                    const id = (item.id || "").toString();
+                    if (nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery) || id.includes(currentSearchQuery)) {
+                        isMatch = true;
+                    }
+                }
+
+                if (!isMatch) {
+                    ctx.moveTo(item.screenX + item.radius, item.screenY);
+                    ctx.arc(item.screenX, item.screenY, item.radius, 0, Math.PI * 2);
+                }
             }
         }
+        ctx.fill();
     }
-    ctx.fill();
 
     // رسم النجوم المطابقة للبحث ككوكبة مضيئة بارزة ومتحركة
     if (queryActive) {
@@ -1444,6 +1904,9 @@ function drawCanvas() {
             const item = cachedItems[i];
 
             if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
+                continue;
+            }
+            if (isInsideCulledRect(item.screenX, item.screenY)) {
                 continue;
             }
 
@@ -1467,16 +1930,43 @@ function drawCanvas() {
         }
     }
 
+
+    // Spot Star targeted highlighting focused on spotlightStarId
+    if (spotlightStarId) {
+        const target = cachedItems.find(p => p.id == spotlightStarId);
+        if (target) {
+            ctx.strokeStyle = '#ef4444';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(target.screenX, target.screenY, 15 + Math.sin(Date.now() / 100) * 4, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.beginPath();
+            ctx.arc(target.screenX, target.screenY, 25 + Math.sin(Date.now() / 80) * 6, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+    }
+
     // فحص التلميح وتحديد ما إذا كان هناك تفاعل مع الماوس
     let hoveredMartyr = null;
     for (let i = 0; i < cachedItems.length; i++) {
         const item = cachedItems[i];
+        if (isInsideCulledRect(item.screenX, item.screenY)) {
+            continue;
+        }
         const dx = mouseX - item.screenX;
         const dy = mouseY - item.screenY;
         if (dx * dx + dy * dy < 100) { // مسافة تقريبية للتفاعل (10 بكسل)
             hoveredMartyr = item;
             break;
         }
+    }
+
+    if (hoveredMartyr) {
+        hoveredFamilyName = extractFamilyName(hoveredMartyr.name);
+    } else {
+        hoveredFamilyName = null;
     }
 
     const tooltip = document.getElementById('star-tooltip');
@@ -1496,19 +1986,6 @@ function drawCanvas() {
         tooltip.style.top = (mouseY + 15) + 'px';
     } else {
         tooltip.style.display = 'none';
-    }
-
-    // تحديث الإحداثيات لحركة النجوم البطيئة للغاية في الخلفية السماوية
-    const driftSpeed = 0.04;
-    for (let i = 0; i < cachedItems.length; i++) {
-        const item = cachedItems[i];
-        item.screenX -= driftSpeed * (i % 2 === 0 ? 0.8 : 1.2);
-        item.screenY += driftSpeed * 0.4;
-
-        if (item.screenX < -20) item.screenX = width + 20;
-        if (item.screenX > width + 20) item.screenX = -20;
-        if (item.screenY < -20) item.screenY = height + 20;
-        if (item.screenY > height + 20) item.screenY = -20;
     }
 
     // تحديث ورسم الشهب المتساقطة
@@ -1697,6 +2174,31 @@ function applyApprovedSubmissions(targetList) {
 
     return result;
 }
+function spotFamilyStar(starId) {
+    // Clear any previous spotlight
+    if (spotlightTimer) {
+        clearTimeout(spotlightTimer);
+    }
+
+    spotlightStarId = starId;
+    isDirty = true;
+
+    // Close the modal so the user can see the animated focal target in the sky
+    const modal = document.getElementById('martyr-modal-overlay');
+    if (modal) {
+        modal.style.display = 'none';
+        window.speechSynthesis.cancel();
+        isMartyrSpeaking = false;
+    }
+
+    // Set a timer to automatically fade out the target focus rings after 10 seconds
+    spotlightTimer = setTimeout(() => {
+        spotlightStarId = null;
+        isDirty = true;
+    }, 10000);
+}
+window.spotFamilyStar = spotFamilyStar;
+
 window.applyApprovedSubmissions = applyApprovedSubmissions;
 
 function openAdminReviewPanel() {
@@ -1958,6 +2460,39 @@ function openMartyrModal(person) {
         photoEl.innerHTML = `<span id="modal-photo-text">${translations[currentLang].modalPhotoText}</span>`;
     }
 
+    // Populate Family Corridors section
+    const famContainer = document.getElementById('martyr-modal-family-container');
+    const famList = document.getElementById('martyr-modal-family-list');
+    const famTitle = document.getElementById('family-container-title');
+
+    if (famContainer && famList && typeof familyGroups !== 'undefined') {
+        const famName = extractFamilyName(person.name);
+        const members = familyGroups[famName] || [];
+        const filteredMembers = members.filter(m => String(m.id) !== String(person.id));
+
+        if (corridorsActive && filteredMembers.length > 0) {
+            famTitle.innerText = translations[currentLang].familyTitle || "أفراد العائلة الموثقون:";
+            famContainer.classList.remove('hidden');
+
+            famList.innerHTML = filteredMembers.map(m => {
+                let displayName = m.name;
+                if (currentLang !== 'ar') {
+                    displayName = transliterateName(m.name, currentLang);
+                }
+                const spotText = translations[currentLang].spotBtn || "🎯 رصد النجم";
+                return `
+                    <div class="flex justify-between items-center bg-black/40 border border-white/5 p-1.5 rounded-lg">
+                        <span>${displayName} (${m.age || 'غير معروف'})</span>
+                        <button onclick="spotFamilyStar('${m.id}')" class="btn-main text-[9px] px-2 py-0.5 bg-red-600/30 border border-red-500/40 text-red-300 rounded-full">${spotText}</button>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            famContainer.classList.add('hidden');
+            famList.innerHTML = '';
+        }
+    }
+
     // Dynamic injection of the premium "Edit Martyr" button in the modal
     const candleBtn = document.getElementById('tribute-candle-btn');
     if (candleBtn && candleBtn.parentElement) {
@@ -2047,6 +2582,97 @@ const multilingualBios = {
         es: "Basil al-Araj fue un escritor intelectual, activista y farmacéutico. Defendió la resistencia cultural y murió como mártir tras una persecución de meses."
     }
 };
+
+const cityTranslations = {
+    "غزة": { ar: "غزة", en: "Gaza", fr: "Gaza", es: "Gaza" },
+    "خان يونس": { ar: "خان يونس", en: "Khan Younis", fr: "Khan Younès", es: "Jan Yunis" },
+    "رفح": { ar: "رفح", en: "Rafah", fr: "Rafah", es: "Rafah" },
+    "جباليا": { ar: "جباليا", en: "Jabalia", fr: "Jabalia", es: "Jabalya" },
+    "دير البلح": { ar: "دير البلح", en: "Deir al-Balah", fr: "Deir el-Balah", es: "Deir al-Balah" },
+    "شمال غزة": { ar: "شمال غزة", en: "North Gaza", fr: "Nord de Gaza", es: "Norte de Gaza" },
+    "مخيم جباليا": { ar: "مخيم جباليا", en: "Jabalia Camp", fr: "Camp de Jabalia", es: "Campamento de Jabalia" },
+    "جنين": { ar: "جنين", en: "Jenin", fr: "Jénine", es: "Yenín" },
+    "نابلس": { ar: "نابلس", en: "Nablus", fr: "Naplouse", es: "Nablus" },
+    "الخليل": { ar: "الخليل", en: "Hebron", fr: "Hébron", es: "Hebrón" },
+    "رام الله": { ar: "رام الله", en: "Ramallah", fr: "Ramallah", es: "Ramala" },
+    "القدس": { ar: "القدس", en: "Jerusalem", fr: "Jérusalem", es: "Jerusalén" },
+    "بيت لحم": { ar: "بيت لحم", en: "Bethlehem", fr: "Bethléem", es: "Belén" },
+    "طولكرم": { ar: "طولكرم", en: "Tulkarm", fr: "Tulkarem", es: "Tulkarem" },
+    "قلقيلية": { ar: "قلقيلية", en: "Qalqilya", fr: "Qalqilya", es: "Qalqilya" },
+    "طوباس": { ar: "طوباس", en: "Tubas", fr: "Tubas", es: "Tubas" },
+    "سلفيت": { ar: "سلفيت", en: "Salfit", fr: "Salfit", es: "Salfit" },
+    "أريحا": { ar: "أريحا", en: "Jericho", fr: "Jéricho", es: "Jericó" }
+};
+
+function transliterateName(arabicName, lang) {
+    if (!arabicName) return "";
+
+    // Common dictionary of full name overrides
+    const overrides = {
+        "باسل الأعرج": { en: "Basil al-Araj", fr: "Basil al-Araj", es: "Basil al-Araj" },
+        "شيرين أبو عاقلة": { en: "Shireen Abu Akleh", fr: "Shireen Abu Akleh", es: "Shireen Abu Akleh" },
+        "ياسر عرفات": { en: "Yasser Arafat", fr: "Yasser Arafat", es: "Yasser Arafat" },
+        "أحمد ياسين": { en: "Ahmed Yassin", fr: "Ahmed Yassin", es: "Ahmed Yassin" }
+    };
+
+    if (overrides[arabicName] && overrides[arabicName][lang]) {
+        return overrides[arabicName][lang];
+    }
+
+    const nameMap = {
+        "محمد": "Muhammad", "احمد": "Ahmad", "أحمد": "Ahmad", "محمود": "Mahmoud", "علي": "Ali", "على": "Ali",
+        "حسن": "Hassan", "حسين": "Hussein", "يوسف": "Youssef", "ابراهيم": "Ibrahim", "إبراهيم": "Ibrahim",
+        "عبد": "Abd", "الله": "Allah", "الرحمن": "Rahman", "الرحيم": "Rahim", "الملك": "Malik",
+        "خالد": "Khaled", "مصطفى": "Mustafa", "سعيد": "Saeed", "عمر": "Omar", "سليمان": "Soliman",
+        "فاطمة": "Fatima", "عائشة": "Aisha", "مريم": "Maryam", "زينب": "Zainab", "رانية": "Rania",
+        "جمال": "Jamal", "نبيل": "Nabil", "سليم": "Salim", "سمير": "Samir", "أمين": "Amin",
+        "رائد": "Raed", "شادي": "Shadi", "ماهر": "Maher", "أيمن": "Ayman", "تيسير": "Taysir",
+        "صالح": "Saleh", "ياسر": "Yasser", "سائد": "Saed", "طه": "Taha", "يحيى": "Yahya",
+        "زكريا": "Zakaria", "موسى": "Mousa", "عيسى": "Isa", "جابر": "Jaber", "سعد": "Saad",
+        "مسعود": "Masoud", "طارق": "Tariq", "زياد": "Ziad", "بهاء": "Bahaa", "ضياء": "Diyaa",
+        "كريم": "Karim", "رمزي": "Ramzi", "مروان": "Marwan", "سامي": "Sami", "سامر": "Samer",
+        "راني": "Rani", "عادل": "Adel", "عماد": "Imad", "عصام": "Essam", "حاتم": "Hatem",
+        "رشاد": "Rashad", "أنور": "Anwar", "أكرم": "Akram", "أمجد": "Amjad", "أشرف": "Ashraf",
+        "هاني": "Hani", "هشام": "Hisham", "منير": "Mounir", "وجيه": "Wajih", "فريد": "Farid",
+        "رئيسة": "Raeesa", "صابر": "Saber", "نعيم": "Naeem", "شريف": "Sherif", "فتحي": "Fathi"
+    };
+
+    const words = arabicName.split(/\s+/);
+    const translatedWords = words.map(word => {
+        const cleanWord = word.replace(/[^\u0621-\u064A]/g, "");
+        if (nameMap[cleanWord]) {
+            return nameMap[cleanWord];
+        }
+
+        let latin = "";
+        const chars = {
+            'ا': 'a', 'أ': 'a', 'إ': 'i', 'آ': 'a', 'ب': 'b', 'ت': 't', 'ث': 'th', 'ج': 'j',
+            'ح': 'h', 'خ': 'kh', 'د': 'd', 'ذ': 'dh', 'ر': 'r', 'ز': 'z', 'س': 's', 'ش': 'sh',
+            'ص': 's', 'ض': 'd', 'ط': 't', 'ظ': 'z', 'ع': 'a', 'غ': 'gh', 'ف': 'f', 'ق': 'q',
+            'ك': 'k', 'ل': 'l', 'م': 'm', 'ن': 'n', 'ه': 'h', 'و': 'w', 'ي': 'y', 'ى': 'a',
+            'ة': 'h', 'ء': 'a', 'ؤ': 'u', 'ئ': 'i'
+        };
+        for (let i = 0; i < cleanWord.length; i++) {
+            const c = cleanWord[i];
+            latin += chars[c] || c;
+        }
+        if (!latin) return word;
+        return latin.charAt(0).toUpperCase() + latin.slice(1);
+    });
+
+    return translatedWords.join(" ");
+}
+window.transliterateName = transliterateName;
+
+function translateCity(arabicCity, lang) {
+    if (!arabicCity) return "";
+    const cleanCity = arabicCity.trim();
+    if (cityTranslations[cleanCity]) {
+        return cityTranslations[cleanCity][lang] || cityTranslations[cleanCity].en;
+    }
+    return transliterateName(arabicCity, lang);
+}
+window.translateCity = translateCity;
 
 function translateContentInstantly(bioText, name, destLang) {
     const targetLang = destLang || currentLang;

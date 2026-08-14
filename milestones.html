@@ -285,18 +285,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="flex items-center gap-1.5">
 <h1 class="text-sm font-black text-white drop-shadow-md"><span class="text-red-500" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
 
-<button id="theme-toggle-btn" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 26px; height: 26px; border-radius: 50%; background: rgba(220, 38, 38, 0.2); border-color: rgba(239, 68, 68, 0.5);">
-    <svg id="theme-icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
-        <path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/>
-        <path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>
-    </svg>
-</button>
+
 </div>
 
 <div class="w-auto relative flex items-center gap-1">
 <input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد..." oninput="searchMartyrByName(this.value)">
-<button id="voice-search-btn" onclick="startVoiceSearch('search-input', (val) => searchMartyrByName(val))" class="btn-main px-2 py-2 text-xs rounded-xl" title="البحث الصوتي">🎤</button>
+<button id="voice-search-btn" onclick="startVoiceSearch('search-input', (val) => searchMartyrByName(val))" class="btn-main flex items-center justify-center shadow-lg" title="البحث الصوتي">
+    <img src="images/Capture9.PNG" alt="Voice Search">
+</button>
 <div id="search-results-dropdown" class="absolute left-0 right-0 mt-2 max-h-80 overflow-y-auto bg-[#0a0a0af2] border border-red-500/30 rounded-xl shadow-2xl hidden z-[1001] text-right font-['Cairo'] text-xs"></div>
 </div>
 <div class="tabs-wrapper no-scrollbar interactive">
@@ -311,12 +307,42 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 </div>
 <div class="relative inline-block text-right flex items-center gap-2">
-<select id="language-select" onchange="changeLanguage(this.value)" class="bg-black/60 border border-white/20 text-white text-[11px] rounded-full px-2 py-0.5 outline-none cursor-pointer font-['Cairo']">
-<option value="ar">🇸🇦 العربية</option>
-<option value="en">🇬🇧 English</option>
-<option value="fr">🇫🇷 Français</option>
-<option value="es">🇪🇸 Español</option>
-</select>
+<!-- زر تبديل الوضع (ليلي/نهاري) -->
+<button id="theme-toggle-btn" class="btn-main flex items-center justify-center shadow-lg hover:scale-105 transition-transform" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري">
+    <svg id="theme-icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
+        <path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/>
+        <path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>
+    </svg>
+</button>
+
+<div class="relative inline-block text-right" id="language-dropdown-container">
+  <button onclick="toggleLanguageDropdown(event)" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" title="Language" style="width: 26px; height: 26px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15);">
+      <svg class="text-white" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+      </svg>
+  </button>
+  <div id="language-dropdown-menu" class="absolute right-0 mt-2 w-32 bg-[#1e1f22]/95 border border-white/10 rounded-xl shadow-2xl hidden z-[1002] py-1 text-left font-['Cairo'] text-xs">
+      <button onclick="changeLanguage('ar'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-2 text-gray-200 hover:bg-white/10 transition-all font-bold">
+          <span>العربية</span>
+          <span class="active-check-lang text-red-500 hidden" id="check-ar">✓</span>
+      </button>
+      <button onclick="changeLanguage('en'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-2 text-gray-200 hover:bg-white/10 transition-all font-bold">
+          <span>English</span>
+          <span class="active-check-lang text-red-500 hidden" id="check-en">✓</span>
+      </button>
+      <button onclick="changeLanguage('es'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-2 text-gray-200 hover:bg-white/10 transition-all font-bold">
+          <span>Español</span>
+          <span class="active-check-lang text-red-500 hidden" id="check-es">✓</span>
+      </button>
+      <button onclick="changeLanguage('fr'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-2 text-gray-200 hover:bg-white/10 transition-all font-bold">
+          <span>Français</span>
+          <span class="active-check-lang text-red-500 hidden" id="check-fr">✓</span>
+      </button>
+  </div>
+</div>
 
 <div id="visitor-counter-box" class="interactive font-['Cairo'] flex items-center justify-center shadow-md" title="عدد الزوار">
     <a href="https://www.hitwebcounter.com" target="_blank" title="Web Counter" style="display: flex; align-items: center; text-decoration: none;">
@@ -329,29 +355,60 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 </div>
 </header>
-<div id="bottom-bar">
-<div id="verse-container" class="interactive glass-panel p-3 px-6 rounded-lg border-r-4 border-r-red-600 order-2 md:order-1 hidden md:block bg-black/80 max-w-lg">
-<p id="verse-text" class="font-amiri text-gray-200 text-lg font-bold leading-relaxed text-center">"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ"</p>
+<div id="bottom-bar" class="w-full flex flex-col items-center gap-3 p-4 pointer-events-none fixed bottom-0 left-0 right-0 z-[1000] justify-end">
+
+
+  <!-- شريط الأزرار والروابط السفلي المطابق تماماً لـ Capture3.PNG -->
+  <div class="interactive glass-panel p-2 px-4 rounded-full flex items-center gap-3 flex-wrap justify-center bg-black/90 font-['Cairo'] text-xs border border-white/10 shadow-2xl pointer-events-auto max-w-full">
+      <!-- مساهمة وتصحيح بيانات -->
+      <button onclick="openCrowdsourceModal()" class="btn-main font-bold text-[11px] bg-transparent border border-red-500 text-red-400 px-3.5 py-1.5 rounded-full hover:bg-red-500 hover:text-white transition-all duration-300">
+          ✍️ <span id="btn-contrib-text">مساهمة وتصحيح بيانات</span>
+      </button>
+
+      <!-- إدعمنا لنستمر -->
+      <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-[11px] bg-red-800 border-none text-white px-3.5 py-1.5 rounded-full hover:bg-red-900 transition-all duration-300 shadow-md shadow-red-900/30">
+          ❤️ إدعمنا لنستمر
+      </a>
+
+      <!-- تطوير: عبد الهادي -->
+      <span id="dev-text" class="text-[11px] text-gray-300 font-bold px-1">تطوير: عبد الهادي</span>
+
+      <!-- فاصل عمودي -->
+      <span class="text-white/20">|</span>
+
+      <!-- الروابط الاجتماعية الدائرية -->
+      <div class="social-links flex gap-2 items-center">
+          <a href="https://www.facebook.com/abdelhadilrs" target="_blank" class="w-6 h-6 flex items-center justify-center rounded-full bg-transparent border border-white/30 text-white hover:bg-blue-600 hover:border-blue-500 hover:shadow-[0_0_8px_rgba(59,130,246,0.5)] transition-all text-[11px] flex" style="align-items: center; justify-content: center;" title="Facebook">
+              <i class="fa-brands fa-facebook-f"></i>
+          </a>
+          <a href="https://www.instagram.com/abdelhadilrs" target="_blank" class="w-6 h-6 flex items-center justify-center rounded-full bg-transparent border border-white/30 text-white hover:bg-gradient-to-tr hover:from-yellow-500 hover:via-red-500 hover:to-purple-600 hover:border-red-400 hover:shadow-[0_0_8px_rgba(239,68,68,0.5)] transition-all text-[11px] flex" style="align-items: center; justify-content: center;" title="Instagram">
+              <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a href="https://x.com/larrasabdelhadi" target="_blank" class="w-6 h-6 flex items-center justify-center rounded-full bg-transparent border border-white/30 text-white hover:bg-white hover:text-black hover:border-white hover:shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all text-[11px] flex" style="align-items: center; justify-content: center;" title="X">
+              <i class="fa-brands fa-x-twitter"></i>
+          </a>
+      </div>
+
+      <!-- فاصل عمودي -->
+      <span class="text-white/20">|</span>
+
+      <!-- مشاركة المنصة -->
+      <button onclick="shareSite()" class="share-btn flex gap-1.5 items-center bg-transparent border border-white text-white font-bold text-[11px] px-3.5 py-1.5 rounded-full hover:bg-white hover:text-black transition-all duration-300">
+          <i class="fa-solid fa-share-nodes"></i> <span id="share-btn-text">مشاركة المنصة</span>
+      </button>
+  </div>
 </div>
 
-<div class="interactive glass-panel p-2 px-3 rounded-lg flex items-center gap-2.5 flex-wrap justify-center order-4 md:order-3 bg-black/80 font-['Cairo']" style="margin-right: auto;">
-<button onclick="openCrowdsourceModal()" class="btn-main font-bold text-[11px] bg-red-600/20 border border-red-500/40 text-red-400 px-2.5 py-1">✍️ مساهمة وتصحيح بيانات</button>
-<a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-[11px] bg-red-900 border-red-500 text-white px-2.5 py-1">❤️ إدعمنا لنستمر</a>
-<span id="dev-text" class="text-[11px] text-gray-400 font-bold border-l border-white/20 pl-3">تطوير: عبد الهادي</span>
-<div class="social-links flex gap-1.5">
-<a href="https://www.facebook.com/abdelhadilrs" target="_blank" class="text-[11px] px-2.5 py-1">Facebook</a>
-<a href="https://www.instagram.com/abdelhadilrs" target="_blank" class="text-[11px] px-2.5 py-1">Instagram</a>
-<a href="https://x.com/larrasabdelhadi" target="_blank" class="text-[11px] px-2.5 py-1">X</a>
-<button onclick="shareSite()" class="share-btn flex gap-1 items-center bg-black border-white font-bold text-[11px] px-2.5 py-1">
-<span id="share-btn-text">مشاركة المنصة</span>
-</button>
-</div>
-</div>
-
-<div id="counter-box" class="interactive order-3 md:order-4 font-['Cairo'] flex items-center justify-center gap-2 bg-black/60 border border-white/10 rounded-full px-4 py-1.5 transition-all shadow-md">
+<!-- عداد توثيق الشهداء العائم لتفادي التداخل -->
+<div id="counter-box" class="interactive font-['Cairo'] flex items-center justify-center gap-2 bg-black/80 border border-white/10 rounded-full px-4 py-1.5 transition-all shadow-lg fixed bottom-20 left-4 z-[999] text-xs">
     <span id="martyrs-label" class="text-[11px] text-red-400 font-bold whitespace-nowrap">شهيداً وثّقت أسماؤهم:</span>
     <span id="number" class="text-sm font-black text-white">60,198</span>
 </div>
+
+<!-- الآية القرآنية الشريفة المصورة المترجمة - في الزاوية اليمنى السفلية بتصميم متناسق مدمج -->
+<div id="verse-container" class="fixed bottom-4 right-4 z-[1001] max-w-[120px] sm:max-w-[150px] md:max-w-[180px] pointer-events-auto flex flex-col items-end gap-1 select-none">
+    <img src="images/wala_tahsban.png" alt="ولا تحسبن" id="verse-img" class="w-full h-auto object-contain transition-all duration-300">
+    <p id="verse-text" class="text-[9px] sm:text-[10px] text-gray-400 font-medium font-['Cairo'] text-right leading-tight max-w-[120px] sm:max-w-[150px] md:max-w-[180px] hidden"></p>
 </div>
 </div>
 
