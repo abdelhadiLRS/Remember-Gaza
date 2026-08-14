@@ -432,11 +432,18 @@ const milestoneCinematicData = [
 // ----------------------------------------------------
 window.toggleLanguageDropdown = function(e) {
     if (e) e.stopPropagation();
-    const menu = document.getElementById('language-dropdown-menu');
-    if (menu) menu.classList.toggle('hidden');
+    if (window.i18n && typeof window.i18n.renderLanguageModal === 'function') {
+        window.i18n.renderLanguageModal();
+    } else {
+        const menu = document.getElementById('language-dropdown-menu');
+        if (menu) menu.classList.toggle('hidden');
+    }
 };
 
 window.closeLanguageDropdown = function() {
+    if (window.i18n && typeof window.i18n.closeLanguageModal === 'function') {
+        window.i18n.closeLanguageModal();
+    }
     const menu = document.getElementById('language-dropdown-menu');
     if (menu) menu.classList.add('hidden');
 };
@@ -446,15 +453,18 @@ document.addEventListener('click', () => {
 });
 
 function changeLanguage(langCode) {
+    if (window.i18n && typeof window.i18n.setLanguage === 'function') {
+        window.i18n.setLanguage(langCode);
+    }
     if (!translations[langCode]) langCode = 'ar';
     currentLang = langCode;
     localStorage.setItem('site_lang', langCode);
-    const t = translations[currentLang];
+    const t = translations[currentLang] || translations['ar'];
 
     const htmlRoot = document.getElementById('html-root');
     if (htmlRoot) {
         htmlRoot.lang = currentLang;
-        htmlRoot.dir = (currentLang === 'ar') ? 'rtl' : 'ltr';
+        htmlRoot.dir = (['ar', 'ur', 'fa'].includes(currentLang)) ? 'rtl' : 'ltr';
     }
 
     // Update custom dropdown checkmarks (matching checkmark style in Capture1.PNG)
@@ -1289,18 +1299,13 @@ function fetchAndRenderData(url) {
             initCanvasPoints(gazaSouls);
             isDirty = true;
         })
-        .fail(() => {
-            // بيانات تجريبية في حال تعذر جلب الملف لضمان استمرار عمل الـ Canvas
-            gazaSouls = Array.from({length: 1500}, (_, i) => ({
-                id: i + 1,
-                name: `شهيد رقم ${i + 1}`,
-                age: Math.floor(Math.random() * 70) + 1,
-                x: Math.random(),
-                y: Math.random()
-            }));
-            document.getElementById('number').innerText = gazaSouls.length.toLocaleString();
-            initCanvasPoints(gazaSouls);
-            isDirty = true;
+        .fail((jqxhr, textStatus, error) => {
+            console.error('Failed to load archive data from:', url, error);
+            const numEl = document.getElementById('number');
+            if (numEl) numEl.innerText = '0';
+            if (window.dataLoader) {
+              window.dataLoader.renderErrorUI('canvas-layer', error || 'Failed to load archive data', () => fetchAndRenderData(url));
+            }
         });
 }
 
@@ -1317,32 +1322,34 @@ function searchMartyrByName(query) {
         return;
     }
 
-    // البحث في البيانات النشطة
+    // البحث في البيانات النشطة عبر جميع الحقول
     const matches = gazaSouls.filter(person => {
         const nameAr = (person.name_ar || person.name || "").toLowerCase();
-        const nameEn = (person.name_en || person.english_name || "").toLowerCase();
-        const id = (person.id || "").toString();
-        return nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery) || id.includes(currentSearchQuery);
+        const nameEn = (person.en_name || person.name_en || person.english_name || "").toLowerCase();
+        const id = (person.id || person.id_number || "").toString().toLowerCase();
+        const city = (person.city || person.district || person.governorate || "").toLowerCase();
+        const category = (person.category || person.profession || person.role || "").toLowerCase();
+        return nameAr.includes(currentSearchQuery) ||
+               nameEn.includes(currentSearchQuery) ||
+               id.includes(currentSearchQuery) ||
+               city.includes(currentSearchQuery) ||
+               category.includes(currentSearchQuery);
     }).slice(0, 15);
 
     if (matches.length === 0) {
-        const noResultsText = currentLang === 'ar' ? 'لا توجد نتائج مطابقة' :
-                              currentLang === 'en' ? 'No matching results found' :
-                              currentLang === 'fr' ? 'Aucun résultat' : 'No hay resultados';
-        dropdown.innerHTML = `<div class="p-3 text-center text-gray-500">${noResultsText}</div>`;
+        const noResultsText = window.i18n ? window.i18n.t('no_results', 'لم يتم العثور على نتائج مطابقة') : 'لم يتم العثور على نتائج مطابقة';
+        dropdown.innerHTML = `<div class="p-3 text-center text-gray-400 text-sm font-semibold">${noResultsText}</div>`;
     } else {
         let html = '';
         matches.forEach(person => {
-            let displayName = person.name_ar || person.name || person.name_en || 'شهيد مجهول';
-            let subtitle = person.name_en || person.english_name || '';
-            if (currentLang !== 'ar') {
-                displayName = transliterateName(person.name || '', currentLang);
-                subtitle = person.name_en || transliterateName(person.name || '', 'en');
+            let displayName = person.name || person.name_ar || person.en_name || 'شهيد مجهول';
+            let subtitle = person.en_name || person.name_en || person.english_name || '';
+            const activeLang = window.i18n ? window.i18n.currentLang : 'ar';
+            if (activeLang !== 'ar' && typeof transliterateName === 'function') {
+                displayName = subtitle || transliterateName(person.name || '', activeLang);
             }
-            const ageText = currentLang === 'ar' ? 'العمر' :
-                            currentLang === 'en' ? 'Age' :
-                            currentLang === 'fr' ? 'Âge' : 'Edad';
-            const displayAge = person.age || (currentLang === 'ar' ? 'غير معروف' : 'Unknown');
+            const ageLabel = window.i18n ? window.i18n.t('age', 'العمر') : 'العمر';
+            const displayAge = person.age !== undefined && person.age !== null ? person.age : (window.i18n ? window.i18n.t('unknown_age', 'غير محدد') : 'غير محدد');
 
             html += `
                 <div class="search-result-item p-2.5 hover:bg-red-950/40 border-b border-white/5 cursor-pointer flex justify-between items-center transition-all" onclick="selectSearchMartyr(${JSON.stringify(person).replace(/"/g, '&quot;')})">
@@ -1350,7 +1357,7 @@ function searchMartyrByName(query) {
                         <div class="font-bold text-white">${displayName}</div>
                         ${subtitle ? `<div class="text-[10px] text-gray-400 font-mono">${subtitle}</div>` : ''}
                     </div>
-                    <span class="bg-red-600/20 text-red-400 text-[10px] px-2 py-0.5 rounded-full mr-2 whitespace-nowrap">${ageText}: ${displayAge}</span>
+                    <span class="bg-red-600/20 text-red-400 text-[10px] px-2 py-0.5 rounded-full mr-2 whitespace-nowrap">${ageLabel}: ${displayAge}</span>
                 </div>
             `;
         });

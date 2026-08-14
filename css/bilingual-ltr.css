@@ -38,3 +38,41 @@
     right: unset;
 }
 
+
+/* Dynamic LTR / RTL Adaptive Layout Adjustments */
+html[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}
+
+html[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir="ltr"] .text-right {
+  text-align: left !important;
+}
+
+html[dir="ltr"] .text-left {
+  text-align: right !important;
+}
+
+html[dir="ltr"] .space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0 !important;
+}
+
+html[dir="ltr"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+html[dir="ltr"] .modal-content,
+html[dir="ltr"] .glass-panel,
+html[dir="ltr"] .timeline-card {
+  text-align: left;
+}
+
+html[dir="ltr"] #search-input,
+html[dir="ltr"] .search-box-input {
+  text-align: left;
+}
