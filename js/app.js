@@ -432,11 +432,18 @@ const milestoneCinematicData = [
 // ----------------------------------------------------
 window.toggleLanguageDropdown = function(e) {
     if (e) e.stopPropagation();
-    const menu = document.getElementById('language-dropdown-menu');
-    if (menu) menu.classList.toggle('hidden');
+    if (window.i18n && typeof window.i18n.renderLanguageModal === 'function') {
+        window.i18n.renderLanguageModal();
+    } else {
+        const menu = document.getElementById('language-dropdown-menu');
+        if (menu) menu.classList.toggle('hidden');
+    }
 };
 
 window.closeLanguageDropdown = function() {
+    if (window.i18n && typeof window.i18n.closeLanguageModal === 'function') {
+        window.i18n.closeLanguageModal();
+    }
     const menu = document.getElementById('language-dropdown-menu');
     if (menu) menu.classList.add('hidden');
 };
@@ -446,15 +453,18 @@ document.addEventListener('click', () => {
 });
 
 function changeLanguage(langCode) {
+    if (window.i18n && typeof window.i18n.setLanguage === 'function') {
+        window.i18n.setLanguage(langCode);
+    }
     if (!translations[langCode]) langCode = 'ar';
     currentLang = langCode;
     localStorage.setItem('site_lang', langCode);
-    const t = translations[currentLang];
+    const t = translations[currentLang] || translations['ar'];
 
     const htmlRoot = document.getElementById('html-root');
     if (htmlRoot) {
         htmlRoot.lang = currentLang;
-        htmlRoot.dir = (currentLang === 'ar') ? 'rtl' : 'ltr';
+        htmlRoot.dir = (['ar', 'ur', 'fa'].includes(currentLang)) ? 'rtl' : 'ltr';
     }
 
     // Update custom dropdown checkmarks (matching checkmark style in Capture1.PNG)

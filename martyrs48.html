@@ -328,23 +328,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
       </svg>
   </button>
-  <div id="language-dropdown-menu" class="absolute left-0 mt-2 w-32 bg-[#1e1f22]/95 border border-white/10 rounded-xl shadow-2xl hidden z-[1002] py-1 text-left font-['Cairo'] text-xs">
-      <button onclick="changeLanguage('ar'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-2 text-gray-200 hover:bg-white/10 transition-all font-bold">
-          <span>العربية</span>
-          <span class="active-check-lang text-red-500 hidden" id="check-ar">✓</span>
-      </button>
-      <button onclick="changeLanguage('en'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-2 text-gray-200 hover:bg-white/10 transition-all font-bold">
-          <span>English</span>
-          <span class="active-check-lang text-red-500 hidden" id="check-en">✓</span>
-      </button>
-      <button onclick="changeLanguage('es'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-2 text-gray-200 hover:bg-white/10 transition-all font-bold">
-          <span>Español</span>
-          <span class="active-check-lang text-red-500 hidden" id="check-es">✓</span>
-      </button>
-      <button onclick="changeLanguage('fr'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-2 text-gray-200 hover:bg-white/10 transition-all font-bold">
-          <span>Français</span>
-          <span class="active-check-lang text-red-500 hidden" id="check-fr">✓</span>
-      </button>
+    <div id="language-dropdown-menu" class="absolute left-0 mt-2 w-48 max-h-80 overflow-y-auto bg-[#1e1f22]/95 border border-white/10 rounded-xl shadow-2xl hidden z-[1002] py-1 text-left font-['Cairo'] text-xs no-scrollbar">
+      <button onclick="changeLanguage('ar'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-1.5 text-gray-200 hover:bg-white/10 transition-all font-bold"><span>العربية (ar)</span><span class="active-check-lang text-red-500 hidden" id="check-ar">✓</span></button>
+      <button onclick="changeLanguage('en'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-1.5 text-gray-200 hover:bg-white/10 transition-all font-bold"><span>English (en)</span><span class="active-check-lang text-red-500 hidden" id="check-en">✓</span></button>
+      <button onclick="changeLanguage('fr'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-1.5 text-gray-200 hover:bg-white/10 transition-all font-bold"><span>Français (fr)</span><span class="active-check-lang text-red-500 hidden" id="check-fr">✓</span></button>
+      <button onclick="changeLanguage('es'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-1.5 text-gray-200 hover:bg-white/10 transition-all font-bold"><span>Español (es)</span><span class="active-check-lang text-red-500 hidden" id="check-es">✓</span></button>
+      <button onclick="changeLanguage('tr'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-1.5 text-gray-200 hover:bg-white/10 transition-all font-bold"><span>Türkçe (tr)</span><span class="active-check-lang text-red-500 hidden" id="check-tr">✓</span></button>
+      <button onclick="changeLanguage('de'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-1.5 text-gray-200 hover:bg-white/10 transition-all font-bold"><span>Deutsch (de)</span><span class="active-check-lang text-red-500 hidden" id="check-de">✓</span></button>
+      <button onclick="changeLanguage('it'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-1.5 text-gray-200 hover:bg-white/10 transition-all font-bold"><span>Italiano (it)</span><span class="active-check-lang text-red-500 hidden" id="check-it">✓</span></button>
+      <button onclick="changeLanguage('pt'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-1.5 text-gray-200 hover:bg-white/10 transition-all font-bold"><span>Português (pt)</span><span class="active-check-lang text-red-500 hidden" id="check-pt">✓</span></button>
+      <button onclick="changeLanguage('id'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-1.5 text-gray-200 hover:bg-white/10 transition-all font-bold"><span>Bahasa Indonesia (id)</span><span class="active-check-lang text-red-500 hidden" id="check-id">✓</span></button>
+      <button onclick="changeLanguage('ms'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-1.5 text-gray-200 hover:bg-white/10 transition-all font-bold"><span>Bahasa Melayu (ms)</span><span class="active-check-lang text-red-500 hidden" id="check-ms">✓</span></button>
+      <button onclick="changeLanguage('ur'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-1.5 text-gray-200 hover:bg-white/10 transition-all font-bold"><span>اردو (ur)</span><span class="active-check-lang text-red-500 hidden" id="check-ur">✓</span></button>
+      <button onclick="changeLanguage('fa'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-1.5 text-gray-200 hover:bg-white/10 transition-all font-bold"><span>فارسی (fa)</span><span class="active-check-lang text-red-500 hidden" id="check-fa">✓</span></button>
+      <button onclick="changeLanguage('nl'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-1.5 text-gray-200 hover:bg-white/10 transition-all font-bold"><span>Nederlands (nl)</span><span class="active-check-lang text-red-500 hidden" id="check-nl">✓</span></button>
+      <button onclick="changeLanguage('ru'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-1.5 text-gray-200 hover:bg-white/10 transition-all font-bold"><span>Русский (ru)</span><span class="active-check-lang text-red-500 hidden" id="check-ru">✓</span></button>
+      <button onclick="changeLanguage('zh'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-1.5 text-gray-200 hover:bg-white/10 transition-all font-bold"><span>中文 (zh)</span><span class="active-check-lang text-red-500 hidden" id="check-zh">✓</span></button>
+      <button onclick="changeLanguage('ja'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-1.5 text-gray-200 hover:bg-white/10 transition-all font-bold"><span>日本語 (ja)</span><span class="active-check-lang text-red-500 hidden" id="check-ja">✓</span></button>
+      <button onclick="changeLanguage('ko'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-1.5 text-gray-200 hover:bg-white/10 transition-all font-bold"><span>한국어 (ko)</span><span class="active-check-lang text-red-500 hidden" id="check-ko">✓</span></button>
   </div>
 </div>
 
