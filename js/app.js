@@ -300,8 +300,10 @@ function toggleMusic() {
 function updateMusicButton() {
     const btn = document.getElementById('music-btn');
     if (btn) {
-        const t = translations[currentLang];
-        btn.innerHTML = isPlayingAudio ? t.musicOff : t.musicOn;
+        const img = document.getElementById('music-icon-img');
+        if (img) {
+            img.src = isPlayingAudio ? 'images/volume.png' : 'images/no-sound.png';
+        }
         if (isPlayingAudio) btn.classList.add('active');
         else btn.classList.remove('active');
     }

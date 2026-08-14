@@ -39,6 +39,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 *{box-sizing:border-box;}
 body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-serif;color:white;transition: background 0.3s ease, color 0.3s ease;}
 
+/* تنسيق رؤية الأيقونات في الوضع الليلي والمضيء */
+.btn-main img, #music-icon-img, .social-links img, .share-btn img, #donate-desktop img { filter: brightness(0) invert(1); transition: filter 0.3s ease; }
+body.light-mode .btn-main img, body.light-mode #music-icon-img, body.light-mode .social-links img, body.light-mode .share-btn img, body.light-mode #donate-desktop img { filter: brightness(0) invert(0); }
+
 /* تنسيق الوضع المضيء (Light Mode) */
 body.light-mode{background-color:#f3f4f6 !important;color:#111827 !important;}
 body.light-mode .glass-panel{background:rgba(255, 255, 255, 0.9) !important;border-color:rgba(220, 38, 38, 0.2) !important;color:#111827 !important;box-shadow:0 4px 6px -1px rgba(0, 0, 0, 0.05);}
@@ -271,18 +275,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
 <div id="ui-layer">
-<header id="header" class="glass-panel interactive">
-<div class="flex items-center gap-1.5">
-<h1 class="text-sm font-black text-white drop-shadow-md"><span class="text-red-500" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
-</div>
-
-<div class="w-auto relative flex items-center gap-1">
-<input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد..." oninput="searchMartyrByName(this.value)">
-<button id="voice-search-btn" onclick="startVoiceSearch('search-input', (val) => searchMartyrByName(val))" class="btn-main flex items-center justify-center shadow-lg" title="البحث الصوتي">
-    <img src="images/Capture9.PNG" alt="Voice Search">
-</button>
-<div id="search-results-dropdown" class="absolute left-0 right-0 mt-2 max-h-80 overflow-y-auto bg-[#0a0a0af2] border border-red-500/30 rounded-xl shadow-2xl hidden z-[1001] text-right font-['Cairo'] text-xs"></div>
-</div>
+<header id="header" class="glass-panel interactive flex justify-between items-center px-3 py-1.5 gap-2">
+<div class="flex items-center gap-3">
+<h1 class="text-sm font-black text-white drop-shadow-md shrink-0"><span class="text-red-500" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
 <div class="tabs-wrapper no-scrollbar interactive">
 <div class="flex gap-1 bg-black/40 p-1 rounded-full border border-white/5">
 <a href="index.html" class="btn-main active" id="tab-souls" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء غزة</a>
@@ -294,15 +289,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <a href="map.html" class="btn-main" id="tab-map" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">الخريطة</a>
 </div>
 </div>
-<div class="relative inline-block text-right flex items-center gap-2">
-<!-- زر المجرات العائلية (موجود فقط في صفحة غزة الرئيسية index.html) -->
-<button id="corridors-toggle-btn" class="btn-main flex items-center justify-center shadow-lg hover:scale-105 transition-all" onclick="toggleCorridors()" title="تجميع النجوم في مجرات عائلية">
-    <img src="images/galaxy.png" alt="Family Galaxies">
+</div>
+
+<div class="flex items-center gap-1.5 flex-wrap justify-end">
+<div class="w-auto relative flex items-center gap-1">
+<input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد..." oninput="searchMartyrByName(this.value)">
+<button id="voice-search-btn" onclick="startVoiceSearch('search-input', (val) => searchMartyrByName(val))" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" title="البحث الصوتي" style="width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15);">
+    <img src="images/Capture9.png" alt="Voice Search" class="w-4 h-4 object-contain">
+</button>
+<div id="search-results-dropdown" class="absolute left-0 right-0 mt-2 max-h-80 overflow-y-auto bg-[#0a0a0af2] border border-red-500/30 rounded-xl shadow-2xl hidden z-[1001] text-right font-['Cairo'] text-xs"></div>
+</div>
+
+<button id="corridors-toggle-btn" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" onclick="toggleCorridors()" title="تجميع النجوم في مجرات عائلية" style="width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15);">
+    <img src="images/galaxy.png" alt="Family Galaxies" class="w-4 h-4 object-contain">
 </button>
 
-<!-- زر تبديل الوضع (ليلي/نهاري) -->
-<button id="theme-toggle-btn" class="btn-main flex items-center justify-center shadow-lg hover:scale-105 transition-transform" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري">
-    <svg id="theme-icon-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<button id="theme-toggle-btn" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" style="width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15);">
+    <svg id="theme-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
         <path d="M15 5L15.5 6.5L17 7L15.5 7.5L15 9L14.5 7.5L13 7L14.5 6.5L15 5Z" fill="white"/>
         <path d="M19 9L19.3 9.7L20 10L19.3 10.3L19 11L18.7 10.3L18 10L18.7 9.7L19 9Z" fill="white"/>
@@ -310,14 +313,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </button>
 
 <div class="relative inline-block text-right" id="language-dropdown-container">
-  <button onclick="toggleLanguageDropdown(event)" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" title="Language" style="width: 26px; height: 26px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15);">
+  <button onclick="toggleLanguageDropdown(event)" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" title="Language" style="width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15);">
       <svg class="text-white" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
           <line x1="2" y1="12" x2="22" y2="12"></line>
           <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
       </svg>
   </button>
-  <div id="language-dropdown-menu" class="absolute right-0 mt-2 w-32 bg-[#1e1f22]/95 border border-white/10 rounded-xl shadow-2xl hidden z-[1002] py-1 text-left font-['Cairo'] text-xs">
+  <div id="language-dropdown-menu" class="absolute left-0 mt-2 w-32 bg-[#1e1f22]/95 border border-white/10 rounded-xl shadow-2xl hidden z-[1002] py-1 text-left font-['Cairo'] text-xs">
       <button onclick="changeLanguage('ar'); closeLanguageDropdown();" class="w-full flex items-center justify-between px-3 py-2 text-gray-200 hover:bg-white/10 transition-all font-bold">
           <span>العربية</span>
           <span class="active-check-lang text-red-500 hidden" id="check-ar">✓</span>
@@ -342,23 +345,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <img src="https://hitwebcounter.com/counter/counter.php?page=11202868&style=0005&nbdigits=5&type=page&initCount=0" title="Web Counter" Alt="web counter" border="0" />
     </a>
 </div>
-
-<div class="flex gap-1.5 items-center">
-<button id="music-btn" class="btn-main" onclick="toggleMusic()">🎵 الصوت</button>
-</div>
 </div>
 </header>
+
+<!-- زر التحكم بالصوت بارز وكبير على اليسار -->
+<button id="music-btn" class="fixed left-3 sm:left-5 top-1/2 -translate-y-1/2 z-[1000] btn-main flex items-center justify-center p-2 shadow-[0_0_20px_rgba(239,68,68,0.4)] hover:scale-110 transition-all interactive border border-red-500/40 bg-black/90" onclick="toggleMusic()" title="تشغيل / كتم الصوت" style="width: 42px; height: 42px; border-radius: 50%;">
+    <img id="music-icon-img" src="images/volume.png" alt="Sound" class="w-5 h-5 object-contain">
+</button>
 <div id="bottom-bar" class="w-full flex flex-col items-center gap-3 p-4 pointer-events-none fixed bottom-0 left-0 right-0 z-[1000] justify-end">
   <!-- شريط الأزرار والروابط السفلي المطابق تماماً لـ Capture3.PNG -->
   <div class="interactive glass-panel p-2 px-4 rounded-full flex items-center gap-3 flex-wrap justify-center bg-black/90 font-['Cairo'] text-xs border border-white/10 shadow-2xl pointer-events-auto max-w-full">
       <!-- مساهمة وتصحيح بيانات -->
-      <button onclick="openCrowdsourceModal()" class="btn-main font-bold text-[11px] bg-transparent border border-red-500 text-red-400 px-3.5 py-1.5 rounded-full hover:bg-red-500 hover:text-white transition-all duration-300">
-          ✍️ <span id="btn-contrib-text">مساهمة وتصحيح بيانات</span>
+      <button onclick="openCrowdsourceModal()" class="btn-main font-bold text-[11px] bg-transparent border border-red-500 text-red-400 px-3.5 py-1.5 rounded-full hover:bg-red-500 hover:text-white transition-all duration-300 flex items-center gap-1.5">
+          <img src="images/edit.png" alt="Edit" class="w-4 h-4 object-contain"> <span id="btn-contrib-text">مساهمة وتصحيح بيانات</span>
       </button>
 
       <!-- إدعمنا لنستمر -->
-      <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-[11px] bg-red-800 border-none text-white px-3.5 py-1.5 rounded-full hover:bg-red-900 transition-all duration-300 shadow-md shadow-red-900/30">
-          ❤️ إدعمنا لنستمر
+      <a href="https://paypal.me/LRSabdelhadi" target="_blank" id="donate-desktop" class="btn-main font-bold text-[11px] bg-red-800 border-none text-white px-3.5 py-1.5 rounded-full hover:bg-red-900 transition-all duration-300 shadow-md shadow-red-900/30 flex items-center gap-1.5">
+          <img src="images/donation.png" alt="Donation" class="w-4 h-4 object-contain"> <span>إدعمنا لنستمر</span>
       </a>
 
       <!-- تطوير: عبد الهادي -->
@@ -369,14 +373,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <!-- الروابط الاجتماعية الدائرية -->
       <div class="social-links flex gap-2 items-center">
-          <a href="https://www.facebook.com/abdelhadilrs" target="_blank" class="w-6 h-6 flex items-center justify-center rounded-full bg-transparent border border-white/30 text-white hover:bg-blue-600 hover:border-blue-500 hover:shadow-[0_0_8px_rgba(59,130,246,0.5)] transition-all text-[11px] flex" style="align-items: center; justify-content: center;" title="Facebook">
-              <i class="fa-brands fa-facebook-f"></i>
+          <a href="https://www.facebook.com/abdelhadilrs" target="_blank" class="w-7 h-7 flex items-center justify-center rounded-full bg-white/5 border border-white/20 hover:bg-blue-600 hover:border-blue-500 transition-all" title="Facebook">
+              <img src="images/facebook.png" alt="Facebook" class="w-4 h-4 object-contain">
           </a>
-          <a href="https://www.instagram.com/abdelhadilrs" target="_blank" class="w-6 h-6 flex items-center justify-center rounded-full bg-transparent border border-white/30 text-white hover:bg-gradient-to-tr hover:from-yellow-500 hover:via-red-500 hover:to-purple-600 hover:border-red-400 hover:shadow-[0_0_8px_rgba(239,68,68,0.5)] transition-all text-[11px] flex" style="align-items: center; justify-content: center;" title="Instagram">
-              <i class="fa-brands fa-instagram"></i>
+          <a href="https://www.instagram.com/abdelhadilrs" target="_blank" class="w-7 h-7 flex items-center justify-center rounded-full bg-white/5 border border-white/20 hover:bg-gradient-to-tr hover:from-yellow-500 hover:via-red-500 hover:to-purple-600 transition-all" title="Instagram">
+              <img src="images/instagram.png" alt="Instagram" class="w-4 h-4 object-contain">
           </a>
-          <a href="https://x.com/larrasabdelhadi" target="_blank" class="w-6 h-6 flex items-center justify-center rounded-full bg-transparent border border-white/30 text-white hover:bg-white hover:text-black hover:border-white hover:shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all text-[11px] flex" style="align-items: center; justify-content: center;" title="X">
-              <i class="fa-brands fa-x-twitter"></i>
+          <a href="https://x.com/larrasabdelhadi" target="_blank" class="w-7 h-7 flex items-center justify-center rounded-full bg-white/5 border border-white/20 hover:bg-white hover:border-white transition-all" title="X">
+              <img src="images/x.png" alt="X" class="w-4 h-4 object-contain">
           </a>
       </div>
 
@@ -385,7 +389,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <!-- مشاركة المنصة -->
       <button onclick="shareSite()" class="share-btn flex gap-1.5 items-center bg-transparent border border-white text-white font-bold text-[11px] px-3.5 py-1.5 rounded-full hover:bg-white hover:text-black transition-all duration-300">
-          <i class="fa-solid fa-share-nodes"></i> <span id="share-btn-text">مشاركة المنصة</span>
+          <img src="images/share.png" alt="Share" class="w-4 h-4 object-contain"> <span id="share-btn-text">مشاركة المنصة</span>
       </button>
   </div>
 </div>
@@ -397,9 +401,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <!-- الآية القرآنية الشريفة المصورة المترجمة - في الزاوية اليمنى السفلية بتصميم متناسق مدمج -->
-<div id="verse-container" class="fixed bottom-4 right-4 z-[1001] max-w-[120px] sm:max-w-[150px] md:max-w-[180px] pointer-events-auto flex flex-col items-end gap-1 select-none">
+<div id="verse-container" class="fixed bottom-20 right-4 z-[1001] max-w-[170px] sm:max-w-[210px] md:max-w-[250px] pointer-events-auto flex flex-col items-end gap-1 select-none">
     <img src="images/wala_tahsban.png" alt="ولا تحسبن" id="verse-img" class="w-full h-auto object-contain transition-all duration-300">
-    <p id="verse-text" class="text-[9px] sm:text-[10px] text-gray-400 font-medium font-['Cairo'] text-right leading-tight max-w-[120px] sm:max-w-[150px] md:max-w-[180px] hidden"></p>
+    <p id="verse-text" class="text-[10px] sm:text-[11px] text-gray-400 font-medium font-['Cairo'] text-right leading-tight max-w-[170px] sm:max-w-[210px] md:max-w-[250px] hidden"></p>
 </div>
 </div>
 
