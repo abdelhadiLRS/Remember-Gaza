@@ -288,20 +288,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <h1 class="text-sm font-black text-white drop-shadow-md shrink-0"><span class="text-red-500" id="title-main">أرواح</span> <span id="logo-text">فلسطين</span></h1>
 <div class="tabs-wrapper no-scrollbar interactive">
 <div class="flex gap-1 bg-black/40 p-1 rounded-full border border-white/5">
-<a href="index.html" class="btn-main" id="tab-souls" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء غزة</a>
-<a href="journalists.html" class="btn-main" id="tab-journalists" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء الصحافة</a>
-<a href="westbank.html" class="btn-main" id="tab-westbank" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء الضفة</a>
-<a href="martyrs48.html" class="btn-main active" id="tab-48" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">شهداء 48</a>
-<a href="milestones.html" class="btn-main" id="tab-milestones" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">أبرز المحطات</a>
-<a href="stats.html" class="btn-main" id="tab-stats" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">الإحصائيات</a>
-<a href="map.html" class="btn-main" id="tab-map" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">الخريطة</a>
+<a href="index.html" class="btn-main" id="tab-souls" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;"><span data-i18n="nav_gaza">شهداء غزة</span></a>
+<a href="journalists.html" class="btn-main" id="tab-journalists" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;"><span data-i18n="nav_journalists">شهداء الصحافة</span></a>
+<a href="westbank.html" class="btn-main" id="tab-westbank" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;"><span data-i18n="nav_westbank">شهداء الضفة</span></a>
+<a href="martyrs48.html" class="btn-main active" id="tab-48" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;"><span data-i18n="nav_martyrs48">شهداء 48</span></a>
+<a href="milestones.html" class="btn-main" id="tab-milestones" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;"><span data-i18n="nav_milestones">أبرز المحطات</span></a>
+<a href="stats.html" class="btn-main" id="tab-stats" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;"><span data-i18n="nav_stats">الإحصائيات</span></a>
+<a href="map.html" class="btn-main" id="tab-map" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;"><span data-i18n="nav_map">الخريطة</span></a>
 </div>
 </div>
 </div>
 
 <div class="flex items-center gap-1.5 flex-wrap justify-end">
 <div class="w-auto relative flex items-center gap-1">
-<input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد..." oninput="searchMartyrByName(this.value)">
+<input type="text" id="search-input" placeholder="ابحث عن اسم الشهيد..." data-i18n-placeholder="search_placeholder" oninput="searchMartyrByName(this.value)">
 <button id="voice-search-btn" onclick="startVoiceSearch('search-input', (val) => searchMartyrByName(val))" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" title="البحث الصوتي" style="width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15);">
     <img src="images/Capture9.png" alt="Voice Search" class="w-4 h-4 object-contain">
 </button>
@@ -365,7 +365,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="interactive glass-panel p-2 px-4 rounded-full flex items-center gap-3 flex-wrap justify-center bg-black/90 font-['Cairo'] text-xs border border-white/10 shadow-2xl pointer-events-auto max-w-full">
       <!-- مساهمة وتصحيح بيانات -->
       <button onclick="openCrowdsourceModal()" class="btn-main font-bold text-[11px] bg-transparent border border-red-500 text-red-400 px-3.5 py-1.5 rounded-full hover:bg-red-500 hover:text-white transition-all duration-300 flex items-center gap-1.5">
-          <img src="images/edit.png" alt="Edit" class="w-4 h-4 object-contain"> <span id="btn-contrib-text">مساهمة وتصحيح بيانات</span>
+          <img src="images/edit.png" alt="Edit" class="w-4 h-4 object-contain"> <span id="btn-contrib-text" data-i18n="submit_contribution">مساهمة وتصحيح بيانات</span>
       </button>
 
       <!-- إدعمنا لنستمر -->
@@ -374,7 +374,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </a>
 
       <!-- تطوير: عبد الهادي -->
-      <span id="dev-text" class="text-[11px] text-gray-300 font-bold px-1">تطوير: عبد الهادي</span>
+      <span id="dev-text" class="text-[11px] text-gray-300 font-bold px-1" data-i18n="dev_by">تطوير: عبد الهادي</span>
 
       <!-- فاصل عمودي -->
       <span class="text-white/20">|</span>
@@ -397,14 +397,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <!-- مشاركة المنصة -->
       <button onclick="shareSite()" class="share-btn flex gap-1.5 items-center bg-transparent border border-white text-white font-bold text-[11px] px-3.5 py-1.5 rounded-full hover:bg-white hover:text-black transition-all duration-300">
-          <img src="images/share.png" alt="Share" class="w-4 h-4 object-contain"> <span id="share-btn-text">مشاركة المنصة</span>
+          <img src="images/share.png" alt="Share" class="w-4 h-4 object-contain"> <span id="share-btn-text" data-i18n="share_platform">مشاركة المنصة</span>
       </button>
   </div>
 </div>
 
 <!-- عداد توثيق الشهداء العائم لتفادي التداخل -->
 <div id="counter-box" class="interactive font-['Cairo'] flex items-center justify-center gap-2 bg-black/80 border border-white/10 rounded-full px-4 py-1.5 transition-all shadow-lg fixed bottom-20 left-4 z-[999] text-xs">
-    <span id="martyrs-label" class="text-[11px] text-red-400 font-bold whitespace-nowrap">شهيداً وثّقت أسماؤهم:</span>
+    <span id="martyrs-label" class="text-[11px] text-red-400 font-bold whitespace-nowrap" data-i18n="martyrs_documented_label">شهيداً وثّقت أسماؤهم:</span>
     <span id="number" class="text-sm font-black text-white">60,198</span>
 </div>
 
