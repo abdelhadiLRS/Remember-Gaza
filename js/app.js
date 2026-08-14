@@ -183,6 +183,9 @@ function toggleCorridors() {
     if (corridorsBtnText) {
         corridorsBtnText.innerText = corridorsActive ? t.corridorsOn : t.corridorsOff;
     }
+    if (btn) {
+        btn.setAttribute('title', corridorsActive ? t.corridorsOn : t.corridorsOff);
+    }
     isDirty = true;
 }
 window.toggleCorridors = toggleCorridors;
@@ -482,7 +485,16 @@ function changeLanguage(langCode) {
     setInnerText('tab-videos', t.tabVideos);
     setInnerText('tab-map', t.tabMap);
     setInnerText('donate-desktop', t.donate);
-    setInnerText('verse-text', t.verse);
+    const verseTextEl = document.getElementById('verse-text');
+    if (verseTextEl) {
+        if (langCode === 'ar') {
+            verseTextEl.innerText = '';
+            verseTextEl.classList.add('hidden');
+        } else {
+            verseTextEl.innerText = t.verse;
+            verseTextEl.classList.remove('hidden');
+        }
+    }
     setInnerText('dev-text', t.devText);
     setInnerText('share-btn-text', t.shareBtn);
     setInnerText('martyrs-label', t.martyrsLabel);
@@ -1564,6 +1576,38 @@ function recalculateCache() {
 const canvas = document.getElementById('stars-canvas');
 const ctx = canvas ? canvas.getContext('2d') : null;
 
+// تهيئة متغيرات استبعاد النجوم من التولد خلف الحاويات الزجاجية (Star Culling)
+let culledRects = [];
+let lastCullUpdate = 0;
+function updateCulledRects() {
+    culledRects = [];
+    const selectors = ['.glass-panel', '.glass-card', '#header', '#bottom-bar', '#counter-box', '#visitor-counter-box', '.tlc-panel', '.modal-content'];
+    selectors.forEach(sel => {
+        const els = document.querySelectorAll(sel);
+        els.forEach(el => {
+            if (el && el.offsetWidth > 0 && el.offsetHeight > 0) {
+                const rect = el.getBoundingClientRect();
+                culledRects.push({
+                    left: rect.left,
+                    top: rect.top,
+                    right: rect.right,
+                    bottom: rect.bottom
+                });
+            }
+        });
+    });
+}
+
+function isInsideCulledRect(x, y) {
+    for (let i = 0; i < culledRects.length; i++) {
+        const rect = culledRects[i];
+        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+            return true;
+        }
+    }
+    return false;
+}
+
 // تهيئة كانفاس الشهب المتساقطة
 const shootingCanvas = document.getElementById('shooting-stars-canvas');
 const shootingCtx = shootingCanvas ? shootingCanvas.getContext('2d') : null;
@@ -1666,6 +1710,13 @@ function drawCanvas() {
         return;
     }
 
+    // تحديث أبعاد واستبعاد الأسطح الزجاجية بشكل دوري لتوفير الأداء (Star Culling)
+    const nowCull = Date.now();
+    if (nowCull - lastCullUpdate > 250) {
+        updateCulledRects();
+        lastCullUpdate = nowCull;
+    }
+
     ctx.clearRect(0, 0, width, height);
 
     const queryActive = currentSearchQuery.length >= 2;
@@ -1746,8 +1797,11 @@ function drawCanvas() {
         for (let i = 0; i < cachedItems.length; i++) {
             const item = cachedItems[i];
 
-            // استبعاد خارج إطار الرؤية (Viewport Culling)
+            // استبعاد خارج إطار الرؤية (Viewport Culling) والأسطح الزجاجية (Star Culling)
             if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
+                continue;
+            }
+            if (isInsideCulledRect(item.screenX, item.screenY)) {
                 continue;
             }
 
@@ -1788,6 +1842,9 @@ function drawCanvas() {
             if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
                 continue;
             }
+            if (isInsideCulledRect(item.screenX, item.screenY)) {
+                continue;
+            }
 
             if (item.color === '#ef4444') {
                 let isMatch = false;
@@ -1817,6 +1874,9 @@ function drawCanvas() {
             if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
                 continue;
             }
+            if (isInsideCulledRect(item.screenX, item.screenY)) {
+                continue;
+            }
 
             if (item.color === '#ffffff') {
                 let isMatch = false;
@@ -1844,6 +1904,9 @@ function drawCanvas() {
             const item = cachedItems[i];
 
             if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
+                continue;
+            }
+            if (isInsideCulledRect(item.screenX, item.screenY)) {
                 continue;
             }
 
@@ -1889,6 +1952,9 @@ function drawCanvas() {
     let hoveredMartyr = null;
     for (let i = 0; i < cachedItems.length; i++) {
         const item = cachedItems[i];
+        if (isInsideCulledRect(item.screenX, item.screenY)) {
+            continue;
+        }
         const dx = mouseX - item.screenX;
         const dy = mouseY - item.screenY;
         if (dx * dx + dy * dy < 100) { // مسافة تقريبية للتفاعل (10 بكسل)

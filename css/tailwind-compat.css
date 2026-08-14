@@ -305,3 +305,64 @@
         }
     }
 }
+
+/* --- Custom styling for the Verse Image and Theme/Galaxy/Voice icons --- */
+#verse-img {
+    transition: filter 0.3s ease;
+}
+body.light-mode #verse-img {
+    filter: brightness(0) !important;
+}
+body:not(.light-mode) #verse-img {
+    filter: brightness(0) invert(1) !important;
+}
+
+/* Rounded, clean styling for Dark Mode / Galaxy toggle buttons matching language icon */
+#theme-toggle-btn,
+#corridors-toggle-btn {
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    transition: all 0.3s ease !important;
+}
+
+body.light-mode #theme-toggle-btn,
+body.light-mode #corridors-toggle-btn {
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    background: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Give the theme and corridors toggle buttons consistent svg and image sizing */
+#theme-toggle-btn svg,
+#corridors-toggle-btn img,
+#corridors-toggle-btn svg {
+    width: 14px !important;
+    height: 14px !important;
+    object-fit: contain;
+}
+
+/* Adjust voice search button styling to match Capture9.PNG as a circular icon button */
+#voice-search-btn {
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(220, 38, 38, 0.2) !important;
+    border: 1px solid rgba(239, 68, 68, 0.5) !important;
+}
+#voice-search-btn img {
+    width: 14px !important;
+    height: 14px !important;
+    object-fit: contain;
+}
