@@ -1,0 +1,226 @@
+[
+  {
+    "id": "d1920",
+    "type": "decade",
+    "decade": "1920"
+  },
+  {
+    "id": "m18",
+    "type": "scene",
+    "year": "1929",
+    "title": "Al-Buraq Uprising",
+    "alt": "Buraq Rebellion",
+    "image": "images/timeline/18.jpg",
+    "excerpt": "In August 1929, Palestinians rose in protest against attempts to seize control of the Al-Buraq Wall adjacent to Al-Aqsa Mosque. Over 116 Palestinians were martyred.",
+    "stat": "~116 Martyrs",
+    "statExp": "116 Palestinian martyrs fell during the clashes, and three leaders were executed by British authorities.",
+    "sourceName": "Interactive Encyclopedia of Palestine",
+    "sourceUrl": "https://www.palquest.org/"
+  },
+  {
+    "id": "d1930",
+    "type": "decade",
+    "decade": "1930"
+  },
+  {
+    "id": "m19",
+    "type": "scene",
+    "year": "1936 - 1939",
+    "title": "Great Palestinian Rebellion",
+    "alt": "6-Month Strike",
+    "image": "images/timeline/19.jpg",
+    "excerpt": "The Great Rebellion began in April 1936 with a six-month general strike before evolving into armed resistance against British Mandate rule and Zionist expansion.",
+    "stat": "5,000 Martyrs",
+    "statExp": "Thousands of martyrs and injured due to military operations and severe British repression.",
+    "sourceName": "Interactive Encyclopedia of Palestine",
+    "sourceUrl": "https://www.palquest.org/"
+  },
+  {
+    "id": "m1",
+    "type": "scene",
+    "year": "1936 - 1948",
+    "title": "Ethnic Cleansing of Palestine",
+    "alt": "Nakba Era",
+    "image": "images/timeline/1.jpg",
+    "excerpt": "Early massacres and ethnic cleansing operations conducted under British Mandate protection preceding the official declaration of Israel.",
+    "stat": "~5,000 Martyrs",
+    "statExp": "Victims of early massacres and displacement preceding 1948.",
+    "sourceName": "Institute for Palestine Studies",
+    "sourceUrl": "https://www.palquest.org/"
+  },
+  {
+    "id": "d1940",
+    "type": "decade",
+    "decade": "1940"
+  },
+  {
+    "id": "m20",
+    "type": "scene",
+    "year": "1948",
+    "title": "Deir Yassin Massacre",
+    "alt": "",
+    "image": "images/timeline/20.jpg",
+    "excerpt": "On April 9, 1948, Zionist militias raided Deir Yassin village west of Jerusalem, committing a brutal massacre of unarmed civilians.",
+    "stat": "254 - 300 Martyrs",
+    "statExp": "Over 250 unarmed civilians including children, women, and elderly executed.",
+    "sourceName": "Wikipedia - Deir Yassin Massacre",
+    "sourceUrl": "https://en.wikipedia.org/wiki/Deir_Yassin_massacre"
+  },
+  {
+    "id": "m2",
+    "type": "scene",
+    "year": "1948",
+    "title": "1948 Arab-Israeli War",
+    "alt": "Nakba War",
+    "image": "images/timeline/2.jpg",
+    "excerpt": "The first major war following the end of the British Mandate and the declaration of Israel in May 1948.",
+    "stat": "20,000 - 22,000 Martyrs",
+    "statExp": "Martyrs defending Palestinian cities, towns, and villages during the Nakba.",
+    "sourceName": "Interactive Encyclopedia of Palestine",
+    "sourceUrl": "https://www.palquest.org/"
+  },
+  {
+    "id": "d1950",
+    "type": "decade",
+    "decade": "1950"
+  },
+  {
+    "id": "m4",
+    "type": "scene",
+    "year": "1956",
+    "title": "Occupation of Gaza 1956",
+    "alt": "Tripartite Aggression",
+    "image": "images/timeline/4.jpg",
+    "excerpt": "During the Suez Crisis, Israeli forces occupied the Gaza Strip, perpetrating major massacres in Khan Younis and Rafah.",
+    "stat": "~1,500 Martyrs",
+    "statExp": "Martyrs of Khan Younis and Rafah massacres during the 1956 aggression.",
+    "sourceName": "Palestinian History Archive",
+    "sourceUrl": "https://www.palquest.org/"
+  },
+  {
+    "id": "d1960",
+    "type": "decade",
+    "decade": "1960"
+  },
+  {
+    "id": "m5",
+    "type": "scene",
+    "year": "1967",
+    "title": "June 1967 War",
+    "alt": "The Naksa",
+    "image": "images/timeline/5.jpg",
+    "excerpt": "The Naksa resulting in the military occupation of the Gaza Strip, West Bank, East Jerusalem, Sinai, and Golan Heights.",
+    "stat": "15,000 - 25,000 Martyrs",
+    "statExp": "Martyrs of military defense operations across Arab and Palestinian territories.",
+    "sourceName": "Interactive Encyclopedia of Palestine",
+    "sourceUrl": "https://www.palquest.org/"
+  },
+  {
+    "id": "d1970",
+    "type": "decade",
+    "decade": "1970"
+  },
+  {
+    "id": "m22",
+    "type": "scene",
+    "year": "1976",
+    "title": "Land Day",
+    "alt": "Yom al-Ard",
+    "image": "images/timeline/22.jpg",
+    "excerpt": "A popular uprising against the confiscation of thousands of dunams of Palestinian land in the Galilee and Triangle.",
+    "stat": "6 Martyrs",
+    "statExp": "Six Palestinians martyred while defending their ancestral lands in 1948 territories.",
+    "sourceName": "Palestinian Documentation Centre",
+    "sourceUrl": "https://www.palquest.org/"
+  },
+  {
+    "id": "d1980",
+    "type": "decade",
+    "decade": "1980"
+  },
+  {
+    "id": "m11",
+    "type": "scene",
+    "year": "1987",
+    "title": "First Palestinian Intifada",
+    "alt": "Intifada of Stones",
+    "image": "images/timeline/11.jpg",
+    "excerpt": "A historic popular uprising originating in Jabalia refugee camp in Gaza that spread across all Palestinian cities.",
+    "stat": "1,300+ Martyrs",
+    "statExp": "Martyrs killed by military forces during popular protests and confrontations.",
+    "sourceName": "WAFA Palestinian News Agency",
+    "sourceUrl": "https://www.wafa.ps/"
+  },
+  {
+    "id": "d1990",
+    "type": "decade",
+    "decade": "1990"
+  },
+  {
+    "id": "m25",
+    "type": "scene",
+    "year": "1994",
+    "title": "Ibrahimi Mosque Massacre",
+    "alt": "",
+    "image": "images/timeline/25.jpg",
+    "excerpt": "An extremist shooting inside the Ibrahimi Mosque in Hebron during dawn prayers.",
+    "stat": "29 Martyrs",
+    "statExp": "29 worshippers martyred inside the holy mosque during dawn prayers.",
+    "sourceName": "Interactive Encyclopedia of Palestine",
+    "sourceUrl": "https://www.palquest.org/"
+  },
+  {
+    "id": "d2000",
+    "type": "decade",
+    "decade": "2000"
+  },
+  {
+    "id": "m12",
+    "type": "scene",
+    "year": "2000",
+    "title": "Second Palestinian Intifada",
+    "alt": "Al-Aqsa Intifada",
+    "image": "images/timeline/12.jpg",
+    "excerpt": "Sparked following Sharon's provocation at Al-Aqsa, leading to extensive military invasions across West Bank and Gaza.",
+    "stat": "4,000+ Martyrs",
+    "statExp": "Over 4,000 documented martyrs during the Al-Aqsa Intifada.",
+    "sourceName": "WAFA News Agency",
+    "sourceUrl": "https://www.wafa.ps/"
+  },
+  {
+    "id": "d2010",
+    "type": "decade",
+    "decade": "2010"
+  },
+  {
+    "id": "m15",
+    "type": "scene",
+    "year": "2014",
+    "title": "2014 Gaza War",
+    "alt": "Protective Edge",
+    "image": "images/timeline/15.jpg",
+    "excerpt": "A 51-day military aggression on the Gaza Strip resulting in widespread devastation and mass family casualties.",
+    "stat": "2,200+ Martyrs",
+    "statExp": "Over 2,200 martyrs including hundreds of children and women.",
+    "sourceName": "Palestinian Central Bureau of Statistics",
+    "sourceUrl": "https://www.pcbs.gov.ps/"
+  },
+  {
+    "id": "d2020",
+    "type": "decade",
+    "decade": "2020"
+  },
+  {
+    "id": "m30",
+    "type": "scene",
+    "year": "2023 - 2026",
+    "title": "Al-Aqsa Flood & Comprehensive War",
+    "alt": "Gaza Genocide",
+    "image": "images/timeline/30.jpg",
+    "excerpt": "The ongoing genocidal war and unprecedented military aggression against Gaza, West Bank, and the wider region.",
+    "stat": "Tens of Thousands of Martyrs",
+    "statExp": "Over 158,000 to 291,000 martyrs, injured, missing, and trapped under rubble in the ongoing war.",
+    "sourceName": "Palestinian Central Bureau of Statistics & UN Reports",
+    "sourceUrl": "https://www.pcbs.gov.ps/"
+  }
+]
