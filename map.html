@@ -39,6 +39,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 *{box-sizing:border-box;}
 body{margin:0;background-color:#0a0a0a;overflow:hidden;font-family:'Cairo',sans-serif;color:white;transition: background 0.3s ease, color 0.3s ease;}
 
+/* تنسيق رؤية الأيقونات في الوضع الليلي والمضيء */
+.btn-main img, #music-icon-img { filter: brightness(0) invert(1); transition: filter 0.3s ease; }
+body.light-mode .btn-main img, body.light-mode #music-icon-img { filter: brightness(0) invert(0); }
+
 /* تنسيق الوضع المضيء (Light Mode) */
 body.light-mode{background-color:#f3f4f6 !important;color:#111827 !important;}
 body.light-mode .glass-panel{background:rgba(255, 255, 255, 0.9) !important;border-color:rgba(220, 38, 38, 0.2) !important;color:#111827 !important;box-shadow:0 4px 6px -1px rgba(0, 0, 0, 0.05);}
@@ -311,22 +315,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div id="search-results-dropdown" class="absolute left-0 right-0 mt-2 max-h-80 overflow-y-auto bg-[#0a0a0af2] border border-red-500/30 rounded-xl shadow-2xl hidden z-[1001] text-right font-['Cairo'] text-xs"></div>
 </div>
 
-<button id="music-btn" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" onclick="toggleMusic()" title="تشغيل / كتم الصوت" style="width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15);">
-    <img id="music-icon-img" src="images/volume.png" alt="Sound" class="w-4 h-4 object-contain">
-</button>
-
-<button id="header-contrib-btn" onclick="openCrowdsourceModal()" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" title="مساهمة وتصحيح بيانات" style="width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15);">
-    <img src="images/edit.png" alt="Edit Data" class="w-4 h-4 object-contain">
-</button>
-
-<button id="header-admin-btn" onclick="openAdminReviewPanel()" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" title="لوحة الإدارة والمراجعة" style="width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15);">
-    <img src="images/administration-du-systeme.png" alt="System Admin" class="w-4 h-4 object-contain">
-</button>
-
-<button id="header-share-btn" onclick="shareSite()" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" title="مشاركة المنصة" style="width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15);">
-    <img src="images/share.png" alt="Share" class="w-4 h-4 object-contain">
-</button>
-
 <button id="corridors-toggle-btn" class="btn-main flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" onclick="toggleCorridors()" title="تجميع النجوم في مجرات عائلية" style="width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15); display: none;">
     <img src="images/galaxy.png" alt="Family Galaxies" class="w-4 h-4 object-contain">
 </button>
@@ -374,6 +362,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 </div>
 </header>
+
+<!-- زر التحكم بالصوت يمارس الطفو وسط منتصف اليسار -->
+<button id="music-btn" class="fixed left-3 sm:left-4 top-1/2 -translate-y-1/2 z-[1000] btn-main flex items-center justify-center p-1.5 shadow-2xl hover:scale-110 transition-transform interactive" onclick="toggleMusic()" title="تشغيل / كتم الصوت" style="width: 32px; height: 32px; border-radius: 50%; background: rgba(20, 20, 20, 0.85); border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px);">
+    <img id="music-icon-img" src="images/volume.png" alt="Sound" class="w-4 h-4 object-contain">
+</button>
 <div id="bottom-bar" class="w-full flex flex-col items-center gap-3 p-4 pointer-events-none fixed bottom-0 left-0 right-0 z-[1000] justify-end">
 
 
