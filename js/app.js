@@ -577,8 +577,6 @@ function changeLanguage(langCode) {
     if(tlcFooterStory) tlcFooterStory.innerText = t.tlcFooterStory;
     const statsTitle = document.getElementById('stats-title');
     if(statsTitle) statsTitle.innerText = t.statsTitle;
-    const statsSubtitle = document.getElementById('stats-subtitle');
-    if(statsSubtitle) statsSubtitle.innerText = t.statsSubtitle;
     const statsBanner = document.getElementById('stats-banner');
     if(statsBanner) statsBanner.innerText = t.statsBanner;
     const statsUrbanHeader = document.getElementById('stats-urban-header');
