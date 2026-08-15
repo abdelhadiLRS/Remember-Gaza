@@ -280,7 +280,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <h3 id="stats-subtitle" class="text-2xl font-bold text-white mb-4">
         <human-toll-counter></human-toll-counter> يوم من الإبادة الجماعية
     </h3>
-    <p id="stats-banner" class="text-sm text-red-300 font-semibold max-w-2xl mx-auto bg-red-950/40 border border-red-600/30 p-3 rounded-xl" data-i18n="stats_banner">أكثر من 2.4 مليون إنسان يتعرضون للإبادة والتجويع</p>
+    <p id="stats-banner" class="text-sm text-red-300 font-semibold max-w-2xl mx-auto bg-red-950/40 border border-red-600/30 p-3 rounded-xl mb-6" data-i18n="stats_banner">أكثر من 2.4 مليون إنسان يتعرضون للإبادة والتجويع</p>
+
+    <!-- 1. ويدج أسماء الأطفال مباشرة تحت العداد الرئيسي -->
+    <names-behind-numbers-mf class="mb-6 block"></names-behind-numbers-mf>
+
+    <!-- 2. ويدج الحصيلة المحاذاة مباشرة تحت أسماء الأطفال -->
+    <human-toll-widget class="mb-8 block"></human-toll-widget>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
@@ -306,9 +312,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1" data-i18n="stat_displaced">نازح</span><p class="text-2xl font-black text-white" data-i18n="stat_displaced_val">2 مليون</p></div>
     <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1" data-i18n="stat_rehab_needed">جريح بحاجة للتأهيل</span><p class="text-2xl font-black text-white" data-i18n="stat_rehab_needed_val">+19,000</p></div>
 </div>
-
-<!-- ويدج أسماء الأطفال تحت عداد الإحصائيات -->
-<names-behind-numbers-mf></names-behind-numbers-mf>
 
 <div class="mb-8 text-center">
     <h3 id="stats-urban-header" class="text-xl md:text-2xl font-bold text-red-400 leading-relaxed max-w-4xl mx-auto bg-black/60 border border-white/10 p-4 rounded-2xl" data-i18n="stats_urban_header">
@@ -336,9 +339,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1" data-i18n="stat_sewage">شبكات صرف صحي دمرها الاحتلال</span><p class="text-2xl font-black text-white" data-i18n="stat_sewage_val">+700 ألف متر</p></div>
     <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1" data-i18n="stat_water_nets">شبكات مياه دمرها الاحتلال</span><p class="text-2xl font-black text-white" data-i18n="stat_water_nets_val">+700 ألف متر</p></div>
 </div>
-
-<!-- ويدج الحصيلة المحاذاة تحت بطاقات الأرقام -->
-<human-toll-widget></human-toll-widget>
 
 <!-- لوحة الرسوم البيانية التفاعلية -->
 <div class="mt-12 glass-panel p-8 rounded-2xl border border-red-600/30 text-center">
