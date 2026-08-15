@@ -455,6 +455,17 @@ document.addEventListener('click', () => {
 function changeLanguage(langCode) {
     if (window.i18n && typeof window.i18n.setLanguage === 'function') {
         window.i18n.setLanguage(langCode);
+        currentLang = langCode;
+        localStorage.setItem('site_lang', langCode);
+        const htmlRoot = document.getElementById('html-root');
+        if (htmlRoot) {
+            htmlRoot.lang = currentLang;
+            htmlRoot.dir = (['ar', 'ur', 'fa'].includes(currentLang)) ? 'rtl' : 'ltr';
+        }
+        document.querySelectorAll('.active-check-lang').forEach(el => el.classList.add('hidden'));
+        const checkEl = document.getElementById('check-' + currentLang);
+        if (checkEl) checkEl.classList.remove('hidden');
+        return;
     }
     if (!translations[langCode]) langCode = 'ar';
     currentLang = langCode;
@@ -2210,16 +2221,7 @@ window.spotFamilyStar = spotFamilyStar;
 
 window.applyApprovedSubmissions = applyApprovedSubmissions;
 
-function openAdminReviewPanel() {
-    const password = prompt(currentLang === 'ar' ? 'الرجاء إدخال كلمة مرور الإدارة لتسجيل الدخول:' : 'Please enter the admin password to log in:', '');
-    if (password !== 'admin123') {
-        alert(currentLang === 'ar' ? 'كلمة المرور غير صحيحة!' : 'Incorrect password!');
-        return;
-    }
-    document.getElementById('crowdsource-modal-overlay').style.display = 'none';
-    document.getElementById('admin-review-overlay').style.display = 'flex';
-    renderAdminSubmissions();
-}
+// Delegated to js/admin.js: openAdminReviewPanel
 
 function renderAdminSubmissions() {
     const container = document.getElementById('admin-submissions-list');
