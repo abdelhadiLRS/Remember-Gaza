@@ -1,6 +1,6 @@
 /**
  * Palestinian Souls (Remember Gaza) - Internationalization (i18n) Engine
- * Supports 17 Languages with Lazy Loading, Dynamic RTL/LTR, LocalStorage Sync & Event Listeners
+ * Supports 17 Languages with Lazy Loading, Dynamic RTL/LTR, LocalStorage Sync & Dropdown Menu
  */
 
 const SUPPORTED_LANGUAGES = [
@@ -159,90 +159,97 @@ class I18nEngine {
   bindEvents() {
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') {
-        this.closeLanguageModal();
+        this.closeLanguageDropdown();
+      }
+    });
+
+    document.addEventListener('click', e => {
+      const container = document.getElementById('language-dropdown-container');
+      if (container && !container.contains(e.target)) {
+        this.closeLanguageDropdown();
       }
     });
   }
 
-  renderLanguageModal() {
-    let modal = document.getElementById('i18n-language-modal');
-    if (!modal) {
-      modal = document.createElement('div');
-      modal.id = 'i18n-language-modal';
-      modal.className = 'fixed inset-0 z-[9999] hidden flex items-center justify-center bg-black/70 backdrop-blur-md p-4 transition-all duration-300';
-      document.body.appendChild(modal);
+  toggleLanguageDropdown(e) {
+    if (e) e.stopPropagation();
+    let menu = document.getElementById('language-dropdown-menu');
+    if (!menu) {
+      const container = document.getElementById('language-dropdown-container') || document.body;
+      menu = document.createElement('div');
+      menu.id = 'language-dropdown-menu';
+      container.appendChild(menu);
     }
 
-    const currentDict = this.translations[this.currentLang] || {};
-    const titleText = currentDict['select_language'] || 'Select Language / اختر اللغة';
-    const searchPlaceholder = currentDict['search_language'] || 'Search language...';
-
-    modal.innerHTML = `
-      <div class="bg-gray-900 border border-gray-700/80 rounded-2xl p-6 max-w-md w-full text-white shadow-2xl relative animate-in fade-in zoom-in duration-200">
-        <button id="i18n-modal-close" class="absolute top-4 ${this.isRTL() ? 'left-4' : 'right-4'} text-gray-400 hover:text-white text-2xl font-bold w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-800 transition-colors">&times;</button>
-
-        <h3 class="text-xl font-bold mb-4 flex items-center gap-2 border-b border-gray-800 pb-3">
-          <span>🌐</span> <span>${titleText}</span>
-        </h3>
-
-        <div class="mb-4 relative">
-          <input type="text" id="i18n-search-input" placeholder="${searchPlaceholder}" class="w-full bg-gray-800/90 border border-gray-700 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500/70 transition-colors" />
-        </div>
-
-        <div id="i18n-lang-list" class="max-h-80 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
-          ${SUPPORTED_LANGUAGES.map(lang => `
-            <button data-lang="${lang.code}" class="i18n-lang-btn w-full text-left px-4 py-2.5 rounded-xl flex items-center justify-between text-sm transition-all duration-150 ${this.currentLang === lang.code ? 'bg-red-600/20 text-red-400 border border-red-500/30 font-semibold' : 'hover:bg-gray-800/80 text-gray-200'}">
-              <span>${lang.name} <span class="text-xs text-gray-400 uppercase ml-1">(${lang.code})</span></span>
-              ${this.currentLang === lang.code ? '<span class="text-red-400 font-bold">✓</span>' : ''}
-            </button>
-          `).join('')}
-        </div>
-      </div>
-    `;
-
-    modal.classList.remove('hidden');
-
-    const closeBtn = document.getElementById('i18n-modal-close');
-    if (closeBtn) {
-      closeBtn.onclick = () => this.closeLanguageModal();
+    const isHidden = menu.classList.contains('hidden') || menu.style.display === 'none';
+    if (isHidden) {
+      this.renderLanguageDropdownMenu(menu);
+      menu.classList.remove('hidden');
+      menu.style.display = 'block';
+    } else {
+      this.closeLanguageDropdown();
     }
+  }
 
-    modal.onclick = (e) => {
-      if (e.target === modal) this.closeLanguageModal();
-    };
+  renderLanguageDropdownMenu(menu) {
+    if (!menu) menu = document.getElementById('language-dropdown-menu');
+    if (!menu) return;
 
-    const searchInput = document.getElementById('i18n-search-input');
-    if (searchInput) {
-      searchInput.focus();
-      searchInput.oninput = (e) => {
-        const query = e.target.value.toLowerCase().trim();
-        document.querySelectorAll('.i18n-lang-btn').forEach(btn => {
-          const code = btn.getAttribute('data-lang');
-          const langObj = SUPPORTED_LANGUAGES.find(l => l.code === code);
-          const name = langObj ? langObj.name.toLowerCase() : '';
-          if (name.includes(query) || code.includes(query)) {
-            btn.style.display = 'flex';
-          } else {
-            btn.style.display = 'none';
-          }
-        });
-      };
-    }
+    const isRtl = this.isRTL();
 
-    document.querySelectorAll('.i18n-lang-btn').forEach(btn => {
-      btn.onclick = async () => {
-        const selectedCode = btn.getAttribute('data-lang');
-        await this.setLanguage(selectedCode);
-        this.closeLanguageModal();
+    menu.className = `absolute ${isRtl ? 'right-0' : 'left-0'} mt-2 w-52 max-h-80 overflow-y-auto bg-[#18191c]/95 border border-white/10 rounded-2xl shadow-2xl z-[1002] py-2 font-['Cairo'] text-xs backdrop-blur-xl custom-scrollbar transition-all duration-150`;
+
+    menu.innerHTML = SUPPORTED_LANGUAGES.map(lang => {
+      const isActive = this.currentLang === lang.code;
+      return `
+        <button type="button" data-lang="${lang.code}" class="i18n-dropdown-item w-full flex items-center justify-between px-4 py-2.5 text-left font-['Cairo'] text-xs transition-all duration-150 ${isActive ? 'bg-red-600/20 text-red-400 font-bold' : 'text-gray-200 hover:bg-white/10 hover:text-white'}">
+          <span class="truncate">${lang.name}</span>
+          ${isActive ? '<span class="text-red-400 font-bold text-sm ml-2">✓</span>' : ''}
+        </button>
+      `;
+    }).join('');
+
+    // Ensure alignment within screen bounds for mobile responsiveness
+    requestAnimationFrame(() => {
+      const rect = menu.getBoundingClientRect();
+      if (rect.right > window.innerWidth - 8) {
+        menu.style.left = 'auto';
+        menu.style.right = '0';
+      } else if (rect.left < 8) {
+        menu.style.left = '0';
+        menu.style.right = 'auto';
+      }
+    });
+
+    // Attach click events
+    menu.querySelectorAll('.i18n-dropdown-item').forEach(btn => {
+      btn.onclick = async (e) => {
+        e.stopPropagation();
+        const code = btn.getAttribute('data-lang');
+        if (typeof changeLanguage === 'function') {
+          changeLanguage(code);
+        } else {
+          await this.setLanguage(code);
+        }
+        this.closeLanguageDropdown();
       };
     });
   }
 
-  closeLanguageModal() {
-    const modal = document.getElementById('i18n-language-modal');
-    if (modal) {
-      modal.classList.add('hidden');
+  closeLanguageDropdown() {
+    const menu = document.getElementById('language-dropdown-menu');
+    if (menu) {
+      menu.classList.add('hidden');
+      menu.style.display = 'none';
     }
+  }
+
+  renderLanguageModal() {
+    this.toggleLanguageDropdown();
+  }
+
+  closeLanguageModal() {
+    this.closeLanguageDropdown();
   }
 }
 

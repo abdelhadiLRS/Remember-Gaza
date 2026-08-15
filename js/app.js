@@ -432,23 +432,30 @@ const milestoneCinematicData = [
 // ----------------------------------------------------
 window.toggleLanguageDropdown = function(e) {
     if (e) e.stopPropagation();
-    if (window.i18n && typeof window.i18n.renderLanguageModal === 'function') {
-        window.i18n.renderLanguageModal();
+    if (window.i18n && typeof window.i18n.toggleLanguageDropdown === 'function') {
+        window.i18n.toggleLanguageDropdown(e);
     } else {
         const menu = document.getElementById('language-dropdown-menu');
-        if (menu) menu.classList.toggle('hidden');
+        if (menu) {
+            menu.classList.toggle('hidden');
+        }
     }
 };
 
 window.closeLanguageDropdown = function() {
-    if (window.i18n && typeof window.i18n.closeLanguageModal === 'function') {
-        window.i18n.closeLanguageModal();
+    if (window.i18n && typeof window.i18n.closeLanguageDropdown === 'function') {
+        window.i18n.closeLanguageDropdown();
     }
     const menu = document.getElementById('language-dropdown-menu');
-    if (menu) menu.classList.add('hidden');
+    if (menu) {
+        menu.classList.add('hidden');
+        menu.style.display = 'none';
+    }
 };
 
-document.addEventListener('click', () => {
+document.addEventListener('click', (e) => {
+    const container = document.getElementById('language-dropdown-container');
+    if (container && container.contains(e.target)) return;
     window.closeLanguageDropdown();
 });
 
