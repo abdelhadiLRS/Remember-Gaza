@@ -277,7 +277,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <div class="mb-10 text-center">
     <h2 id="stats-title" class="text-4xl font-extrabold text-red-500 mb-3" data-i18n="stats_title">حرب الإبادة الجماعية في غزة</h2>
-    <h3 id="stats-subtitle" class="text-2xl font-bold text-white mb-4" data-i18n="stats_subtitle">1000 يوم من الإبادة الجماعية</h3>
+    <h3 id="stats-subtitle" class="text-2xl font-bold text-white mb-4">
+        <human-toll-counter></human-toll-counter> يوم من الإبادة الجماعية
+    </h3>
     <p id="stats-banner" class="text-sm text-red-300 font-semibold max-w-2xl mx-auto bg-red-950/40 border border-red-600/30 p-3 rounded-xl" data-i18n="stats_banner">أكثر من 2.4 مليون إنسان يتعرضون للإبادة والتجويع</p>
 </div>
 
@@ -305,6 +307,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1" data-i18n="stat_rehab_needed">جريح بحاجة للتأهيل</span><p class="text-2xl font-black text-white" data-i18n="stat_rehab_needed_val">+19,000</p></div>
 </div>
 
+<!-- ويدج أسماء الأطفال تحت عداد الإحصائيات -->
+<names-behind-numbers-mf></names-behind-numbers-mf>
+
 <div class="mb-8 text-center">
     <h3 id="stats-urban-header" class="text-xl md:text-2xl font-bold text-red-400 leading-relaxed max-w-4xl mx-auto bg-black/60 border border-white/10 p-4 rounded-2xl" data-i18n="stats_urban_header">
         لم تقتصر إعتداءات الإحتلال على البشر بل تطال مختلف مظاهر العمران والحضارة كذلك.
@@ -331,6 +336,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1" data-i18n="stat_sewage">شبكات صرف صحي دمرها الاحتلال</span><p class="text-2xl font-black text-white" data-i18n="stat_sewage_val">+700 ألف متر</p></div>
     <div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><span class="text-xs text-gray-400 block mb-1" data-i18n="stat_water_nets">شبكات مياه دمرها الاحتلال</span><p class="text-2xl font-black text-white" data-i18n="stat_water_nets_val">+700 ألف متر</p></div>
 </div>
+
+<!-- ويدج الحصيلة المحاذاة تحت بطاقات الأرقام -->
+<human-toll-widget></human-toll-widget>
 
 <!-- لوحة الرسوم البيانية التفاعلية -->
 <div class="mt-12 glass-panel p-8 rounded-2xl border border-red-600/30 text-center">
@@ -908,6 +916,9 @@ document.addEventListener("DOMContentLoaded", () => {
 <script src="js/admin.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/timeline.js"></script>
+<script src="js/human-toll-counter-number-style.js"></script>
+<script src="js/names-behind-numbers-children-only.js"></script>
+<script src="js/human-toll-widget-aligned.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
