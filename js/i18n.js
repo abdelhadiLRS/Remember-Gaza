@@ -1,6 +1,6 @@
 /**
  * Palestinian Souls (Remember Gaza) - Internationalization (i18n) Engine
- * Supports 17 Languages with Lazy Loading, Dynamic RTL/LTR, LocalStorage Sync & Dropdown Menu
+ * Supports 17 Languages with Lazy Loading, Dynamic RTL/LTR, LocalStorage Sync & Event Listeners
  */
 
 const SUPPORTED_LANGUAGES = [
@@ -159,89 +159,9 @@ class I18nEngine {
   bindEvents() {
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') {
-        this.closeLanguageDropdown();
+        this.closeLanguageModal();
       }
     });
-
-    document.addEventListener('click', e => {
-      const container = document.getElementById('language-dropdown-container');
-      if (container && !container.contains(e.target)) {
-        this.closeLanguageDropdown();
-      }
-    });
-  }
-
-  toggleLanguageDropdown(e) {
-    if (e) e.stopPropagation();
-    let menu = document.getElementById('language-dropdown-menu');
-    if (!menu) {
-      const container = document.getElementById('language-dropdown-container') || document.body;
-      menu = document.createElement('div');
-      menu.id = 'language-dropdown-menu';
-      container.appendChild(menu);
-    }
-
-    const isHidden = menu.classList.contains('hidden') || menu.style.display === 'none';
-    if (isHidden) {
-      this.renderLanguageDropdownMenu(menu);
-      menu.classList.remove('hidden');
-      menu.style.display = 'block';
-    } else {
-      this.closeLanguageDropdown();
-    }
-  }
-
-  renderLanguageDropdownMenu(menu) {
-    if (!menu) menu = document.getElementById('language-dropdown-menu');
-    if (!menu) return;
-
-    const isRtl = this.isRTL();
-
-    menu.className = `absolute ${isRtl ? 'right-0' : 'left-0'} mt-2 w-52 max-h-80 overflow-y-auto bg-[#18191c]/95 border border-white/10 rounded-2xl shadow-2xl z-[1002] py-2 font-['Cairo'] text-xs backdrop-blur-xl custom-scrollbar transition-all duration-150`;
-
-    menu.innerHTML = SUPPORTED_LANGUAGES.map(lang => {
-      const isActive = this.currentLang === lang.code;
-      return `
-        <button type="button" data-lang="${lang.code}" class="i18n-dropdown-item w-full flex items-center justify-between px-4 py-2.5 text-left font-['Cairo'] text-xs transition-all duration-150 ${isActive ? 'bg-red-600/20 text-red-400 font-bold' : 'text-gray-200 hover:bg-white/10 hover:text-white'}">
-          <span class="truncate">${lang.name}</span>
-          ${isActive ? '<span class="text-red-400 font-bold text-sm ml-2">✓</span>' : ''}
-        </button>
-      `;
-    }).join('');
-
-    // Ensure alignment within screen bounds for mobile responsiveness
-    requestAnimationFrame(() => {
-      const rect = menu.getBoundingClientRect();
-      if (rect.right > window.innerWidth - 8) {
-        menu.style.left = 'auto';
-        menu.style.right = '0';
-      } else if (rect.left < 8) {
-        menu.style.left = '0';
-        menu.style.right = 'auto';
-      }
-    });
-
-    // Attach click events
-    menu.querySelectorAll('.i18n-dropdown-item').forEach(btn => {
-      btn.onclick = async (e) => {
-        e.stopPropagation();
-        const code = btn.getAttribute('data-lang');
-        if (typeof changeLanguage === 'function') {
-          changeLanguage(code);
-        } else {
-          await this.setLanguage(code);
-        }
-        this.closeLanguageDropdown();
-      };
-    });
-  }
-
-  closeLanguageDropdown() {
-    const menu = document.getElementById('language-dropdown-menu');
-    if (menu) {
-      menu.classList.add('hidden');
-      menu.style.display = 'none';
-    }
   }
 
   renderLanguageModal() {
@@ -250,6 +170,64 @@ class I18nEngine {
 
   closeLanguageModal() {
     this.closeLanguageDropdown();
+  }
+
+  toggleLanguageDropdown(e) {
+    if (e && e.stopPropagation) e.stopPropagation();
+    const dropdown = document.getElementById('language-dropdown-menu');
+    if (!dropdown) return;
+
+    if (dropdown.classList.contains('hidden')) {
+      this.openLanguageDropdown();
+    } else {
+      this.closeLanguageDropdown();
+    }
+  }
+
+  openLanguageDropdown() {
+    const dropdown = document.getElementById('language-dropdown-menu');
+    const container = document.getElementById('language-dropdown-container');
+    if (!dropdown) return;
+
+    this.updateDropdownUI();
+    dropdown.classList.remove('hidden');
+
+    // Smart positioning relative to container/viewport on mobile/desktop
+    if (container) {
+      const rect = container.getBoundingClientRect();
+      if (rect.right > window.innerWidth - 200) {
+        dropdown.style.right = '0px';
+        dropdown.style.left = 'auto';
+      } else {
+        dropdown.style.left = '0px';
+        dropdown.style.right = 'auto';
+      }
+    }
+  }
+
+  closeLanguageDropdown() {
+    const dropdown = document.getElementById('language-dropdown-menu');
+    if (dropdown) {
+      dropdown.classList.add('hidden');
+    }
+  }
+
+  updateDropdownUI() {
+    const dropdown = document.getElementById('language-dropdown-menu');
+    if (!dropdown) return;
+
+    // Render clean YouTube-style language dropdown items without flags or heavy modals
+    dropdown.innerHTML = SUPPORTED_LANGUAGES.map(lang => {
+      const isSelected = this.currentLang === lang.code;
+      return `
+        <button
+          onclick="changeLanguage('${lang.code}'); if(window.i18n) window.i18n.closeLanguageDropdown();"
+          class="w-full flex items-center justify-between px-3.5 py-2 text-gray-200 hover:bg-white/10 hover:text-white transition-colors duration-150 text-xs text-start font-medium cursor-pointer ${isSelected ? 'bg-red-500/10 text-red-400 font-bold' : ''}">
+          <span>${lang.name}</span>
+          ${isSelected ? '<span class="text-red-400 text-sm ml-2">✓</span>' : ''}
+        </button>
+      `;
+    }).join('');
   }
 }
 

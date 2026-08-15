@@ -1,3 +1,4 @@
+
 // Automatically detect system language or load preferred
 const browserLang = (navigator.language || navigator.userLanguage || 'ar').toLowerCase();
 let systemLang = 'ar';
@@ -16,16 +17,16 @@ if (!localStorage.getItem('site_lang')) {
     localStorage.setItem('site_lang', systemLang);
 }
 let currentLang = localStorage.getItem('site_lang') || systemLang;
-let gazaSouls = [];
-let journalistsData = [];
+let gazaSouls=[];
 let width, height, points = [];
 let cachedItems = []; // 2. التخزين المؤقت للإحداثيات والخصائص
 let isDirty = true;   // 1. نظام إعادة الرسم المشروط (Dirty Flag)
-let currentMainMode = 'home';
+let currentMainMode = 'souls';
 let map = null;
 let markersLayer = null;
 let nakbaVillages = [];
 let mapMarkers = [];
+let gazaGeoJsonLayer = null;
 let mouseX = -1000, mouseY = -1000;
 
 let backgroundSound = null;
@@ -195,7 +196,7 @@ function toggleTheme() {
     const isLight = body.classList.contains('light-mode');
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
     updateThemeIcon(isLight);
-    isDirty = true;
+    isDirty = true; // تفعيل إعادة الرسم عند تغيير الثيم
 }
 
 function updateThemeIcon(isLight) {
@@ -426,33 +427,29 @@ const milestoneCinematicData = [
     }
 ];
 
-// Language Dropdown Global Toggle
+// ----------------------------------------------------
+// Custom Globe Language Dropdown Logic (Matching Capture.PNG & Capture1.PNG)
+// ----------------------------------------------------
 window.toggleLanguageDropdown = function(e) {
     if (e) e.stopPropagation();
     if (window.i18n && typeof window.i18n.toggleLanguageDropdown === 'function') {
         window.i18n.toggleLanguageDropdown(e);
     } else {
         const menu = document.getElementById('language-dropdown-menu');
-        if (menu) {
-            menu.classList.toggle('hidden');
-        }
+        if (menu) menu.classList.toggle('hidden');
     }
 };
 
 window.closeLanguageDropdown = function() {
     if (window.i18n && typeof window.i18n.closeLanguageDropdown === 'function') {
         window.i18n.closeLanguageDropdown();
-    }
-    const menu = document.getElementById('language-dropdown-menu');
-    if (menu) {
-        menu.classList.add('hidden');
-        menu.style.display = 'none';
+    } else {
+        const menu = document.getElementById('language-dropdown-menu');
+        if (menu) menu.classList.add('hidden');
     }
 };
 
-document.addEventListener('click', (e) => {
-    const container = document.getElementById('language-dropdown-container');
-    if (container && container.contains(e.target)) return;
+document.addEventListener('click', () => {
     window.closeLanguageDropdown();
 });
 
@@ -466,6 +463,9 @@ function changeLanguage(langCode) {
             htmlRoot.lang = currentLang;
             htmlRoot.dir = (['ar', 'ur', 'fa'].includes(currentLang)) ? 'rtl' : 'ltr';
         }
+        document.querySelectorAll('.active-check-lang').forEach(el => el.classList.add('hidden'));
+        const checkEl = document.getElementById('check-' + currentLang);
+        if (checkEl) checkEl.classList.remove('hidden');
         return;
     }
     if (!translations[langCode]) langCode = 'ar';
@@ -477,6 +477,15 @@ function changeLanguage(langCode) {
     if (htmlRoot) {
         htmlRoot.lang = currentLang;
         htmlRoot.dir = (['ar', 'ur', 'fa'].includes(currentLang)) ? 'rtl' : 'ltr';
+    }
+
+    // Update custom dropdown checkmarks (matching checkmark style in Capture1.PNG)
+    document.querySelectorAll('.active-check-lang').forEach(el => {
+        el.classList.add('hidden');
+    });
+    const checkEl = document.getElementById(`check-${langCode}`);
+    if (checkEl) {
+        checkEl.classList.remove('hidden');
     }
 
     const setInnerText = (id, text) => {
@@ -491,10 +500,90 @@ function changeLanguage(langCode) {
     setInnerText('title-main', t.titleMain);
     setInnerText('logo-text', t.logoText);
     setPlaceholder('search-input', t.searchPlaceholder);
+    setInnerText('tab-souls', t.tabSouls);
+    setInnerText('tab-journalists', t.tabJournalists);
+    setInnerText('tab-westbank', t.tabWestBank);
+    setInnerText('tab-48', t.tab48);
+    setInnerText('tab-milestones', t.tabMilestones);
+    setInnerText('tab-stats', t.tabStats);
+    setInnerText('tab-videos', t.tabVideos);
+    setInnerText('tab-map', t.tabMap);
     setInnerText('donate-desktop', t.donate);
+    const verseTextEl = document.getElementById('verse-text');
+    if (verseTextEl) {
+        if (langCode === 'ar') {
+            verseTextEl.innerText = '';
+            verseTextEl.classList.add('hidden');
+        } else {
+            verseTextEl.innerText = t.verse;
+            verseTextEl.classList.remove('hidden');
+        }
+    }
     setInnerText('dev-text', t.devText);
     setInnerText('share-btn-text', t.shareBtn);
     setInnerText('martyrs-label', t.martyrsLabel);
+
+    const corridorsBtnText = document.getElementById('corridors-btn-text');
+    if (corridorsBtnText) {
+        corridorsBtnText.innerText = (typeof corridorsActive !== 'undefined' && corridorsActive) ? t.corridorsOn : t.corridorsOff;
+    }
+
+    const modalMilestoneTitle = document.getElementById('modal-milestone-title-text');
+    if(modalMilestoneTitle) modalMilestoneTitle.innerText = t.milestonesTitle;
+    const modalMartyrTitle = document.getElementById('modal-martyr-title-text');
+    if(modalMartyrTitle) modalMartyrTitle.innerText = t.martyrCardTitle;
+    const modalPhotoText = document.getElementById('modal-photo-text');
+    if(modalPhotoText) modalPhotoText.innerText = t.modalPhotoText;
+    const modalAgeLabel = document.getElementById('modal-age-label');
+    if(modalAgeLabel) modalAgeLabel.innerText = t.ageLabel;
+    const modalIdLabel = document.getElementById('modal-id-label');
+    if(modalIdLabel) modalIdLabel.innerText = t.idLabel;
+    const shareBtnModal = document.getElementById('share-btn-modal');
+    if(shareBtnModal) shareBtnModal.innerText = t.shareCardBtn;
+    const mapLogTitle = document.getElementById('map-log-title');
+    if(mapLogTitle) mapLogTitle.innerText = t.mapLogTitle;
+    const mapSearchInput = document.getElementById('map-search-input');
+    if(mapSearchInput) mapSearchInput.placeholder = t.mapSearchPlaceholder;
+    const mapEmptyText = document.getElementById('map-empty-text');
+    if(mapEmptyText) mapEmptyText.innerText = t.mapEmptyText;
+    const mapEmptyOverlay = document.getElementById('map-empty-overlay');
+    if(mapEmptyOverlay) mapEmptyOverlay.innerText = t.mapEmptyOverlay;
+    const wbTitle = document.getElementById('wb-title');
+    if(wbTitle) wbTitle.innerText = t.wbTitle;
+    const wbDesc = document.getElementById('wb-desc');
+    if(wbDesc) wbDesc.innerText = t.wbDesc;
+    const wbStatus = document.getElementById('wb-status');
+    if(wbStatus) wbStatus.innerText = t.wbStatus;
+    const m48Title = document.getElementById('m48-title');
+    if(m48Title) m48Title.innerText = t.m48Title;
+    const m48Desc = document.getElementById('m48-desc');
+    if(m48Desc) m48Desc.innerText = t.m48Desc;
+    const m48Status = document.getElementById('m48-status');
+    if(m48Status) m48Status.innerText = t.m48Status;
+    const archiveTitle = document.getElementById('archive-title');
+    if(archiveTitle) archiveTitle.innerText = t.archiveTitle;
+    const archiveSub = document.getElementById('archive-sub');
+    if(archiveSub) archiveSub.innerText = t.archiveSub;
+    const btnAll = document.getElementById('btn-all');
+    if(btnAll) btnAll.innerText = t.btnAll;
+    const btnReports = document.getElementById('btn-reports');
+    if(btnReports) btnReports.innerText = t.btnReports;
+    const btnTestimonies = document.getElementById('btn-testimonies');
+    if(btnTestimonies) btnTestimonies.innerText = t.btnTestimonies;
+    const tlcIntro1 = document.getElementById('tlc-intro-1');
+    if(tlcIntro1) tlcIntro1.innerText = t.tlcIntro1;
+    const tlcIntro2 = document.getElementById('tlc-intro-2');
+    if(tlcIntro2) tlcIntro2.innerText = t.tlcIntro2;
+    const tlcFooterStory = document.getElementById('tlc-footer-story');
+    if(tlcFooterStory) tlcFooterStory.innerText = t.tlcFooterStory;
+    const statsTitle = document.getElementById('stats-title');
+    if(statsTitle) statsTitle.innerText = t.statsTitle;
+    const statsBanner = document.getElementById('stats-banner');
+    if(statsBanner) statsBanner.innerText = t.statsBanner;
+    const statsUrbanHeader = document.getElementById('stats-urban-header');
+    if(statsUrbanHeader) statsUrbanHeader.innerText = t.statsUrbanHeader;
+    const noDataText = document.getElementById('no-data-text');
+    if(noDataText) noDataText.innerText = t.noDataText;
 
     updateMusicButton();
     isDirty = true;
@@ -504,18 +593,426 @@ window.shareSite = function(){
     navigator.clipboard.writeText(window.location.href).then(() => alert('تم نسخ رابط المنصة بنجاح!'));
 };
 
+window.shareMartyrCard = function(){
+    if(!currentMartyrObj) return;
+    const btn = document.getElementById('share-btn-modal');
+    const originalText = btn.innerText;
+    btn.innerText = "جاري تحضير الصورة...";
+    btn.disabled = true;
+
+    const person = currentMartyrObj;
+    document.getElementById('capture-name').innerText = person.name_ar || person.name || 'شهيد مجهول';
+    document.getElementById('capture-name-en').innerText = person.name_en || person.english_name || '';
+    document.getElementById('capture-age').innerText = person.age || 'غير معروف';
+    document.getElementById('capture-id').innerText = person.id || '-';
+
+    const imgContainer = document.getElementById('capture-img-container');
+    if (person.image) {
+        imgContainer.innerHTML = `<img src="${person.image}" style="width:100%; height:100%; object-fit:cover;" crossorigin="anonymous">`;
+    } else {
+        imgContainer.innerHTML = `<span style="color:#666; font-size: 1.2rem;">صورة الشهيد</span>`;
+    }
+
+    const cardElement = document.getElementById('shareable-card');
+
+    html2canvas(cardElement, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#0a0a0a'
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `توثيق_الشهيد_${(person.name_ar || 'مجهول').replace(/\s+/g, '_')}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+
+        btn.innerText = originalText;
+        btn.disabled = false;
+    }).catch(err => {
+        console.error("Error generating card image:", err);
+        alert("حدث خطأ أثناء التقاط الصورة. يرجى المحاولة مرة أخرى.");
+        btn.innerText = originalText;
+        btn.disabled = false;
+    });
+};
+
+function openMilestoneModal(item) {
+    currentMilestoneObj = item;
+    // Reset Speech state on modal open
+    if (isMilestoneSpeaking) {
+        window.speechSynthesis.cancel();
+        isMilestoneSpeaking = false;
+    }
+    const ttsBtnText = document.getElementById('milestone-tts-btn-text');
+    if (ttsBtnText) {
+        ttsBtnText.innerText = currentLang === 'ar' ? 'استماع للحدث التاريخي' : 'Listen Event';
+    }
+
+    const modal = document.getElementById('milestone-modal-overlay');
+    const container = document.getElementById('milestone-modal-body-container');
+    if(!modal || !container) return;
+    const t = translations[currentLang];
+
+    container.innerHTML = `
+        <div class="tlc-modal-content">
+            <h2 class="tlc-modal-title">${item.title} ${item.alt ? `<span class="tlc-mdl-alt">(${item.alt})</span>` : ''}</h2>
+            <div class="tlc-modal-meta"><time>${item.year}</time></div>
+            <img class="tlc-modal-img" src="${item.image}" alt="" onerror="this.style.display='none'">
+            <div class="tlc-modal-desc">${item.excerpt}</div>
+            <div class="tlc-modal-stat">
+                <span class="tlc-mdl-stat-label">عدد الشهداء:</span>
+                <span class="tlc-mdl-stat-num">${item.stat}</span>
+                <p class="tlc-mdl-stat-exp">${item.statExp || item.excerpt}</p>
+            </div>
+            <div class="tlc-modal-source">
+                <span>${t.source}</span>
+                <a href="${item.sourceUrl || 'https://www.palquest.org/'}" target="_blank" rel="noopener">${item.sourceName || 'الموسوعة التفاعلية للقضية الفلسطينية'}</a>
+            </div>
+        </div>
+    `;
+    modal.style.display = 'flex';
+    if (typeof translateMilestoneModal === 'function') {
+        translateMilestoneModal(currentLang);
+    }
+}
+
+function renderCinematicTimeline() {
+    const scenesContainer = document.getElementById('tlc-scenes-container');
+    if(!scenesContainer) return;
+    scenesContainer.innerHTML = '';
+
+    let currentDecadeSection = null;
+    let currentCardsGrid = null;
+
+    milestoneCinematicData.forEach(item => {
+        if (item.type === 'decade') {
+            currentDecadeSection = document.createElement('div');
+            currentDecadeSection.className = 'tlc-decade-group';
+            currentDecadeSection.id = item.id;
+
+            const decadeHeader = document.createElement('div');
+            decadeHeader.className = 'tlc-decade';
+            decadeHeader.innerHTML = `
+                <h2 class="tlc-decade-num">${item.decade}<span>s</span></h2>
+                <div class="tlc-decade-divider"></div>
+                <div class="tlc-decade-cards" id="cards-${item.decade}"></div>
+            `;
+            currentDecadeSection.appendChild(decadeHeader);
+            currentCardsGrid = decadeHeader.querySelector('.tlc-decade-cards');
+            scenesContainer.appendChild(currentDecadeSection);
+        } else if (item.type === 'scene') {
+            if (currentCardsGrid) {
+                const cardA = document.createElement('a');
+                cardA.className = 'tlc-decade-card';
+                cardA.href = `#${item.id}`;
+                cardA.onclick = (e) => {
+                    e.preventDefault();
+                    const target = document.getElementById(item.id);
+                    if(target) target.scrollIntoView({behavior: 'smooth'});
+                };
+                cardA.innerHTML = `
+                    <div class="tlc-decade-card-img"><img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.style.display='none'"></div>
+                    <div class="tlc-decade-card-body">
+                        <span class="tlc-decade-card-year">${item.year}</span>
+                        <span class="tlc-decade-card-title">${item.title}</span>
+                    </div>
+                `;
+                currentCardsGrid.appendChild(cardA);
+            }
+
+            const sceneEl = document.createElement('section');
+            sceneEl.className = 'tlc-scene';
+            sceneEl.id = item.id;
+            sceneEl.innerHTML = `
+                <div class="tlc-bg" aria-hidden="true">
+                    <img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.style.display='none'">
+                    <div class="tlc-bg-tint"></div>
+                </div>
+                <article class="tlc-panel">
+                    <time class="tlc-date">${item.year}</time>
+                    <h2 class="tlc-title">${item.title}</h2>
+                    ${item.alt ? `<p class="tlc-alt">${item.alt}</p>` : ''}
+                    <p class="tlc-excerpt">${item.excerpt}</p>
+                    <div class="tlc-foot">
+                        <div class="tlc-stat">
+                            <span class="tlc-stat-num">${item.stat}</span>
+                            <span class="tlc-stat-label">عدد الشهداء والضحايا:</span>
+                        </div>
+                        <div class="flex gap-1.5 items-center">
+                            <button type="button" class="tlc-more"><span>اقرأ المزيد</span><span aria-hidden="true">→</span></button>
+                            <button type="button" onclick="timelineShowOnMap('${item.title.replace(/'/g, "\\'")}')" class="btn-main text-[10px] px-2.5 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded-full flex items-center gap-1">🗺️ الخريطة</button>
+                        </div>
+                    </div>
+                </article>
+            `;
+            sceneEl.querySelector('.tlc-more').onclick = () => openMilestoneModal(item);
+            if (currentDecadeSection) currentDecadeSection.appendChild(sceneEl);
+            else scenesContainer.appendChild(sceneEl);
+        }
+    });
+
+    // Initialize Scrollytelling IntersectionObserver
+    setTimeout(initScrollytellingObserver, 100);
+}
+
+// ----------------------------------------------------
+// Category 2 JS: Immersive Scrollytelling Map Connection
+// ----------------------------------------------------
+const milestoneCoords = {
+    "هبّة البراق": { lat: 31.7767, lng: 35.2345, zoom: 14, name: "حائط البراق - القدس الشريف" },
+    "الثورة الفلسطينية الكبرى": { lat: 31.9038, lng: 35.2034, zoom: 11, name: "فلسطين المحتلة" },
+    "مرحلة التطهير العرقي في فلسطين": { lat: 31.5, lng: 34.4667, zoom: 10, name: "فلسطين التاريخية" },
+    "مجزرة دير ياسين": { lat: 31.7864, lng: 35.1764, zoom: 15, name: "قرية دير ياسين المهجرة" },
+    "مجزرة الطنطورة": { lat: 32.6139, lng: 34.9228, zoom: 14, name: "الطنطورة المهجرة" },
+    "مجزرة قبية": { lat: 31.9867, lng: 34.9917, zoom: 14, name: "قرية قبية المهجرة" },
+    "مجزرة كفر قاسم": { lat: 32.115, lng: 34.9753, zoom: 14, name: "كفر قاسم" },
+    "عدوان 1956 ومجزرة خان يونس": { lat: 31.3458, lng: 34.3025, zoom: 13, name: "خان يونس - قطاع غزة" },
+    "نكسة حزيران 1967": { lat: 31.7767, lng: 35.2345, zoom: 10, name: "الضفة الغربية وقطاع غزة" },
+    "يوم الأرض الخالد 1976": { lat: 32.8647, lng: 35.2806, zoom: 12, name: "سخنين وعرابة ودير حنا" },
+    "مجزرة صبرا وشاتيلا 1982": { lat: 33.8644, lng: 35.4967, zoom: 14, name: "مخيم صبرا وشاتيلا" },
+    "الانتفاضة الأولى (انتفاضة الحجارة) 1987": { lat: 31.5017, lng: 34.4581, zoom: 11, name: "جباليا وقطاع غزة والضفة" },
+    "مجزرة الحرم الإبراهيمي 1994": { lat: 31.5244, lng: 35.1081, zoom: 15, name: "الحرم الإبراهيمي - الخليل" },
+    "الانتفاضة الثانية (انتفاضة الأقصى) 2000": { lat: 31.7761, lng: 35.2358, zoom: 14, name: "المسجد الأقصى - القدس الشريف" },
+    "مجزرة جنين 2002": { lat: 32.4614, lng: 35.2936, zoom: 14, name: "مخيم جنين" },
+    "حروب وغارات غزة المتكررة (2008 - 2021)": { lat: 31.45, lng: 34.4, zoom: 11, name: "قطاع غزة" },
+    "طوفان الأقصى والعدوان الشامل": { lat: 31.42, lng: 34.38, zoom: 11, name: "غزة الصامدة" }
+};
+
+function timelineShowOnMap(milestoneTitle) {
+    const coords = milestoneCoords[milestoneTitle];
+    if (!coords) return;
+
+    switchMainMode('map');
+    initMapIfNeeded();
+
+    setTimeout(() => {
+        if (map) {
+            map.setView([coords.lat, coords.lng], coords.zoom);
+            L.popup()
+                .setLatLng([coords.lat, coords.lng])
+                .setContent(`<div class="font-['Cairo'] text-right text-xs p-1">
+                    <strong class="text-red-500">${milestoneTitle}</strong><br>
+                    <span>الموقع: ${coords.name}</span>
+                </div>`)
+                .openOn(map);
+        }
+    }, 300);
+}
+
+function initScrollytellingObserver() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+
+                const titleEl = entry.target.querySelector('.tlc-title');
+                if (titleEl) {
+                    const title = titleEl.innerText.trim();
+                    const coords = milestoneCoords[title];
+                    if (coords && map) {
+                        map.panTo([coords.lat, coords.lng]);
+                    }
+                }
+            } else {
+                entry.target.classList.remove('active');
+            }
+        });
+    }, {
+        threshold: 0.25,
+        rootMargin: "-10% 0px -20% 0px"
+    });
+
+    document.querySelectorAll('.tlc-scene').forEach(scene => {
+        observer.observe(scene);
+    });
+}
+
+// ----------------------------------------------------
+// Category 3 JS: Voice Search (Web Speech API)
+// ----------------------------------------------------
+function startVoiceSearch(inputId, callback) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        alert(currentLang === 'ar' ? 'البحث الصوتي غير مدعوم في متصفحك. يرجى استخدام متصفح Chrome أو Safari.' : 'Voice Search is not supported in your browser. Please use Chrome or Safari.');
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    let micBtn = null;
+    if (inputId === 'search-input') {
+        micBtn = document.getElementById('voice-search-btn');
+    } else {
+        micBtn = document.getElementById('map-voice-btn');
+    }
+
+    if (micBtn) {
+        micBtn.classList.add('bg-red-600', 'animate-pulse');
+        micBtn.innerText = '🔴';
+    }
+
+    recognition.onstart = () => {
+        console.log("Voice recognition started...");
+    };
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        console.log("Voice input transcribed:", transcript);
+        const inputEl = document.getElementById(inputId);
+        if (inputEl) {
+            inputEl.value = transcript;
+            if (callback) callback(transcript);
+        }
+    };
+
+    recognition.onerror = (err) => {
+        console.error("Speech recognition error:", err);
+    };
+
+    recognition.onend = () => {
+        if (micBtn) {
+            micBtn.classList.remove('bg-red-600', 'animate-pulse');
+            micBtn.innerText = '🎤';
+        }
+    };
+
+    recognition.start();
+}
+
+// ----------------------------------------------------
+// Category 3 JS: Text-To-Speech (Speech Synthesis)
+// ----------------------------------------------------
+let isMartyrSpeaking = false;
+let isMilestoneSpeaking = false;
+let currentMilestoneObj = null;
+
+function playMartyrTTS() {
+    if (!currentMartyrObj) return;
+
+    if (isMartyrSpeaking) {
+        window.speechSynthesis.cancel();
+        isMartyrSpeaking = false;
+        document.getElementById('tts-btn-text').innerText = currentLang === 'ar' ? 'استماع للسيرة' : 'Listen Biography';
+        return;
+    }
+
+    window.speechSynthesis.cancel();
+    isMilestoneSpeaking = false;
+
+    const bioText = currentMartyrObj.notes || (currentLang === 'ar' ? 'شهيد من أبناء فلسطين الأوفياء' : 'A martyr of the loyal sons of Palestine');
+
+    const utterance = new SpeechSynthesisUtterance(bioText);
+    utterance.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+
+    utterance.onstart = () => {
+        isMartyrSpeaking = true;
+        document.getElementById('tts-btn-text').innerText = currentLang === 'ar' ? 'إيقاف الصوت' : 'Stop Listening';
+    };
+
+    utterance.onend = () => {
+        isMartyrSpeaking = false;
+        document.getElementById('tts-btn-text').innerText = currentLang === 'ar' ? 'استماع للسيرة' : 'Listen Biography';
+    };
+
+    utterance.onerror = () => {
+        isMartyrSpeaking = false;
+        document.getElementById('tts-btn-text').innerText = currentLang === 'ar' ? 'استماع للسيرة' : 'Listen Biography';
+    };
+
+    window.speechSynthesis.speak(utterance);
+}
+
+function playMilestoneTTS() {
+    if (!currentMilestoneObj) return;
+
+    if (isMilestoneSpeaking) {
+        window.speechSynthesis.cancel();
+        isMilestoneSpeaking = false;
+        document.getElementById('milestone-tts-btn-text').innerText = currentLang === 'ar' ? 'استماع للحدث التاريخي' : 'Listen Event';
+        return;
+    }
+
+    window.speechSynthesis.cancel();
+    isMartyrSpeaking = false;
+
+    const text = currentMilestoneObj.excerpt || '';
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+
+    utterance.onstart = () => {
+        isMilestoneSpeaking = true;
+        document.getElementById('milestone-tts-btn-text').innerText = currentLang === 'ar' ? 'إيقاف الصوت' : 'Stop Listening';
+    };
+
+    utterance.onend = () => {
+        isMilestoneSpeaking = false;
+        document.getElementById('milestone-tts-btn-text').innerText = currentLang === 'ar' ? 'استماع للحدث التاريخي' : 'Listen Event';
+    };
+
+    utterance.onerror = () => {
+        isMilestoneSpeaking = false;
+        document.getElementById('milestone-tts-btn-text').innerText = currentLang === 'ar' ? 'استماع للحدث التاريخي' : 'Listen Event';
+    };
+
+    window.speechSynthesis.speak(utterance);
+}
+
+// ----------------------------------------------------
+// Category 4 JS: Solidarity Card Generator
+// ----------------------------------------------------
+function updateCertificatePreview() {
+    const name = document.getElementById('cert-name').value.trim() || 'متضامن مع فلسطين';
+    const slogan = document.getElementById('cs-slogan').value.trim() || '';
+
+    document.getElementById('preview-cert-name').innerText = name;
+    document.getElementById('preview-cs-slogan').innerText = slogan;
+}
+
+function updateCertificateTheme(theme) {
+    const keffiyehBg = document.getElementById('cert-bg-keffiyeh');
+    const flagBg = document.getElementById('cert-bg-flag');
+    const oliveBg = document.getElementById('cert-bg-olive');
+
+    keffiyehBg.classList.add('hidden');
+    flagBg.classList.add('hidden');
+    oliveBg.classList.add('hidden');
+
+    if (theme === 'keffiyeh') {
+        keffiyehBg.classList.remove('hidden');
+    } else if (theme === 'flag') {
+        flagBg.classList.remove('hidden');
+    } else if (theme === 'olive') {
+        oliveBg.classList.remove('hidden');
+    }
+}
+
+function downloadCertificate() {
+    const element = document.getElementById('certificate-preview');
+    if (!element) return;
+
+    html2canvas(element, {
+        backgroundColor: '#1a1a1a',
+        scale: 2,
+        useCORS: true
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'Palestinian_Souls_Solidarity_Card.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    });
+}
+
 function initMapIfNeeded() {
     if (!map) {
-        const container = document.getElementById('map-element') || document.getElementById('map');
-        if (container) {
-            map = L.map(container, { minZoom: 7 }).setView([31.95, 35.15], 8);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                attribution: '© OpenStreetMap contributors © CARTO',
-                subdomains: 'abcd',
-                maxZoom: 19
-            }).addTo(map);
-            markersLayer = L.layerGroup().addTo(map);
-        }
+        map = L.map('map', { minZoom: 7 }).setView([31.95, 35.15], 8);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '© OpenStreetMap contributors © CARTO',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+        markersLayer = L.layerGroup().addTo(map);
     }
 }
 
@@ -536,6 +1033,7 @@ function loadMapData() {
             renderMapAndList();
         })
         .fail(err => {
+            console.log("Failed to load Nakba villages GeoJSON, using robust fallback:", err);
             nakbaVillages = [
                 { id: "deir-yassin", name: "Deir Yassin", year: 1948, fate: "Massacre", lat: 31.7868, lng: 35.1784 },
                 { id: "tantura", name: "Tantura", year: 1948, fate: "Massacre", lat: 32.61, lng: 34.93 },
@@ -557,7 +1055,7 @@ function renderMapAndList() {
 
     const listContainer = document.getElementById('map-data-list');
     const query = document.getElementById('map-search-input') ? document.getElementById('map-search-input').value.trim().toLowerCase() : '';
-    const t = translations[currentLang] || translations.ar;
+    const t = translations[currentLang];
 
     const filtered = nakbaVillages.filter(v => {
         const name = (v.name || '').toLowerCase();
@@ -578,7 +1076,7 @@ function renderMapAndList() {
     if (overlay) overlay.style.display = 'none';
 
     let html = '';
-    filtered.forEach((v) => {
+    filtered.forEach((v, index) => {
         if (markersLayer) {
             let marker = L.circleMarker([v.lat, v.lng], {
                 radius: 7,
@@ -590,11 +1088,24 @@ function renderMapAndList() {
             });
 
             const fateAr = v.fate === 'Massacre' ? 'مجزرة وحشية' : 'قرية مهجرة بالكامل';
+            const fateLabelPop = currentLang === 'ar' ? fateAr :
+                                 currentLang === 'en' ? (v.fate === 'Massacre' ? 'Brutal Massacre' : 'Completely Depopulated') :
+                                 currentLang === 'fr' ? (v.fate === 'Massacre' ? 'Massacre Brutal' : 'Complètement Dépeuplé') :
+                                                        (v.fate === 'Massacre' ? 'Masacre Brutal' : 'Completamente Despoblado');
+
+            const yearLabelPop = currentLang === 'ar' ? 'سنة التهجير' :
+                                 currentLang === 'en' ? 'Displacement Year' :
+                                 currentLang === 'fr' ? 'Année d\'expulsion' : 'Año de expulsión';
+
+            const fateHeaderPop = currentLang === 'ar' ? 'المصير والوضع الحالي' :
+                                  currentLang === 'en' ? 'Fate & Current Status' :
+                                  currentLang === 'fr' ? 'Destin et statut actuel' : 'Destino y estado actual';
+
             const popupContent = `
                 <div class="p-2.5 text-right font-['Cairo'] text-xs text-white bg-neutral-900/95 border border-red-600/30 rounded-lg max-w-[200px]">
                     <h4 class="font-bold text-red-400 text-sm mb-1">🇵🇸 ${v.name}</h4>
-                    <p class="text-gray-300 mb-1"><strong>سنة التهجير:</strong> ${v.year}</p>
-                    <p class="text-gray-300"><strong>المصير:</strong> ${fateAr}</p>
+                    <p class="text-gray-300 mb-1"><strong>${yearLabelPop}:</strong> ${v.year}</p>
+                    <p class="text-gray-300"><strong>${fateHeaderPop}:</strong> ${fateLabelPop}</p>
                 </div>
             `;
             marker.bindPopup(popupContent);
@@ -603,10 +1114,19 @@ function renderMapAndList() {
             mapMarkers.push({ name: v.name.toLowerCase(), marker: marker, lat: v.lat, lng: v.lng });
         }
 
+        const fateLabel = currentLang === 'ar' ? (v.fate === 'Massacre' ? 'مجزرة' : 'تهجير') :
+                          currentLang === 'en' ? (v.fate === 'Massacre' ? 'Massacre' : 'Depopulated') :
+                          currentLang === 'fr' ? (v.fate === 'Massacre' ? 'Massacre' : 'Dépeuplé') :
+                                                 (v.fate === 'Massacre' ? 'Masacre' : 'Despoblado');
+
+        const statusText = currentLang === 'ar' ? 'الوضع' :
+                           currentLang === 'en' ? 'Status' :
+                           currentLang === 'fr' ? 'Statut' : 'Estado';
+
         html += `
             <div class="map-item bg-black/40 border border-white/5 hover:border-red-500/30 p-2.5 rounded-xl cursor-pointer transition-all hover:bg-black/60 text-right" onclick="focusMapMarker(${v.lat}, ${v.lng}, '${v.name}')">
                 <div class="font-bold text-xs text-white">${v.name}</div>
-                <div class="text-[10px] text-gray-400 font-mono mt-1">الوضع: <span class="text-red-400">${v.fate} (${v.year})</span></div>
+                <div class="text-[10px] text-gray-400 font-mono mt-1">${statusText}: <span class="text-red-400">${fateLabel} (${v.year})</span></div>
             </div>
         `;
     });
@@ -645,11 +1165,6 @@ const martyrs48Data = [
     { id: "m48_5", name: "إياد لوابنة", name_en: "Eyad Lawabny", age: 26, date: "2000-10-02", city: "الناصرة", notes: "طبيب ومسعف فلسطيني ارتقى شهيداً في الناصرة أثناء تقديمه الإسعافات الأولية للجرحى خلال هبة أكتوبر 2000 البطولية بالداخل المحتل." },
     { id: "m48_6", name: "أحمد جبارين", name_en: "Ahmed Jabarin", age: 18, date: "2000-10-01", city: "أم الفحم", notes: "شاب في مقتبل العمر ارتقى شهيداً برصاص القناصة خلال التظاهرات السلمية في أم الفحم دفاعاً عن المسجد الأقصى المبارك والهوية الوطنية." }
 ];
-
-if (window.cardsEngine) {
-    window.cardsEngine.registerData(westBankMartyrsData);
-    window.cardsEngine.registerData(martyrs48Data);
-}
 
 function renderTributeCards(containerId, dataset) {
     const container = document.getElementById(containerId);
@@ -692,10 +1207,13 @@ function renderTributeCards(containerId, dataset) {
 
 window.switchMainMode = function(mode) {
     currentMainMode = mode;
+    document.querySelectorAll('.btn-main').forEach(btn => btn.classList.remove('active'));
+    const activeBtn = document.getElementById(`tab-${mode === 'martyrs48' ? '48' : mode}`);
+    if (activeBtn) activeBtn.classList.add('active');
 
-    // Restrict Family Galaxies gathering features strictly to Gaza Souls (home)
+    // Restrict Family Galaxies gathering features strictly to Gaza Souls (index.html)
     const corridorsBtn = document.getElementById('corridors-toggle-btn');
-    if (mode === 'home' || mode === 'souls') {
+    if (mode === 'souls') {
         if (corridorsBtn) corridorsBtn.style.display = 'inline-flex';
     } else {
         corridorsActive = false;
@@ -710,14 +1228,74 @@ window.switchMainMode = function(mode) {
         }
     }
 
-    if (mode === 'map') {
+    ['map-view', 'stats-view', 'videos-view', 'no-data-view', 'milestones-view', 'westbank-view', 'martyrs48-view'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
+    const canvasLayer = document.getElementById('canvas-layer');
+    const shootingCanvas = document.getElementById('shooting-stars-canvas');
+    const showStars = ['souls', 'journalists', 'westbank', 'martyrs48'].includes(mode);
+
+    if (showStars) {
+        document.body.classList.remove('stars-hidden');
+    } else {
+        document.body.classList.add('stars-hidden');
+    }
+
+    if (canvasLayer) canvasLayer.style.display = showStars ? '' : 'none';
+    if (shootingCanvas) shootingCanvas.style.display = showStars ? '' : 'none';
+
+    const verseContainer = document.getElementById('verse-container');
+    const counterBox = document.getElementById('counter-box');
+    const showVerseAndCounter = ['souls', 'journalists', 'westbank', 'martyrs48'].includes(mode);
+
+    if (verseContainer) verseContainer.style.display = showVerseAndCounter ? '' : 'none';
+    if (counterBox) counterBox.style.display = showVerseAndCounter ? 'flex' : 'none';
+
+    if(mode === 'souls'){
+        fetchAndRenderData('./data/victims.json');
+    } else if(mode === 'journalists') {
+        fetchAndRenderData('./data/journalists.json');
+    } else if(mode === 'westbank') {
+        const el = document.getElementById('westbank-view');
+        if (el) el.style.display = 'block';
+        let wbData = applyApprovedSubmissions(westBankMartyrsData);
+        renderTributeCards('wb-cards-container', wbData);
+        document.getElementById('number').innerText = wbData.length.toLocaleString();
+        initCanvasPoints(wbData);
+        isDirty = true;
+    } else if(mode === 'martyrs48') {
+        const el = document.getElementById('martyrs48-view');
+        if (el) el.style.display = 'block';
+        let m48Data = applyApprovedSubmissions(martyrs48Data);
+        renderTributeCards('m48-cards-container', m48Data);
+        document.getElementById('number').innerText = m48Data.length.toLocaleString();
+        initCanvasPoints(m48Data);
+        isDirty = true;
+    } else if(mode === 'milestones') {
+        const el = document.getElementById('milestones-view');
+        if (el) el.style.display = 'block';
+        renderCinematicTimeline();
+    } else if(mode === 'stats') {
+        const el = document.getElementById('stats-view');
+        if (el) el.style.display = 'block';
+    } else if(mode === 'videos') {
+        const el = document.getElementById('videos-view');
+        if (el) el.style.display = 'block';
+    } else if(mode === 'map') {
+        const el = document.getElementById('map-view');
+        if (el) el.style.display = 'block';
         if (nakbaVillages.length === 0) {
             loadMapData();
         } else {
             renderMapAndList();
         }
         setTimeout(() => {
-            if (map) map.invalidateSize();
+            if (map) {
+                map.invalidateSize();
+                if (typeof window.loadGazaBorders === 'function') { window.loadGazaBorders(); }
+            }
         }, 200);
     }
 };
@@ -726,26 +1304,24 @@ function fetchAndRenderData(url) {
     $.getJSON(url)
         .done(data => {
             let list = data || [];
-            if (url.includes('journalists')) {
-                journalistsData = applyApprovedSubmissions(list);
-                if (window.cardsEngine) window.cardsEngine.registerData(journalistsData);
-                renderTributeCards('journalists-cards-container', journalistsData);
-            } else {
-                gazaSouls = applyApprovedSubmissions(list);
-                if (window.cardsEngine) window.cardsEngine.registerData(gazaSouls);
-                document.getElementById('number').innerText = gazaSouls.length.toLocaleString();
-                initCanvasPoints(gazaSouls);
-            }
+            gazaSouls = applyApprovedSubmissions(list);
+            document.getElementById('number').innerText = gazaSouls.length.toLocaleString();
+            initCanvasPoints(gazaSouls);
             isDirty = true;
         })
         .fail((jqxhr, textStatus, error) => {
-            console.error('Failed to load data from:', url, error);
+            console.error('Failed to load archive data from:', url, error);
+            const numEl = document.getElementById('number');
+            if (numEl) numEl.innerText = '0';
+            if (window.dataLoader) {
+              window.dataLoader.renderErrorUI('canvas-layer', error || 'Failed to load archive data', () => fetchAndRenderData(url));
+            }
         });
 }
 
 function searchMartyrByName(query) {
     currentSearchQuery = query.trim().toLowerCase();
-    isDirty = true;
+    isDirty = true; // إعادة الرسم عند البحث
 
     const dropdown = document.getElementById('search-results-dropdown');
     if (!dropdown) return;
@@ -756,15 +1332,18 @@ function searchMartyrByName(query) {
         return;
     }
 
+    // البحث في البيانات النشطة عبر جميع الحقول
     const matches = gazaSouls.filter(person => {
         const nameAr = (person.name_ar || person.name || "").toLowerCase();
         const nameEn = (person.en_name || person.name_en || person.english_name || "").toLowerCase();
         const id = (person.id || person.id_number || "").toString().toLowerCase();
         const city = (person.city || person.district || person.governorate || "").toLowerCase();
+        const category = (person.category || person.profession || person.role || "").toLowerCase();
         return nameAr.includes(currentSearchQuery) ||
                nameEn.includes(currentSearchQuery) ||
                id.includes(currentSearchQuery) ||
-               city.includes(currentSearchQuery);
+               city.includes(currentSearchQuery) ||
+               category.includes(currentSearchQuery);
     }).slice(0, 15);
 
     if (matches.length === 0) {
@@ -775,6 +1354,12 @@ function searchMartyrByName(query) {
         matches.forEach(person => {
             let displayName = person.name || person.name_ar || person.en_name || 'شهيد مجهول';
             let subtitle = person.en_name || person.name_en || person.english_name || '';
+            const activeLang = window.i18n ? window.i18n.currentLang : 'ar';
+            if (activeLang !== 'ar' && typeof transliterateName === 'function') {
+                displayName = subtitle || transliterateName(person.name || '', activeLang);
+            }
+            const ageLabel = window.i18n ? window.i18n.t('age', 'العمر') : 'العمر';
+            const displayAge = person.age !== undefined && person.age !== null ? person.age : (window.i18n ? window.i18n.t('unknown_age', 'غير محدد') : 'غير محدد');
 
             html += `
                 <div class="search-result-item p-2.5 hover:bg-red-950/40 border-b border-white/5 cursor-pointer flex justify-between items-center transition-all" onclick="selectSearchMartyr(${JSON.stringify(person).replace(/"/g, '&quot;')})">
@@ -782,6 +1367,7 @@ function searchMartyrByName(query) {
                         <div class="font-bold text-white">${displayName}</div>
                         ${subtitle ? `<div class="text-[10px] text-gray-400 font-mono">${subtitle}</div>` : ''}
                     </div>
+                    <span class="bg-red-600/20 text-red-400 text-[10px] px-2 py-0.5 rounded-full mr-2 whitespace-nowrap">${ageLabel}: ${displayAge}</span>
                 </div>
             `;
         });
@@ -793,17 +1379,33 @@ function searchMartyrByName(query) {
 window.selectSearchMartyr = function(person) {
     document.getElementById('search-results-dropdown').classList.add('hidden');
     document.getElementById('search-input').value = person.name_ar || person.name || '';
-    if (window.cardsEngine) window.cardsEngine.showMartyrCard(person);
+    openMartyrModal(person);
 };
 
-// Canvas Particle Rendering Engine
+// إغلاق القائمة المنسدلة عند النقر خارجها
+document.addEventListener('click', (e) => {
+    const dropdown = document.getElementById('search-results-dropdown');
+    const input = document.getElementById('search-input');
+    if (dropdown && !dropdown.contains(e.target) && e.target !== input) {
+        dropdown.classList.add('hidden');
+    }
+});
+
+// ==========================================
+// تحسينات أداء الـ Canvas (النظام المحدث)
+// ==========================================
+
+// Function to extract family name from Arabic name
 function extractFamilyName(fullName) {
     if (!fullName) return "";
     let clean = fullName.replace(/[^\u0621-\u064A\s]/g, "").trim();
     let parts = clean.split(/\s+/);
     if (parts.length < 2) return "";
+
+    // We can fetch the last word or handle compound last names like "ابو ..." or "ابن ..." or "آل ..."
     let last = parts[parts.length - 1];
     let secondLast = parts[parts.length - 2];
+
     const prefixes = ["ابو", "أبو", "ابن", "آل", "ام", "أم", "عبد", "بن"];
     if (prefixes.includes(secondLast) && parts.length >= 3) {
         return secondLast + " " + last;
@@ -822,6 +1424,8 @@ function getGalaxyTarget(item, time) {
     let fam = extractFamilyName(item.name);
     let info = getFamilyCenterAndColor(fam);
     if (!fam || fam.length <= 2 || !info) {
+        // Martyr doesn't belong to a large family galaxy, let them float as background stardust!
+        // Beautiful dimmed field stars in cool white or soft red
         const isRed = (item.originalColor === '#ef4444');
         return {
             x: item.bgX,
@@ -838,20 +1442,24 @@ function getGalaxyTarget(item, time) {
     let cX = info.xNorm * width;
     let cY = info.yNorm * height;
 
+    // Calculate slow rotation based on time and family hash to give each galaxy its own rotation speed/dir
     let rotationDir = (info.hue % 2 === 0) ? 1 : -1;
     let rotationSpeed = 0.0002 + (info.hue % 4) * 0.0001;
     let galaxyRotation = rotationDir * rotationSpeed * time;
 
+    // Choose 2 or 3 spiral arms based on family hash (replicating spectacular multi-arm spiral galaxies)
     let armCount = (info.hue % 2 === 0) ? 2 : 3;
     let armIndex = k % armCount;
 
+    // Logarithmic spiral geometry: r = a * e^(b * theta) with beautiful fluffy arm dispersion
     let maxRadius = 15 + Math.sqrt(N) * 6;
     let progress = k / N;
-    let theta = progress * Math.PI * 2.5;
+    let theta = progress * Math.PI * 2.5; // tightness of the swirl
 
     let baseRadius = 5 + Math.pow(progress, 0.7) * maxRadius;
     let angle = theta + (armIndex * (Math.PI * 2 / armCount)) + galaxyRotation;
 
+    // Add fluffy arm dispersion (narrower near the center, wider at the ends of spiral arms)
     let dispersion = (0.15 + progress * 0.3) * baseRadius;
     let dispHashX = Math.sin(k * 13) * dispersion;
     let dispHashY = Math.cos(k * 17) * dispersion;
@@ -859,18 +1467,25 @@ function getGalaxyTarget(item, time) {
     let targetX = cX + Math.cos(angle) * baseRadius + dispHashX;
     let targetY = cY + Math.sin(angle) * baseRadius + dispHashY;
 
+    // Beautiful celestial color scheme matching the provided reference image (pink-red stellar nurseries + cyan/blue/white stars)
     let starColor = '#ffffff';
     if (baseRadius < 18) {
+        // Dense glowing core of the galaxy: brilliant cyan-white
         starColor = `hsl(180, 100%, 90%)`;
     } else {
+        // Color variation along the spiral arms
         let colorNoise = Math.abs(Math.sin(k * 31));
         if (colorNoise < 0.22) {
+            // Bright pinkish-red H II gas nurseries (like NGC 604)
             starColor = `hsl(342, 95%, 62%)`;
         } else if (colorNoise < 0.55) {
+            // Hot young blue/cyan stars
             starColor = `hsl(195, 95%, 72%)`;
         } else if (colorNoise < 0.8) {
+            // Bright cool white stars
             starColor = `hsl(180, 30%, 95%)`;
         } else {
+            // Main galaxy hue
             starColor = info.color;
         }
     }
@@ -881,8 +1496,11 @@ function getGalaxyTarget(item, time) {
 function initCanvasPoints(dataList) {
     width = window.innerWidth;
     height = window.innerHeight;
+
+    // تحديد حد أقصى لعدد النقاط المرسومة على الكانفاس لتجنب تجميد المتصفح وضمان تجربة أسلس وسريعة للغاية
     const displayList = dataList.slice(0, 15000);
 
+    // إنشاء العناصر وتوليد الإحداثيات الأساسية
     points = displayList.map((item, index) => {
         let col = Math.random() > 0.3 ? '#ef4444' : '#ffffff';
         return {
@@ -900,6 +1518,7 @@ function initCanvasPoints(dataList) {
         };
     });
 
+    // 2. التخزين المؤقت للإحداثيات (Pre-calculation & Caching)
     recalculateCache();
 }
 
@@ -907,6 +1526,7 @@ function recalculateCache() {
     width = window.innerWidth;
     height = window.innerHeight;
 
+    // تجميع الإحداثيات والخصائص في مصفوفة جاهزة لتقليل الحسابات المتكررة داخل حلقة الرسم
     cachedItems = points.map(p => {
         const existing = (typeof cachedItems !== 'undefined') ? cachedItems.find(item => item.id === p.id) : null;
         const bgX = existing ? existing.bgX : p.x;
@@ -923,17 +1543,22 @@ function recalculateCache() {
         };
     });
 
+    // Group family members using cachedItems which are actively updated/drifting on screen
     familyGroups = {};
     cachedItems.forEach(p => {
         let fam = extractFamilyName(p.name);
-        if (fam && fam.length > 2) {
-            if (!familyGroups[fam]) familyGroups[fam] = [];
+        if (fam && fam.length > 2) { // only group families with significant names
+            if (!familyGroups[fam]) {
+                familyGroups[fam] = [];
+            }
             familyGroups[fam].push(p);
         }
     });
 
+    // حساب مراكز متباعدة بصرياً وموزعة رياضياً باستخدام الحلزون الذهبي (Golden Spiral) لتجنب التداخل
     familyCenters = {};
-    const minFamilySize = 3;
+    const minFamilySize = 3; // العائلات التي تضم 3 شهداء أو أكثر تحصل على مجرة خاصة بها متباعدة
+
     const sortedFamilies = Object.keys(familyGroups)
         .filter(fam => familyGroups[fam].length >= minFamilySize)
         .sort((a, b) => familyGroups[b].length - familyGroups[a].length);
@@ -946,7 +1571,9 @@ function recalculateCache() {
         const hue = Math.abs(hash % 360);
         const color = `hsl(${hue}, 95%, 68%)`;
 
+        // توزيع حلزوني ذهبي متناسق لمنع التداخل تماماً وتباعد مثالي
         const angle = idx * 2.39996;
+        // زيادة مسافة التباعد التدريجية للحفاظ على الفراغات الجمالية
         const spacing = 0.05 + (idx * 0.001);
         const radius = Math.sqrt(idx + 1) * spacing;
 
@@ -954,6 +1581,7 @@ function recalculateCache() {
         let xNorm = 0.5 + Math.cos(angle) * radius;
         let yNorm = 0.5 + Math.sin(angle) * radius * (aspect < 1 ? 1 : 1 / aspect);
 
+        // الحفاظ على المجرات داخل حدود الشاشة المرئية بمساحة أمان جمالية
         xNorm = Math.max(0.12, Math.min(0.88, xNorm));
         yNorm = Math.max(0.12, Math.min(0.88, yNorm));
 
@@ -963,14 +1591,16 @@ function recalculateCache() {
     isDirty = true;
 }
 
+// تهيئة عناصر الـ Canvas وتطبيق التحسينات
 const canvas = document.getElementById('stars-canvas');
 const ctx = canvas ? canvas.getContext('2d') : null;
 
+// تهيئة متغيرات استبعاد النجوم من التولد خلف الحاويات الزجاجية (Star Culling)
 let culledRects = [];
 let lastCullUpdate = 0;
 function updateCulledRects() {
     culledRects = [];
-    const selectors = ['.glass-panel', '.slidetabs-nav', '#bottom-bar', '#counter-box', '#visitor-counter-box', '.tlc-panel', '.modal-box'];
+    const selectors = ['.glass-panel', '.glass-card', '#header', '#bottom-bar', '#counter-box', '#visitor-counter-box', '.tlc-panel', '.modal-content'];
     selectors.forEach(sel => {
         const els = document.querySelectorAll(sel);
         els.forEach(el => {
@@ -997,6 +1627,7 @@ function isInsideCulledRect(x, y) {
     return false;
 }
 
+// تهيئة كانفاس الشهب المتساقطة
 const shootingCanvas = document.getElementById('shooting-stars-canvas');
 const shootingCtx = shootingCanvas ? shootingCanvas.getContext('2d') : null;
 let shootingStars = [];
@@ -1006,7 +1637,7 @@ function createShootingStar() {
         x: Math.random() * width * 1.2,
         y: Math.random() * height * 0.4,
         length: Math.random() * 90 + 60,
-        speed: Math.random() * 1.2 + 0.8,
+        speed: Math.random() * 1.2 + 0.8, // تساقط انسيابي رائع وخلاب
         opacity: 0,
         fadeState: 'in'
     };
@@ -1016,12 +1647,15 @@ function updateAndDrawShootingStars() {
     if (!shootingCtx) return;
     shootingCtx.clearRect(0, 0, width, height);
 
+    // توليد شهب جديدة عشوائياً بمعدل أعلى وأجمل بكثير لتزيين الخلفية السماوية الشاعرية
     if (shootingStars.length < 5 && Math.random() < 0.02) {
         shootingStars.push(createShootingStar());
     }
 
     for (let i = shootingStars.length - 1; i >= 0; i--) {
         const star = shootingStars[i];
+
+        // حركة مائلة وبطيئة للأسفل واليسار
         star.x -= star.speed * 1.5;
         star.y += star.speed;
 
@@ -1039,6 +1673,7 @@ function updateAndDrawShootingStars() {
             }
         }
 
+        // رسم ذيل الشهاب بشكل متلاشٍ متدرج رائع (أبيض يميل للأحمر المتوهج)
         const grad = shootingCtx.createLinearGradient(
             star.x, star.y,
             star.x + star.length * 0.8, star.y - star.length * 0.6
@@ -1075,22 +1710,26 @@ if (canvas) {
     resizeCanvas();
 }
 
+// تتبع حركة الماوس لتحديث التلميح وإجبار الرسم عند التفاعل
 window.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
     isDirty = true;
 });
 
+// 1. نظام إعادة الرسم المشروط (Dirty Flag & Conditional Rendering) و 3. Viewport Culling و 4. State Batching
 function drawCanvas() {
     if (!ctx) {
         requestAnimationFrame(drawCanvas);
         return;
     }
+    // أوقف استهلاك المعالج تماماً عندما تكون الواجهة ثابتة ولا يوجد تغيير (isDirty == false)
     if (!isDirty) {
         requestAnimationFrame(drawCanvas);
         return;
     }
 
+    // تحديث أبعاد واستبعاد الأسطح الزجاجية بشكل دوري لتوفير الأداء (Star Culling)
     const nowCull = Date.now();
     if (nowCull - lastCullUpdate > 250) {
         updateCulledRects();
@@ -1098,14 +1737,22 @@ function drawCanvas() {
     }
 
     ctx.clearRect(0, 0, width, height);
+
     const queryActive = currentSearchQuery.length >= 2;
 
+    if (queryActive) {
+        isDirty = true; // لتفعيل حركة نبض الكوكبة باستمرار
+    }
+
+    // تحديث الإحداثيات والانتقال السلس بين الخلفية الطبيعية والمجرات العائلية
     const driftSpeed = 0.04;
-    const lerpSpeed = 0.06;
+    const lerpSpeed = 0.06; // سرعة انتقال فيزيائي انسيابي رائع
     const time = Date.now();
 
     for (let i = 0; i < cachedItems.length; i++) {
         const item = cachedItems[i];
+
+        // تحديث حركة الخلفية السماوية المستمرة دائماً تحت السطح لعدم فقدان الإزاحة عند إلغاء التفعيل
         item.bgX -= driftSpeed * (i % 2 === 0 ? 0.8 : 1.2);
         item.bgY += driftSpeed * 0.4;
 
@@ -1127,89 +1774,1050 @@ function drawCanvas() {
             targetColor = item.originalColor || item.color;
         }
 
+        // تطبيق الاستيفاء الخطي (Lerp / Smooth Interpolation) للحركة البصرية الانسيابية
         item.screenX += (targetX - item.screenX) * lerpSpeed;
         item.screenY += (targetY - item.screenY) * lerpSpeed;
         item.renderedColor = targetColor;
     }
 
-    // Draw particle stars
-    ctx.fillStyle = queryActive ? 'rgba(239, 68, 68, 0.15)' : '#ef4444';
-    ctx.beginPath();
-    for (let i = 0; i < cachedItems.length; i++) {
-        const item = cachedItems[i];
-        if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) continue;
-        if (isInsideCulledRect(item.screenX, item.screenY)) continue;
+    // رسم السحب الغازية ونوى المجرات (Nebula Cores) عند تفعيل المجرات العائلية لعائلات بها 3 شهداء أو أكثر
+    if (corridorsActive && typeof familyGroups !== 'undefined') {
+        Object.keys(familyGroups).forEach(famName => {
+            const members = familyGroups[famName];
+            if (members.length < 3) return;
 
-        if (item.color === '#ef4444') {
-            ctx.moveTo(item.screenX + item.radius, item.screenY);
-            ctx.arc(item.screenX, item.screenY, item.radius, 0, Math.PI * 2);
+            const info = getFamilyCenterAndColor(famName);
+            if (!info) return;
+
+            const cX = info.xNorm * width;
+            const cY = info.yNorm * height;
+
+            // توهج دائري متعدد الطبقات يمثل نواة المجرة الساطعة والسدم المحيطة بها بدقة بالغة تطابق الصورة
+            const glowRadius = Math.min(90, 20 + members.length * 1.8);
+            const grad = ctx.createRadialGradient(cX, cY, 0, cX, cY, glowRadius);
+
+            // تدرج لوني غازي ناعم (أبيض متوهج في المركز -> تركواز ساطع -> شفاف تماماً في الأطراف)
+            grad.addColorStop(0, 'rgba(255, 255, 255, 0.40)');
+            grad.addColorStop(0.15, 'rgba(153, 246, 228, 0.22)'); // Teal-200 / Cyan soft glow
+            grad.addColorStop(0.45, 'rgba(13, 148, 136, 0.06)');  // Teal-600 outer nebula dust
+            grad.addColorStop(1, 'rgba(13, 148, 136, 0)');
+
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(cX, cY, glowRadius, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    }
+
+    // رسم النجوم بناءً على وضع العرض
+    if (corridorsActive) {
+        // تجميع النجوم حسب اللون لتقليل عمليات الـ State Fills وضمان أداء خارق 60 FPS
+        let colorBuckets = {};
+        for (let i = 0; i < cachedItems.length; i++) {
+            const item = cachedItems[i];
+
+            // استبعاد خارج إطار الرؤية (Viewport Culling) والأسطح الزجاجية (Star Culling)
+            if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
+                continue;
+            }
+            if (isInsideCulledRect(item.screenX, item.screenY)) {
+                continue;
+            }
+
+            let col = item.renderedColor || '#ef4444';
+            if (queryActive) {
+                const nameAr = (item.name_ar || item.name || "").toLowerCase();
+                const nameEn = (item.name_en || item.english_name || "").toLowerCase();
+                const id = (item.id || "").toString();
+                const isMatch = nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery) || id.includes(currentSearchQuery);
+                col = isMatch ? col : 'rgba(255, 255, 255, 0.08)';
+            }
+
+            if (!colorBuckets[col]) {
+                colorBuckets[col] = [];
+            }
+            colorBuckets[col].push(item);
+        }
+
+        // رسم كل دلو لوني في استدعاء Batch واحد
+        Object.keys(colorBuckets).forEach(col => {
+            ctx.fillStyle = col;
+            ctx.beginPath();
+            const items = colorBuckets[col];
+            for (let j = 0; j < items.length; j++) {
+                const item = items[j];
+                ctx.moveTo(item.screenX + item.radius, item.screenY);
+                ctx.arc(item.screenX, item.screenY, item.radius, 0, Math.PI * 2);
+            }
+            ctx.fill();
+        });
+    } else {
+        // تجميع خصائص السياق (State Batching) لشهداء اللون الأحمر (العاديين أو الباهتين)
+        ctx.fillStyle = queryActive ? 'rgba(239, 68, 68, 0.15)' : '#ef4444';
+        ctx.beginPath();
+        for (let i = 0; i < cachedItems.length; i++) {
+            const item = cachedItems[i];
+
+            if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
+                continue;
+            }
+            if (isInsideCulledRect(item.screenX, item.screenY)) {
+                continue;
+            }
+
+            if (item.color === '#ef4444') {
+                let isMatch = false;
+                if (queryActive) {
+                    const nameAr = (item.name_ar || item.name || "").toLowerCase();
+                    const nameEn = (item.name_en || item.english_name || "").toLowerCase();
+                    const id = (item.id || "").toString();
+                    if (nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery) || id.includes(currentSearchQuery)) {
+                        isMatch = true;
+                    }
+                }
+
+                if (!isMatch) {
+                    ctx.moveTo(item.screenX + item.radius, item.screenY);
+                    ctx.arc(item.screenX, item.screenY, item.radius, 0, Math.PI * 2);
+                }
+            }
+        }
+        ctx.fill();
+
+        // تجميع خصائص السياق (State Batching) لشهداء اللون الأبيض (العاديين أو الباهتين)
+        ctx.fillStyle = queryActive ? 'rgba(255, 255, 255, 0.15)' : '#ffffff';
+        ctx.beginPath();
+        for (let i = 0; i < cachedItems.length; i++) {
+            const item = cachedItems[i];
+
+            if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
+                continue;
+            }
+            if (isInsideCulledRect(item.screenX, item.screenY)) {
+                continue;
+            }
+
+            if (item.color === '#ffffff') {
+                let isMatch = false;
+                if (queryActive) {
+                    const nameAr = (item.name_ar || item.name || "").toLowerCase();
+                    const nameEn = (item.name_en || item.english_name || "").toLowerCase();
+                    const id = (item.id || "").toString();
+                    if (nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery) || id.includes(currentSearchQuery)) {
+                        isMatch = true;
+                    }
+                }
+
+                if (!isMatch) {
+                    ctx.moveTo(item.screenX + item.radius, item.screenY);
+                    ctx.arc(item.screenX, item.screenY, item.radius, 0, Math.PI * 2);
+                }
+            }
+        }
+        ctx.fill();
+    }
+
+    // رسم النجوم المطابقة للبحث ككوكبة مضيئة بارزة ومتحركة
+    if (queryActive) {
+        for (let i = 0; i < cachedItems.length; i++) {
+            const item = cachedItems[i];
+
+            if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) {
+                continue;
+            }
+            if (isInsideCulledRect(item.screenX, item.screenY)) {
+                continue;
+            }
+
+            const nameAr = (item.name_ar || item.name || "").toLowerCase();
+            const nameEn = (item.name_en || item.english_name || "").toLowerCase();
+            const id = (item.id || "").toString();
+            if (nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery) || id.includes(currentSearchQuery)) {
+                // النجم المطابق
+                ctx.fillStyle = '#ef4444';
+                ctx.beginPath();
+                ctx.arc(item.screenX, item.screenY, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // حلقة وهج خارجي نابضة
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.arc(item.screenX, item.screenY, 9 + Math.sin(Date.now() / 150) * 2, 0, Math.PI * 2);
+                ctx.stroke();
+            }
         }
     }
-    ctx.fill();
 
-    ctx.fillStyle = queryActive ? 'rgba(255, 255, 255, 0.15)' : '#ffffff';
-    ctx.beginPath();
-    for (let i = 0; i < cachedItems.length; i++) {
-        const item = cachedItems[i];
-        if (item.screenX < -10 || item.screenX > width + 10 || item.screenY < -10 || item.screenY > height + 10) continue;
-        if (isInsideCulledRect(item.screenX, item.screenY)) continue;
 
-        if (item.color === '#ffffff') {
-            ctx.moveTo(item.screenX + item.radius, item.screenY);
-            ctx.arc(item.screenX, item.screenY, item.radius, 0, Math.PI * 2);
+    // Spot Star targeted highlighting focused on spotlightStarId
+    if (spotlightStarId) {
+        const target = cachedItems.find(p => p.id == spotlightStarId);
+        if (target) {
+            ctx.strokeStyle = '#ef4444';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(target.screenX, target.screenY, 15 + Math.sin(Date.now() / 100) * 4, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.beginPath();
+            ctx.arc(target.screenX, target.screenY, 25 + Math.sin(Date.now() / 80) * 6, 0, Math.PI * 2);
+            ctx.stroke();
         }
     }
-    ctx.fill();
 
-    // Hover tooltip
+    // فحص التلميح وتحديد ما إذا كان هناك تفاعل مع الماوس
     let hoveredMartyr = null;
     for (let i = 0; i < cachedItems.length; i++) {
         const item = cachedItems[i];
-        if (isInsideCulledRect(item.screenX, item.screenY)) continue;
+        if (isInsideCulledRect(item.screenX, item.screenY)) {
+            continue;
+        }
         const dx = mouseX - item.screenX;
         const dy = mouseY - item.screenY;
-        if (dx * dx + dy * dy < 100) {
+        if (dx * dx + dy * dy < 100) { // مسافة تقريبية للتفاعل (10 بكسل)
             hoveredMartyr = item;
             break;
         }
     }
 
+    if (hoveredMartyr) {
+        hoveredFamilyName = extractFamilyName(hoveredMartyr.name);
+    } else {
+        hoveredFamilyName = null;
+    }
+
     const tooltip = document.getElementById('star-tooltip');
-    if (hoveredMartyr && tooltip) {
+    if (hoveredMartyr) {
         currentMartyrObj = hoveredMartyr;
         document.getElementById('tooltip-name').innerText = hoveredMartyr.name;
+        const nameEnEl = document.getElementById('tooltip-name-en');
+        if(hoveredMartyr.name_en) {
+            nameEnEl.innerText = hoveredMartyr.name_en;
+            nameEnEl.style.display = 'block';
+        } else {
+            nameEnEl.style.display = 'none';
+        }
         document.getElementById('tooltip-age').innerText = `العمر: ${hoveredMartyr.age}`;
         tooltip.style.display = 'block';
         tooltip.style.left = (mouseX + 15) + 'px';
         tooltip.style.top = (mouseY + 15) + 'px';
-    } else if (tooltip) {
+    } else {
         tooltip.style.display = 'none';
     }
 
+    // تحديث ورسم الشهب المتساقطة
     updateAndDrawShootingStars();
+
+    // نضمن بقاء العلم صحيحاً لاستمرار حركة النجوم والشهب ببطء دائم
     isDirty = true;
     requestAnimationFrame(drawCanvas);
 }
 
+// بدء حلقة الرسم المشروط
 requestAnimationFrame(drawCanvas);
 
-// On Page Ready Bootstrapper
+// ----------------------------------------------------
+// Category 1 JS: Crowdsourcing & Submissions
+// ----------------------------------------------------
+let captchaNum1 = 0;
+let captchaNum2 = 0;
+let currentEditingMartyrId = null;
+
+// Dynamic and beautiful dual input injector (File Upload / Link)
+function openCrowdsourceModal() {
+    captchaNum1 = Math.floor(Math.random() * 9) + 1;
+    captchaNum2 = Math.floor(Math.random() * 9) + 1;
+    const qEl = document.getElementById('cs-captcha-question');
+    if (qEl) {
+        qEl.innerText = `${captchaNum1} + ${captchaNum2} =`;
+    }
+    const ansEl = document.getElementById('cs-captcha-answer');
+    if (ansEl) ansEl.value = '';
+
+    document.getElementById('cs-submitter').value = '';
+    document.getElementById('cs-martyr-name').value = '';
+    document.getElementById('cs-martyr-city').value = '';
+    document.getElementById('cs-notes').value = '';
+
+    // Dynamically inject the file upload input next to URL input if it doesn't exist
+    const oldPhotoInput = document.getElementById('cs-photo');
+    if (oldPhotoInput && oldPhotoInput.parentElement) {
+        const parent = oldPhotoInput.parentElement;
+        let fileInput = document.getElementById('cs-photo-file');
+        if (!fileInput) {
+            parent.innerHTML = `
+                <label class="text-gray-300 block">صورة الشهيد أو مستند الإثبات (ملف أو رابط):</label>
+                <div class="flex flex-col gap-1.5">
+                    <input type="file" id="cs-photo-file" accept="image/*" class="w-full bg-black/60 border border-white/20 text-white px-3 py-1.5 rounded-xl text-xs outline-none focus:border-red-500">
+                    <span class="text-gray-500 text-[10px] text-center">أو أدخل رابط الصورة مباشرة:</span>
+                    <input type="url" id="cs-photo" placeholder="https://example.com/photo.jpg" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
+                </div>
+            `;
+        }
+    }
+
+    const fileIn = document.getElementById('cs-photo-file');
+    if (fileIn) fileIn.value = '';
+    const urlIn = document.getElementById('cs-photo');
+    if (urlIn) urlIn.value = '';
+
+    document.getElementById('crowdsource-modal-overlay').style.display = 'flex';
+}
+
+function triggerMartyrEdit() {
+    if (!currentMartyrObj) return;
+
+    // Close martyr modal
+    document.getElementById('martyr-modal-overlay').style.display = 'none';
+
+    // Open crowdsourcing modal
+    openCrowdsourceModal();
+
+    // Autofill fields
+    currentEditingMartyrId = currentMartyrObj.id;
+    document.getElementById('cs-martyr-name').value = currentMartyrObj.name || '';
+    document.getElementById('cs-martyr-city').value = currentMartyrObj.city || '';
+    document.getElementById('cs-notes').value = `طلب تعديل لبيانات الشهيد: ${currentMartyrObj.name} (رقم الهوية: ${currentMartyrObj.id || 'غير معروف'}). التفاصيل المراد تعديلها: `;
+
+    const urlIn = document.getElementById('cs-photo');
+    if (urlIn && currentMartyrObj.image) {
+        urlIn.value = currentMartyrObj.image;
+    }
+}
+window.triggerMartyrEdit = triggerMartyrEdit;
+
+function submitCrowdsourceForm(e) {
+    e.preventDefault();
+    const ansVal = parseInt(document.getElementById('cs-captcha-answer').value);
+    if (ansVal !== (captchaNum1 + captchaNum2)) {
+        alert(currentLang === 'ar' ? 'إجابة سؤال الحماية غير صحيحة، يرجى المحاولة مرة أخرى.' : 'Incorrect protection question answer. Please try again.');
+        return;
+    }
+
+    const submitter = document.getElementById('cs-submitter').value.trim();
+    const name = document.getElementById('cs-martyr-name').value.trim();
+    const city = document.getElementById('cs-martyr-city').value.trim();
+    const notes = document.getElementById('cs-notes').value.trim();
+
+    const fileInput = document.getElementById('cs-photo-file');
+    const urlInput = document.getElementById('cs-photo');
+    let image = urlInput ? urlInput.value.trim() : '';
+
+    const proceedSubmission = (imageData) => {
+        const submission = {
+            id: 'cs_' + Date.now(),
+            original_id: currentEditingMartyrId || null,
+            submitter,
+            name,
+            city,
+            notes,
+            image: imageData || image,
+            status: 'pending',
+            date: new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US')
+        };
+
+        let list = [];
+        try {
+            const stored = localStorage.getItem('crowdsourced_submissions');
+            if (stored) list = JSON.parse(stored);
+        } catch (err) {
+            console.error(err);
+        }
+        list.push(submission);
+        localStorage.setItem('crowdsourced_submissions', JSON.stringify(list));
+
+        alert(currentLang === 'ar' ? 'تم إرسال مساهمتك بنجاح وهي قيد المراجعة والاعتماد الآن.' : 'Your submission has been sent successfully and is under review.');
+        document.getElementById('crowdsource-modal-overlay').style.display = 'none';
+
+        // Reset state
+        currentEditingMartyrId = null;
+    };
+
+    if (fileInput && fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            proceedSubmission(evt.target.result);
+        };
+        reader.readAsDataURL(file);
+    } else {
+        proceedSubmission(image);
+    }
+}
+
+// Global helper to merge approved edits and additions on load
+function applyApprovedSubmissions(targetList) {
+    let list = [];
+    try {
+        const stored = localStorage.getItem('crowdsourced_submissions');
+        if (stored) list = JSON.parse(stored);
+    } catch (err) {
+        console.error(err);
+    }
+
+    const approved = list.filter(item => item.status === 'approved');
+    let result = [...targetList];
+
+    approved.forEach(item => {
+        if (item.original_id) {
+            // Edit existing record
+            const idx = result.findIndex(p => String(p.id) === String(item.original_id));
+            if (idx !== -1) {
+                result[idx] = {
+                    ...result[idx],
+                    name: item.name || result[idx].name,
+                    city: item.city || result[idx].city,
+                    notes: item.notes || result[idx].notes,
+                    image: item.image || result[idx].image || ''
+                };
+            }
+        } else {
+            // Add brand new record
+            const exists = result.some(p => p.name === item.name);
+            if (!exists) {
+                result.unshift({
+                    id: item.id,
+                    name: item.name,
+                    city: item.city,
+                    age: item.age || 'غير معروف',
+                    notes: item.notes || '',
+                    image: item.image || '',
+                    x: Math.random(),
+                    y: Math.random()
+                });
+            }
+        }
+    });
+
+    return result;
+}
+function spotFamilyStar(starId) {
+    // Clear any previous spotlight
+    if (spotlightTimer) {
+        clearTimeout(spotlightTimer);
+    }
+
+    spotlightStarId = starId;
+    isDirty = true;
+
+    // Close the modal so the user can see the animated focal target in the sky
+    const modal = document.getElementById('martyr-modal-overlay');
+    if (modal) {
+        modal.style.display = 'none';
+        window.speechSynthesis.cancel();
+        isMartyrSpeaking = false;
+    }
+
+    // Set a timer to automatically fade out the target focus rings after 10 seconds
+    spotlightTimer = setTimeout(() => {
+        spotlightStarId = null;
+        isDirty = true;
+    }, 10000);
+}
+window.spotFamilyStar = spotFamilyStar;
+
+window.applyApprovedSubmissions = applyApprovedSubmissions;
+
+// Delegated to js/admin.js: openAdminReviewPanel
+
+function renderAdminSubmissions() {
+    const container = document.getElementById('admin-submissions-list');
+    if (!container) return;
+
+    let list = [];
+    try {
+        const stored = localStorage.getItem('crowdsourced_submissions');
+        if (stored) list = JSON.parse(stored);
+    } catch (err) {
+        console.error(err);
+    }
+
+    if (list.length === 0) {
+        container.innerHTML = `<div class="text-gray-500 text-center py-6">لا توجد مساهمات معلقة للمراجعة حالياً.</div>`;
+        return;
+    }
+
+    container.innerHTML = list.map(item => `
+        <div class="bg-white/5 border border-white/10 p-3 rounded-xl space-y-2 relative text-right">
+            <span class="absolute top-3 left-3 px-2 py-0.5 rounded text-[9px] font-bold ${
+                item.status === 'approved' ? 'bg-green-600/20 border border-green-500 text-green-400' :
+                item.status === 'rejected' ? 'bg-red-600/20 border border-red-500 text-red-400' :
+                'bg-amber-600/20 border border-amber-500 text-amber-400'
+            }">${item.status === 'approved' ? 'معتمد' : item.status === 'rejected' ? 'مرفوض' : 'معلق'}</span>
+
+            <div class="text-red-400 font-bold mb-1">المساهم: ${item.submitter} (${item.date})</div>
+            <div><strong>اسم الشهيد:</strong> ${item.name}</div>
+            <div><strong>المدينة / المحافظة:</strong> ${item.city}</div>
+            <div><strong>التفاصيل:</strong> ${item.notes}</div>
+            ${item.image ? `<div class="mt-1"><a href="${item.image}" target="_blank" class="text-blue-400 underline">عرض الصورة المرفقة</a></div>` : ''}
+
+            ${item.status === 'pending' ? `
+                <div class="flex gap-2 mt-2 pt-2 border-t border-white/10">
+                    <button onclick="approveSubmission('${item.id}')" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded font-bold text-[10px]">اعتماد وقبول</button>
+                    <button onclick="rejectSubmission('${item.id}')" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded font-bold text-[10px]">رفض</button>
+                </div>
+            ` : ''}
+        </div>
+    `).join('');
+}
+
+function approveSubmission(id) {
+    let list = [];
+    try {
+        const stored = localStorage.getItem('crowdsourced_submissions');
+        if (stored) list = JSON.parse(stored);
+    } catch (err) {}
+
+    const index = list.findIndex(item => item.id === id);
+    if (index !== -1) {
+        list[index].status = 'approved';
+        localStorage.setItem('crowdsourced_submissions', JSON.stringify(list));
+
+        const sub = list[index];
+        const newSoulsObj = {
+            id: 'cs_approved_' + Date.now(),
+            name: sub.name,
+            city: sub.city,
+            age: 'غير معروف',
+            notes: sub.notes,
+            image: sub.image || ''
+        };
+
+        if (typeof gazaSouls !== 'undefined') {
+            gazaSouls.unshift(newSoulsObj);
+        }
+        if (typeof cachedItems !== 'undefined') {
+            cachedItems.unshift(newSoulsObj);
+        }
+
+        alert(currentLang === 'ar' ? 'تم قبول واعتماد المساهمة، وتمت إضافتها بنجاح إلى أرشيف الشهداء!' : 'Submission approved and successfully added to the archive!');
+        renderAdminSubmissions();
+    }
+}
+
+function rejectSubmission(id) {
+    let list = [];
+    try {
+        const stored = localStorage.getItem('crowdsourced_submissions');
+        if (stored) list = JSON.parse(stored);
+    } catch (err) {}
+
+    const index = list.findIndex(item => item.id === id);
+    if (index !== -1) {
+        list[index].status = 'rejected';
+        localStorage.setItem('crowdsourced_submissions', JSON.stringify(list));
+        alert(currentLang === 'ar' ? 'تم رفض المساهمة.' : 'Submission rejected.');
+        renderAdminSubmissions();
+    }
+}
+
+// ----------------------------------------------------
+// Category 1 JS: Virtual Tributes & Local Storage
+// ----------------------------------------------------
+function loadMartyrTributes(martyrKey) {
+    let allTributes = {};
+    try {
+        const stored = localStorage.getItem('martyr_tributes');
+        if (stored) {
+            allTributes = JSON.parse(stored);
+        }
+    } catch (e) {
+        console.error(e);
+    }
+    if (!allTributes[martyrKey]) {
+        allTributes[martyrKey] = { candles: 0, comments: [] };
+    }
+    return allTributes[martyrKey];
+}
+
+function saveMartyrTributes(martyrKey, data) {
+    let allTributes = {};
+    try {
+        const stored = localStorage.getItem('martyr_tributes');
+        if (stored) {
+            allTributes = JSON.parse(stored);
+        }
+    } catch (e) {
+        console.error(e);
+    }
+    allTributes[martyrKey] = data;
+    localStorage.setItem('martyr_tributes', JSON.stringify(allTributes));
+}
+
+function updateTributeUI() {
+    if (!currentMartyrObj) return;
+    const key = currentMartyrObj.name || 'unknown';
+    const data = loadMartyrTributes(key);
+
+    // Update candle counter
+    const candleCountEl = document.getElementById('tribute-candle-count');
+    if (candleCountEl) {
+        candleCountEl.innerText = data.candles;
+    }
+
+    // Render comments list
+    const container = document.getElementById('tributes-list-container');
+    if (container) {
+        if (data.comments && data.comments.length > 0) {
+            container.innerHTML = data.comments.map(c => `
+                <div class="bg-white/5 p-1.5 rounded text-right border-r-2 border-red-500">
+                    <div class="flex justify-between items-center text-[9px] text-gray-400 font-bold mb-0.5">
+                        <span>${c.name}</span>
+                        <span>${c.date}</span>
+                    </div>
+                    <p class="text-gray-200 text-[10px] leading-tight">${c.text}</p>
+                </div>
+            `).join('');
+        } else {
+            container.innerHTML = `<div class="text-gray-500 text-center py-2">لا توجد رسائل تضامن حالياً. كن أول من يترك أثراً.</div>`;
+        }
+    }
+}
+
+function lightTributeCandle() {
+    if (!currentMartyrObj) return;
+    const key = currentMartyrObj.name || 'unknown';
+    const data = loadMartyrTributes(key);
+    data.candles += 1;
+    saveMartyrTributes(key, data);
+
+    // Play light bell sound using Web Audio API simple oscillator
+    try {
+        if (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined') {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            const ctx = new AudioContextClass();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(659.25, ctx.currentTime); // E5
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.2);
+
+            osc.start();
+            osc.stop(ctx.currentTime + 1.2);
+        }
+    } catch(e) {
+        console.log("Audio trigger error:", e);
+    }
+
+    // Show visual candle flame pop
+    const animArea = document.getElementById('candle-animation-area');
+    if (animArea) {
+        animArea.classList.remove('hidden');
+        animArea.classList.add('flex');
+        setTimeout(() => {
+            animArea.classList.add('hidden');
+            animArea.classList.remove('flex');
+        }, 1500);
+    }
+
+    updateTributeUI();
+}
+
+function submitVirtualTribute() {
+    if (!currentMartyrObj) return;
+    const nameInput = document.getElementById('tribute-name-input');
+    const msgInput = document.getElementById('tribute-msg-input');
+    if (!nameInput || !msgInput) return;
+
+    const name = nameInput.value.trim() || 'زائر تضامني';
+    const text = msgInput.value.trim();
+    if (!text) return;
+
+    const key = currentMartyrObj.name || 'unknown';
+    const data = loadMartyrTributes(key);
+
+    const today = new Date();
+    const dateStr = today.getFullYear() + '/' + (today.getMonth()+1) + '/' + today.getDate();
+
+    data.comments.unshift({ name, text, date: dateStr });
+    saveMartyrTributes(key, data);
+
+    // Reset msg
+    msgInput.value = '';
+    nameInput.value = '';
+
+    updateTributeUI();
+}
+
+function openMartyrModal(person) {
+    currentMartyrObj = person;
+    updateTributeUI();
+    if (typeof translateMartyrModal === 'function') {
+        translateMartyrModal(currentLang);
+    }
+
+    document.getElementById('martyr-modal-name').innerText = person.name || 'شهيد مجهول';
+    const nameEnEl = document.getElementById('martyr-modal-name-en');
+    if (person.name_en) {
+        nameEnEl.innerText = person.name_en;
+        nameEnEl.style.display = 'block';
+    } else {
+        nameEnEl.style.display = 'none';
+    }
+    document.getElementById('martyr-modal-age').innerText = person.age || 'غير معروف';
+    document.getElementById('martyr-modal-id').innerText = person.id || '-';
+
+    const photoEl = document.getElementById('martyr-modal-photo');
+    if (person.image) {
+        photoEl.innerHTML = `<img src="${person.image}" style="width:100%; height:100%; object-fit:cover;" crossorigin="anonymous">`;
+    } else {
+        photoEl.innerHTML = `<span id="modal-photo-text">${translations[currentLang].modalPhotoText}</span>`;
+    }
+
+    // Populate Family Corridors section
+    const famContainer = document.getElementById('martyr-modal-family-container');
+    const famList = document.getElementById('martyr-modal-family-list');
+    const famTitle = document.getElementById('family-container-title');
+
+    if (famContainer && famList && typeof familyGroups !== 'undefined') {
+        const famName = extractFamilyName(person.name);
+        const members = familyGroups[famName] || [];
+        const filteredMembers = members.filter(m => String(m.id) !== String(person.id));
+
+        if (corridorsActive && filteredMembers.length > 0) {
+            famTitle.innerText = translations[currentLang].familyTitle || "أفراد العائلة الموثقون:";
+            famContainer.classList.remove('hidden');
+
+            famList.innerHTML = filteredMembers.map(m => {
+                let displayName = m.name;
+                if (currentLang !== 'ar') {
+                    displayName = transliterateName(m.name, currentLang);
+                }
+                const spotText = translations[currentLang].spotBtn || "🎯 رصد النجم";
+                return `
+                    <div class="flex justify-between items-center bg-black/40 border border-white/5 p-1.5 rounded-lg">
+                        <span>${displayName} (${m.age || 'غير معروف'})</span>
+                        <button onclick="spotFamilyStar('${m.id}')" class="btn-main text-[9px] px-2 py-0.5 bg-red-600/30 border border-red-500/40 text-red-300 rounded-full">${spotText}</button>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            famContainer.classList.add('hidden');
+            famList.innerHTML = '';
+        }
+    }
+
+    // Dynamic injection of the premium "Edit Martyr" button in the modal
+    const candleBtn = document.getElementById('tribute-candle-btn');
+    if (candleBtn && candleBtn.parentElement) {
+        const parent = candleBtn.parentElement;
+        let editBtn = document.getElementById('tribute-edit-btn-dynamic');
+        if (!editBtn) {
+            editBtn = document.createElement('button');
+            editBtn.id = 'tribute-edit-btn-dynamic';
+            editBtn.className = 'btn-main text-[10px] px-2.5 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded-full flex items-center gap-1';
+            editBtn.innerHTML = '✍️ <span id="tribute-edit-text">تعديل البيانات</span>';
+            editBtn.onclick = function() { triggerMartyrEdit(); };
+            parent.appendChild(editBtn);
+        }
+    }
+
+    document.getElementById('martyr-modal-overlay').style.display = 'flex';
+}
+
+// نقر النجوم لفتح الكرت التوثيقي للشهيد
+if (canvas) {
+    canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        let clickedMartyr = null;
+        for (let i = 0; i < cachedItems.length; i++) {
+            const item = cachedItems[i];
+            const dx = x - item.screenX;
+            const dy = y - item.screenY;
+            if (dx * dx + dy * dy < 144) { // ضمن مسافة 12 بكسل
+                clickedMartyr = item;
+                break;
+            }
+        }
+
+        if (clickedMartyr) {
+            openMartyrModal(clickedMartyr);
+        }
+    });
+}
+
+// ربط أحداث الإغلاق للنوافذ المنبثقة
+document.getElementById('milestone-modal-close').addEventListener('click', () => {
+    window.speechSynthesis.cancel();
+    isMilestoneSpeaking = false;
+    document.getElementById('milestone-modal-overlay').style.display = 'none';
+});
+document.getElementById('milestone-modal-overlay').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('milestone-modal-overlay')) {
+        window.speechSynthesis.cancel();
+        isMilestoneSpeaking = false;
+        document.getElementById('milestone-modal-overlay').style.display = 'none';
+    }
+});
+
+document.getElementById('martyr-modal-close').addEventListener('click', () => {
+    window.speechSynthesis.cancel();
+    isMartyrSpeaking = false;
+    document.getElementById('martyr-modal-overlay').style.display = 'none';
+});
+document.getElementById('martyr-modal-overlay').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('martyr-modal-overlay')) {
+        window.speechSynthesis.cancel();
+        isMartyrSpeaking = false;
+        document.getElementById('martyr-modal-overlay').style.display = 'none';
+    }
+});
+
+// ----------------------------------------------------
+// Category 6 JS: Instant Translations & Adaptive Dark Mode
+// ----------------------------------------------------
+const multilingualBios = {
+    "شيرين أبو عاقلة": {
+        en: "Shireen Abu Akleh was a prominent Palestinian-American journalist who worked as a reporter for Al Jazeera for 25 years. She was shot and killed by Israeli forces while covering a military raid on the Jenin refugee camp.",
+        fr: "Shireen Abu Akleh était une éminente journalist palestino-américaine de renom de l'Al Jazeera. Elle a été lâchement assassinée par balles de l'armée d'occupation.",
+        es: "Shireen Abu Akleh fue una destacada periodista palestina que trabajó para Al Jazeera. Fue asesinada por las fuerzas de ocupación mientras informaba sobre el terreno."
+    },
+    "إبراهيم النابلسي": {
+        en: "Ibrahim al-Nabulsi was a young, inspiring resistance commander in Nablus. He was martyred during an armed confrontation, leaving behind a legacy of unity.",
+        fr: "Ibrahim al-Nabulsi était un jeune commandant inspirant de la résistance à Naplouse. Il est tombé en martyr lors d'un affrontement armé.",
+        es: "Ibrahim al-Nabulsi fue un joven e inspirador comandante de la resistencia en Nablus. Murió como mártir durante un enfrentamiento armado."
+    },
+    "باسل الأعرج": {
+        en: "Basil al-Araj was an intellectual writer, activist, and pharmacist. He championed cultural resistance and was martyred in a gunfight with special forces after a months-long chase.",
+        fr: "Basil al-Araj était un écrivain intellectuel, activiste et pharmacien. Il a défendu la résistance culturelle et est tombé en martyr après une longue traque.",
+        es: "Basil al-Araj fue un escritor intelectual, activista y farmacéutico. Defendió la resistencia cultural y murió como mártir tras una persecución de meses."
+    }
+};
+
+const cityTranslations = {
+    "غزة": { ar: "غزة", en: "Gaza", fr: "Gaza", es: "Gaza" },
+    "خان يونس": { ar: "خان يونس", en: "Khan Younis", fr: "Khan Younès", es: "Jan Yunis" },
+    "رفح": { ar: "رفح", en: "Rafah", fr: "Rafah", es: "Rafah" },
+    "جباليا": { ar: "جباليا", en: "Jabalia", fr: "Jabalia", es: "Jabalya" },
+    "دير البلح": { ar: "دير البلح", en: "Deir al-Balah", fr: "Deir el-Balah", es: "Deir al-Balah" },
+    "شمال غزة": { ar: "شمال غزة", en: "North Gaza", fr: "Nord de Gaza", es: "Norte de Gaza" },
+    "مخيم جباليا": { ar: "مخيم جباليا", en: "Jabalia Camp", fr: "Camp de Jabalia", es: "Campamento de Jabalia" },
+    "جنين": { ar: "جنين", en: "Jenin", fr: "Jénine", es: "Yenín" },
+    "نابلس": { ar: "نابلس", en: "Nablus", fr: "Naplouse", es: "Nablus" },
+    "الخليل": { ar: "الخليل", en: "Hebron", fr: "Hébron", es: "Hebrón" },
+    "رام الله": { ar: "رام الله", en: "Ramallah", fr: "Ramallah", es: "Ramala" },
+    "القدس": { ar: "القدس", en: "Jerusalem", fr: "Jérusalem", es: "Jerusalén" },
+    "بيت لحم": { ar: "بيت لحم", en: "Bethlehem", fr: "Bethléem", es: "Belén" },
+    "طولكرم": { ar: "طولكرم", en: "Tulkarm", fr: "Tulkarem", es: "Tulkarem" },
+    "قلقيلية": { ar: "قلقيلية", en: "Qalqilya", fr: "Qalqilya", es: "Qalqilya" },
+    "طوباس": { ar: "طوباس", en: "Tubas", fr: "Tubas", es: "Tubas" },
+    "سلفيت": { ar: "سلفيت", en: "Salfit", fr: "Salfit", es: "Salfit" },
+    "أريحا": { ar: "أريحا", en: "Jericho", fr: "Jéricho", es: "Jericó" }
+};
+
+function transliterateName(arabicName, lang) {
+    if (!arabicName) return "";
+
+    // Common dictionary of full name overrides
+    const overrides = {
+        "باسل الأعرج": { en: "Basil al-Araj", fr: "Basil al-Araj", es: "Basil al-Araj" },
+        "شيرين أبو عاقلة": { en: "Shireen Abu Akleh", fr: "Shireen Abu Akleh", es: "Shireen Abu Akleh" },
+        "ياسر عرفات": { en: "Yasser Arafat", fr: "Yasser Arafat", es: "Yasser Arafat" },
+        "أحمد ياسين": { en: "Ahmed Yassin", fr: "Ahmed Yassin", es: "Ahmed Yassin" }
+    };
+
+    if (overrides[arabicName] && overrides[arabicName][lang]) {
+        return overrides[arabicName][lang];
+    }
+
+    const nameMap = {
+        "محمد": "Muhammad", "احمد": "Ahmad", "أحمد": "Ahmad", "محمود": "Mahmoud", "علي": "Ali", "على": "Ali",
+        "حسن": "Hassan", "حسين": "Hussein", "يوسف": "Youssef", "ابراهيم": "Ibrahim", "إبراهيم": "Ibrahim",
+        "عبد": "Abd", "الله": "Allah", "الرحمن": "Rahman", "الرحيم": "Rahim", "الملك": "Malik",
+        "خالد": "Khaled", "مصطفى": "Mustafa", "سعيد": "Saeed", "عمر": "Omar", "سليمان": "Soliman",
+        "فاطمة": "Fatima", "عائشة": "Aisha", "مريم": "Maryam", "زينب": "Zainab", "رانية": "Rania",
+        "جمال": "Jamal", "نبيل": "Nabil", "سليم": "Salim", "سمير": "Samir", "أمين": "Amin",
+        "رائد": "Raed", "شادي": "Shadi", "ماهر": "Maher", "أيمن": "Ayman", "تيسير": "Taysir",
+        "صالح": "Saleh", "ياسر": "Yasser", "سائد": "Saed", "طه": "Taha", "يحيى": "Yahya",
+        "زكريا": "Zakaria", "موسى": "Mousa", "عيسى": "Isa", "جابر": "Jaber", "سعد": "Saad",
+        "مسعود": "Masoud", "طارق": "Tariq", "زياد": "Ziad", "بهاء": "Bahaa", "ضياء": "Diyaa",
+        "كريم": "Karim", "رمزي": "Ramzi", "مروان": "Marwan", "سامي": "Sami", "سامر": "Samer",
+        "راني": "Rani", "عادل": "Adel", "عماد": "Imad", "عصام": "Essam", "حاتم": "Hatem",
+        "رشاد": "Rashad", "أنور": "Anwar", "أكرم": "Akram", "أمجد": "Amjad", "أشرف": "Ashraf",
+        "هاني": "Hani", "هشام": "Hisham", "منير": "Mounir", "وجيه": "Wajih", "فريد": "Farid",
+        "رئيسة": "Raeesa", "صابر": "Saber", "نعيم": "Naeem", "شريف": "Sherif", "فتحي": "Fathi"
+    };
+
+    const words = arabicName.split(/\s+/);
+    const translatedWords = words.map(word => {
+        const cleanWord = word.replace(/[^\u0621-\u064A]/g, "");
+        if (nameMap[cleanWord]) {
+            return nameMap[cleanWord];
+        }
+
+        let latin = "";
+        const chars = {
+            'ا': 'a', 'أ': 'a', 'إ': 'i', 'آ': 'a', 'ب': 'b', 'ت': 't', 'ث': 'th', 'ج': 'j',
+            'ح': 'h', 'خ': 'kh', 'د': 'd', 'ذ': 'dh', 'ر': 'r', 'ز': 'z', 'س': 's', 'ش': 'sh',
+            'ص': 's', 'ض': 'd', 'ط': 't', 'ظ': 'z', 'ع': 'a', 'غ': 'gh', 'ف': 'f', 'ق': 'q',
+            'ك': 'k', 'ل': 'l', 'م': 'm', 'ن': 'n', 'ه': 'h', 'و': 'w', 'ي': 'y', 'ى': 'a',
+            'ة': 'h', 'ء': 'a', 'ؤ': 'u', 'ئ': 'i'
+        };
+        for (let i = 0; i < cleanWord.length; i++) {
+            const c = cleanWord[i];
+            latin += chars[c] || c;
+        }
+        if (!latin) return word;
+        return latin.charAt(0).toUpperCase() + latin.slice(1);
+    });
+
+    return translatedWords.join(" ");
+}
+window.transliterateName = transliterateName;
+
+function translateCity(arabicCity, lang) {
+    if (!arabicCity) return "";
+    const cleanCity = arabicCity.trim();
+    if (cityTranslations[cleanCity]) {
+        return cityTranslations[cleanCity][lang] || cityTranslations[cleanCity].en;
+    }
+    return transliterateName(arabicCity, lang);
+}
+window.translateCity = translateCity;
+
+function translateContentInstantly(bioText, name, destLang) {
+    const targetLang = destLang || currentLang;
+    if (targetLang === 'ar') return bioText;
+    if (multilingualBios[name] && multilingualBios[name][targetLang]) {
+        return multilingualBios[name][targetLang];
+    }
+    // Simulation / Fallback mock-translator for standard entries
+    const mockTranslations = {
+        en: "A brave Palestinian soul who was martyred in defense of the homeland, dignity, and national identity.",
+        fr: "Une âme palestinienne courageuse qui est tombée en martyr pour la défense de la patrie, de la dignité et de l'identité.",
+        es: "Un alma palestina valiente que murió como mártir en defensa de la patria, la dignidad y la identidad nacional."
+    };
+    return mockTranslations[targetLang] || bioText;
+}
+
+function translateMartyrModal(lang) {
+    if (!currentMartyrObj) return;
+
+    const buttons = document.querySelectorAll('#martyr-modal-bio-container button');
+    buttons.forEach(btn => {
+        if (btn.getAttribute('onclick').includes(`'${lang}'`)) {
+            btn.className = "px-1.5 py-0.5 rounded bg-red-600/30 border border-red-500 text-white text-[9px]";
+        } else {
+            btn.className = "px-1.5 py-0.5 rounded bg-gray-800 border border-white/10 text-gray-300 text-[9px]";
+        }
+    });
+
+    const bioTextDiv = document.getElementById('martyr-modal-bio-text-div');
+    if (currentMartyrObj.notes) {
+        const translatedNotes = translateContentInstantly(currentMartyrObj.notes, currentMartyrObj.name, lang);
+
+        const langLabels = {
+            ar: { title: "سيرة الشهيد:", labelAge: "العمر:", labelId: "رقم الهوية:", ttsText: "استماع للسيرة" },
+            en: { title: "Biography of the Martyr:", labelAge: "Age:", labelId: "ID Number:", ttsText: "Listen Biography" },
+            fr: { title: "Biographie du Martyr:", labelAge: "Âge:", labelId: "Numéro d'ID:", ttsText: "Écouter la Biographie" },
+            es: { title: "Biografía del Mártir:", labelAge: "Edad:", labelId: "Número de ID:", ttsText: "Escuchar Biografía" }
+        };
+
+        const l = langLabels[lang] || langLabels.ar;
+
+        bioTextDiv.innerHTML = `🌟 <strong>${l.title}</strong><p class="mt-1 font-normal">${translatedNotes}</p>`;
+        bioTextDiv.classList.remove('hidden');
+
+        document.getElementById('modal-age-label').innerText = l.labelAge;
+        document.getElementById('modal-id-label').innerText = l.labelId;
+        document.getElementById('tts-btn-text').innerText = l.ttsText;
+    } else {
+        bioTextDiv.classList.add('hidden');
+    }
+}
+
+function translateMilestoneModal(lang) {
+    if (!currentMilestoneObj) return;
+
+    const buttons = document.querySelectorAll('#milestone-lang-container button');
+    buttons.forEach(btn => {
+        if (btn.getAttribute('onclick').includes(`'${lang}'`)) {
+            btn.className = "px-1.5 py-0.5 rounded bg-red-600/30 border border-red-500 text-white text-[9px]";
+        } else {
+            btn.className = "px-1.5 py-0.5 rounded bg-gray-800 border border-white/10 text-gray-300 text-[9px]";
+        }
+    });
+
+    const container = document.getElementById('milestone-modal-body-container');
+    if (!container) return;
+
+    const t = translations[lang] || translations.ar;
+
+    let transTitle = currentMilestoneObj.title;
+    let transExcerpt = currentMilestoneObj.excerpt;
+    let transStat = currentMilestoneObj.stat;
+    let transStatExp = currentMilestoneObj.statExp || currentMilestoneObj.excerpt;
+
+    if (lang !== 'ar') {
+        transTitle = currentMilestoneObj.title_en || currentMilestoneObj.title;
+        transExcerpt = "A prominent historical milestone documenting the struggles, resilience, and events in the history of the Palestinian cause.";
+        transStat = "Thousands of Martyrs";
+        transStatExp = "Detailed archival statistics showing targeting records and historical timelines.";
+    }
+
+    container.innerHTML = `
+        <div class="tlc-modal-content text-right text-xs">
+            <h2 class="tlc-modal-title" style="font-size: 1.1rem; font-weight: bold; color: #ef4444;">${transTitle}</h2>
+            <div class="tlc-modal-meta" style="color: #9ca3af; font-size: 0.75rem; margin-top: 4px;"><time>${currentMilestoneObj.year}</time></div>
+            <img class="tlc-modal-img mt-3 rounded-xl max-h-48 w-full object-cover" src="${currentMilestoneObj.image}" alt="" onerror="this.style.display='none'">
+            <div class="tlc-modal-desc mt-3 leading-relaxed text-gray-200" style="font-size: 0.8rem;">${transExcerpt}</div>
+            <div class="tlc-modal-stat mt-4 bg-red-950/20 border border-red-500/20 p-3 rounded-xl">
+                <span class="tlc-mdl-stat-label text-gray-400 block font-bold text-[10px]">عدد الشهداء:</span>
+                <span class="tlc-mdl-stat-num text-red-400 font-black text-sm">${transStat}</span>
+                <p class="tlc-mdl-stat-exp text-gray-300 mt-1" style="font-size: 0.75rem;">${transStatExp}</p>
+            </div>
+            <div class="tlc-modal-source mt-4 border-t border-white/10 pt-2 text-[10px] text-gray-500">
+                <span>${t.source || 'المصدر:'}</span>
+                <a href="${currentMilestoneObj.sourceUrl || 'https://www.palquest.org/'}" target="_blank" class="text-red-400 underline">${currentMilestoneObj.sourceName || 'الموسوعة التفاعلية بالقضية الفلسطينية'}</a>
+            </div>
+        </div>
+    `;
+}
+
+// تحميل البيانات الافتراضية عند البدء
 $(document).ready(() => {
     initAdaptiveTheme();
 
-    // 1. Load Gaza Souls dataset for Canvas & counter
-    fetchAndRenderData('./data/victims.json');
+    // Determine active mode dynamically based on page url
+    const path = window.location.pathname;
+    let activeMode = 'souls';
+    if (path.includes('journalists.html')) activeMode = 'journalists';
+    else if (path.includes('westbank.html')) activeMode = 'westbank';
+    else if (path.includes('martyrs48.html')) activeMode = 'martyrs48';
+    else if (path.includes('milestones.html')) activeMode = 'milestones';
+    else if (path.includes('stats.html')) activeMode = 'stats';
+    else if (path.includes('map.html')) activeMode = 'map';
 
-    // 2. Load Journalists dataset
-    fetchAndRenderData('./data/journalists.json');
+    // Auto translate to user preferred system language
+    changeLanguage(currentLang);
 
-    // 3. Render West Bank & 1948 Martyrs Cards
-    renderTributeCards('wb-cards-container', applyApprovedSubmissions(westBankMartyrsData));
-    renderTributeCards('m48-cards-container', applyApprovedSubmissions(martyrs48Data));
+    switchMainMode(activeMode);
+    if (typeof window.initOnThisDayWidget === 'function') { window.initOnThisDayWidget(); }
 
-    // 4. Render Historical Milestones Scrollytelling Timeline
-    renderCinematicTimeline();
-
-    // 5. Initialize Leaflet Map
-    loadMapData();
+    // Check for Map-to-Milestone deep linking parameters
+    if (activeMode === 'milestones') {
+        const urlParams = new URLSearchParams(window.location.search);
+        const milestoneParam = urlParams.get('milestone');
+        if (milestoneParam) {
+            const foundMilestone = milestoneCinematicData.find(m => m.id === milestoneParam);
+            if (foundMilestone) {
+                setTimeout(() => {
+                    const element = document.getElementById(milestoneParam);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    openMilestoneModal(foundMilestone);
+                }, 600);
+            }
+        }
+    }
 });

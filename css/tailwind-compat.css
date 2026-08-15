@@ -146,6 +146,7 @@
         -webkit-backdrop-filter: blur(15px) !important;
         border-bottom: 1px solid rgba(220, 38, 38, 0.25) !important;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
+        overflow: visible !important;
     }
 
     body.light-mode #header {
