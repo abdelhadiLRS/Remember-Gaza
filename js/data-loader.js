@@ -26,6 +26,9 @@ class DataLoaderEngine {
         }
         const data = await response.json();
         this.cache.set(key, data);
+        if (window.cardsEngine && Array.isArray(data)) {
+          window.cardsEngine.registerData(data);
+        }
         return data;
       } catch (err) {
         attempt++;

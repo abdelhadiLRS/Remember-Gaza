@@ -1172,6 +1172,11 @@ const martyrs48Data = [
     { id: "m48_6", name: "أحمد جبارين", name_en: "Ahmed Jabarin", age: 18, date: "2000-10-01", city: "أم الفحم", notes: "شاب في مقتبل العمر ارتقى شهيداً برصاص القناصة خلال التظاهرات السلمية في أم الفحم دفاعاً عن المسجد الأقصى المبارك والهوية الوطنية." }
 ];
 
+if (window.cardsEngine) {
+    window.cardsEngine.registerData(westBankMartyrsData);
+    window.cardsEngine.registerData(martyrs48Data);
+}
+
 function renderTributeCards(containerId, dataset) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -2452,6 +2457,10 @@ function submitVirtualTribute() {
 }
 
 function openMartyrModal(person) {
+    if (window.cardsEngine && typeof window.cardsEngine.showMartyrCard === 'function') {
+        window.cardsEngine.showMartyrCard(person);
+        return;
+    }
     currentMartyrObj = person;
     updateTributeUI();
     if (typeof translateMartyrModal === 'function') {
