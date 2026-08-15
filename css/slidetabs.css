@@ -1,0 +1,216 @@
+/* Palestinian Souls (Remember Gaza) - SlideTabs Navigation System
+   Exact CSS implementation matching Framer Motion SlideTabs template */
+
+.slidetabs-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 8px 16px;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+body.light-mode .slidetabs-nav {
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+.slidetabs-header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.slidetabs-desktop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+/* SlideTabs Container - Isolation context for mix-blend-mode */
+.slidetabs-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  margin: 0 auto;
+  border-radius: 9999px;
+  padding: 4px;
+  list-style: none;
+  isolation: isolate;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Dark Mode Default: bg-neutral-800 border-white/20 */
+body:not(.light-mode) .slidetabs-container {
+  background: #262626; /* neutral-800 */
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Light Mode: bg-white border-black */
+body.light-mode .slidetabs-container {
+  background: #ffffff;
+  border: 2px solid #000000;
+}
+
+/* SlideTabs Tab Element */
+.slidetabs-tab {
+  position: relative;
+  z-index: 10;
+  display: block;
+  cursor: pointer;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: 'Cairo', sans-serif;
+  text-transform: uppercase;
+  color: #ffffff !important;
+  mix-blend-mode: difference;
+  text-decoration: none !important;
+  white-space: nowrap;
+  border-radius: 9999px;
+  user-select: none;
+  transition: opacity 0.2s ease;
+}
+
+@media (min-width: 768px) {
+  .slidetabs-tab {
+    padding: 8px 18px;
+    font-size: 0.88rem;
+  }
+}
+
+.slidetabs-tab.active {
+  font-weight: 900;
+}
+
+/* SlideTabs Cursor Motion Pill */
+.slidetabs-cursor {
+  position: absolute;
+  z-index: 0;
+  height: calc(100% - 8px);
+  top: 4px;
+  border-radius: 9999px;
+  pointer-events: none;
+  transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.2s ease;
+}
+
+/* Dark Mode Cursor: White pill */
+body:not(.light-mode) .slidetabs-cursor {
+  background: #ffffff;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+}
+
+/* Light Mode Cursor: Black pill */
+body.light-mode .slidetabs-cursor {
+  background: #000000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Mobile responsive navigation controls */
+.slidetabs-mobile-trigger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(220, 38, 38, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+body.light-mode .slidetabs-mobile-trigger {
+  background: rgba(220, 38, 38, 0.1);
+  border-color: rgba(220, 38, 38, 0.3);
+  color: #111827;
+}
+
+/* Mobile dropdown menu */
+.slidetabs-mobile-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 12px;
+  right: 12px;
+  background: rgba(18, 19, 23, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 8px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(20px);
+  z-index: 1002;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+body.light-mode .slidetabs-mobile-menu {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.slidetabs-mobile-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-radius: 14px;
+  color: #d1d5db;
+  text-decoration: none !important;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+body.light-mode .slidetabs-mobile-item {
+  color: #374151;
+}
+
+.slidetabs-mobile-item.active,
+.slidetabs-mobile-item:hover {
+  background: rgba(220, 38, 38, 0.2);
+  color: #ef4444;
+  font-weight: 700;
+}
+
+body.light-mode .slidetabs-mobile-item.active,
+body.light-mode .slidetabs-mobile-item:hover {
+  background: rgba(220, 38, 38, 0.1);
+  color: #dc2626;
+}
+
+@media (max-width: 850px) {
+  .slidetabs-desktop {
+    display: none !important;
+  }
+  .slidetabs-mobile-trigger {
+    display: flex !important;
+  }
+}
+
+@media (min-width: 851px) {
+  .slidetabs-desktop {
+    display: flex !important;
+  }
+  .slidetabs-mobile-trigger {
+    display: none !important;
+  }
+  .slidetabs-mobile-menu {
+    display: none !important;
+  }
+}
