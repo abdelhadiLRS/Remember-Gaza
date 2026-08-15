@@ -151,7 +151,7 @@ class NamesBehindNumbersMF extends HTMLElement{
        <div class="question">Do you know a ${esc(x.name)}?</div>
        <div class="number">${x.count.toLocaleString("en-US")}</div>
        <div class="caption"><span class="red">children</span> named ${esc(x.name)}<br>have been <span class="red">killed.</span></div>
-       <div class="source">data.techforpalestine.org</div>
+       <div class="source"> </div>
      </div>
    </article>`;
  }
