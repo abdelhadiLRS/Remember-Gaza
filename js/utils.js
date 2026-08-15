@@ -1,24 +1,34 @@
 /**
- * Palestinian Souls - Utility Functions
+ * Palestinian Souls (Remember Gaza) - Utility Helper Module
+ * Input Sanitization, XSS Encoding, Safe URL Parsing & Helpers
  */
 
-window.Utils = {
-  formatNumber(num) {
-    if (num === null || num === undefined) return '0';
-    return Number(num).toLocaleString(window.i18n ? window.i18n.currentLang : 'ar');
-  },
-
-  escapeHTML(str) {
+class UtilsEngine {
+  static escapeHTML(str) {
     if (!str) return '';
     return String(str)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
-  },
+      .replace(/'/g, '&#39;');
+  }
 
-  debounce(func, wait) {
+  static sanitizeUrl(url) {
+    if (!url) return '';
+    const cleanUrl = String(url).trim();
+    if (cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://') || cleanUrl.startsWith('/')) {
+      return cleanUrl;
+    }
+    return '';
+  }
+
+  static formatNumber(num) {
+    if (num === null || num === undefined) return '0';
+    return Number(num).toLocaleString('ar-EG');
+  }
+
+  static debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
       const later = () => {
@@ -28,19 +38,7 @@ window.Utils = {
       clearTimeout(timeout);
       timeout = setTimeout(later, wait);
     };
-  },
-
-  extractFamilyName(fullName) {
-    if (!fullName) return 'غير محدد';
-    const parts = fullName.trim().split(/\s+/);
-    if (parts.length <= 1) return parts[0];
-
-    // Check for prefixes like "أبو", "آل", "بن"
-    const last = parts[parts.length - 1];
-    const prev = parts[parts.length - 2];
-    if (['أبو', 'ابن', 'بن', 'آل', 'عبد'].includes(prev) && parts.length > 2) {
-      return prev + ' ' + last;
-    }
-    return last;
   }
-};
+}
+
+window.Utils = UtilsEngine;

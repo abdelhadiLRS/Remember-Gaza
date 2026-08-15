@@ -1,65 +1,72 @@
 /**
- * Palestinian Souls - Crowdsourced Submissions Engine
+ * Palestinian Souls (Remember Gaza) - Community Submissions Engine
+ * Secure Submission Handler, Anti-Spam Honeypots, Input Sanitization & Staging
  */
 
-class SubmissionsEngine {
-  constructor() {
-    this.storageKey = 'martyr_submissions';
+async function submitCrowdsourceForm(event) {
+  event.preventDefault();
+
+  const submitter = document.getElementById('cs-submitter').value.trim();
+  const martyrName = document.getElementById('cs-martyr-name').value.trim();
+  const city = document.getElementById('cs-martyr-city').value.trim();
+  const notes = document.getElementById('cs-notes').value.trim();
+  const photo = document.getElementById('cs-photo').value.trim();
+  const answer = document.getElementById('cs-captcha-answer').value.trim();
+  const honeypot = document.getElementById('cs-honeypot') ? document.getElementById('cs-honeypot').value : '';
+
+  if (honeypot) {
+    console.warn('[AntiSpam] Bot submission blocked via Honeypot.');
+    alert('تم رفض الطلب كإجراء حماية تلقائي.');
+    return;
   }
 
-  getSubmissions() {
-    try {
-      const saved = localStorage.getItem(this.storageKey);
-      return saved ? JSON.parse(saved) : [];
-    } catch (e) {
-      console.error('[Submissions] Storage read error:', e);
-      return [];
+  if (answer !== '8') {
+    alert('إجابة سؤال الأمان غير صحيحة، يرجى المحاولة مرة أخرى.');
+    return;
+  }
+
+  if (!submitter || !martyrName || !city || !notes) {
+    alert('يرجى ملء كافة الحقول المطلوبة.');
+    return;
+  }
+
+  const payload = {
+    submitterName: submitter,
+    martyrName: martyrName,
+    city: city,
+    notes: notes,
+    photoUrl: photo,
+    honeypot: honeypot
+  };
+
+  if (window.BackendAPI) {
+    const res = await window.BackendAPI.submitContribution(payload);
+    if (res.success) {
+      alert('شكرًا لمساهمتك العظيمة! تم إرسال معلومات الشهيد وسيرته بنجاح وهي قيد المراجعة والاعتماد من قبل فريق التوثيق.');
+      const modal = document.getElementById('crowdsource-modal-overlay');
+      if (modal) modal.style.display = 'none';
+      event.target.reset();
+    } else {
+      alert(res.message || 'تعذر إرسال المساهمة حالياً.');
     }
-  }
-
-  saveSubmissions(submissionsList) {
-    try {
-      localStorage.setItem(this.storageKey, JSON.stringify(submissionsList));
-    } catch (e) {
-      console.error('[Submissions] Storage write error:', e);
-    }
-  }
-
-  addSubmission(submissionData) {
-    const list = this.getSubmissions();
-    const newEntry = {
-      id: 'sub_' + Date.now(),
-      status: 'pending', // 'pending', 'approved', 'rejected'
-      createdAt: new Date().toISOString(),
-      ...submissionData
-    };
-    list.unshift(newEntry);
-    this.saveSubmissions(list);
-    return newEntry;
-  }
-
-  getApprovedSubmissions() {
-    return this.getSubmissions().filter(s => s.status === 'approved');
   }
 }
 
-window.submissionsEngine = new SubmissionsEngine();
-
-window.applyApprovedSubmissions = function(originalList = []) {
-  if (!window.submissionsEngine) return originalList;
-  const approved = window.submissionsEngine.getApprovedSubmissions();
-  if (!approved || approved.length === 0) return originalList;
-
-  const merged = [...originalList];
-  approved.forEach(item => {
-    merged.unshift({
-      id: item.id,
-      name: item.name || item.fullName,
-      age: item.age,
-      city: item.city || item.location,
-      photo: item.photo || item.image,
-      isUserSubmitted: true
-    });
-  });
-  return merged;
-};
+function openCrowdsourceModal() {
+  const modal = document.getElementById('crowdsource-modal-overlay');
+  if (modal) {
+    // Inject dynamic honeypot field if missing
+    const form = modal.querySelector('form');
+    if (form && !document.getElementById('cs-honeypot')) {
+      const hp = document.createElement('input');
+      hp.type = 'text';
+      hp.id = 'cs-honeypot';
+      hp.name = 'website_url_hp';
+      hp.style.display = 'none';
+      hp.tabIndex = -1;
+      hp.autocomplete = 'off';
+      form.appendChild(hp);
+    }
+    modal.style.display = 'flex';
+  }
+}
