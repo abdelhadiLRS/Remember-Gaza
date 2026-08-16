@@ -106,25 +106,30 @@
   }
 
   function injectHamburgerButton() {
-    if (document.getElementById('mobile-menu-btn')) return;
+    const existingBtn = document.getElementById('mobile-menu-btn');
+    if (existingBtn) {
+      existingBtn.onclick = window.toggleMobileDrawer;
+      return;
+    }
 
     const headerRightContainer = document.querySelector('#header > div:first-child');
     if (!headerRightContainer) return;
 
     const hamburgerBtn = document.createElement('button');
     hamburgerBtn.id = 'mobile-menu-btn';
-    hamburgerBtn.className = 'btn-main flex items-center justify-center shadow-lg hover:scale-105 transition-transform';
+    hamburgerBtn.className = 'action-circle-btn md:hidden flex items-center justify-center';
     hamburgerBtn.title = 'القائمة الجانبية';
+    hamburgerBtn.setAttribute('aria-label', 'فتح القائمة الجانبية');
     hamburgerBtn.onclick = window.toggleMobileDrawer;
     hamburgerBtn.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="3" y1="6" x2="21" y2="6"></line>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
         <line x1="3" y1="18" x2="21" y2="18"></line>
       </svg>
     `;
 
-    headerRightContainer.appendChild(hamburgerBtn);
+    headerRightContainer.insertBefore(hamburgerBtn, headerRightContainer.firstChild);
   }
 
   window.toggleMobileDrawer = function () {
