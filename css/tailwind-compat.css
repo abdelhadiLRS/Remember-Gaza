@@ -535,7 +535,16 @@ body.light-mode .mobile-drawer-link {
     background: rgba(239, 68, 68, 0.18);
     border-color: rgba(239, 68, 68, 0.4);
     color: #ef4444;
-    transform: translateX(html[dir="rtl"] ? -3px : 3px);
+}
+
+html[dir="ltr"] .mobile-drawer-link:hover,
+html[dir="ltr"] .mobile-drawer-link.active {
+    transform: translateX(3px);
+}
+
+html[dir="rtl"] .mobile-drawer-link:hover,
+html[dir="rtl"] .mobile-drawer-link.active {
+    transform: translateX(-3px);
 }
 
 .drawer-icon {
@@ -608,4 +617,22 @@ body.light-mode .mobile-social-icon {
 .mobile-social-icon:hover {
     transform: scale(1.1);
     border-color: #ef4444;
+}
+
+/* =========================================================================
+   Mobile View Overrides: Hide header page tabs and bottom bar dock on mobile
+   ========================================================================= */
+@media (max-width: 768px) {
+    .tabs-wrapper {
+        display: none !important;
+    }
+    #bottom-bar {
+        display: none !important;
+    }
+    #header {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 6px 10px !important;
+    }
 }

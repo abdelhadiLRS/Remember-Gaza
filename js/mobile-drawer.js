@@ -34,31 +34,24 @@
             <div class="mobile-drawer-title" data-i18n="drawer_sections_pages">أقسام المنصة</div>
             <nav class="mobile-drawer-nav">
               <a href="index.html" class="mobile-drawer-link ${currentPath === 'index.html' || currentPath === '' ? 'active' : ''}" id="drawer-tab-souls">
-                <span class="drawer-icon">🕊️</span>
                 <span data-i18n="nav_gaza">شهداء غزة</span>
               </a>
               <a href="journalists.html" class="mobile-drawer-link ${currentPath === 'journalists.html' ? 'active' : ''}" id="drawer-tab-journalists">
-                <span class="drawer-icon">📷</span>
                 <span data-i18n="nav_journalists">شهداء الصحافة</span>
               </a>
               <a href="westbank.html" class="mobile-drawer-link ${currentPath === 'westbank.html' ? 'active' : ''}" id="drawer-tab-westbank">
-                <span class="drawer-icon">🏞️</span>
                 <span data-i18n="nav_westbank">شهداء الضفة</span>
               </a>
               <a href="martyrs48.html" class="mobile-drawer-link ${currentPath === 'martyrs48.html' ? 'active' : ''}" id="drawer-tab-48">
-                <span class="drawer-icon">🔑</span>
                 <span data-i18n="nav_martyrs48">شهداء 48</span>
               </a>
               <a href="milestones.html" class="mobile-drawer-link ${currentPath === 'milestones.html' ? 'active' : ''}" id="drawer-tab-milestones">
-                <span class="drawer-icon">📜</span>
                 <span data-i18n="nav_milestones">أبرز المحطات</span>
               </a>
               <a href="stats.html" class="mobile-drawer-link ${currentPath === 'stats.html' ? 'active' : ''}" id="drawer-tab-stats">
-                <span class="drawer-icon">📊</span>
                 <span data-i18n="nav_stats">الإحصائيات</span>
               </a>
               <a href="map.html" class="mobile-drawer-link ${currentPath === 'map.html' ? 'active' : ''}" id="drawer-tab-map">
-                <span class="drawer-icon">🗺️</span>
                 <span data-i18n="nav_map">الخريطة التفاعلية</span>
               </a>
             </nav>
