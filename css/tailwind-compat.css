@@ -708,3 +708,236 @@ body.light-mode .mobile-social-icon {
         font-size: 0.68rem !important;
     }
 }
+
+/* =========================================================================
+   Desktop Archival Design System (min-width: 769px)
+   Independent Desktop Architecture - No impact on Mobile (< 769px)
+   ========================================================================= */
+
+@media (min-width: 769px) {
+    /* Central Content Container */
+    .desktop-container,
+    #stats-view > div,
+    #milestones-view .tlc-main,
+    #westbank-view > div,
+    #martyrs48-view > div {
+        max-width: 1400px;
+        margin-inline: auto;
+        padding-inline: 32px;
+    }
+
+    /* Desktop Header Layout */
+    #header {
+        flex-direction: column;
+        padding: 12px 32px;
+        gap: 10px;
+        background: rgba(10, 10, 10, 0.95);
+        border-bottom: 1px solid rgba(239, 68, 68, 0.25);
+    }
+
+    .header-row-1 {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 1400px;
+        margin-inline: auto;
+        gap: 24px;
+    }
+
+    .header-logo-group {
+        gap: 12px;
+    }
+
+    .logo-title {
+        font-size: 1.5rem;
+        font-weight: 900;
+        letter-spacing: -0.5px;
+    }
+
+    /* Desktop Search Box Row */
+    .header-row-2 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 1400px;
+        margin-inline: auto;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding-top: 10px;
+    }
+
+    .search-input-wrapper {
+        width: min(440px, 100%);
+        margin-inline: 0;
+    }
+
+    #search-input {
+        height: 42px !important;
+        font-size: 0.9rem !important;
+        border-radius: 12px !important;
+        background: rgba(15, 15, 20, 0.85) !important;
+        border-color: rgba(239, 68, 68, 0.3) !important;
+    }
+
+    #search-input:focus {
+        border-color: #ef4444 !important;
+        box-shadow: 0 0 15px rgba(239, 68, 68, 0.25) !important;
+    }
+
+    /* Desktop Navigation Tabs */
+    .tabs-wrapper {
+        display: flex !important;
+        align-items: center;
+    }
+
+    .tabs-wrapper .btn-main {
+        padding: 8px 18px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        border-radius: 10px;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .tabs-wrapper .btn-main:hover {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.5);
+        color: #ffffff;
+    }
+
+    .tabs-wrapper .btn-main.active {
+        background: #dc2626;
+        border-color: #ef4444;
+        color: #ffffff !important;
+        box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+    }
+
+    /* Header Tools & Actions */
+    .header-actions-group {
+        gap: 10px;
+    }
+
+    .action-circle-btn {
+        min-width: 38px;
+        min-height: 38px;
+        width: 38px;
+        height: 38px;
+        transition: all 0.2s ease;
+    }
+
+    .action-circle-btn:hover {
+        background: rgba(239, 68, 68, 0.25);
+        border-color: rgba(239, 68, 68, 0.5);
+        transform: translateY(-2px);
+    }
+
+    /* Desktop Hero Overlay */
+    #canvas-layer {
+        opacity: 0.9;
+    }
+
+    /* Desktop Martyr Counter Card */
+    #counter-box {
+        left: auto !important;
+        inset-inline-start: 32px !important;
+        transform: none !important;
+        bottom: 28px !important;
+        padding: 10px 22px !important;
+        border-radius: 16px !important;
+        background: rgba(10, 10, 15, 0.88) !important;
+        border: 1px solid rgba(239, 68, 68, 0.35) !important;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), 0 0 15px rgba(220, 38, 38, 0.2) !important;
+    }
+
+    #counter-box #number {
+        font-size: 1.4rem !important;
+    }
+
+    #counter-box #martyrs-label {
+        font-size: 0.82rem !important;
+    }
+
+    /* Desktop Audio Button */
+    #music-btn {
+        inset-inline-start: 32px !important;
+        bottom: 88px !important;
+        width: 44px !important;
+        height: 44px !important;
+        transition: all 0.25s ease !important;
+    }
+
+    #music-btn:hover {
+        transform: scale(1.08) !important;
+        border-color: #ef4444 !important;
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.5) !important;
+    }
+
+    /* Desktop Verse Container */
+    #verse-container {
+        bottom: 28px !important;
+        inset-inline-end: 32px !important;
+        max-width: 260px !important;
+    }
+
+    /* Desktop Views Sub-page Containers & Scrollable Views */
+    #stats-view, #videos-view, #no-data-view, #map-view, #milestones-view, #westbank-view, #martyrs48-view {
+        padding-top: 110px;
+        padding-bottom: 90px;
+    }
+
+    /* Desktop Modals Centering & Sizing */
+    .modal-box {
+        max-width: min(900px, calc(100vw - 64px)) !important;
+        border-radius: 20px !important;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(220, 38, 38, 0.2) !important;
+    }
+
+    /* Desktop Bottom Bar */
+    #bottom-bar {
+        padding: 20px 32px;
+    }
+
+    #bottom-bar .glass-panel {
+        padding: 8px 18px;
+        border-radius: 20px;
+    }
+}
+
+/* Large Desktop Adjustments (min-width: 1200px) */
+@media (min-width: 1200px) {
+    #header {
+        padding: 12px 48px;
+    }
+
+    .header-row-1 {
+        max-width: 1500px;
+    }
+
+    .header-row-2 {
+        max-width: 1500px;
+    }
+
+    #counter-box {
+        inset-inline-start: 48px !important;
+    }
+
+    #music-btn {
+        inset-inline-start: 48px !important;
+    }
+
+    #verse-container {
+        inset-inline-end: 48px !important;
+    }
+}
+
+/* Extra Large Desktop Adjustments (min-width: 1440px) */
+@media (min-width: 1440px) {
+    .logo-title {
+        font-size: 1.65rem;
+    }
+
+    .tabs-wrapper .btn-main {
+        padding: 9px 20px;
+        font-size: 0.88rem;
+    }
+}
