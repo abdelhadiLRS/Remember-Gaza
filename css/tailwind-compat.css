@@ -134,253 +134,331 @@
 .cursor-pointer{cursor:pointer}
 
 /* =========================================================================
-   أرواح فلسطين | Palestinian Souls — Creative Mobile Design System (v2.0)
-   Highly optimized, premium glassmorphic mobile viewport enhancements.
-   Guarantees 100% data visibility while elevating UX to native-app quality.
+   أرواح فلسطين | Palestinian Souls — Creative Mobile Design System (v3.0)
+   Highly optimized Mobile-First CSS Architecture for Android & iOS (320px-768px).
    ========================================================================= */
-@media (max-width: 768px) {
-    /* --- Premium Header & Navigation Glassmorphism --- */
+
+/* --- General Header & Layout --- */
+#header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 8px 12px;
+    gap: 8px;
+    background: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(220, 38, 38, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+}
+
+body.light-mode #header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom-color: rgba(220, 38, 38, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Rows Layout */
+.header-row-1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px;
+}
+
+.header-row-2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.header-logo-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    shrink: 0;
+}
+
+.logo-title {
+    font-size: clamp(1.1rem, 4vw, 1.35rem);
+    font-weight: 900;
+    color: #ffffff;
+    margin: 0;
+    line-height: 1;
+    white-space: nowrap;
+}
+body.light-mode .logo-title {
+    color: #111827;
+}
+
+.header-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Action Circle Buttons (Minimum 44px touch area for touch accessibility on mobile) */
+.action-circle-btn {
+    min-width: 44px;
+    min-height: 44px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 0;
+}
+
+body.light-mode .action-circle-btn {
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #111827;
+}
+
+.action-circle-btn:active {
+    transform: scale(0.92);
+}
+
+/* Desktop Header Adjustments for Desktop View (>= 769px) */
+@media (min-width: 769px) {
     #header {
-        background: rgba(10, 10, 10, 0.85) !important;
-        backdrop-filter: blur(15px) !important;
-        -webkit-backdrop-filter: blur(15px) !important;
-        border-bottom: 1px solid rgba(220, 38, 38, 0.25) !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 16px;
     }
-
-    body.light-mode #header {
-        background: rgba(255, 255, 255, 0.9) !important;
-        backdrop-filter: blur(15px) !important;
-        -webkit-backdrop-filter: blur(15px) !important;
-        border-bottom: 1px solid rgba(220, 38, 38, 0.15) !important;
+    .header-row-1 {
+        width: auto;
+        gap: 16px;
     }
+    .header-row-2 {
+        width: auto;
+    }
+    .mobile-menu-btn {
+        display: none !important;
+    }
+    .action-circle-btn {
+        min-width: 32px;
+        min-height: 32px;
+        width: 32px;
+        height: 32px;
+    }
+}
 
-    /* Elegant Horizontal Nav Scroller with Gradient Fade Masks */
+/* --- Mobile First Search Box (Row 2) --- */
+.search-input-wrapper {
+    position: relative;
+    width: calc(100% - 12px);
+    margin-inline: auto;
+    display: flex;
+    align-items: center;
+}
+
+#search-input {
+    width: 100% !important;
+    height: 46px !important;
+    background: rgba(0, 0, 0, 0.65) !important;
+    border: 1.5px solid rgba(239, 68, 68, 0.35) !important;
+    color: #ffffff !important;
+    padding-inline-start: 16px !important;
+    padding-inline-end: 48px !important;
+    border-radius: 24px !important;
+    font-size: 0.88rem !important;
+    font-family: 'Cairo', sans-serif !important;
+    outline: none !important;
+    transition: all 0.25s ease !important;
+}
+
+#search-input:focus {
+    border-color: #ef4444 !important;
+    background: rgba(0, 0, 0, 0.9) !important;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.4) !important;
+}
+
+body.light-mode #search-input {
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: #111827 !important;
+    border-color: rgba(220, 38, 38, 0.3) !important;
+}
+
+.voice-mic-btn {
+    position: absolute;
+    inset-inline-end: 6px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(220, 38, 38, 0.25);
+    border: 1px solid rgba(239, 68, 68, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.voice-mic-btn:active {
+    transform: scale(0.9);
+}
+
+.search-dropdown-menu {
+    position: absolute;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
+    top: 52px;
+    max-height: 280px;
+    overflow-y: auto;
+    background: rgba(10, 10, 15, 0.96);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
+    z-index: 1001;
+}
+
+/* Visitor Counter Pill in Header */
+.visitor-counter-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 8px;
+    height: 28px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+}
+.visitor-counter-pill img {
+    height: 12px;
+    width: auto;
+}
+
+/* --- Mobile Hero / Background Density Overlay --- */
+@media (max-width: 768px) {
+    #canvas-layer {
+        opacity: 0.65;
+    }
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        background: radial-gradient(circle at center, rgba(10, 10, 10, 0.4) 0%, rgba(10, 10, 10, 0.8) 100%);
+    }
+    body.light-mode::before {
+        background: radial-gradient(circle at center, rgba(243, 244, 246, 0.3) 0%, rgba(243, 244, 246, 0.7) 100%);
+    }
+}
+
+/* --- Modern Martyr Counter Box Pill --- */
+#counter-box {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    background: rgba(15, 15, 20, 0.9) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(239, 68, 68, 0.35) !important;
+    border-radius: 24px !important;
+    padding: 6px 16px !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7), 0 0 12px rgba(220, 38, 38, 0.2) !important;
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 999 !important;
+    font-family: 'Cairo', sans-serif !important;
+    width: auto !important;
+    max-width: calc(100% - 32px) !important;
+}
+
+#counter-box #number {
+    font-size: 1.1rem !important;
+    font-weight: 900 !important;
+    font-variant-numeric: tabular-nums !important;
+    color: #ffffff !important;
+}
+
+#counter-box #martyrs-label {
+    font-size: 0.75rem !important;
+    color: #fca5a5 !important;
+    font-weight: 700 !important;
+}
+
+body.light-mode #counter-box {
+    background: rgba(255, 255, 255, 0.92) !important;
+    border-color: rgba(220, 38, 38, 0.25) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+}
+body.light-mode #counter-box #number {
+    color: #111827 !important;
+}
+
+/* --- Audio Button (Positioned cleanly on Bottom Left for RTL) --- */
+#music-btn {
+    position: fixed !important;
+    bottom: 20px !important;
+    inset-inline-start: 16px !important;
+    top: auto !important;
+    transform: none !important;
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+    border-radius: 50% !important;
+    z-index: 1000 !important;
+    background: rgba(15, 15, 20, 0.9) !important;
+    border: 1.5px solid rgba(239, 68, 68, 0.4) !important;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+}
+
+#music-btn:active {
+    transform: scale(0.9) !important;
+}
+
+/* Ensure verse image container stays on bottom right without obscuring UI */
+#verse-container {
+    position: fixed !important;
+    bottom: 20px !important;
+    inset-inline-end: 16px !important;
+    z-index: 998 !important;
+    pointer-events: none !important;
+}
+
+@media (max-width: 768px) {
+    #verse-container {
+        bottom: 68px !important;
+        inset-inline-end: 12px !important;
+        max-width: 120px !important;
+    }
+}
+
+/* Mobile View Overrides: Hide header page tabs and bottom bar dock on mobile */
+@media (max-width: 768px) {
     .tabs-wrapper {
-        position: relative !important;
-        overflow-x: auto !important;
-        white-space: nowrap !important;
-        -webkit-overflow-scrolling: touch !important;
-        mask-image: linear-gradient(to right, transparent, #000 15px, #000 calc(100% - 15px), transparent) !important;
-        -webkit-mask-image: linear-gradient(to right, transparent, #000 15px, #000 calc(100% - 15px), transparent) !important;
-        padding: 4px 6px !important;
-        margin: 0 4px !important;
+        display: none !important;
     }
-
-    /* --- Pulsing Interactive Navigation Tab Highlight --- */
-    @keyframes pulseActiveTab {
-        0%, 100% { box-shadow: 0 0 8px rgba(220, 38, 38, 0.4); transform: scale(1); }
-        50% { box-shadow: 0 0 18px rgba(220, 38, 38, 0.7); transform: scale(1.03); }
-    }
-
-    .btn-main.active {
-        animation: pulseActiveTab 2.5s infinite ease-in-out !important;
-        border-color: #ef4444 !important;
-    }
-
-    /* --- Organic Haptic Active States on Touch --- */
-    .btn-main:active, .share-btn:active, .social-links a:active, select:active, button:active {
-        transform: scale(0.93) !important;
-        transition: transform 0.08s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    }
-
-    /* --- Premium Glassmorphic Cards & Neon Accent Strip --- */
-    .glass-panel, .tlc-panel, .tlc-decade-card, .tlc-modal-stat, .modal-box {
-        border-radius: 16px !important;
-        border: 1px solid rgba(220, 38, 38, 0.25) !important;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), inset 0 0 12px rgba(220, 38, 38, 0.05) !important;
-        position: relative !important;
-        overflow: hidden !important;
-        background: rgba(15, 15, 15, 0.88) !important;
-        backdrop-filter: blur(12px) !important;
-        -webkit-backdrop-filter: blur(12px) !important;
-    }
-
-    body.light-mode .glass-panel,
-    body.light-mode .tlc-panel,
-    body.light-mode .tlc-decade-card,
-    body.light-mode .tlc-modal-stat,
-    body.light-mode .modal-box {
-        background: rgba(255, 255, 255, 0.92) !important;
-        border: 1px solid rgba(220, 38, 38, 0.15) !important;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
-    }
-
-    /* Subtle Blood-Red Neon Accent Line on Top of Cards */
-    .glass-panel::before, .tlc-panel::before, .tlc-decade-card::before, .modal-box::before {
-        content: '' !important;
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 2px !important;
-        background: linear-gradient(90deg, transparent, #dc2626, transparent) !important;
-        z-index: 10 !important;
-    }
-
-    /* --- Beautiful Bottom Docking Quick Action bar --- */
     #bottom-bar {
-        position: fixed !important;
-        bottom: 14px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        width: calc(100% - 24px) !important;
-        max-width: 480px !important;
-        background: rgba(10, 10, 10, 0.85) !important;
-        backdrop-filter: blur(15px) !important;
-        -webkit-backdrop-filter: blur(15px) !important;
-        border: 1px solid rgba(220, 38, 38, 0.3) !important;
-        border-radius: 24px !important;
-        padding: 8px 14px !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85), 0 0 15px rgba(220, 38, 38, 0.2) !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        gap: 6px !important;
-        z-index: 999 !important;
-        pointer-events: auto !important;
-        margin: 0 !important;
+        display: none !important;
     }
-
-    body.light-mode #bottom-bar {
-        background: rgba(255, 255, 255, 0.9) !important;
-        border: 1px solid rgba(220, 38, 38, 0.2) !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
-    }
-
-    #bottom-bar .social-links,
-    #bottom-bar div {
-        flex: 1 1 auto !important;
-        justify-content: center !important;
-        text-align: center !important;
-    }
-
-    #bottom-bar button,
-    #bottom-bar a {
-        font-size: 10px !important;
-        color: white !important;
-    }
-
-    /* --- Adaptive Compact Viewports on Narrow Devices --- */
-    @media (max-width: 480px) {
-        #header {
-            flex-direction: column !important;
-            gap: 6px !important;
-            padding: 8px 10px !important;
-        }
-        #header > div {
-            width: 100% !important;
-            justify-content: space-between !important;
-        }
-        .tabs-wrapper {
-            width: 100% !important;
-            margin: 2px 0 !important;
-        }
-        #bottom-bar {
-            bottom: 8px !important;
-            width: calc(100% - 16px) !important;
-            padding: 6px 10px !important;
-            border-radius: 20px !important;
-        }
-        #bottom-bar button span,
-        #bottom-bar a span {
-            display: none !important; /* Keep icons only to save space on extremely tiny screens */
-        }
-    }
-}
-
-/* --- Custom styling for the Verse Image and Theme/Galaxy/Voice icons --- */
-#verse-img {
-    transition: filter 0.3s ease;
-}
-body.light-mode #verse-img {
-    filter: brightness(0) !important;
-}
-body:not(.light-mode) #verse-img {
-    filter: brightness(0) invert(1) !important;
-}
-
-/* Rounded, clean styling for Dark Mode / Galaxy toggle buttons matching language icon */
-#theme-toggle-btn,
-#corridors-toggle-btn {
-    width: 26px !important;
-    height: 26px !important;
-    min-width: 26px !important;
-    border-radius: 50% !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    transition: all 0.3s ease !important;
-}
-
-body.light-mode #theme-toggle-btn,
-body.light-mode #corridors-toggle-btn {
-    border: 1px solid rgba(0, 0, 0, 0.15) !important;
-    background: rgba(0, 0, 0, 0.05) !important;
-}
-
-/* Give the theme and corridors toggle buttons consistent svg and image sizing */
-#theme-toggle-btn svg,
-#corridors-toggle-btn img,
-#corridors-toggle-btn svg {
-    width: 14px !important;
-    height: 14px !important;
-    object-fit: contain;
-}
-
-/* Adjust voice search button styling to match Capture9.PNG as a circular icon button */
-#voice-search-btn {
-    width: 26px !important;
-    height: 26px !important;
-    min-width: 26px !important;
-    padding: 0 !important;
-    border-radius: 50% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background: rgba(220, 38, 38, 0.2) !important;
-    border: 1px solid rgba(239, 68, 68, 0.5) !important;
-}
-#voice-search-btn img {
-    width: 14px !important;
-    height: 14px !important;
-    object-fit: contain;
 }
 
 /* =========================================================================
    Mobile Slide-Out Sidebar Drawer & Hamburger Button Styling
    ========================================================================= */
-
-/* Mobile Hamburger Button in Header */
-#mobile-menu-btn {
-    width: 28px !important;
-    height: 28px !important;
-    min-width: 28px !important;
-    border-radius: 50% !important;
-    padding: 0 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    cursor: pointer !important;
-    transition: all 0.3s ease !important;
-    color: #ffffff;
-}
-body.light-mode #mobile-menu-btn {
-    border: 1px solid rgba(0, 0, 0, 0.15) !important;
-    background: rgba(0, 0, 0, 0.05) !important;
-    color: #111827;
-}
-
-@media (min-width: 769px) {
-    #mobile-menu-btn {
-        display: none !important;
-    }
-}
 
 /* Mobile Drawer Overlay Backdrop */
 .mobile-drawer-overlay {
@@ -388,8 +466,8 @@ body.light-mode #mobile-menu-btn {
     inset: 0;
     z-index: 2000;
     background: rgba(0, 0, 0, 0.65);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -405,13 +483,13 @@ body.light-mode #mobile-menu-btn {
     position: fixed;
     top: 0;
     bottom: 0;
-    width: 285px;
-    max-width: 85vw;
+    width: min(82vw, 360px);
+    height: 100dvh;
     z-index: 2001;
     background: rgba(15, 15, 20, 0.96);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
     display: flex;
     flex-direction: column;
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -422,9 +500,9 @@ body.light-mode #mobile-menu-btn {
 
 /* RTL Placement (Right Side) */
 html[dir="rtl"] .mobile-drawer {
-    right: 0;
-    left: auto;
-    border-left: 1px solid rgba(239, 68, 68, 0.3);
+    inset-inline-start: auto;
+    inset-inline-end: 0;
+    border-inline-start: 1px solid rgba(239, 68, 68, 0.3);
     transform: translateX(100%);
 }
 html[dir="rtl"] .mobile-drawer-overlay.active .mobile-drawer {
@@ -433,9 +511,9 @@ html[dir="rtl"] .mobile-drawer-overlay.active .mobile-drawer {
 
 /* LTR Placement (Left Side) */
 html[dir="ltr"] .mobile-drawer {
-    left: 0;
-    right: auto;
-    border-right: 1px solid rgba(239, 68, 68, 0.3);
+    inset-inline-start: 0;
+    inset-inline-end: auto;
+    border-inline-end: 1px solid rgba(239, 68, 68, 0.3);
     transform: translateX(-100%);
 }
 html[dir="ltr"] .mobile-drawer-overlay.active .mobile-drawer {
@@ -444,7 +522,7 @@ html[dir="ltr"] .mobile-drawer-overlay.active .mobile-drawer {
 
 /* Light Mode Drawer Panel */
 body.light-mode .mobile-drawer {
-    background: rgba(255, 255, 255, 0.97);
+    background: rgba(255, 255, 255, 0.98);
     color: #111827;
     border-color: rgba(220, 38, 38, 0.2) !important;
 }
@@ -454,9 +532,9 @@ body.light-mode .mobile-drawer {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 18px;
+    padding: 16px 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.25);
 }
 body.light-mode .mobile-drawer-header {
     border-bottom-color: rgba(0, 0, 0, 0.1);
@@ -464,8 +542,8 @@ body.light-mode .mobile-drawer-header {
 }
 
 .mobile-drawer-close {
-    width: 32px;
-    height: 32px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.1);
     border: none;
@@ -473,7 +551,7 @@ body.light-mode .mobile-drawer-header {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     cursor: pointer;
     transition: background 0.2s;
 }
@@ -483,7 +561,7 @@ body.light-mode .mobile-drawer-header {
 
 /* Drawer Body & Sections */
 .mobile-drawer-body {
-    padding: 16px;
+    padding: 18px 16px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -493,41 +571,42 @@ body.light-mode .mobile-drawer-header {
 .mobile-drawer-section {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
 .mobile-drawer-title {
-    font-size: 0.72rem;
-    font-weight: 700;
+    font-size: 0.75rem;
+    font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     color: #ef4444;
-    padding: 0 4px;
+    padding-inline: 4px;
 }
 
 .mobile-drawer-nav {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 8px;
 }
 
 .mobile-drawer-link {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 10px 14px;
-    border-radius: 12px;
+    justify-content: space-between;
+    height: 54px;
+    padding-inline: 16px;
+    border-radius: 16px;
     color: inherit;
     text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 600;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.88rem;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     transition: all 0.2s ease;
 }
 body.light-mode .mobile-drawer-link {
     background: rgba(0, 0, 0, 0.03);
-    border-color: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.06);
 }
 
 .mobile-drawer-link:hover,
@@ -539,16 +618,12 @@ body.light-mode .mobile-drawer-link {
 
 html[dir="ltr"] .mobile-drawer-link:hover,
 html[dir="ltr"] .mobile-drawer-link.active {
-    transform: translateX(3px);
+    transform: translateX(4px);
 }
 
 html[dir="rtl"] .mobile-drawer-link:hover,
 html[dir="rtl"] .mobile-drawer-link.active {
-    transform: translateX(-3px);
-}
-
-.drawer-icon {
-    font-size: 1rem;
+    transform: translateX(-4px);
 }
 
 /* Mobile Quick Action Card Buttons inside Drawer */
@@ -560,12 +635,13 @@ html[dir="rtl"] .mobile-drawer-link.active {
 
 .mobile-drawer-action-btn {
     width: 100%;
+    height: 54px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    border-radius: 12px;
-    font-size: 0.82rem;
+    gap: 12px;
+    padding-inline: 16px;
+    border-radius: 16px;
+    font-size: 0.85rem;
     font-weight: 700;
     cursor: pointer;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -574,7 +650,7 @@ html[dir="rtl"] .mobile-drawer-link.active {
 }
 
 .mobile-drawer-action-btn.crowdsource {
-    background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), rgba(153, 27, 27, 0.2));
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.25), rgba(153, 27, 27, 0.25));
     border-color: rgba(239, 68, 68, 0.4);
     color: #fca5a5;
 }
@@ -594,17 +670,16 @@ body.light-mode .mobile-drawer-action-btn.share {
     color: #111827;
 }
 
-.mobile-drawer-action-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+.mobile-drawer-action-btn:active {
+    transform: scale(0.98);
 }
 
 .mobile-social-icon {
-    width: 36px;
-    height: 36px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -614,25 +689,22 @@ body.light-mode .mobile-social-icon {
     background: rgba(0, 0, 0, 0.05);
     border-color: rgba(0, 0, 0, 0.1);
 }
-.mobile-social-icon:hover {
-    transform: scale(1.1);
-    border-color: #ef4444;
-}
 
-/* =========================================================================
-   Mobile View Overrides: Hide header page tabs and bottom bar dock on mobile
-   ========================================================================= */
-@media (max-width: 768px) {
-    .tabs-wrapper {
-        display: none !important;
+/* Breakpoints Responsiveness fine-tuning (320px, 360px, 390px, 414px, 480px, 768px) */
+@media (max-width: 360px) {
+    .logo-title {
+        font-size: 1rem;
     }
-    #bottom-bar {
-        display: none !important;
+    .action-circle-btn {
+        min-width: 38px;
+        min-height: 38px;
+        width: 38px;
+        height: 38px;
     }
-    #header {
-        flex-direction: row !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        padding: 6px 10px !important;
+    #counter-box #number {
+        font-size: 0.95rem !important;
+    }
+    #counter-box #martyrs-label {
+        font-size: 0.68rem !important;
     }
 }
