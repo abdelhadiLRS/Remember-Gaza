@@ -304,8 +304,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <main id="stats-view" class="text-white" style="display: block;">
 <div class="w-full max-w-6xl mx-auto px-6 py-10 font-['Cairo']">
 
+<!-- العنوان الرئيسي بخط عريض في أعلى صفحة الإحصائيات -->
+<div class="mb-8 text-center">
+    <h1 id="stats-title" class="text-4xl md:text-5xl font-black text-red-500 mb-3 tracking-tight" data-i18n="stats_title">حرب الإبادة الجماعية في غزة</h1>
+    <p id="stats-banner" class="text-sm text-red-300 font-semibold max-w-2xl mx-auto bg-red-950/40 border border-red-600/30 p-3 rounded-xl" data-i18n="stats_banner">أكثر من 2.4 مليون إنسان يتعرضون للإبادة والتجويع</p>
+</div>
+
 <!-- قسم العدادات ومكونات التوثيق المدمجة في أعلى الإحصائيات -->
 <div class="space-y-8 mb-10">
+    <!-- العنوان فوق الودجت الأولى -->
+    <div class="text-center pt-2 pb-1">
+        <h2 id="stats-subtitle" class="text-2xl md:text-3xl font-extrabold text-white" data-i18n="stats_subtitle">1000 يوم من الإبادة الجماعية</h2>
+    </div>
+
     <!-- 1. Human Toll Counter -->
     <div class="glass-panel rounded-2xl overflow-hidden border border-red-600/30 shadow-xl">
         <human-toll-counter></human-toll-counter>
@@ -320,12 +331,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="glass-panel rounded-2xl overflow-hidden border border-red-600/30 shadow-xl">
         <names-behind-numbers-mf></names-behind-numbers-mf>
     </div>
-</div>
-
-<div class="mb-10 text-center">
-    <h2 id="stats-title" class="text-4xl font-extrabold text-red-500 mb-3" data-i18n="stats_title">حرب الإبادة الجماعية في غزة</h2>
-    <h3 id="stats-subtitle" class="text-2xl font-bold text-white mb-4" data-i18n="stats_subtitle">1000 يوم من الإبادة الجماعية</h3>
-    <p id="stats-banner" class="text-sm text-red-300 font-semibold max-w-2xl mx-auto bg-red-950/40 border border-red-600/30 p-3 rounded-xl" data-i18n="stats_banner">أكثر من 2.4 مليون إنسان يتعرضون للإبادة والتجويع</p>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
@@ -943,6 +948,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+<script src="js/i18n.js"></script>
 <script src="js/names-behind-numbers-mf.js"></script>
 <script src="js/human-toll-counter.js"></script>
 <script>
@@ -1002,7 +1008,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 })();
 </script>
-<script src="js/i18n.js"></script>
 <script src="js/data-loader.js"></script>
 <script src="js/utils.js"></script>
 <script src="js/voice-search.js"></script>

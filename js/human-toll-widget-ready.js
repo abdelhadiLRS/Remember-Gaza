@@ -13,16 +13,16 @@ const css=`
 class HumanTollWidget extends HTMLElement{
  constructor(){super();this.attachShadow({mode:"open"});this.data=[];this.i=0;this.known=null}
  connectedCallback(){this.renderShell();this.load()}
- renderShell(){this.shadowRoot.innerHTML=`<style>${css}</style><div class="wrap">
- <div class="eyebrow">DAILY CASUALTIES DATASETS</div>
- <div class="title"><h1>The Human Toll</h1><div class="rule"></div></div>
- <div class="sub">Since October 7, 2023 for Gaza</div>
- <div class="notice" id="notice"><span>⚠</span> Learn why these numbers do not fully reflect the human toll</div>
- <div class="method" id="method">These figures are reported datasets and do not necessarily represent the full human toll. Demographic fields are shown only when the underlying daily dataset provides them; derived values are labeled as derived.</div>
+ renderShell(){this.shadowRoot.innerHTML=`<style>${css}</style><div class="wrap" dir="rtl">
+ <div class="eyebrow">قواعد بيانات الضحايا اليومية</div>
+ <div class="title"><h1>الحصيلة البشرية</h1><div class="rule"></div></div>
+ <div class="sub">منذ 7 أكتوبر 2023 لقطاع غزة</div>
+ <div class="notice" id="notice"><span>⚠</span> اعرف لماذا لا تعكس هذه الأرقام الحصيلة البشرية بالكامل</div>
+ <div class="method" id="method">هذه الأرقام هي قواعد بيانات مُبلغ عنها ولا تمثل بالضرورة الحصيلة البشرية الكاملة. تُعرض الحقول الديموغرافية فقط عندما توفرها قاعدة البيانات اليومية الأساسية.</div>
  <div class="pills" id="pills"></div>
- <div class="chartHead"><div><div class="chartTitle">Daily cumulative toll</div><div class="status" id="status">Loading live data…</div></div><div><div class="big" id="big">—</div><div class="bigLabel">killed</div></div></div>
+ <div class="chartHead"><div><div class="chartTitle">الحصيلة التراكمية اليومية</div><div class="status" id="status">جاري تحميل البيانات…</div></div><div><div class="big" id="big">—</div><div class="bigLabel">شهيد</div></div></div>
  <div class="chartBox"><svg id="svg" viewBox="0 0 1200 430" preserveAspectRatio="none"><path id="area" class="area"/><path id="line" class="line"/><g id="marks"></g></svg><div class="tip" id="tip"></div></div>
- <div class="slider"><div class="dateRow"><span>October 7, 2023</span><span id="today">TODAY</span></div><div class="sliderLine"><div class="track"></div><div class="thumb" id="thumb"></div><input class="range" id="range" type="range" min="0" max="0" value="0"></div><div class="selected" id="selected">—</div></div>
+ <div class="slider"><div class="dateRow"><span>7 أكتوبر 2023</span><span id="today">اليوم</span></div><div class="sliderLine"><div class="track"></div><div class="thumb" id="thumb"></div><input class="range" id="range" type="range" min="0" max="0" value="0"></div><div class="selected" id="selected">—</div></div>
  </div>`;
  this.shadowRoot.getElementById("notice").onclick=()=>{const m=this.shadowRoot.getElementById("method");m.style.display=m.style.display==="block"?"none":"block"};
  this.shadowRoot.getElementById("range").oninput=e=>{this.i=+e.target.value;this.paint()}
@@ -42,7 +42,7 @@ class HumanTollWidget extends HTMLElement{
   const d=this.data[this.i];if(!d)return;
   const root=this.shadowRoot,$=s=>root.querySelector(s);
   $("#big").textContent=nf(d.killed);$("#selected").textContent=dateFmt(d.date);
-  const pills=[["",d.killed,"killed"],["",d.injured,"injured"],["",d.children,"children killed"],["",d.women,"women killed"],["",d.medical,"medical personnel killed"],["",d.press,"journalists killed"],["",d.civdef,"first responders killed"]];
+  const pills=[["",d.killed,"شهيد"],["",d.injured,"جريح"],["",d.children,"طفل شهيد"],["",d.women,"امرأة شهيدة"],["",d.medical,"من الكوادر الطبية"],["",d.press,"صحفي شهيد"],["",d.civdef,"من الدفاع المدني"]];
   $("#pills").innerHTML=pills.map(p=>`<div class="pill">${nf(p[1])} <em>${p[2]}</em></div>`).join("");
   this.draw();
  }

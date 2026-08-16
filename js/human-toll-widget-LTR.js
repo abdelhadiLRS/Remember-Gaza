@@ -12,17 +12,95 @@ const css=`
 `;
 class HumanTollWidget extends HTMLElement{
  constructor(){super();this.attachShadow({mode:"open"});this.data=[];this.i=0;this.known=null}
- connectedCallback(){this.renderShell();this.load()}
- renderShell(){this.shadowRoot.innerHTML=`<style>${css}</style><div class="wrap">
- <div class="eyebrow">DAILY CASUALTIES DATASETS</div>
- <div class="title"><h1>The Human Toll</h1><div class="rule"></div></div>
- <div class="sub">Since October 7, 2023 for Gaza</div>
- <div class="notice" id="notice"><span>⚠</span> Learn why these numbers do not fully reflect the human toll</div>
- <div class="method" id="method">These figures are reported datasets and do not necessarily represent the full human toll. Demographic fields are shown only when the underlying daily dataset provides them; derived values are labeled as derived.</div>
+ getLang(){
+  return (window.i18n && window.i18n.currentLang) ||
+         localStorage.getItem('app_lang') ||
+         localStorage.getItem('site_language') ||
+         'en';
+ }
+ getDict(){
+  const lang = this.getLang();
+  const dicts = {
+    en: {
+      eyebrow: "DAILY CASUALTIES DATASETS",
+      title: "The Human Toll",
+      sub: "Since October 7, 2023 for Gaza",
+      notice: "⚠ Learn why these numbers do not fully reflect the human toll",
+      method: "These figures are reported datasets and do not necessarily represent the full human toll. Demographic fields are shown only when the underlying daily dataset provides them; derived values are labeled as derived.",
+      chartTitle: "Daily cumulative toll",
+      bigLabel: "killed",
+      today: "TODAY",
+      pills: { killed: "killed", injured: "injured", children: "children killed", women: "women killed", medical: "medical personnel killed", press: "journalists killed", civdef: "first responders killed" }
+    },
+    fr: {
+      eyebrow: "DONNÉES DES VICTIMES QUOTIDIENNES",
+      title: "Le bilan humain",
+      sub: "Depuis le 7 octobre 2023 pour Gaza",
+      notice: "⚠ Découvrez pourquoi ces chiffres ne reflètent pas totalement le bilan humain",
+      method: "Ces chiffres sont des ensembles de données signalés et ne représentent pas nécessairement la totalité du bilan humain.",
+      chartTitle: "Bilan cumulé quotidien",
+      bigLabel: "tués",
+      today: "AUJOURD'HUI",
+      pills: { killed: "tués", injured: "blessés", children: "enfants tués", women: "femmes tuées", medical: "personnel médical tué", press: "journalistes tués", civdef: "premiers secours tués" }
+    },
+    es: {
+      eyebrow: "DATOS DE VÍCTIMAS DIARIAS",
+      title: "El costo humano",
+      sub: "Desde el 7 de octubre de 2023 para Gaza",
+      notice: "⚠ Descubra por qué estos números no reflejan completamente el costo humano",
+      method: "Estas cifras son conjuntos de datos reportados y no representan necesariamente el costo humano total.",
+      chartTitle: "Cómputo acumulado diario",
+      bigLabel: "asesinados",
+      today: "HOY",
+      pills: { killed: "asesinados", injured: "heridos", children: "niños asesinados", women: "mujeres asesinadas", medical: "personal médico asesinado", press: "periodistas asesinados", civdef: "rescatistas asesinados" }
+    },
+    de: {
+      eyebrow: "TÄGLICHE OPFERDATEN",
+      title: "Der menschliche Zoll",
+      sub: "Seit dem 7. Oktober 2023 für Gaza",
+      notice: "⚠ Erfahren Sie, warum diese Zahlen den menschlichen Zoll nicht vollständig widerspiegeln",
+      method: "Diese Zahlen sind gemeldete Datensätze und spiegeln nicht unbedingt das Ausmaß wider.",
+      chartTitle: "Täglich kumulierte Zahl",
+      bigLabel: "getötet",
+      today: "HEUTE",
+      pills: { killed: "getötet", injured: "verletzt", children: "Kinder getötet", women: "Frauen getötet", medical: "medizinisches Personal getötet", press: "Journalisten getötet", civdef: "Ersthelfer getötet" }
+    },
+    tr: {
+      eyebrow: "GÜNLÜK KAYIP VERİLERİ",
+      title: "İnsani Bilanço",
+      sub: "Gazze için 7 Ekim 2023'ten bu yana",
+      notice: "⚠ Bu rakamların neden tüm insani bilançoyu yansıtmadığını öğrenin",
+      method: "Bu rakamlar bildirilen veri kümeleridir ve tüm bilançoyu temsil etmeyebilir.",
+      chartTitle: "Günlük toplam bilanço",
+      bigLabel: "şehit",
+      today: "BUGÜN",
+      pills: { killed: "şehit", injured: "yaralı", children: "şehit çocuk", women: "şehit kadın", medical: "şehit sağlık personeli", press: "şehit gazeteci", civdef: "şehit sivil savunma" }
+    }
+  };
+  return dicts[lang] || dicts.en;
+ }
+ connectedCallback(){
+  this.renderShell();
+  this.load();
+  if(window.i18n && typeof window.i18n.onLanguageChange==='function'){
+    window.i18n.onLanguageChange(()=> {
+      this.renderShell();
+      this.paint();
+    });
+  }
+ }
+ renderShell(){
+ const d = this.getDict();
+ this.shadowRoot.innerHTML=`<style>${css}</style><div class="wrap">
+ <div class="eyebrow">${d.eyebrow}</div>
+ <div class="title"><h1>${d.title}</h1><div class="rule"></div></div>
+ <div class="sub">${d.sub}</div>
+ <div class="notice" id="notice"><span>⚠</span> ${d.notice}</div>
+ <div class="method" id="method">${d.method}</div>
  <div class="pills" id="pills"></div>
- <div class="chartHead"><div><div class="chartTitle">Daily cumulative toll</div><div class="status" id="status">Loading live data…</div></div><div><div class="big" id="big">—</div><div class="bigLabel">killed</div></div></div>
+ <div class="chartHead"><div><div class="chartTitle">${d.chartTitle}</div><div class="status" id="status">Loading live data…</div></div><div><div class="big" id="big">—</div><div class="bigLabel">${d.bigLabel}</div></div></div>
  <div class="chartBox"><svg id="svg" viewBox="0 0 1200 430" preserveAspectRatio="none"><path id="area" class="area"/><path id="line" class="line"/><g id="marks"></g></svg><div class="tip" id="tip"></div></div>
- <div class="slider"><div class="dateRow"><span>October 7, 2023</span><span id="today">TODAY</span></div><div class="sliderLine"><div class="track"></div><div class="thumb" id="thumb"></div><input class="range" id="range" type="range" min="0" max="0" value="0"></div><div class="selected" id="selected">—</div></div>
+ <div class="slider"><div class="dateRow"><span>October 7, 2023</span><span id="today">${d.today}</span></div><div class="sliderLine"><div class="track"></div><div class="thumb" id="thumb"></div><input class="range" id="range" type="range" min="0" max="0" value="0"></div><div class="selected" id="selected">—</div></div>
  </div>`;
  this.shadowRoot.getElementById("notice").onclick=()=>{const m=this.shadowRoot.getElementById("method");m.style.display=m.style.display==="block"?"none":"block"};
  this.shadowRoot.getElementById("range").oninput=e=>{this.i=+e.target.value;this.paint()}
@@ -41,8 +119,10 @@ class HumanTollWidget extends HTMLElement{
  paint(){
   const d=this.data[this.i];if(!d)return;
   const root=this.shadowRoot,$=s=>root.querySelector(s);
+  const dict = this.getDict();
+  const pDict = dict.pills || {};
   $("#big").textContent=nf(d.killed);$("#selected").textContent=dateFmt(d.date);
-  const pills=[["",d.killed,"killed"],["",d.injured,"injured"],["",d.children,"children killed"],["",d.women,"women killed"],["",d.medical,"medical personnel killed"],["",d.press,"journalists killed"],["",d.civdef,"first responders killed"]];
+  const pills=[["",d.killed,pDict.killed||"killed"],["",d.injured,pDict.injured||"injured"],["",d.children,pDict.children||"children killed"],["",d.women,pDict.women||"women killed"],["",d.medical,pDict.medical||"medical personnel killed"],["",d.press,pDict.press||"journalists killed"],["",d.civdef,pDict.civdef||"first responders killed"]];
   $("#pills").innerHTML=pills.map(p=>`<div class="pill">${nf(p[1])} <em>${p[2]}</em></div>`).join("");
   this.draw();
  }
