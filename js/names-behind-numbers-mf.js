@@ -117,7 +117,7 @@ class NamesBehindNumbersMF extends HTMLElement{
      this.index=0;
      this.render();
      this.shadowRoot.getElementById("status").textContent=
-       `Children only · ${this.boys.length} boys’ names · ${this.girls.length} girls’ names · Tech for Palestine`;
+       `Children only · ${this.boys.length} boys’ names · ${this.girls.length} girls’ names · `;
    }catch(e){
      console.error(e);
      this.shadowRoot.getElementById("status").textContent="Unable to load names.";
@@ -151,7 +151,7 @@ class NamesBehindNumbersMF extends HTMLElement{
        <div class="question">Do you know a ${esc(x.name)}?</div>
        <div class="number">${x.count.toLocaleString("en-US")}</div>
        <div class="caption"><span class="red">children</span> named ${esc(x.name)}<br>have been <span class="red">killed.</span></div>
-       <div class="source"> </div>
+       <div class="source"></div>
      </div>
    </article>`;
  }
