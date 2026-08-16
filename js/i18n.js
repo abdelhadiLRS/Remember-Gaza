@@ -221,7 +221,7 @@ class I18nEngine {
       const isSelected = this.currentLang === lang.code;
       return `
         <button
-          onclick="changeLanguage('${lang.code}'); if(window.i18n) window.i18n.closeLanguageDropdown();"
+          onclick="if (typeof changeLanguage === 'function') { changeLanguage('${lang.code}'); } else if (window.i18n) { window.i18n.setLanguage('${lang.code}'); } if (window.i18n) window.i18n.closeLanguageDropdown();"
           class="w-full flex items-center justify-between px-3.5 py-2 text-gray-200 hover:bg-white/10 hover:text-white transition-colors duration-150 text-xs text-start font-medium cursor-pointer ${isSelected ? 'bg-red-500/10 text-red-400 font-bold' : ''}">
           <span>${lang.name}</span>
           ${isSelected ? '<span class="text-red-400 text-sm ml-2">✓</span>' : ''}
