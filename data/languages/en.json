@@ -126,5 +126,9 @@
   "chart_region_l3": "Khan Younis",
   "chart_region_l4": "Middle Governorate",
   "chart_region_l5": "Rafah",
-  "chart_region_l6": "West Bank & Jerusalem"
+  "chart_region_l6": "West Bank & Jerusalem",
+  "drawer_sections_pages": "Platform Sections",
+  "drawer_sections_quick": "Quick Actions",
+  "drawer_sections_social": "Social Media",
+  "nav_milestones": "Key Milestones"
 }

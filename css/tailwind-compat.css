@@ -257,25 +257,8 @@
 
     #bottom-bar button,
     #bottom-bar a {
-        padding: 5px 10px !important;
         font-size: 10px !important;
-        border-radius: 12px !important;
-        background: rgba(255, 255, 255, 0.05) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
         color: white !important;
-    }
-
-    body.light-mode #bottom-bar button,
-    body.light-mode #bottom-bar a {
-        background: rgba(0, 0, 0, 0.04) !important;
-        border: 1px solid rgba(0, 0, 0, 0.08) !important;
-        color: #111827 !important;
-    }
-
-    #bottom-bar button:hover,
-    #bottom-bar a:hover {
-        background: rgba(220, 38, 38, 0.2) !important;
-        border-color: rgba(239, 68, 68, 0.4) !important;
     }
 
     /* --- Adaptive Compact Viewports on Narrow Devices --- */
@@ -365,4 +348,291 @@ body.light-mode #corridors-toggle-btn {
     width: 14px !important;
     height: 14px !important;
     object-fit: contain;
+}
+
+/* =========================================================================
+   Mobile Slide-Out Sidebar Drawer & Hamburger Button Styling
+   ========================================================================= */
+
+/* Mobile Hamburger Button in Header */
+#mobile-menu-btn {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    color: #ffffff;
+}
+body.light-mode #mobile-menu-btn {
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    background: rgba(0, 0, 0, 0.05) !important;
+    color: #111827;
+}
+
+@media (min-width: 769px) {
+    #mobile-menu-btn {
+        display: none !important;
+    }
+}
+
+/* Mobile Drawer Overlay Backdrop */
+.mobile-drawer-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobile-drawer-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Mobile Drawer Main Panel */
+.mobile-drawer {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 285px;
+    max-width: 85vw;
+    z-index: 2001;
+    background: rgba(15, 15, 20, 0.96);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    font-family: 'Cairo', sans-serif;
+    color: #f3f4f6;
+    overflow-y: auto;
+}
+
+/* RTL Placement (Right Side) */
+html[dir="rtl"] .mobile-drawer {
+    right: 0;
+    left: auto;
+    border-left: 1px solid rgba(239, 68, 68, 0.3);
+    transform: translateX(100%);
+}
+html[dir="rtl"] .mobile-drawer-overlay.active .mobile-drawer {
+    transform: translateX(0);
+}
+
+/* LTR Placement (Left Side) */
+html[dir="ltr"] .mobile-drawer {
+    left: 0;
+    right: auto;
+    border-right: 1px solid rgba(239, 68, 68, 0.3);
+    transform: translateX(-100%);
+}
+html[dir="ltr"] .mobile-drawer-overlay.active .mobile-drawer {
+    transform: translateX(0);
+}
+
+/* Light Mode Drawer Panel */
+body.light-mode .mobile-drawer {
+    background: rgba(255, 255, 255, 0.97);
+    color: #111827;
+    border-color: rgba(220, 38, 38, 0.2) !important;
+}
+
+/* Drawer Header */
+.mobile-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+}
+body.light-mode .mobile-drawer-header {
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.mobile-drawer-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.mobile-drawer-close:hover {
+    background: rgba(239, 68, 68, 0.3);
+}
+
+/* Drawer Body & Sections */
+.mobile-drawer-body {
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.mobile-drawer-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mobile-drawer-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #ef4444;
+    padding: 0 4px;
+}
+
+.mobile-drawer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mobile-drawer-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    color: inherit;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+}
+body.light-mode .mobile-drawer-link {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.05);
+}
+
+.mobile-drawer-link:hover,
+.mobile-drawer-link.active {
+    background: rgba(239, 68, 68, 0.18);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #ef4444;
+}
+
+html[dir="ltr"] .mobile-drawer-link:hover,
+html[dir="ltr"] .mobile-drawer-link.active {
+    transform: translateX(3px);
+}
+
+html[dir="rtl"] .mobile-drawer-link:hover,
+html[dir="rtl"] .mobile-drawer-link.active {
+    transform: translateX(-3px);
+}
+
+.drawer-icon {
+    font-size: 1rem;
+}
+
+/* Mobile Quick Action Card Buttons inside Drawer */
+.mobile-drawer-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mobile-drawer-action-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+    text-align: start;
+}
+
+.mobile-drawer-action-btn.crowdsource {
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), rgba(153, 27, 27, 0.2));
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #fca5a5;
+}
+.mobile-drawer-action-btn.donate {
+    background: linear-gradient(135deg, #dc2626, #991b1b);
+    border-color: #ef4444;
+    color: #ffffff;
+}
+.mobile-drawer-action-btn.share {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+body.light-mode .mobile-drawer-action-btn.share {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #111827;
+}
+
+.mobile-drawer-action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.mobile-social-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+body.light-mode .mobile-social-icon {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+.mobile-social-icon:hover {
+    transform: scale(1.1);
+    border-color: #ef4444;
+}
+
+/* =========================================================================
+   Mobile View Overrides: Hide header page tabs and bottom bar dock on mobile
+   ========================================================================= */
+@media (max-width: 768px) {
+    .tabs-wrapper {
+        display: none !important;
+    }
+    #bottom-bar {
+        display: none !important;
+    }
+    #header {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 6px 10px !important;
+    }
 }
