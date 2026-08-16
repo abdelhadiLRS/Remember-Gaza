@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="html-root">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data: blob:; script-src 'self' https: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; font-src 'self' https: data:;">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="favicon.png">
+<title id="page-title">تعريف الشهيد | أرواح فلسطين</title>
+
+<!-- jQuery & Bootstrap & Fonts -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/tailwind-compat.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#dc2626',blood:'#0a0a0a',glass:'rgba(10, 10, 10, 0.9)'}}}}</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Amiri:ital@1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+
+<!-- Custom Desktop Page Styles -->
+<link rel="stylesheet" href="css/desktop-pages.css">
+
+<style>
+*{box-sizing:border-box;}
+body{margin:0;background-color:#09090b;font-family:'Cairo',sans-serif;color:#f5f5f5;transition: background 0.3s ease, color 0.3s ease;}
+
+/* Mode & Utility toggles */
+.btn-main img, #music-icon-img, .social-links img, .share-btn img { filter: brightness(0) invert(1); transition: filter 0.3s ease; }
+body.light-mode .btn-main img, body.light-mode #music-icon-img, body.light-mode .social-links img, body.light-mode .share-btn img { filter: brightness(0) invert(0); }
+
+body.light-mode{background-color:#f3f4f6 !important;color:#111827 !important;}
+body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-bottom-color:rgba(0, 0, 0, 0.1) !important;}
+
+/* Header Base Styling */
+#header{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;flex-wrap:nowrap;gap:12px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(10,10,10,0.95);}
+#search-input{background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.2);color:white;padding:6px 14px;border-radius:20px;width:240px;font-size:0.82rem;outline:none;transition:0.4s;}
+#search-input:focus{border-color:#ef4444;background:rgba(0,0,0,0.9);box-shadow:0 0 8px rgba(239,68,68,0.3);width:280px;}
+
+.btn-main{background:rgba(255,255,255,0.05);color:white;border:1px solid rgba(255,255,255,0.1);padding:5px 12px;border-radius:20px;cursor:pointer;transition:all 0.3s ease;font-size:0.78rem;white-space:nowrap;}
+.btn-main:hover{background:rgba(220,38,38,0.3);border-color:rgba(239,68,68,0.5);}
+.btn-main.active{background:#dc2626;border-color:#ef4444;font-weight:bold;color:white !important;}
+
+/* Bottom Navigation Bar */
+#bottom-bar{display:flex;justify-content:space-between;align-items:center;padding:15px 25px;pointer-events:none;}
+</style>
+</head>
+<body class="desktop-page-body">
+
+<!-- HEADER NAV -->
+<header id="header" class="glass-panel interactive sticky top-0 z-50">
+  <div class="header-row-1 flex items-center justify-between w-full">
+    <div class="header-logo-group flex items-center gap-3">
+      <a href="index.html" class="flex items-center gap-2 text-decoration-none">
+        <h1 class="logo-title text-xl font-black m-0">
+          <span class="text-red-500">أرواح</span>
+          <span class="text-white">فلسطين</span>
+        </h1>
+      </a>
+    </div>
+
+    <!-- Desktop Navigation Links -->
+    <div class="tabs-wrapper no-scrollbar interactive hidden md:flex">
+      <div class="flex gap-1.5 bg-black/50 p-1.5 rounded-full border border-white/10">
+        <a href="index.html" class="btn-main"><span data-i18n="nav_gaza">شهداء غزة</span></a>
+        <a href="journalists.html" class="btn-main"><span data-i18n="nav_journalists">شهداء الصحافة</span></a>
+        <a href="westbank.html" class="btn-main"><span data-i18n="nav_westbank">شهداء الضفة</span></a>
+        <a href="martyrs48.html" class="btn-main"><span data-i18n="nav_martyrs48">شهداء 48</span></a>
+        <a href="milestones.html" class="btn-main"><span data-i18n="nav_milestones">أبرز المحطات</span></a>
+        <a href="stats.html" class="btn-main"><span data-i18n="nav_stats">الإحصائيات</span></a>
+        <a href="map.html" class="btn-main"><span data-i18n="nav_map">الخريطة التفاعلية</span></a>
+      </div>
+    </div>
+
+    <div class="header-actions-group flex items-center gap-3">
+      <!-- Search Input -->
+      <div class="relative hidden sm:block">
+        <input type="text" id="search-input" placeholder="البحث عن شهيد..." oninput="searchMartyrByName(this.value)" aria-label="البحث عن اسم الشهيد">
+      </div>
+
+      <!-- Theme Toggle Button -->
+      <button id="theme-toggle-btn" class="action-circle-btn w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-red-600 transition" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري">
+        <i class="fas font-solid fa-moon text-xs"></i>
+      </button>
+
+      <!-- Language Dropdown Trigger -->
+      <div class="relative inline-block" id="language-dropdown-container">
+        <button onclick="toggleLanguageDropdown(event)" class="action-circle-btn w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-red-600 transition" title="Language">
+          <i class="fas fa-globe text-xs"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN CONTAINER -->
+<main class="dp-main-container my-6">
+
+  <!-- Breadcrumb -->
+  <nav class="dp-breadcrumb">
+    <a href="index.html"><i class="fas fa-home ml-1"></i> الرئيسية</a>
+    <span class="sep">/</span>
+    <a href="index.html">أرشيف الشهداء</a>
+    <span class="sep">/</span>
+    <span class="active" id="martyr-breadcrumb-name">جارٍ التحميل...</span>
+  </nav>
+
+  <!-- Martyr Layout Grid -->
+  <div class="dp-martyr-layout">
+
+    <!-- RIGHT / MAIN COLUMN: Details & Biography -->
+    <div class="dp-martyr-info-column">
+
+      <!-- Header & Badges Card -->
+      <div class="dp-card">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+          <div>
+            <span class="dp-badge dp-badge-red mb-2" id="martyr-category-badge">شهيد من غزة</span>
+            <h1 class="text-3xl font-black text-white m-0" id="martyr-name">جارٍ التحميل...</h1>
+            <p class="text-sm text-gray-400 font-mono mt-1 mb-0" id="martyr-en-name" style="display: none;"></p>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="flex flex-wrap gap-2">
+            <a id="btn-edit-data" href="#" class="dp-btn dp-btn-outline">
+              <i class="fas fa-edit text-red-500"></i> تعديل البيانات
+            </a>
+            <a id="btn-add-biography" href="#" class="dp-btn dp-btn-outline">
+              <i class="fas fa-feather-alt text-amber-500"></i> إضافة للسيرة الذاتية
+            </a>
+          </div>
+        </div>
+
+        <!-- Badges Row -->
+        <div class="flex flex-wrap gap-2.5 mt-4 pt-4 border-t border-white/10">
+          <div class="dp-badge">
+            <i class="fas fa-user text-gray-400 ml-1"></i>
+            الحالة: <span id="badge-status" class="text-red-400 font-bold ml-1">شهيد</span>
+          </div>
+          <div class="dp-badge">
+            <i class="fas fa-hourglass-half text-gray-400 ml-1"></i>
+            العمر: <span id="badge-age" class="text-white font-bold ml-1">--</span>
+          </div>
+          <div class="dp-badge">
+            <i class="fas fa-calendar-alt text-gray-400 ml-1"></i>
+            تاريخ الاستشهاد: <span id="badge-date" class="text-white font-bold ml-1">--</span>
+          </div>
+          <div class="dp-badge">
+            <i class="fas fa-map-marker-alt text-gray-400 ml-1"></i>
+            مكان الاستشهاد: <span id="badge-location" class="text-white font-bold ml-1">--</span>
+          </div>
+          <div class="dp-badge" id="badge-id-wrap" style="display:none;">
+            <i class="fas fa-id-card text-gray-400 ml-1"></i>
+            رقم الهوية: <span id="badge-id" class="text-white font-mono ml-1">--</span>
+          </div>
+        </div>
+
+        <!-- Tributes & Candle Bar -->
+        <div class="flex flex-wrap items-center justify-between gap-3 mt-5 pt-4 border-t border-white/10 bg-black/30 p-3 rounded-xl">
+          <div class="flex items-center gap-3">
+            <button id="btn-light-candle" onclick="lightMartyrCandlePage()" class="dp-btn dp-btn-red py-2 px-4 text-xs">
+              🕯️ إضاءة شمعة
+            </button>
+            <span class="text-sm text-amber-400 font-bold">
+              عدد الشموع: <span id="candles-count-page">0</span> 🕯️
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="toggleBookmarkMartyr()" class="dp-btn dp-btn-outline py-2 px-3 text-xs" title="المفضلة">
+              <i class="far fa-bookmark" id="bookmark-icon"></i> المفضلة
+            </button>
+            <button onclick="shareMartyrPage()" class="dp-btn dp-btn-outline py-2 px-3 text-xs" title="مشاركة">
+              <i class="fas fa-share-alt"></i> مشاركة
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Biography Section Card -->
+      <div class="dp-card">
+        <div class="dp-card-title">
+          <i class="fas fa-book-open"></i> السيرة الذاتية
+        </div>
+        <div id="martyr-biography-text" class="text-gray-200 text-base leading-relaxed space-y-4 text-justify">
+          جارٍ تحميل السيرة الذاتية للشهيد...
+        </div>
+
+        <!-- Audio Player Box (Hidden if no audio file exists) -->
+        <div id="audio-player-box" class="dp-audio-box" style="display: none;">
+          <button id="audio-play-btn" onclick="toggleBiographyAudio()" class="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center shrink-0 hover:bg-red-700 transition">
+            <i class="fas fa-play" id="audio-play-icon"></i>
+          </button>
+          <div class="flex-1">
+            <div class="text-xs font-bold text-red-400 mb-1">استمع للسيرة الذاتية (تسجيل صوتي)</div>
+            <audio id="martyr-audio-element" controls class="w-full h-8 outline-none">
+              <source id="audio-source-element" src="" type="audio/mpeg">
+              متصفحك لا يدعم مشغل الصوتيات.
+            </audio>
+          </div>
+        </div>
+      </div>
+
+      <!-- Documentation Sources Card -->
+      <div class="dp-card">
+        <div class="dp-card-title">
+          <i class="fas fa-shield-alt"></i> مصادر التوثيق
+        </div>
+        <div id="sources-list-container" class="space-y-3">
+          <div class="flex items-center justify-between bg-black/40 p-3 rounded-xl border border-white/5">
+            <div>
+              <div class="font-bold text-sm text-white">المصدر الأول: سجل شهداء الصحة والمراكز الرسمية</div>
+              <div class="text-xs text-gray-400 mt-0.5">تاريخ التوثيق: 2024-10-15</div>
+            </div>
+            <span class="dp-badge dp-badge-green">موثّق رسميًا</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Corrections & Pending Reviews Section -->
+      <div class="dp-card">
+        <div class="dp-card-title justify-between">
+          <span><i class="fas fa-history"></i> التصحيحات والملاحظات المرفوعة</span>
+          <span class="text-xs dp-badge dp-badge-blue" id="corrections-count-badge">0 تصحيحات بانتظار المراجعة</span>
+        </div>
+        <div id="corrections-list-container" class="space-y-3">
+          <div class="text-gray-400 text-sm py-4 text-center">لا توجد تصحيحات معلقة لبيانات هذا الشهيد حالياً.</div>
+        </div>
+      </div>
+
+      <!-- Comments Section Card -->
+      <div class="dp-card">
+        <div class="dp-card-title justify-between">
+          <span><i class="fas fa-comments"></i> التعليقات والرسائل التضامنية (<span id="comments-count">0</span>)</span>
+        </div>
+
+        <!-- Add Comment Form -->
+        <div class="bg-black/30 p-4 rounded-xl border border-white/10 mb-6">
+          <h4 class="text-sm font-bold text-gray-300 mb-3">أضف رسالة تضامن أو تعليق:</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            <input type="text" id="comment-author-input" placeholder="اسمك الكامل..." class="dp-input text-xs">
+            <input type="text" id="comment-location-input" placeholder="البلد / المدينة..." class="dp-input text-xs">
+          </div>
+          <textarea id="comment-text-input" rows="3" placeholder="رحم الله الشهيد وأسكنه فسيح جناته..." class="dp-textarea text-xs mb-3"></textarea>
+          <button onclick="postMartyrComment()" class="dp-btn dp-btn-red text-xs py-2 px-5">
+            <i class="fas fa-paper-plane ml-1"></i> إرسال التعليق
+          </button>
+        </div>
+
+        <!-- Comments List -->
+        <div id="comments-list-container">
+          <div class="text-gray-400 text-sm py-4 text-center">لا توجد تعليقات حتى الآن. كن أول من يترك أثرًا تضامنيًا.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- LEFT COLUMN: Large Martyr Image Card -->
+    <div class="dp-martyr-photo-column">
+      <div class="dp-card sticky top-24">
+        <div class="dp-martyr-photo-wrap mb-4">
+          <img id="martyr-photo-img" src="favicon.png" alt="صورة الشهيد" onerror="this.src='favicon.png'">
+        </div>
+
+        <div class="text-center space-y-2">
+          <h3 class="font-bold text-lg text-white" id="photo-card-name">جارٍ التحميل...</h3>
+          <div class="text-xs text-gray-400" id="photo-card-subtitle">وثّقت قضيته في الأرشيف الفلسطيني</div>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-white/10 space-y-2">
+          <button onclick="shareMartyrPage()" class="dp-btn dp-btn-outline w-full py-2.5 text-xs">
+            <i class="fas fa-share-alt ml-1"></i> مشاركة رابط التوثيق
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script src="js/i18n.js"></script>
+<script src="js/data-loader.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/cards.js"></script>
+<script src="js/backend-api.js"></script>
+<script src="js/audit.js"></script>
+<script>
+let currentMartyrData = null;
+let currentMartyrId = null;
+
+$(document.body).addClass('desktop-page-body');
+
+$(document).ready(async function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  currentMartyrId = urlParams.get('id') || urlParams.get('person');
+
+  if (!currentMartyrId) {
+    alert('لم يتم تحديد رقم الشهيد.');
+    window.location.href = 'index.html';
+    return;
+  }
+
+  // Set action links to edit page with ID
+  $('#btn-edit-data').attr('href', `edit-martyr.html?id=${encodeURIComponent(currentMartyrId)}&action=edit`);
+  $('#btn-add-biography').attr('href', `edit-martyr.html?id=${encodeURIComponent(currentMartyrId)}&action=biography`);
+
+  await loadMartyrDetails(currentMartyrId);
+  loadPendingCorrections(currentMartyrId);
+  loadLocalComments(currentMartyrId);
+});
+
+async function loadMartyrDetails(id) {
+  let found = null;
+  let categoryLabel = 'شهيد من غزة';
+
+  // Search across datasets
+  if (window.DataLoader) {
+    try {
+      const victims = await DataLoader.loadDataset('data/victims.json');
+      if (Array.isArray(victims)) {
+        found = victims.find(m => String(m.id) === String(id) || String(m.record_id) === String(id));
+      }
+    } catch(e){}
+
+    if (!found) {
+      try {
+        const journalists = await DataLoader.loadDataset('data/journalists.json');
+        if (Array.isArray(journalists)) {
+          found = journalists.find(m => String(m.id) === String(id) || String(m.record_id) === String(id));
+          if (found) categoryLabel = 'شهيد من الصحافة';
+        }
+      } catch(e){}
+    }
+
+    if (!found) {
+      try {
+        const press = await DataLoader.loadDataset('data/press_killed_in_gaza.json');
+        if (Array.isArray(press)) {
+          found = press.find(m => String(m.id) === String(id) || String(m.record_id) === String(id));
+          if (found) categoryLabel = 'شهيد من الصحافة والإعلام';
+        }
+      } catch(e){}
+    }
+  }
+
+  if (!found) {
+    // Fallback search in killed-in-gaza
+    try {
+      const response = await fetch('data/killed-in-gaza.json');
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        found = data.find(m => String(m.id) === String(id) || String(m.record_id) === String(id) || String(m.id_number) === String(id));
+      }
+    } catch(e){}
+  }
+
+  if (!found) {
+    found = {
+      id: id,
+      name: 'شهيد فلسطين',
+      en_name: '',
+      age: 'غير محدد',
+      date_of_death: 'غير محدد',
+      dob: 'غير محدد',
+      story: 'استشهد برصاص وقصف قوات الاحتلال الإسرائيلي دفاعًا عن أرض فلسطين وحريتها.'
+    };
+  }
+
+  currentMartyrData = found;
+
+  // Render Data
+  const martyrName = found.name || found.ar_name || 'شهيد بلا اسم';
+  $('#martyr-name, #photo-card-name, #martyr-breadcrumb-name').text(martyrName);
+  document.title = `${martyrName} | أرواح فلسطين`;
+
+  if (found.en_name) {
+    $('#martyr-en-name').text(found.en_name).show();
+  }
+
+  $('#martyr-category-badge').text(categoryLabel);
+
+  const age = found.age !== undefined ? `${found.age} عام` : 'غير محدد';
+  $('#badge-age').text(age);
+
+  const date = found.date_of_death || found.date_of_event || found.date || 'غير محدد';
+  $('#badge-date').text(date);
+
+  const location = found.location || found.city || found.district || 'قطاع غزة';
+  $('#badge-location').text(location);
+
+  if (found.id_number || found.id) {
+    $('#badge-id').text(found.id_number || found.id);
+    $('#badge-id-wrap').show();
+  }
+
+  // Photo
+  const photoUrl = found.photo_url || found.photo || found.image_url || 'favicon.png';
+  $('#martyr-photo-img').attr('src', photoUrl);
+
+  // Biography
+  const bio = found.story || found.biography || found.details || `${martyrName}، استشهد برصاص وقصف قوات الاحتلال الإسرائيلي. تم توثيق اسمه ضمن سجلات الخلود الوطنية لمنصة أرواح فلسطين.`;
+  $('#martyr-biography-text').html(bio.replace(/\n/g, '<br>'));
+
+  // Audio file check
+  if (found.audio_url || found.audio) {
+    const audioUrl = found.audio_url || found.audio;
+    $('#audio-source-element').attr('src', audioUrl);
+    $('#martyr-audio-element')[0].load();
+    $('#audio-player-box').show();
+  }
+
+  // Load Saved Candles Count
+  const candlesKey = `rg_candles_${id}`;
+  const count = parseInt(localStorage.getItem(candlesKey) || '0', 10);
+  $('#candles-count-page').text(count);
+}
+
+function lightMartyrCandlePage() {
+  if (!currentMartyrId) return;
+  const candlesKey = `rg_candles_${currentMartyrId}`;
+  let count = parseInt(localStorage.getItem(candlesKey) || '0', 10);
+  count += 1;
+  localStorage.setItem(candlesKey, count);
+  $('#candles-count-page').text(count);
+
+  alert('شكراً لإضاءتك شمعة تخليداً لروح الشهيد!');
+}
+
+function shareMartyrPage() {
+  if (navigator.share) {
+    navigator.share({
+      title: document.title,
+      url: window.location.href
+    }).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(window.location.href);
+    alert('تم نسخ رابط صفحة الشهيد بنجاح!');
+  }
+}
+
+function toggleBookmarkMartyr() {
+  const bookmarks = JSON.parse(localStorage.getItem('rg_bookmarks') || '[]');
+  const index = bookmarks.indexOf(currentMartyrId);
+  if (index >= 0) {
+    bookmarks.splice(index, 1);
+    $('#bookmark-icon').removeClass('fas text-amber-500').addClass('far');
+    alert('تم إزالة الشهيد من المفضلة.');
+  } else {
+    bookmarks.push(currentMartyrId);
+    $('#bookmark-icon').removeClass('far').addClass('fas text-amber-500');
+    alert('تم إضافة الشهيد إلى المفضلة.');
+  }
+  localStorage.setItem('rg_bookmarks', JSON.stringify(bookmarks));
+}
+
+async function loadPendingCorrections(martyrId) {
+  if (!window.BackendAPI) return;
+  const submissions = await BackendAPI.getSubmissions('PENDING');
+  const filtered = submissions.filter(s => String(s.martyrId) === String(martyrId) || String(s.martyrName) === String($('#martyr-name').text()));
+
+  $('#corrections-count-badge').text(`${filtered.length} تصحيحات بانتظار المراجعة`);
+
+  const container = $('#corrections-list-container');
+  if (filtered.length === 0) {
+    container.html('<div class="text-gray-400 text-sm py-4 text-center">لا توجد تصحيحات معلقة لبيانات هذا الشهيد حالياً.</div>');
+    return;
+  }
+
+  let html = '';
+  filtered.forEach(item => {
+    html += `
+      <div class="dp-correction-item">
+        <div class="flex justify-between items-center mb-2">
+          <span class="font-bold text-xs text-red-400">مقدم الطلب: ${item.submitterName || 'زائر'}</span>
+          <span class="dp-badge dp-badge-blue text-[10px]">${item.createdAt ? new Date(item.createdAt).toLocaleDateString('ar-EG') : 'حديثاً'}</span>
+        </div>
+        <div class="text-xs text-gray-300 mb-1"><strong>نوع التعديل:</strong> ${item.type === 'biography_addition' ? 'إضافة للسيرة الذاتية' : 'تصحيح بيانات'}</div>
+        <div class="dp-preview-box text-xs mt-2">${item.biographyAddition || item.notes || 'تعديل حقول شخصية'}</div>
+      </div>
+    `;
+  });
+  container.html(html);
+}
+
+function loadLocalComments(martyrId) {
+  const commentsKey = `rg_comments_${martyrId}`;
+  const comments = JSON.parse(localStorage.getItem(commentsKey) || '[]');
+  $('#comments-count').text(comments.length);
+
+  const container = $('#comments-list-container');
+  if (comments.length === 0) {
+    container.html('<div class="text-gray-400 text-sm py-4 text-center">لا توجد تعليقات حتى الآن. كن أول من يترك أثرًا تضامنيًا.</div>');
+    return;
+  }
+
+  let html = '';
+  comments.forEach(c => {
+    html += `
+      <div class="dp-comment-card">
+        <div class="dp-comment-header">
+          <span class="dp-comment-author">${Utils ? Utils.escapeHTML(c.author) : c.author} <span class="text-xs font-normal text-gray-400">(${c.location || 'فلسطين'})</span></span>
+          <span class="dp-comment-time">${c.time}</span>
+        </div>
+        <div class="dp-comment-body">${Utils ? Utils.escapeHTML(c.text) : c.text}</div>
+        <div class="dp-comment-actions">
+          <button onclick="alert('شكرًا لإعجابك بالتعليق')"><i class="far fa-thumbs-up ml-1"></i> إعجاب</button>
+        </div>
+      </div>
+    `;
+  });
+  container.html(html);
+}
+
+function postMartyrComment() {
+  const author = $('#comment-author-input').val().trim() || 'زائر متضامن';
+  const location = $('#comment-location-input').val().trim() || 'فلسطين';
+  const text = $('#comment-text-input').val().trim();
+
+  if (!text) {
+    alert('يرجى إدخال نص التعليق أو الرسالة التضامنية.');
+    return;
+  }
+
+  const commentsKey = `rg_comments_${currentMartyrId}`;
+  const comments = JSON.parse(localStorage.getItem(commentsKey) || '[]');
+
+  comments.unshift({
+    author: author,
+    location: location,
+    text: text,
+    time: 'منذ لحظات'
+  });
+
+  localStorage.setItem(commentsKey, JSON.stringify(comments));
+
+  $('#comment-text-input').val('');
+  loadLocalComments(currentMartyrId);
+  alert('تم إرسال تعليقك التضامني بنجاح!');
+}
+
+function toggleTheme() {
+  $('body').toggleClass('light-mode');
+}
+function toggleLanguageDropdown(e) {}
+function searchMartyrByName(query) {
+  if (query.trim().length > 1) {
+    window.location.href = `index.html?search=${encodeURIComponent(query)}`;
+  }
+}
+</script>
+</body>
+</html>

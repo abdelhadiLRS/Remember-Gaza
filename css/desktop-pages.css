@@ -1,0 +1,350 @@
+/* =========================================================================
+   Desktop Pages Stylesheet - Palestinian Souls (Remember Gaza)
+   Strictly Scoped for Desktop (min-width: 769px)
+   ========================================================================= */
+
+@media (min-width: 769px) {
+  :root {
+    --dp-bg: #09090b;
+    --dp-surface: #111114;
+    --dp-surface-2: #17171b;
+    --dp-border: rgba(255, 255, 255, 0.10);
+    --dp-text: #f5f5f5;
+    --dp-muted: #9b9ba3;
+    --dp-red: #e3262e;
+    --dp-green: #2dbb72;
+    --dp-blue: #179bd7;
+    --dp-radius: 18px;
+    --dp-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  }
+
+  body.desktop-page-body {
+    background-color: var(--dp-bg) !important;
+    color: var(--dp-text) !important;
+    font-family: 'Cairo', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    overflow-y: auto !important;
+  }
+
+  /* Base Container */
+  .dp-main-container {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  /* Desktop Layout Grid */
+  .dp-martyr-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(440px, 0.75fr);
+    gap: 24px;
+    direction: rtl;
+  }
+
+  /* Cards & Surfaces */
+  .dp-card {
+    background: var(--dp-surface);
+    border: 1px solid var(--dp-border);
+    border-radius: var(--dp-radius);
+    box-shadow: var(--dp-shadow);
+    padding: 24px;
+    margin-bottom: 24px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .dp-card:hover {
+    border-color: rgba(227, 38, 46, 0.3);
+  }
+
+  .dp-card-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--dp-text);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--dp-border);
+    padding-bottom: 12px;
+  }
+
+  .dp-card-title i, .dp-card-title span.icon {
+    color: var(--dp-red);
+  }
+
+  /* Badges & Pills */
+  .dp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    background: var(--dp-surface-2);
+    border: 1px solid var(--dp-border);
+    color: var(--dp-text);
+  }
+
+  .dp-badge-red {
+    background: rgba(227, 38, 46, 0.15);
+    border-color: rgba(227, 38, 46, 0.4);
+    color: #ff6b6b;
+  }
+
+  .dp-badge-green {
+    background: rgba(45, 187, 114, 0.15);
+    border-color: rgba(45, 187, 114, 0.4);
+    color: #51f0a1;
+  }
+
+  .dp-badge-blue {
+    background: rgba(23, 155, 215, 0.15);
+    border-color: rgba(23, 155, 215, 0.4);
+    color: #64c8f5;
+  }
+
+  /* Buttons */
+  .dp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: 1px solid transparent;
+    text-decoration: none !important;
+  }
+
+  .dp-btn-red {
+    background: var(--dp-red);
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(227, 38, 46, 0.3);
+  }
+
+  .dp-btn-red:hover {
+    background: #c71c23;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(227, 38, 46, 0.5);
+  }
+
+  .dp-btn-outline {
+    background: var(--dp-surface-2);
+    border-color: var(--dp-border);
+    color: var(--dp-text) !important;
+  }
+
+  .dp-btn-outline:hover {
+    border-color: var(--dp-red);
+    color: var(--dp-red) !important;
+    background: rgba(227, 38, 46, 0.08);
+    transform: translateY(-2px);
+  }
+
+  /* Form Controls */
+  .dp-form-group {
+    margin-bottom: 18px;
+  }
+
+  .dp-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--dp-muted);
+    margin-bottom: 8px;
+  }
+
+  .dp-label required, .dp-label .req {
+    color: var(--dp-red);
+    margin-inline-start: 3px;
+  }
+
+  .dp-input, .dp-select, .dp-textarea {
+    width: 100%;
+    background: var(--dp-surface-2);
+    border: 1px solid var(--dp-border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: var(--dp-text);
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.25s ease;
+  }
+
+  .dp-input:focus, .dp-select:focus, .dp-textarea:focus {
+    border-color: var(--dp-red);
+    box-shadow: 0 0 12px rgba(227, 38, 46, 0.25);
+    background: #1c1c22;
+  }
+
+  .dp-textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .dp-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .dp-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  /* Martyr Profile Image */
+  .dp-martyr-photo-wrap {
+    position: relative;
+    width: 100%;
+    border-radius: var(--dp-radius);
+    overflow: hidden;
+    border: 2px solid var(--dp-red);
+    box-shadow: 0 10px 30px rgba(227, 38, 46, 0.25);
+    background: var(--dp-surface-2);
+  }
+
+  .dp-martyr-photo-wrap img {
+    width: 100%;
+    height: 100%;
+    max-height: 520px;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Breadcrumbs */
+  .dp-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--dp-muted);
+    margin-bottom: 16px;
+  }
+
+  .dp-breadcrumb a {
+    color: var(--dp-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .dp-breadcrumb a:hover {
+    color: var(--dp-red);
+  }
+
+  .dp-breadcrumb span.sep {
+    color: rgba(255, 255, 255, 0.2);
+  }
+
+  .dp-breadcrumb span.active {
+    color: var(--dp-text);
+    font-weight: 700;
+  }
+
+  /* Alert Banner */
+  .dp-alert-notice {
+    background: rgba(23, 155, 215, 0.1);
+    border: 1px solid rgba(23, 155, 215, 0.3);
+    border-radius: 14px;
+    padding: 14px 20px;
+    color: #72d0f7;
+    font-size: 0.88rem;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Audio Player Box */
+  .dp-audio-box {
+    background: rgba(227, 38, 46, 0.08);
+    border: 1px solid rgba(227, 38, 46, 0.25);
+    border-radius: 14px;
+    padding: 16px;
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  /* Comments Card */
+  .dp-comment-card {
+    background: var(--dp-surface-2);
+    border: 1px solid var(--dp-border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+
+  .dp-comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .dp-comment-author {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--dp-text);
+  }
+
+  .dp-comment-time {
+    font-size: 0.78rem;
+    color: var(--dp-muted);
+  }
+
+  .dp-comment-body {
+    font-size: 0.88rem;
+    color: #d1d1d6;
+    line-height: 1.6;
+  }
+
+  .dp-comment-actions {
+    display: flex;
+    gap: 14px;
+    margin-top: 10px;
+    font-size: 0.8rem;
+  }
+
+  .dp-comment-actions button {
+    background: none;
+    border: none;
+    color: var(--dp-muted);
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+  }
+
+  .dp-comment-actions button:hover {
+    color: var(--dp-red);
+  }
+
+  /* Corrections Tabs & Items */
+  .dp-correction-item {
+    background: var(--dp-surface-2);
+    border: 1px solid var(--dp-border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+
+  .dp-preview-box {
+    background: #0d0d10;
+    border: 1px dashed rgba(227, 38, 46, 0.4);
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: #e0e0e0;
+  }
+}
