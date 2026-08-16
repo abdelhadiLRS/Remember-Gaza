@@ -257,25 +257,8 @@
 
     #bottom-bar button,
     #bottom-bar a {
-        padding: 5px 10px !important;
         font-size: 10px !important;
-        border-radius: 12px !important;
-        background: rgba(255, 255, 255, 0.05) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
         color: white !important;
-    }
-
-    body.light-mode #bottom-bar button,
-    body.light-mode #bottom-bar a {
-        background: rgba(0, 0, 0, 0.04) !important;
-        border: 1px solid rgba(0, 0, 0, 0.08) !important;
-        color: #111827 !important;
-    }
-
-    #bottom-bar button:hover,
-    #bottom-bar a:hover {
-        background: rgba(220, 38, 38, 0.2) !important;
-        border-color: rgba(239, 68, 68, 0.4) !important;
     }
 
     /* --- Adaptive Compact Viewports on Narrow Devices --- */
