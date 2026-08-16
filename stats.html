@@ -223,6 +223,36 @@ body.light-mode .tlc-mdl-stat-exp{color:#4b5563;}
 .tlc-scene.active .tlc-bg img {
     transform: scale(1.1);
 }
+
+/* Overrides for dynamic theme adaptation on custom web component widgets */
+human-toll-counter, human-toll-widget, names-behind-numbers-mf {
+    display: block;
+    --bg: rgba(15, 15, 15, 0.95);
+    --paper: rgba(25, 25, 25, 0.8);
+    --ink: #ffffff;
+    --muted: #9ca3af;
+    --line: rgba(255, 255, 255, 0.15);
+    --ht-bg: rgba(15, 15, 15, 0.95);
+    --ht-paper: rgba(255, 255, 255, 0.05);
+    --ht-ink: #ffffff;
+    --ht-muted: #9ca3af;
+    --ht-line: rgba(255, 255, 255, 0.15);
+}
+
+body.light-mode human-toll-counter,
+body.light-mode human-toll-widget,
+body.light-mode names-behind-numbers-mf {
+    --bg: #f8f6f2;
+    --paper: #fffdf9;
+    --ink: #292724;
+    --muted: #777168;
+    --line: #d9d4cc;
+    --ht-bg: #f8f6f2;
+    --ht-paper: #fffdf9;
+    --ht-ink: #292724;
+    --ht-muted: #777168;
+    --ht-line: #d9d4cc;
+}
 </style>
 </head>
 <body>
@@ -274,6 +304,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <main id="stats-view" class="text-white" style="display: block;">
 <div class="w-full max-w-6xl mx-auto px-6 py-10 font-['Cairo']">
 
+<!-- قسم العدادات ومكونات التوثيق المدمجة في أعلى الإحصائيات -->
+<div class="space-y-8 mb-10">
+    <!-- 1. Human Toll Counter -->
+    <div class="glass-panel rounded-2xl overflow-hidden border border-red-600/30 shadow-xl">
+        <human-toll-counter></human-toll-counter>
+    </div>
+
+    <!-- 2. Human Toll Widget -->
+    <div class="glass-panel rounded-2xl overflow-hidden border border-red-600/30 shadow-xl" id="human-toll-widget-wrapper">
+        <human-toll-widget></human-toll-widget>
+    </div>
+
+    <!-- 3. Names Behind Numbers -->
+    <div class="glass-panel rounded-2xl overflow-hidden border border-red-600/30 shadow-xl">
+        <names-behind-numbers-mf></names-behind-numbers-mf>
+    </div>
+</div>
 
 <div class="mb-10 text-center">
     <h2 id="stats-title" class="text-4xl font-extrabold text-red-500 mb-3" data-i18n="stats_title">حرب الإبادة الجماعية في غزة</h2>
@@ -896,6 +943,65 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+<script src="js/names-behind-numbers-mf.js"></script>
+<script src="js/human-toll-counter.js"></script>
+<script>
+(function() {
+    let currentWidgetScript = null;
+    let loadedScriptType = null; // 'ar' or 'ltr'
+
+    function loadHumanTollWidgetScript(lang) {
+        const isArabic = (lang === 'ar');
+        const targetType = isArabic ? 'ar' : 'ltr';
+        const targetScriptPath = isArabic ? 'js/human-toll-widget-ready.js' : 'js/human-toll-widget-LTR.js';
+
+        if (loadedScriptType === targetType) return;
+
+        // Clean up previous script tag if present
+        if (currentWidgetScript && currentWidgetScript.parentNode) {
+            currentWidgetScript.parentNode.removeChild(currentWidgetScript);
+        }
+
+        // If customElement is already defined, we re-instantiate or replace element wrapper
+        if (customElements.get('human-toll-widget')) {
+            // Unregister is not natively supported in CustomElements, so we recreate wrapper innerHTML
+            const wrapper = document.getElementById('human-toll-widget-wrapper');
+            if (wrapper) {
+                // Remove existing custom element instance
+                wrapper.innerHTML = '';
+            }
+        }
+
+        const script = document.createElement('script');
+        script.src = targetScriptPath;
+        script.async = true;
+        script.onload = function() {
+            loadedScriptType = targetType;
+            const wrapper = document.getElementById('human-toll-widget-wrapper');
+            if (wrapper && !wrapper.querySelector('human-toll-widget')) {
+                wrapper.innerHTML = '<human-toll-widget></human-toll-widget>';
+            }
+        };
+        currentWidgetScript = script;
+        document.head.appendChild(script);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const initialLang = (window.i18n && window.i18n.currentLang) ||
+                            localStorage.getItem('app_lang') ||
+                            localStorage.getItem('site_language') ||
+                            localStorage.getItem('site_lang') ||
+                            'ar';
+        loadHumanTollWidgetScript(initialLang);
+
+        if (window.i18n && typeof window.i18n.onLanguageChange === 'function') {
+            window.i18n.onLanguageChange(function(newLang) {
+                loadHumanTollWidgetScript(newLang);
+            });
+        }
+    });
+})();
+</script>
 <script src="js/i18n.js"></script>
 <script src="js/data-loader.js"></script>
 <script src="js/utils.js"></script>

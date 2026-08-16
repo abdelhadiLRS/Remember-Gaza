@@ -6,16 +6,11 @@ const DATA_URL="https://data.techforpalestine.org/api/v2/killed-in-gaza/child-na
 const css=`
 :host{
   display:block;
-  --bg:#f8f6f2;
-  --ink:#242321;
-  --muted:#777168;
-  --red:#cf3b32;
-  --card:#0b0b0b;
-  font-family:Arial,Helvetica,sans-serif;
-  color:var(--ink)
+  font-family:'Cairo',Arial,Helvetica,sans-serif;
+  color:var(--ink, #242321)
 }
 *{box-sizing:border-box}
-.wrap{background:var(--bg);padding:clamp(18px,3vw,38px)}
+.wrap{background:var(--bg, #f8f6f2);padding:clamp(18px,3vw,38px)}
 .header{display:flex;align-items:end;gap:22px}
 .eyebrow{font-size:13px;font-weight:800;letter-spacing:.19em;color:var(--red);margin-bottom:7px}
 .title{font:700 clamp(36px,4.2vw,55px)/1 Georgia,"Times New Roman",serif;white-space:nowrap}
