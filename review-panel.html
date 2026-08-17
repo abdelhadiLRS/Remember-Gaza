@@ -4,56 +4,94 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data: blob:; script-src 'self' https: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; font-src 'self' https: data:;">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة مراجعة واعتماد المساهمات (Secure Moderation Panel)</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #0a0a0a; color: white; }
-        .glass-card { background: rgba(18, 18, 18, 0.85); border: 1px solid rgba(239, 68, 68, 0.2); backdrop-filter: blur(10px); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="favicon.png">
+<title>بوابة الإدارة والمراجعة الموحدة | Unified Admin & Review Portal</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+<style>
+    body { font-family: 'Cairo', sans-serif; background-color: #0a0a0a; color: #f3f4f6; }
+    .glass-card { background: rgba(18, 18, 18, 0.85); border: 1px solid rgba(239, 68, 68, 0.2); backdrop-filter: blur(10px); }
+    .diff-changed { background: rgba(220, 38, 38, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); }
+    .diff-equal { opacity: 0.7; }
+</style>
 </head>
-<body class="min-h-screen p-4 sm:p-8 flex flex-col items-center justify-center">
+<body class="min-h-screen p-4 sm:p-8 flex flex-col items-center justify-start">
 
-    <div class="w-full max-w-3xl space-y-6">
-        <header class="text-center space-y-2">
-            <h1 class="text-2xl sm:text-3xl font-black text-red-500">لوحة مراجعة واعتماد المساهمات</h1>
-            <p class="text-gray-400 text-xs sm:text-sm">نظام الأمان المطور والمحمي للمشرفين والمسؤولين</p>
+    <div class="w-full max-w-6xl space-y-6">
+        <!-- HEADER -->
+        <header class="flex flex-col sm:flex-row justify-between items-center glass-card p-4 rounded-2xl gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-red-600/20 border border-red-500/50 flex items-center justify-center text-red-500 font-black text-xl">🔑</div>
+                <div>
+                    <h1 class="text-xl font-black text-white m-0">بوابة الإدارة والمراجعة الموحدة</h1>
+                    <p class="text-gray-400 text-xs">نظام مراجعة وتوثيق شهداء فلسطين المحمي لجميع الفئات</p>
+                </div>
+            </div>
+
+            <div id="header-auth-status" class="hidden flex items-center gap-3 text-xs">
+                <span class="text-gray-400">الدور الحقيقي: <strong id="logged-user-role" class="text-red-400 font-bold">Guest</strong></span>
+                <button onclick="window.location.href='index.html'" class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-white transition">الموقع العام 🌐</button>
+                <button onclick="handlePanelLogout()" class="px-3 py-1.5 rounded-lg bg-red-600/20 border border-red-500/40 text-red-400 hover:bg-red-600 hover:text-white font-bold transition">خروج 🚪</button>
+            </div>
         </header>
 
-        <!-- نافذة تسجيل الدخول عند عدم وود جلسة مصدقة -->
+        <!-- LOGIN SECTION -->
         <div id="login-section" class="glass-card p-6 sm:p-8 rounded-2xl max-w-md mx-auto space-y-4">
-            <h2 class="text-lg font-bold text-center text-red-400">تسجيل الدخول الآمن</h2>
+            <h2 class="text-lg font-bold text-center text-red-400 border-b border-white/10 pb-3">تسجيل الدخول الآمن للمشرفين</h2>
             <div class="space-y-3 text-xs text-right">
                 <div>
                     <label class="text-gray-300 block mb-1">اسم المستخدم:</label>
                     <input type="text" id="admin-user" placeholder="admin" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-center outline-none focus:border-red-500 font-mono">
                 </div>
                 <div>
-                    <label class="text-gray-300 block mb-1">رمز الدخول السرّي:</label>
+                    <label class="text-gray-300 block mb-1">كلمة المرور:</label>
                     <input type="password" id="admin-pass" placeholder="••••••••" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-center outline-none focus:border-red-500 font-mono">
                 </div>
                 <div id="login-error" class="text-red-500 text-center font-bold hidden"></div>
-                <button onclick="handlePanelLogin()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl transition-all text-xs shadow-[0_0_15px_rgba(220,38,38,0.3)]">دخول الجلسة الآمنة</button>
+                <button onclick="handlePanelLogin()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl transition-all text-xs shadow-[0_0_15px_rgba(220,38,38,0.3)]">دخول الجلسة المحمية</button>
             </div>
         </div>
 
-        <!-- قسم عرض المساهمات المعتمدة وقيد المراجعة -->
-        <div id="dashboard-section" class="space-y-4 hidden">
-            <div class="flex justify-between items-center glass-card p-4 rounded-xl text-xs">
-                <div>
-                    <span class="text-gray-400">المستخدم الحقيقي:</span>
-                    <strong id="logged-user-role" class="text-red-400 font-bold ml-1">Administrator</strong>
-                </div>
+        <!-- MAIN DASHBOARD -->
+        <div id="dashboard-section" class="space-y-6 hidden">
+            <!-- TABS & FILTERS -->
+            <div class="glass-card p-3 rounded-xl flex flex-wrap justify-between items-center gap-3 text-xs">
                 <div class="flex gap-2">
-                    <button onclick="window.location.href='index.html'" class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10">العودة للموقع</button>
-                    <button onclick="handlePanelLogout()" class="px-3 py-1.5 rounded-lg bg-red-600/20 border border-red-500/40 text-red-400 hover:bg-red-600 hover:text-white font-bold">تسجيل الخروج</button>
+                    <button onclick="setFilterStatus('ALL')" id="filter-btn-ALL" class="px-3 py-1.5 rounded-lg font-bold bg-red-600 text-white">الكل</button>
+                    <button onclick="setFilterStatus('PENDING')" id="filter-btn-PENDING" class="px-3 py-1.5 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white">قيد الانتظار (Pending)</button>
+                    <button onclick="setFilterStatus('UNDER_REVIEW')" id="filter-btn-UNDER_REVIEW" class="px-3 py-1.5 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white">قيد المراجعة (Under Review)</button>
+                    <button onclick="setFilterStatus('NEEDS_INFORMATION')" id="filter-btn-NEEDS_INFORMATION" class="px-3 py-1.5 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white">تتطلب معلومات (Needs Info)</button>
+                    <button onclick="setFilterStatus('APPROVED')" id="filter-btn-APPROVED" class="px-3 py-1.5 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white">المعتمدة (Approved)</button>
+                    <button onclick="setFilterStatus('REJECTED')" id="filter-btn-REJECTED" class="px-3 py-1.5 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white">المرفوضة (Rejected)</button>
+                </div>
+                <div>
+                    <button onclick="loadPanelSubmissions()" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold flex items-center gap-1">
+                        <i class="fas fa-sync-alt"></i> تحديث القائمة
+                    </button>
                 </div>
             </div>
 
-            <div id="panel-submissions-container" class="space-y-3">
-                <div class="text-center text-gray-400 py-8">جاري جلب المساهمات بطلب خادمي آمن...</div>
+            <!-- SUBMISSIONS LIST & DIFF VIEWER -->
+            <div id="panel-submissions-container" class="space-y-4">
+                <div class="text-center text-gray-400 py-12">جاري جلب المساهمات بطلب خادمي آمن...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REASON / NOTES MODAL -->
+    <div id="action-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+        <div class="glass-card max-w-md w-full p-6 rounded-2xl space-y-4 text-right">
+            <h3 id="action-modal-title" class="font-bold text-lg text-white">إضافة ملاحظات المراجعة</h3>
+            <div>
+                <label class="text-xs text-gray-400 block mb-1">سبب الرفض أو طلب معلومات إضافية:</label>
+                <textarea id="action-modal-notes" rows="4" class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-xs text-white outline-none focus:border-red-500" placeholder="اكتب الملاحظات أو التفاصيل المطلوبة هنا..."></textarea>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="confirmModalAction()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-xl text-xs transition">تأكيد القرار</button>
+                <button onclick="closeActionModal()" class="px-4 bg-white/10 hover:bg-white/20 text-gray-300 font-bold py-2 rounded-xl text-xs transition">إلغاء</button>
             </div>
         </div>
     </div>
@@ -62,6 +100,9 @@
     <script src="js/audit.js"></script>
     <script src="js/backend-api.js"></script>
     <script>
+        let currentFilter = 'ALL';
+        let pendingAction = null;
+
         document.addEventListener('DOMContentLoaded', () => {
             if (window.BackendAPI && window.BackendAPI.isAuthenticated()) {
                 showDashboard();
@@ -87,55 +128,170 @@
             window.BackendAPI.logout();
             document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('dashboard-section').classList.add('hidden');
+            document.getElementById('header-auth-status').classList.add('hidden');
         }
 
         async function showDashboard() {
             document.getElementById('login-section').classList.add('hidden');
             document.getElementById('dashboard-section').classList.remove('hidden');
+            document.getElementById('header-auth-status').classList.remove('hidden');
             document.getElementById('logged-user-role').innerText = window.BackendAPI.getUserRole();
+            loadPanelSubmissions();
+        }
+
+        function setFilterStatus(status) {
+            currentFilter = status;
+            ['ALL', 'PENDING', 'UNDER_REVIEW', 'NEEDS_INFORMATION', 'APPROVED', 'REJECTED'].forEach(s => {
+                const btn = document.getElementById(`filter-btn-${s}`);
+                if (btn) {
+                    if (s === status) {
+                        btn.className = 'px-3 py-1.5 rounded-lg font-bold bg-red-600 text-white';
+                    } else {
+                        btn.className = 'px-3 py-1.5 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white';
+                    }
+                }
+            });
             loadPanelSubmissions();
         }
 
         async function loadPanelSubmissions() {
             const container = document.getElementById('panel-submissions-container');
-            const list = await window.BackendAPI.getSubmissions('ALL');
+            container.innerHTML = `<div class="text-center text-gray-400 py-12">جاري جلب المساهمات من السيرفر...</div>`;
 
-            if (list.length === 0) {
-                container.innerHTML = `<div class="glass-card p-6 text-center text-gray-500 text-xs">لا توجد مساهمات مسجلة حالياً.</div>`;
+            const list = await window.BackendAPI.getSubmissions(currentFilter);
+
+            if (!list || list.length === 0) {
+                container.innerHTML = `<div class="glass-card p-8 text-center text-gray-400 text-xs rounded-xl">لا توجد طلبات مساهمة مسجلة تحت هذا التصنيف حالياً.</div>`;
                 return;
             }
 
-            container.innerHTML = list.map(item => `
-                <div class="glass-card p-4 rounded-xl space-y-2 text-xs text-right">
-                    <div class="flex justify-between items-center">
-                        <strong class="text-base text-white">${window.Utils.escapeHTML(item.martyrName || 'اسم غير محدد')}</strong>
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                            item.status === 'APPROVED' ? 'bg-green-950 text-green-400 border border-green-600/30' :
-                            item.status === 'REJECTED' ? 'bg-red-950 text-red-400 border border-red-600/30' :
-                            'bg-amber-950 text-amber-400 border border-amber-600/30'
-                        }">${item.status || 'PENDING'}</span>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-300">
-                        <p><strong>المدينة:</strong> ${window.Utils.escapeHTML(item.city || '-')}</p>
-                        <p><strong>مقدم المساهمة:</strong> ${window.Utils.escapeHTML(item.submitterName || '-')}</p>
-                    </div>
-                    <p class="text-gray-300 bg-black/40 p-2.5 rounded-lg border border-white/5 leading-relaxed">${window.Utils.escapeHTML(item.notes || '')}</p>
-                    ${item.photoUrl ? `<p class="text-blue-400 underline"><a href="${window.Utils.sanitizeUrl(item.photoUrl)}" target="_blank">رابط المرفق / الصورة المستلمة</a></p>` : ''}
-                    <div class="flex gap-2 pt-2 border-t border-white/5">
-                        <button onclick="updatePanelItem('${item.id}', 'APPROVED')" class="flex-1 bg-green-600/20 border border-green-500/40 text-green-400 py-1.5 rounded-lg font-bold hover:bg-green-600 hover:text-white transition-all">اعتماد وإضافة للأرشيف ✅</button>
-                        <button onclick="updatePanelItem('${item.id}', 'REJECTED')" class="flex-1 bg-red-600/20 border border-red-500/40 text-red-400 py-1.5 rounded-lg font-bold hover:bg-red-600 hover:text-white transition-all">رفض ❌</button>
-                    </div>
-                </div>
-            `).join('');
+            container.innerHTML = list.map(item => renderSubmissionDiffCard(item)).join('');
         }
 
-        async function updatePanelItem(id, status) {
-            const res = await window.BackendAPI.updateSubmissionStatus(id, status);
+        function renderSubmissionDiffCard(item) {
+            const current = item.currentData || {};
+            const proposed = item.proposedData || {};
+            const status = item.status || 'PENDING';
+
+            const fields = [
+                { label: 'الاسم الكامل', key: 'name', cur: current.name || current.martyrName || '-', prop: proposed.name || proposed.martyrName || item.martyrName || '-' },
+                { label: 'العمر', key: 'age', cur: current.age || '-', prop: proposed.age || item.age || '-' },
+                { label: 'الفئة / القسم', key: 'category', cur: current.category || '-', prop: proposed.category || item.category || 'شهداء غزة' },
+                { label: 'المدينة / المنطقة', key: 'city', cur: current.city || '-', prop: proposed.city || item.city || '-' },
+                { label: 'تاريخ الاستشهاد', key: 'date', cur: current.date || current.date_of_death || '-', prop: proposed.date || proposed.date_of_death || item.date || '-' },
+                { label: 'المؤسسة / التخصص', key: 'organization', cur: current.organization || current.specialty || '-', prop: proposed.organization || proposed.specialty || item.organization || '-' },
+                { label: 'السيرة الذاتية', key: 'biography', cur: current.biography || current.notes || '-', prop: proposed.biography || item.biography || item.notes || '-' }
+            ];
+
+            const statusBadgeClass =
+                status === 'APPROVED' ? 'bg-green-950 text-green-400 border-green-600/30' :
+                status === 'REJECTED' ? 'bg-red-950 text-red-400 border-red-600/30' :
+                status === 'UNDER_REVIEW' ? 'bg-blue-950 text-blue-400 border-blue-600/30' :
+                status === 'NEEDS_INFORMATION' ? 'bg-purple-950 text-purple-400 border-purple-600/30' :
+                'bg-amber-950 text-amber-400 border-amber-600/30';
+
+            return `
+                <div class="glass-card p-5 rounded-2xl space-y-4 text-xs">
+                    <!-- HEADER BAR -->
+                    <div class="flex flex-wrap justify-between items-center border-b border-white/10 pb-3 gap-2">
+                        <div class="flex items-center gap-2">
+                            <strong class="text-base text-white font-bold">${window.Utils.escapeHTML(item.martyrName || proposed.name || 'اسم غير محدد')}</strong>
+                            <span class="text-[10px] text-gray-400">(معرف الطلب: ${item.id})</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="px-3 py-1 rounded-full text-[11px] font-bold border ${statusBadgeClass}">${status}</span>
+                            <span class="text-[11px] text-gray-400">${item.created_at ? new Date(item.created_at).toLocaleDateString('ar-EG') : ''}</span>
+                        </div>
+                    </div>
+
+                    <!-- SUBMITTER METADATA -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-black/40 p-3 rounded-xl border border-white/5 text-gray-300 text-[11px]">
+                        <div><strong>مقدم الطلب:</strong> ${window.Utils.escapeHTML(item.submitterName || 'مجهول')}</div>
+                        <div><strong>البريد/التواصل:</strong> ${window.Utils.escapeHTML(item.submitterContact || 'غير متوفر')}</div>
+                        <div><strong>المصادر المرفقة:</strong> ${item.sources ? `<a href="${window.Utils.sanitizeUrl(item.sources)}" target="_blank" class="text-blue-400 underline">عرض المصدر</a>` : 'لا يوجد'}</div>
+                    </div>
+
+                    <!-- SIDE-BY-SIDE DIFF TABLE -->
+                    <div class="overflow-x-auto rounded-xl border border-white/10">
+                        <table class="w-full text-right border-collapse">
+                            <thead>
+                                <tr class="bg-black/60 text-gray-400 border-b border-white/10">
+                                    <th class="p-2.5 w-1/4">الحقل</th>
+                                    <th class="p-2.5 w-3/8 text-amber-400">البيانات الحالية (Current Public)</th>
+                                    <th class="p-2.5 w-3/8 text-green-400">البيانات المقترحة (Proposed Edit)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/5">
+                                ${fields.map(f => {
+                                    const isDiff = f.cur !== f.prop && f.prop !== '-' && f.prop !== '';
+                                    return `
+                                        <tr class="${isDiff ? 'diff-changed' : 'diff-equal'}">
+                                            <td class="p-2.5 font-bold text-gray-300">${f.label}</td>
+                                            <td class="p-2.5 text-gray-400 font-mono">${window.Utils.escapeHTML(String(f.cur))}</td>
+                                            <td class="p-2.5 font-bold font-mono ${isDiff ? 'text-green-300' : 'text-gray-300'}">${window.Utils.escapeHTML(String(f.prop))}</td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    ${item.photoUrl ? `
+                        <div class="flex items-center gap-3 bg-black/40 p-2.5 rounded-xl border border-white/5">
+                            <i class="fas fa-image text-red-400"></i>
+                            <span class="text-gray-300">مرفق الصورة المرفوعة:</span>
+                            <a href="${window.Utils.sanitizeUrl(item.photoUrl)}" target="_blank" class="text-blue-400 underline text-xs">معاينة الصورة المرفقة</a>
+                        </div>
+                    ` : ''}
+
+                    ${item.reviewerNotes ? `
+                        <div class="bg-amber-950/40 border border-amber-500/30 p-3 rounded-xl text-amber-200">
+                            <strong>ملاحظات المراجع السابق:</strong> ${window.Utils.escapeHTML(item.reviewerNotes)}
+                        </div>
+                    ` : ''}
+
+                    <!-- ACTION BUTTONS -->
+                    <div class="flex flex-wrap gap-2 pt-2 border-t border-white/10">
+                        <button onclick="promptAction('${item.id}', 'UNDER_REVIEW')" class="flex-1 bg-blue-600/20 border border-blue-500/40 text-blue-400 py-2 rounded-xl font-bold hover:bg-blue-600 hover:text-white transition-all text-xs">بدء المراجعة 🔍</button>
+                        <button onclick="updateStatusDirect('${item.id}', 'APPROVED')" class="flex-1 bg-green-600/20 border border-green-500/40 text-green-400 py-2 rounded-xl font-bold hover:bg-green-600 hover:text-white transition-all text-xs">اعتماد ونشر ✅</button>
+                        <button onclick="promptAction('${item.id}', 'NEEDS_INFORMATION')" class="flex-1 bg-purple-600/20 border border-purple-500/40 text-purple-400 py-2 rounded-xl font-bold hover:bg-purple-600 hover:text-white transition-all text-xs">طلب معلومات ℹ️</button>
+                        <button onclick="promptAction('${item.id}', 'REJECTED')" class="flex-1 bg-red-600/20 border border-red-500/40 text-red-400 py-2 rounded-xl font-bold hover:bg-red-600 hover:text-white transition-all text-xs">رفض الطلب ❌</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function updateStatusDirect(id, status, notes = '') {
+            const res = await window.BackendAPI.updateSubmissionStatus(id, status, notes);
             if (res.success) {
                 loadPanelSubmissions();
             } else {
                 alert(res.message || 'تعذر التحديث');
             }
+        }
+
+        function promptAction(id, status) {
+            pendingAction = { id, status };
+            document.getElementById('action-modal-title').innerText =
+                status === 'REJECTED' ? 'سبب رفض الطلب' :
+                status === 'NEEDS_INFORMATION' ? 'المعلومات المطلوب استكمالها من مقدم الطلب' :
+                'ملاحظات بدء المراجعة';
+            document.getElementById('action-modal-notes').value = '';
+            document.getElementById('action-modal').classList.remove('hidden');
+            document.getElementById('action-modal').classList.add('flex');
+        }
+
+        function closeActionModal() {
+            document.getElementById('action-modal').classList.add('hidden');
+            document.getElementById('action-modal').classList.remove('flex');
+            pendingAction = null;
+        }
+
+        async function confirmModalAction() {
+            if (!pendingAction) return;
+            const notes = document.getElementById('action-modal-notes').value.trim();
+            await updateStatusDirect(pendingAction.id, pendingAction.status, notes);
+            closeActionModal();
         }
     </script>
 </body>

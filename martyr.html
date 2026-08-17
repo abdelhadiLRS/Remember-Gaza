@@ -125,10 +125,7 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
           <!-- Quick Action Buttons -->
           <div class="flex flex-wrap gap-2">
             <a id="btn-edit-data" href="#" class="dp-btn dp-btn-outline">
-              <i class="fas fa-edit text-red-500"></i> تعديل البيانات
-            </a>
-            <a id="btn-add-biography" href="#" class="dp-btn dp-btn-outline">
-              <i class="fas fa-feather-alt text-amber-500"></i> إضافة للسيرة الذاتية
+              <i class="fas fa-edit text-red-500"></i> اقتراح تصحيح / تحديث البيانات
             </a>
           </div>
         </div>
@@ -182,7 +179,7 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
       <!-- Biography Section Card -->
       <div class="dp-card">
         <div class="dp-card-title">
-          <i class="fas fa-book-open"></i> السيرة الذاتية
+          <i class="fas fa-book-open"></i> السيرة الذاتية المعتمدة
         </div>
         <div id="martyr-biography-text" class="text-gray-200 text-base leading-relaxed space-y-4 text-justify">
           جارٍ تحميل السيرة الذاتية للشهيد...
@@ -206,27 +203,16 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
       <!-- Documentation Sources Card -->
       <div class="dp-card">
         <div class="dp-card-title">
-          <i class="fas fa-shield-alt"></i> مصادر التوثيق
+          <i class="fas fa-shield-alt"></i> مصادر التوثيق المعتمدة
         </div>
         <div id="sources-list-container" class="space-y-3">
           <div class="flex items-center justify-between bg-black/40 p-3 rounded-xl border border-white/5">
             <div>
-              <div class="font-bold text-sm text-white">المصدر الأول: سجل شهداء الصحة والمراكز الرسمية</div>
-              <div class="text-xs text-gray-400 mt-0.5">تاريخ التوثيق: 2024-10-15</div>
+              <div class="font-bold text-sm text-white">المصدر الرئيسي: سجل شهداء الصحة والمراكز الرسمية المعتمدة</div>
+              <div class="text-xs text-gray-400 mt-0.5">حالة البيانات: منشورة ومعتمدة رسميًا</div>
             </div>
-            <span class="dp-badge dp-badge-green">موثّق رسميًا</span>
+            <span class="dp-badge dp-badge-green">موثّق معتمد</span>
           </div>
-        </div>
-      </div>
-
-      <!-- Corrections & Pending Reviews Section -->
-      <div class="dp-card">
-        <div class="dp-card-title justify-between">
-          <span><i class="fas fa-history"></i> التصحيحات والملاحظات المرفوعة</span>
-          <span class="text-xs dp-badge dp-badge-blue" id="corrections-count-badge">0 تصحيحات بانتظار المراجعة</span>
-        </div>
-        <div id="corrections-list-container" class="space-y-3">
-          <div class="text-gray-400 text-sm py-4 text-center">لا توجد تصحيحات معلقة لبيانات هذا الشهيد حالياً.</div>
         </div>
       </div>
 
@@ -303,12 +289,10 @@ $(document).ready(async function() {
     return;
   }
 
-  // Set action links to edit page with ID
+  // Set single unified edit action link
   $('#btn-edit-data').attr('href', `edit-martyr.html?id=${encodeURIComponent(currentMartyrId)}&action=edit`);
-  $('#btn-add-biography').attr('href', `edit-martyr.html?id=${encodeURIComponent(currentMartyrId)}&action=biography`);
 
   await loadMartyrDetails(currentMartyrId);
-  loadPendingCorrections(currentMartyrId);
   loadLocalComments(currentMartyrId);
 });
 
@@ -504,35 +488,6 @@ function toggleBookmarkMartyr() {
     alert('تم إضافة الشهيد إلى المفضلة.');
   }
   localStorage.setItem('rg_bookmarks', JSON.stringify(bookmarks));
-}
-
-async function loadPendingCorrections(martyrId) {
-  if (!window.BackendAPI) return;
-  const submissions = await BackendAPI.getSubmissions('PENDING');
-  const filtered = submissions.filter(s => String(s.martyrId) === String(martyrId) || String(s.martyrName) === String($('#martyr-name').text()));
-
-  $('#corrections-count-badge').text(`${filtered.length} تصحيحات بانتظار المراجعة`);
-
-  const container = $('#corrections-list-container');
-  if (filtered.length === 0) {
-    container.html('<div class="text-gray-400 text-sm py-4 text-center">لا توجد تصحيحات معلقة لبيانات هذا الشهيد حالياً.</div>');
-    return;
-  }
-
-  let html = '';
-  filtered.forEach(item => {
-    html += `
-      <div class="dp-correction-item">
-        <div class="flex justify-between items-center mb-2">
-          <span class="font-bold text-xs text-red-400">مقدم الطلب: ${item.submitterName || 'زائر'}</span>
-          <span class="dp-badge dp-badge-blue text-[10px]">${item.createdAt ? new Date(item.createdAt).toLocaleDateString('ar-EG') : 'حديثاً'}</span>
-        </div>
-        <div class="text-xs text-gray-300 mb-1"><strong>نوع التعديل:</strong> ${item.type === 'biography_addition' ? 'إضافة للسيرة الذاتية' : 'تصحيح بيانات'}</div>
-        <div class="dp-preview-box text-xs mt-2">${item.biographyAddition || item.notes || 'تعديل حقول شخصية'}</div>
-      </div>
-    `;
-  });
-  container.html(html);
 }
 
 function loadLocalComments(martyrId) {

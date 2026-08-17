@@ -17,7 +17,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={theme:{extend:{colors:{primary:'#dc2626',blood:'#0a0a0a',glass:'rgba(10, 10, 10, 0.9)'}}}}</script>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Amiri:ital@1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Amiri:ital@1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 
 <!-- Custom Desktop Page Styles -->
@@ -89,13 +89,13 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
 
   <!-- Title & Breadcrumb -->
   <div class="mb-4">
-    <h1 class="text-2xl font-black text-white m-0 mb-1">تعديل أو إضافة بيانات شهيد</h1>
+    <h1 class="text-2xl font-black text-white m-0 mb-1">تعديل أو إضافة بيانات شهيد (نموذج موحد)</h1>
     <nav class="dp-breadcrumb">
       <a href="index.html"><i class="fas fa-home ml-1"></i> الرئيسية</a>
       <span class="sep">/</span>
       <span>المساهمة في التوثيق</span>
       <span class="sep">/</span>
-      <span class="active">تعديل أو إضافة بيانات شهيد</span>
+      <span class="active">نموذج اقتراح التعديل الموحد</span>
     </nav>
   </div>
 
@@ -103,36 +103,103 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
   <div class="dp-alert-notice">
     <i class="fas fa-info-circle text-lg shrink-0"></i>
     <div>
-      ساهم في توثيق سيرة الشهيد بإدخال المعلومات المتوفرة لديك، سيتم مراجعة البيانات قبل اعتمادها.
+      ساهم في توثيق سيرة شهداء فلسطين بكافة فئاتهم (شهداء غزة، الصحفيون، الطواقم الطبية، الأطفال، الضفة الغربية، وشهداء 48).
     </div>
   </div>
 
   <form id="edit-martyr-form" onsubmit="handleFormSubmission(event)">
 
-    <!-- OPERATION TYPE CARD -->
+    <!-- CATEGORY & OPERATION TYPE CARD -->
     <div class="dp-card">
       <div class="dp-card-title">
-        <i class="fas fa-tasks"></i> نوع العملية
+        <i class="fas fa-layer-group"></i> التصنيف ونوع العملية
       </div>
 
-      <div class="flex flex-wrap gap-6 items-center">
-        <label class="inline-flex items-center gap-2 cursor-pointer">
-          <input type="radio" name="operation_type" value="new" checked onchange="handleOperationTypeChange('new')" class="w-4 h-4 accent-red-600">
-          <span class="font-bold text-sm text-white">إضافة شهيد جديد</span>
-        </label>
+      <div class="dp-grid-2 mb-4">
+        <div class="dp-form-group">
+          <label class="dp-label">فئة الشهيد <span class="req">*</span></label>
+          <select id="martyr_category" class="dp-select" onchange="handleCategoryChange(this.value)">
+            <option value="Gazans">شهداء غزة (Gazans)</option>
+            <option value="Journalists">شهداء الصحافة والإعلام (Journalists)</option>
+            <option value="Medical">الطواقم الطبية والمسعفون (Medical)</option>
+            <option value="Children">الأطفال (Children)</option>
+            <option value="WestBank">شهداء الضفة الغربية (West Bank)</option>
+            <option value="Martyrs48">شهداء فلسطين 48 (1948 Martyrs)</option>
+          </select>
+        </div>
 
-        <label class="inline-flex items-center gap-2 cursor-pointer">
-          <input type="radio" name="operation_type" value="correct" onchange="handleOperationTypeChange('correct')" class="w-4 h-4 accent-red-600">
-          <span class="font-bold text-sm text-white">تصحيح بيانات موجودة</span>
-        </label>
+        <div class="dp-form-group">
+          <label class="dp-label">نوع العملية</label>
+          <div class="flex items-center gap-6 pt-2">
+            <label class="inline-flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="operation_type" value="new" checked onchange="handleOperationTypeChange('new')" class="w-4 h-4 accent-red-600">
+              <span class="font-bold text-sm text-white">إضافة جديد</span>
+            </label>
+            <label class="inline-flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="operation_type" value="correct" onchange="handleOperationTypeChange('correct')" class="w-4 h-4 accent-red-600">
+              <span class="font-bold text-sm text-white">تصحيح سجل موجود</span>
+            </label>
+          </div>
+        </div>
       </div>
 
       <!-- Search Field for existing martyr selection -->
       <div id="search-existing-martyr-wrap" class="mt-4 pt-4 border-t border-white/10" style="display: none;">
         <label class="dp-label">ابحث عن الشهيد لتحميل بياناته الحالية:</label>
         <div class="relative">
-          <input type="text" id="search-martyr-input" placeholder="اكتب اسم الشهيد أو رقم الهوية..." class="dp-input" oninput="searchAndPopulateMartyr(this.value)">
+          <input type="text" id="search-martyr-input" placeholder="اكتب اسم الشهيد أو المعرّف..." class="dp-input" oninput="searchAndPopulateMartyr(this.value)">
           <div id="search-results-list" class="absolute left-0 right-0 top-full mt-1 bg-[#17171b] border border-white/20 rounded-xl overflow-hidden z-20 hidden max-h-60 overflow-y-auto"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CATEGORY SPECIFIC DYNAMIC FIELDS CARD -->
+    <div id="category-specific-card" class="dp-card" style="display: none;">
+      <div class="dp-card-title text-amber-400">
+        <i class="fas fa-briefcase"></i> <span id="category-card-title">بيانات خاصة بالفئة</span>
+      </div>
+
+      <!-- JOURNALIST FIELDS -->
+      <div id="journalist-fields" class="dp-grid-3 category-fields-group" style="display: none;">
+        <div class="dp-form-group">
+          <label class="dp-label">المؤسسة الإعلامية / القناة</label>
+          <input type="text" id="media_outlet" placeholder="مثلاً: قناة الجزيرة، شبكة قدس..." class="dp-input">
+        </div>
+        <div class="dp-form-group">
+          <label class="dp-label">المهنة الصحفية</label>
+          <input type="text" id="press_role" placeholder="مثلاً: مراسل، مصور، رئيس تحرير..." class="dp-input">
+        </div>
+        <div class="dp-form-group">
+          <label class="dp-label">رقم بطاقة الصحفي / المعرف الصحفي</label>
+          <input type="text" id="press_id" placeholder="رقم البطاقة الصحفية" class="dp-input font-mono">
+        </div>
+      </div>
+
+      <!-- MEDICAL FIELDS -->
+      <div id="medical-fields" class="dp-grid-3 category-fields-group" style="display: none;">
+        <div class="dp-form-group">
+          <label class="dp-label">التخصص الطبي</label>
+          <input type="text" id="medical_specialty" placeholder="مثلاً: جراحة عظام، إسعاف وطوارئ، تمريض..." class="dp-input">
+        </div>
+        <div class="dp-form-group">
+          <label class="dp-label">المستشفى / المؤسسة الطبية</label>
+          <input type="text" id="medical_institution" placeholder="مثلاً: مجمع الشفاء الطبي، الهلال الأحمر..." class="dp-input">
+        </div>
+        <div class="dp-form-group">
+          <label class="dp-label">الرقم المهني / المزاولة</label>
+          <input type="text" id="medical_license_id" placeholder="رقم المزاولة إن وجد" class="dp-input font-mono">
+        </div>
+      </div>
+
+      <!-- CHILD FIELDS -->
+      <div id="child-fields" class="dp-grid-2 category-fields-group" style="display: none;">
+        <div class="dp-form-group">
+          <label class="dp-label">اسم ولي الأمر / الوالد</label>
+          <input type="text" id="guardian_name" placeholder="الاسم الكامل لولي الأمر" class="dp-input">
+        </div>
+        <div class="dp-form-group">
+          <label class="dp-label">المرحلة الدراسية / الصف</label>
+          <input type="text" id="school_grade" placeholder="مثلاً: الصف الخامس الابتدائي..." class="dp-input">
         </div>
       </div>
     </div>
@@ -140,7 +207,7 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
     <!-- PERSONAL DATA CARD -->
     <div class="dp-card">
       <div class="dp-card-title">
-        <i class="fas fa-user"></i> البيانات الشخصية
+        <i class="fas fa-user"></i> البيانات الشخصية الرئيسية
       </div>
 
       <div class="dp-grid-3">
@@ -172,14 +239,17 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
         </div>
 
         <div class="dp-form-group">
-          <label class="dp-label">تاريخ الميلاد</label>
-          <input type="date" id="dob" class="dp-input">
+          <label class="dp-label">العمر / تاريخ الميلاد</label>
+          <div class="flex gap-2">
+            <input type="number" id="age_input" placeholder="العمر" class="dp-input w-24">
+            <input type="date" id="dob" class="dp-input flex-1">
+          </div>
         </div>
       </div>
 
       <div class="dp-grid-3">
         <div class="dp-form-group">
-          <label class="dp-label">المحافظة</label>
+          <label class="dp-label">المحافظة / المدينة</label>
           <select id="province" class="dp-select">
             <option value="">اختر المحافظة...</option>
             <option value="شمال غزة">شمال غزة</option>
@@ -189,7 +259,6 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
             <option value="رفح">رفح</option>
             <option value="القدس">القدس</option>
             <option value="جنين">جنين</option>
-
             <option value="طولكرم">طولكرم</option>
             <option value="نابلس">نابلس</option>
             <option value="رام الله والبيرة">رام الله والبيرة</option>
@@ -218,26 +287,26 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
       </div>
 
       <div class="dp-form-group">
-        <label class="dp-label">المهنة</label>
-        <input type="text" id="profession" placeholder="مثلاً: طبيب، صحفي، طالب، مهندس..." class="dp-input">
+        <label class="dp-label">المهنة / العمل العامة</label>
+        <input type="text" id="profession" placeholder="مثلاً: طالب، مهندس، معلم..." class="dp-input">
       </div>
     </div>
 
     <!-- MARTYRDOM INFO CARD -->
     <div class="dp-card">
       <div class="dp-card-title">
-        <i class="fas fa-crosshairs"></i> حالة الاستشهاد / الوفاة
+        <i class="fas fa-crosshairs"></i> تفاصيل الاستشهاد / الوفاة
       </div>
 
       <div class="dp-grid-3">
         <div class="dp-form-group">
-          <label class="dp-label">تاريخ الاستشهاد / الوفاة</label>
+          <label class="dp-label">تاريخ الاستشهاد</label>
           <input type="date" id="date_of_death" class="dp-input">
         </div>
 
         <div class="dp-form-group">
           <label class="dp-label">المحافظة</label>
-          <input type="text" id="death_province" placeholder="مثلاً: غزة، خانيونس" class="dp-input">
+          <input type="text" id="death_province" placeholder="مثلاً: غزة، جنين" class="dp-input">
         </div>
 
         <div class="dp-form-group">
@@ -246,9 +315,9 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
         </div>
       </div>
 
-      <div class="dp-grid-3">
+      <div class="dp-grid-2">
         <div class="dp-form-group">
-          <label class="dp-label">حالة الوفاة</label>
+          <label class="dp-label">حالة الوفاة / ظروف الاستشهاد</label>
           <select id="death_status" class="dp-select">
             <option value="استهداف مباشر">استهداف مباشر</option>
             <option value="قصف مدفعي/جوي">قصف مدفعي / جوي</option>
@@ -267,22 +336,13 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
             <option value="تحت الركام">ما زال تحت الركام</option>
           </select>
         </div>
-
-        <div class="dp-form-group">
-          <label class="dp-label">هل تم تبليغ المستشفى مسبقاً؟</label>
-          <select id="hospital_notified" class="dp-select">
-            <option value="نعم">نعم</option>
-            <option value="لا">لا</option>
-            <option value="غير معروف">غير معروف</option>
-          </select>
-        </div>
       </div>
     </div>
 
     <!-- SUBMITTER DATA CARD -->
     <div class="dp-card">
       <div class="dp-card-title">
-        <i class="fas fa-id-badge"></i> بيانات مقدم الطلب
+        <i class="fas fa-id-badge"></i> بيانات مقدم المساهمة
       </div>
 
       <div class="dp-grid-3">
@@ -292,72 +352,13 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
         </div>
 
         <div class="dp-form-group">
-          <label class="dp-label">رقم الجوال</label>
-          <input type="tel" id="submitter_phone" placeholder="059xxxxxxx" class="dp-input font-mono">
+          <label class="dp-label">رقم الجوال / البريد الإلكتروني</label>
+          <input type="text" id="submitter_phone" placeholder="059xxxxxxx أو email@example.com" class="dp-input font-mono">
         </div>
 
         <div class="dp-form-group">
-          <label class="dp-label">صلة القرابة</label>
-          <input type="text" id="submitter_relation" placeholder="مثلاً: ابن، أخ، والد..." class="dp-input">
-        </div>
-      </div>
-
-      <div class="dp-form-group">
-        <label class="dp-label">أقرب جهة قضائية / توثيقية</label>
-        <select id="judicial_entity" class="dp-select">
-          <option value="">اختر أقرب جهة قضائية...</option>
-          <option value="الشيخ رضوان">الشيخ رضوان</option>
-          <option value="نقابة المحامين">نقابة المحامين</option>
-          <option value="مستشفى الشفاء">مستشفى الشفاء</option>
-          <option value="مستشفى الأقصى">مستشفى الأقصى</option>
-          <option value="مستشفى ناصر">مستشفى ناصر</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- IDENTIFIERS (المعرّفين) CARD -->
-    <div class="dp-card">
-      <div class="dp-card-title">
-        <i class="fas fa-users-cog"></i> بيانات المعرّفين
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Identifier 1 -->
-        <div class="bg-black/30 p-4 rounded-xl border border-white/10">
-          <h4 class="font-bold text-sm text-red-400 mb-3">المعرّف الأول:</h4>
-          <div class="space-y-3">
-            <div>
-              <label class="dp-label">رقم هوية المعرّف</label>
-              <input type="text" id="id1_number" placeholder="رقم الهوية" class="dp-input font-mono text-xs">
-            </div>
-            <div>
-              <label class="dp-label">اسم المعرّف</label>
-              <input type="text" id="id1_name" placeholder="الاسم الكامل" class="dp-input text-xs">
-            </div>
-            <div>
-              <label class="dp-label">رقم جوال المعرّف</label>
-              <input type="tel" id="id1_phone" placeholder="رقم الجوال" class="dp-input font-mono text-xs">
-            </div>
-          </div>
-        </div>
-
-        <!-- Identifier 2 -->
-        <div class="bg-black/30 p-4 rounded-xl border border-white/10">
-          <h4 class="font-bold text-sm text-red-400 mb-3">المعرّف الثاني:</h4>
-          <div class="space-y-3">
-            <div>
-              <label class="dp-label">رقم هوية المعرّف</label>
-              <input type="text" id="id2_number" placeholder="رقم الهوية" class="dp-input font-mono text-xs">
-            </div>
-            <div>
-              <label class="dp-label">اسم المعرّف</label>
-              <input type="text" id="id2_name" placeholder="الاسم الكامل" class="dp-input text-xs">
-            </div>
-            <div>
-              <label class="dp-label">رقم جوال المعرّف</label>
-              <input type="tel" id="id2_phone" placeholder="رقم الجوال" class="dp-input font-mono text-xs">
-            </div>
-          </div>
+          <label class="dp-label">صلة القرابة / الصفة</label>
+          <input type="text" id="submitter_relation" placeholder="مثلاً: ابن، زميل عمل، شاهد عيان..." class="dp-input">
         </div>
       </div>
     </div>
@@ -365,9 +366,9 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
     <!-- BIOGRAPHY CARD WITH LIVE PREVIEW -->
     <div class="dp-card">
       <div class="dp-card-title justify-between">
-        <span><i class="fas fa-feather-alt"></i> السيرة الذاتية للشهيد</span>
+        <span><i class="fas fa-feather-alt"></i> السيرة الذاتية والتفاصيل</span>
         <button type="button" onclick="appendProposedToBiography()" class="dp-btn dp-btn-outline text-xs py-1.5 px-3">
-          <i class="fas fa-plus-circle text-green-400"></i> إضافة إلى السيرة الحالية
+          <i class="fas fa-plus-circle text-green-400"></i> إضافة للسيرة الحالية
         </button>
       </div>
 
@@ -376,7 +377,7 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
         <textarea id="biography_text" rows="5" placeholder="اكتب سيرة ذاتية، كواليسه، إنجازاته، أو أي معلومات موثوقة عنه..." class="dp-textarea" oninput="updateLiveBiographyPreview()"></textarea>
       </div>
 
-      <!-- Live Biography Addition Preview Box (Triggered when correcting existing martyr) -->
+      <!-- Live Biography Addition Preview Box -->
       <div id="biography-preview-wrapper" class="space-y-4 pt-4 border-t border-white/10" style="display: none;">
         <div>
           <label class="dp-label text-amber-400">السيرة الحالية:</label>
@@ -409,7 +410,7 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
 
       <div class="dp-grid-2">
         <div class="dp-form-group">
-          <label class="dp-label">مصدر المعلومات</label>
+          <label class="dp-label">مصدر المعلومات / التوثيق</label>
           <input type="text" id="source_name" placeholder="مثلاً: شهادة عائلية، نقابة الصحفيين..." class="dp-input">
         </div>
 
@@ -469,7 +470,12 @@ $(document.body).addClass('desktop-page-body');
 $(document).ready(async function() {
   const urlParams = new URLSearchParams(window.location.search);
   const targetId = urlParams.get('id');
-  const action = urlParams.get('action');
+  const categoryParam = urlParams.get('category');
+
+  if (categoryParam) {
+    $('#martyr_category').val(categoryParam);
+  }
+  handleCategoryChange($('#martyr_category').val());
 
   if (targetId) {
     $('input[name="operation_type"][value="correct"]').prop('checked', true);
@@ -477,6 +483,26 @@ $(document).ready(async function() {
     await fetchAndPopulateMartyrById(targetId);
   }
 });
+
+function handleCategoryChange(category) {
+  $('.category-fields-group').hide();
+
+  if (category === 'Journalists') {
+    $('#category-card-title').text('بيانات الصحفي والإعلامي');
+    $('#journalist-fields').show();
+    $('#category-specific-card').slideDown(200);
+  } else if (category === 'Medical') {
+    $('#category-card-title').text('بيانات الكادر الطبي والمسعف');
+    $('#medical-fields').show();
+    $('#category-specific-card').slideDown(200);
+  } else if (category === 'Children') {
+    $('#category-card-title').text('بيانات الطفل وولي الأمر');
+    $('#child-fields').show();
+    $('#category-specific-card').slideDown(200);
+  } else {
+    $('#category-specific-card').slideUp(200);
+  }
+}
 
 function handleOperationTypeChange(type) {
   currentOpType = type;
@@ -492,22 +518,19 @@ function handleOperationTypeChange(type) {
 
 async function fetchAndPopulateMartyrById(id) {
   let found = null;
-  if (window.DataLoader) {
-    try {
-      const v = await DataLoader.loadDataset('data/victims.json');
-      if (Array.isArray(v)) found = v.find(m => String(m.id) === String(id) || String(m.record_id) === String(id) || String(m.id_number) === String(id));
-    } catch(e){}
-  }
+  const category = $('#martyr_category').val();
+  const jsonFile =
+    category === 'Journalists' ? 'data/press_killed_in_gaza.json' :
+    category === 'Martyrs48' ? 'data/martyrs48.json' :
+    'data/victims.json';
 
-  if (!found) {
-    try {
-      const res = await fetch('data/victims.json');
-      const data = await res.json();
-      if (Array.isArray(data)) {
-        found = data.find(m => String(m.id) === String(id) || String(m.record_id) === String(id) || String(m.id_number) === String(id));
-      }
-    } catch(e){}
-  }
+  try {
+    const res = await fetch(jsonFile);
+    const data = await res.json();
+    if (Array.isArray(data)) {
+      found = data.find(m => String(m.id) === String(id) || String(m.record_id) === String(id) || String(m.id_number) === String(id));
+    }
+  } catch(e){}
 
   if (found) {
     populateFormWithMartyrData(found);
@@ -537,12 +560,16 @@ function populateFormWithMartyrData(data) {
   }
 
   if (data.id_number || data.id) $('#id_number').val(data.id_number || data.id);
+  if (data.age) $('#age_input').val(data.age);
   if (data.dob) $('#dob').val(data.dob);
   if (data.district || data.city) $('#province').val(data.district || data.city);
   if (data.gender || data.sex) $('#gender').val((data.gender === 'f' || data.sex === 'f') ? 'أنثى' : 'ذكر');
   if (data.date_of_death) $('#date_of_death').val(data.date_of_death);
   if (data.location) $('#death_location').val(data.location);
   if (data.photo_url || data.photo) $('#photo_url_input').val(data.photo_url || data.photo);
+
+  if (data.organization) $('#media_outlet').val(data.organization);
+  if (data.role) $('#press_role').val(data.role);
 
   const bioText = data.story || data.biography || '';
   $('#current-biography-box').html(bioText ? bioText.replace(/\n/g, '<br>') : 'لا توجد سيرة حالية مسجلة.');
@@ -613,59 +640,36 @@ async function handleFormSubmission(event) {
   const fatherName = $('#father_name').val().trim();
   const familyName = $('#family_name').val().trim();
   const fullName = `${firstName} ${fatherName} ${$('#grandfather_name').val().trim()} ${familyName}`.replace(/\s+/g, ' ');
+  const category = $('#martyr_category').val();
+
+  const proposedData = {
+    name: fullName,
+    category: category,
+    age: $('#age_input').val(),
+    city: $('#province').val(),
+    profession: $('#profession').val().trim(),
+    organization: $('#media_outlet').val().trim() || $('#medical_institution').val().trim(),
+    specialty: $('#press_role').val().trim() || $('#medical_specialty').val().trim(),
+    biography: $('#biography_text').val().trim()
+  };
 
   const payload = {
     operationType: currentOpType,
+    category: category,
     martyrId: loadedMartyrData ? loadedMartyrData.id : null,
     martyrName: fullName,
-    personalData: {
-      firstName: firstName,
-      fatherName: fatherName,
-      grandfatherName: $('#grandfather_name').val().trim(),
-      familyName: familyName,
-      idNumber: $('#id_number').val().trim(),
-      dob: $('#dob').val(),
-      province: $('#province').val(),
-      gender: $('#gender').val(),
-      maritalStatus: $('#marital_status').val(),
-      profession: $('#profession').val().trim()
-    },
-    martyrdomInfo: {
-      dateOfDeath: $('#date_of_death').val(),
-      province: $('#death_province').val().trim(),
-      location: $('#death_location').val().trim(),
-      deathStatus: $('#death_status').val(),
-      burialStatus: $('#burial_status').val(),
-      hospitalNotified: $('#hospital_notified').val()
-    },
-    submitterData: {
-      name: $('#submitter_name').val().trim(),
-      phone: $('#submitter_phone').val().trim(),
-      relation: $('#submitter_relation').val().trim(),
-      judicialEntity: $('#judicial_entity').val()
-    },
-    identifiers: {
-      id1: { number: $('#id1_number').val().trim(), name: $('#id1_name').val().trim(), phone: $('#id1_phone').val().trim() },
-      id2: { number: $('#id2_number').val().trim(), name: $('#id2_name').val().trim(), phone: $('#id2_phone').val().trim() }
-    },
-    biographyAddition: $('#biography_text').val().trim(),
-    sources: {
-      name: $('#source_name').val().trim(),
-      url: $('#source_url').val().trim(),
-      photoUrl: $('#photo_url_input').val().trim(),
-      docUrl: $('#doc_url_input').val().trim(),
-      notes: $('#notes_input').val().trim()
-    }
+    currentData: loadedMartyrData || {},
+    proposedData: proposedData,
+    submitterName: $('#submitter_name').val().trim() || 'زائر متضامن',
+    submitterContact: $('#submitter_phone').val().trim(),
+    submitterRelation: $('#submitter_relation').val().trim(),
+    sources: $('#source_url').val().trim() || $('#source_name').val().trim(),
+    photoUrl: $('#photo_url_input').val().trim(),
+    notes: $('#notes_input').val().trim()
   };
 
   if (window.BackendAPI) {
-    const res = await window.BackendAPI.submitContribution({
-      submitterName: payload.submitterData.name || 'زائر متضامن',
-      martyrName: payload.martyrName,
-      city: payload.personalData.province || 'قطاع غزة',
-      notes: JSON.stringify(payload),
-      photoUrl: payload.sources.photoUrl
-    });
+    const res = await window.BackendAPI.submitContribution(payload);
 
     if (res.success) {
       alert('تم حفظ البيانات وإرسالها للمراجعة والاعتماد بنجاح! شكراً لمساهمتك الوطنية العظيمة.');
@@ -691,7 +695,7 @@ function previewFullEntry() {
     return;
   }
 
-  alert(`معاينة البيانات:\n\nاسم الشهيد: ${firstName} ${$('#father_name').val()} ${familyName}\nالمحافظة: ${$('#province').val()}\nمقدم الطلب: ${$('#submitter_name').val() || 'غير محدد'}\nالجهة القضائية: ${$('#judicial_entity').val() || 'غير محدد'}`);
+  alert(`معاينة البيانات:\n\nاسم الشهيد: ${firstName} ${$('#father_name').val()} ${familyName}\nالفئة: ${$('#martyr_category').val()}\nالمحافظة: ${$('#province').val()}\nمقدم الطلب: ${$('#submitter_name').val() || 'غير محدد'}`);
 }
 
 function toggleTheme() {
