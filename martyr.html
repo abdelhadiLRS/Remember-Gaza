@@ -316,12 +316,31 @@ async function loadMartyrDetails(id) {
   let found = null;
   let categoryLabel = 'شهيد من غزة';
 
+  const matchId = (item) => {
+    if (!item) return false;
+    const itemId = item.id ?? item.ID ?? item.id_number ?? item.record_id ?? item.uuid ?? item.profile;
+    if (!itemId) return false;
+    let cleanItem = String(itemId).replace(/^\/+/, '');
+    let cleanTarget = String(id).replace(/^\/+/, '');
+
+    if (cleanItem.includes('/')) {
+      const parts = cleanItem.split('/');
+      cleanItem = parts[parts.length - 1];
+    }
+    if (cleanTarget.includes('/')) {
+      const parts = cleanTarget.split('/');
+      cleanTarget = parts[parts.length - 1];
+    }
+
+    return cleanItem === cleanTarget || String(itemId).includes(cleanTarget);
+  };
+
   // Search across datasets
   if (window.DataLoader) {
     try {
       const victims = await DataLoader.loadDataset('data/victims.json');
       if (Array.isArray(victims)) {
-        found = victims.find(m => String(m.id) === String(id) || String(m.record_id) === String(id));
+        found = victims.find(matchId);
       }
     } catch(e){}
 
@@ -329,7 +348,7 @@ async function loadMartyrDetails(id) {
       try {
         const journalists = await DataLoader.loadDataset('data/journalists.json');
         if (Array.isArray(journalists)) {
-          found = journalists.find(m => String(m.id) === String(id) || String(m.record_id) === String(id));
+          found = journalists.find(matchId);
           if (found) categoryLabel = 'شهيد من الصحافة';
         }
       } catch(e){}
@@ -339,7 +358,7 @@ async function loadMartyrDetails(id) {
       try {
         const press = await DataLoader.loadDataset('data/press_killed_in_gaza.json');
         if (Array.isArray(press)) {
-          found = press.find(m => String(m.id) === String(id) || String(m.record_id) === String(id));
+          found = press.find(matchId);
           if (found) categoryLabel = 'شهيد من الصحافة والإعلام';
         }
       } catch(e){}
@@ -347,12 +366,33 @@ async function loadMartyrDetails(id) {
   }
 
   if (!found) {
-    // Fallback search in killed-in-gaza
+    try {
+      const res = await fetch('data/journalists.json');
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        found = data.find(matchId);
+        if (found) categoryLabel = 'شهيد من الصحافة';
+      }
+    } catch(e){}
+  }
+
+  if (!found) {
+    try {
+      const res = await fetch('data/press_killed_in_gaza.json');
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        found = data.find(matchId);
+        if (found) categoryLabel = 'شهيد من الصحافة والإعلام';
+      }
+    } catch(e){}
+  }
+
+  if (!found) {
     try {
       const response = await fetch('data/killed-in-gaza.json');
       const data = await response.json();
       if (Array.isArray(data)) {
-        found = data.find(m => String(m.id) === String(id) || String(m.record_id) === String(id) || String(m.id_number) === String(id));
+        found = data.find(matchId);
       }
     } catch(e){}
   }
@@ -372,12 +412,22 @@ async function loadMartyrDetails(id) {
   currentMartyrData = found;
 
   // Render Data
-  const martyrName = found.name || found.ar_name || 'شهيد بلا اسم';
+  let martyrName = found.name || found.ar_name || 'شهيد بلا اسم';
+  let enName = found.en_name || found.name_en || '';
+
+  if (martyrName.includes('|')) {
+    const parts = martyrName.split('|');
+    enName = parts[0].trim();
+    martyrName = parts[1] ? parts[1].split('Killed')[0].trim() : parts[0].trim();
+  } else if (martyrName.includes('Killed by')) {
+    martyrName = martyrName.split('Killed by')[0].trim();
+  }
+
   $('#martyr-name, #photo-card-name, #martyr-breadcrumb-name').text(martyrName);
   document.title = `${martyrName} | أرواح فلسطين`;
 
-  if (found.en_name) {
-    $('#martyr-en-name').text(found.en_name).show();
+  if (enName) {
+    $('#martyr-en-name').text(enName).show();
   }
 
   $('#martyr-category-badge').text(categoryLabel);

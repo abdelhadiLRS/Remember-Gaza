@@ -1306,9 +1306,27 @@ function fetchAndRenderData(url) {
         .done(data => {
             let list = data || [];
             gazaSouls = applyApprovedSubmissions(list);
-            document.getElementById('number').innerText = gazaSouls.length.toLocaleString();
-            initCanvasPoints(gazaSouls);
-            isDirty = true;
+
+            // Also load journalists into search database
+            $.getJSON('data/journalists.json').done(journalists => {
+                if (Array.isArray(journalists)) {
+                    journalists.forEach(j => {
+                        if (!gazaSouls.some(item => item.id === j.profile || item.name === j.name)) {
+                            gazaSouls.push({
+                                id: j.profile,
+                                name: j.name,
+                                image: j.image,
+                                category: 'شهيد صحفي'
+                            });
+                        }
+                    });
+                }
+            }).always(() => {
+                const numEl = document.getElementById('number');
+                if (numEl) numEl.innerText = gazaSouls.length.toLocaleString();
+                initCanvasPoints(gazaSouls);
+                isDirty = true;
+            });
         })
         .fail((jqxhr, textStatus, error) => {
             console.error('Failed to load archive data from:', url, error);
