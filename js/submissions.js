@@ -51,5 +51,10 @@ async function submitCrowdsourceForm(event) {
 }
 
 function openCrowdsourceModal() {
-  window.location.href = 'edit-martyr.html';
+  if (typeof currentMartyrObj !== 'undefined' && currentMartyrObj && (currentMartyrObj.id || currentMartyrObj.profile || currentMartyrObj.id_number)) {
+    const id = currentMartyrObj.id || currentMartyrObj.profile || currentMartyrObj.id_number;
+    window.location.href = `edit-martyr.html?id=${encodeURIComponent(id)}&action=edit`;
+  } else {
+    window.location.href = 'edit-martyr.html';
+  }
 }
