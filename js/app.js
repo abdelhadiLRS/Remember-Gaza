@@ -2501,12 +2501,12 @@ if (canvas) {
 }
 
 // ربط أحداث الإغلاق للنوافذ المنبثقة
-document.getElementById('milestone-modal-close').addEventListener('click', () => {
+const mc = document.getElementById('milestone-modal-close'); if (mc) mc.addEventListener('click', () => {
     window.speechSynthesis.cancel();
     isMilestoneSpeaking = false;
     document.getElementById('milestone-modal-overlay').style.display = 'none';
 });
-document.getElementById('milestone-modal-overlay').addEventListener('click', (e) => {
+const mo = document.getElementById('milestone-modal-overlay'); if (mo) mo.addEventListener('click', (e) => {
     if (e.target === document.getElementById('milestone-modal-overlay')) {
         window.speechSynthesis.cancel();
         isMilestoneSpeaking = false;
@@ -2514,12 +2514,12 @@ document.getElementById('milestone-modal-overlay').addEventListener('click', (e)
     }
 });
 
-document.getElementById('martyr-modal-close').addEventListener('click', () => {
+const rc = document.getElementById('martyr-modal-close'); if (rc) rc.addEventListener('click', () => {
     window.speechSynthesis.cancel();
     isMartyrSpeaking = false;
     document.getElementById('martyr-modal-overlay').style.display = 'none';
 });
-document.getElementById('martyr-modal-overlay').addEventListener('click', (e) => {
+const ro = document.getElementById('martyr-modal-overlay'); if (ro) ro.addEventListener('click', (e) => {
     if (e.target === document.getElementById('martyr-modal-overlay')) {
         window.speechSynthesis.cancel();
         isMartyrSpeaking = false;
