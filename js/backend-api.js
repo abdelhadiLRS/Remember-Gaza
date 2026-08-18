@@ -77,13 +77,18 @@ class BackendAPIService {
   async submitContribution(data) {
     const sanitizedData = {
       id: 'sub_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
-      submitterName: window.Utils ? window.Utils.escapeHTML(data.submitterName) : data.submitterName,
-      martyrName: window.Utils ? window.Utils.escapeHTML(data.martyrName) : data.martyrName,
-      city: window.Utils ? window.Utils.escapeHTML(data.city) : data.city,
-      notes: window.Utils ? window.Utils.escapeHTML(data.notes) : data.notes,
+      submitterName: window.Utils ? window.Utils.escapeHTML(data.submitterName || data.submitter_name) : (data.submitterName || data.submitter_name || ''),
+      submitterContact: window.Utils ? window.Utils.escapeHTML(data.submitterContact || data.submitter_contact || '') : (data.submitterContact || data.submitter_contact || ''),
+      martyrName: window.Utils ? window.Utils.escapeHTML(data.martyrName || data.martyr_name) : (data.martyrName || data.martyr_name || ''),
+      category: data.category || 'Gazans',
+      city: window.Utils ? window.Utils.escapeHTML(data.city) : (data.city || ''),
+      notes: window.Utils ? window.Utils.escapeHTML(data.notes) : (data.notes || ''),
+      sources: window.Utils ? window.Utils.escapeHTML(data.sources) : (data.sources || ''),
       photoUrl: data.photoUrl ? window.Utils.sanitizeUrl(data.photoUrl) : '',
+      currentData: data.currentData || {},
+      proposedData: data.proposedData || {},
       status: 'PENDING',
-      createdAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
       honeypot: data.honeypot || ''
     };
 
@@ -124,11 +129,12 @@ class BackendAPIService {
             id: item.id || ('legacy_' + Date.now()),
             submitterName: item.submitter || item.submitterName || '',
             martyrName: item.martyrName || '',
+            category: item.category || 'Gazans',
             city: item.city || '',
             notes: item.notes || '',
             photoUrl: item.photo || item.photoUrl || '',
             status: item.status || 'PENDING',
-            createdAt: item.date || new Date().toISOString()
+            created_at: item.date || new Date().toISOString()
           });
         }
       });
@@ -141,8 +147,9 @@ class BackendAPIService {
     return list;
   }
 
-  async updateSubmissionStatus(id, newStatus) {
-    if (!['PENDING', 'UNDER_REVIEW', 'APPROVED', 'REJECTED'].includes(newStatus)) {
+  async updateSubmissionStatus(id, newStatus, notes = '') {
+    const validStatuses = ['DRAFT', 'PENDING', 'UNDER_REVIEW', 'APPROVED', 'REJECTED', 'NEEDS_INFORMATION'];
+    if (!validStatuses.includes(newStatus)) {
       return { success: false, message: 'حالة غير صالحة' };
     }
 
@@ -153,13 +160,15 @@ class BackendAPIService {
     const list = await this.getSubmissions('ALL');
     const target = list.find(s => s.id === id);
     if (target) {
+      const oldStatus = target.status;
       target.status = newStatus;
+      target.reviewerNotes = notes || target.reviewerNotes || '';
       target.updatedAt = new Date().toISOString();
       target.updatedBy = this.getUserRole();
       localStorage.setItem('rg_remote_submissions', JSON.stringify(list));
 
       if (window.AuditLogger) {
-        window.AuditLogger.log(newStatus === 'APPROVED' ? 'APPROVE' : 'REJECT', `Submission ${id} marked as ${newStatus}`);
+        window.AuditLogger.log(`STATUS_CHANGE_${newStatus}`, `Submission ${id} status changed from ${oldStatus} to ${newStatus}. Notes: ${notes}`);
       }
       return { success: true, item: target };
     }

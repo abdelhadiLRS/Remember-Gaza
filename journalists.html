@@ -425,7 +425,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="modal-header border-b border-white/10 p-4 flex justify-between items-center bg-black/40">
             <h2 class="font-bold text-base text-red-400">ركن المساهمات وتصحيح البيانات</h2>
             <div class="flex gap-2">
-                <button onclick="openAdminReviewPanel()" class="text-xs text-gray-500 hover:text-red-400 underline">لوحة الإدارة 🔑</button>
                 <button class="modal-close text-gray-400 hover:text-white" onclick="document.getElementById('crowdsource-modal-overlay').style.display='none'">✕</button>
             </div>
         </div>
@@ -466,132 +465,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <!-- لوحة المراجعة الخاصة بالإدارة -->
-<div id="admin-review-overlay" style="display: none; position: fixed; inset: 0; z-index: 1007; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
-    <div class="modal-box" style="max-width: 500px; background: #121212; border: 1px solid rgba(239,68,68,0.4); border-radius: 16px; overflow: hidden; width: 100%; max-height: 90vh; display: flex; flex-direction: column;">
-        <div class="modal-header border-b border-white/10 p-4 flex justify-between items-center bg-black/40">
-            <h2 class="font-bold text-base text-red-400">لوحة مراجعة واعتماد المساهمات (Admin Control Panel)</h2>
-            <button class="modal-close text-gray-400 hover:text-white" onclick="document.getElementById('admin-review-overlay').style.display='none'">✕</button>
-        </div>
-        <div class="modal-body p-6 space-y-4 overflow-y-auto flex-1 text-right text-xs">
-            <div id="admin-submissions-list" class="space-y-3">
-                <div class="text-gray-500 text-center py-6">لا توجد مساهمات معلقة للمراجعة حالياً.</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="martyr-modal-overlay" style="display: none; position: fixed; inset: 0; z-index: 1005; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; font-family:'Cairo',sans-serif;">
-    <div class="modal-box" style="max-width: 440px; background: #121212; border: 1px solid rgba(239,68,68,0.4); border-radius: 16px; overflow: hidden; width: 100%; max-height: 90vh; display: flex; flex-direction: column;">
-        <div class="modal-header border-b border-white/10 p-4 flex justify-between items-center bg-black/40">
-            <h2 id="modal-martyr-title-text" class="font-bold text-base text-red-400">بطاقة توثيق الشهيد</h2>
-            <button class="modal-close text-gray-400 hover:text-white" id="martyr-modal-close">✕</button>
-        </div>
-        <div class="modal-body text-center p-6 space-y-4 overflow-y-auto flex-1">
-            <div class="flex justify-between items-center mb-1">
-                <button id="tts-btn-modal" onclick="playMartyrTTS()" class="btn-main text-[10px] px-2.5 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded-full flex items-center gap-1">
-                    🔊 <span id="tts-btn-text">استماع للسيرة</span>
-                </button>
-                <div class="flex items-center gap-2">
-                    <button id="tribute-candle-btn" onclick="lightTributeCandle()" class="btn-main text-[10px] px-2.5 py-1 bg-amber-600/20 border border-amber-500/40 text-amber-400 rounded-full flex items-center gap-1">
-                        🕯️ <span id="tribute-candle-text">إضاءة شمعة</span> (<span id="tribute-candle-count">0</span>)
-                    </button>
-                </div>
-            </div>
-
-            <div id="candle-animation-area" class="h-10 flex justify-center items-center hidden">
-                <div class="candle-flame text-2xl animate-pulse">🕯️🔥</div>
-            </div>
-
-            <div id="martyr-modal-photo" class="w-28 h-28 mx-auto bg-stone-900 border border-red-600/40 rounded-xl flex flex-col items-center justify-center text-stone-400 text-xs overflow-hidden">
-                <span id="modal-photo-text">صورة الشهيد</span>
-            </div>
-            <div>
-                <h3 id="martyr-modal-name" class="text-lg font-black text-white mb-1"></h3>
-                <p id="martyr-modal-name-en" class="text-xs text-gray-400 font-mono" style="display: none;"></p>
-            </div>
-            <div class="bg-black/50 border border-white/10 p-3 rounded-xl text-right space-y-2 text-xs">
-                <div class="flex justify-between"><span id="modal-age-label" class="text-gray-400">العمر:</span> <strong id="martyr-modal-age" class="text-white"></strong></div>
-                <div class="flex justify-between"><span id="modal-id-label" class="text-gray-400">رقم الهوية:</span> <strong id="martyr-modal-id" class="text-white font-mono"></strong></div>
-            </div>
-
-            <!-- Dedicated Martyr Biography & Translation Block (Category 6) -->
-            <div id="martyr-modal-bio-container" class="text-right text-xs space-y-2">
-                <div class="flex justify-center items-center gap-1.5 bg-black/40 border border-white/10 p-1.5 rounded-xl">
-                    <span class="text-gray-400 text-[10px] font-bold">الترجمة / Translate:</span>
-                    <button onclick="translateMartyrModal('ar')" class="px-1.5 py-0.5 rounded bg-red-600/30 border border-red-500 text-white text-[9px]">العربية</button>
-                    <button onclick="translateMartyrModal('en')" class="px-1.5 py-0.5 rounded bg-gray-800 border border-white/10 text-gray-300 text-[9px]">English</button>
-                    <button onclick="translateMartyrModal('fr')" class="px-1.5 py-0.5 rounded bg-gray-800 border border-white/10 text-gray-300 text-[9px]">Français</button>
-                    <button onclick="translateMartyrModal('es')" class="px-1.5 py-0.5 rounded bg-gray-800 border border-white/10 text-gray-300 text-[9px]">Español</button>
-                </div>
-                <div id="martyr-modal-bio-text-div" class="bg-red-950/20 border border-red-500/20 p-2.5 rounded-lg text-gray-200 font-semibold hidden">
-                </div>
-            </div>
-
-            <!-- Family Constellation Corridor section -->
-            <div id="martyr-modal-family-container" class="bg-red-950/20 border border-red-500/30 p-3 rounded-xl text-right space-y-2 hidden">
-                <h4 class="font-bold text-xs text-red-400 flex items-center gap-1">🌌 <span id="family-container-title">أفراد العائلة الموثقون:</span></h4>
-                <div id="martyr-modal-family-list" class="flex flex-col gap-1.5 max-h-32 overflow-y-auto no-scrollbar text-[11px]">
-                </div>
-            </div>
-
-            <!-- ترك أثر تضامني -->
-            <div class="bg-black/30 border border-white/5 p-3 rounded-xl text-right space-y-2">
-                <h4 class="font-bold text-xs text-red-400 mb-1">اترك أثراً تضامنياً (رسالة تعليق)</h4>
-                <div class="space-y-1.5">
-                    <input type="text" id="tribute-name-input" placeholder="اسمك (أو زائر من حول العالم)" class="w-full bg-black/60 border border-white/20 text-white px-2.5 py-1 rounded-lg text-[11px] outline-none focus:border-red-500">
-                    <textarea id="tribute-msg-input" placeholder="اكتب كلمة تضامن مع عائلة الشهيد..." rows="2" class="w-full bg-black/60 border border-white/20 text-white px-2.5 py-1 rounded-lg text-[11px] outline-none focus:border-red-500 resize-none"></textarea>
-                    <button onclick="submitVirtualTribute()" class="w-full btn-main text-[10px] bg-red-600 border border-red-500 py-1 font-bold rounded-lg text-white">إرسال التضامن</button>
-                </div>
-                <div class="mt-2">
-                    <h5 class="text-[10px] text-gray-400 font-bold mb-1">أحدث رسائل التضامن:</h5>
-                    <div id="tributes-list-container" class="max-h-24 overflow-y-auto space-y-1 text-[10px] no-scrollbar">
-                        <div class="text-gray-500 text-center py-2">لا توجد رسائل تضامن حالياً. كن أول من يترك أثراً.</div>
-                    </div>
-                </div>
-            </div>
-
-            <button id="share-btn-modal" onclick="shareMartyrCard()" class="w-full text-white font-bold py-2 px-4 rounded-xl transition-all bg-red-800 hover:bg-red-700 text-xs shadow-[0_0_15px_rgba(220,38,38,0.3)]">مشاركة بطاقة الشهيد كصورة</button>
-        </div>
-    </div>
-</div>
-
-<div id="capture-container" style="position:fixed; top:-9999px; left:-9999px; pointer-events:none; z-index:-9999;">
-    <div id="shareable-card" style="width: 650px; height: 900px; background: #0a0a0a; color: white; font-family: 'Cairo', sans-serif; position: relative; overflow: hidden; padding: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border: 6px solid #880808;">
-        <div style="position: absolute; top: -50px; right: -50px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(136,8,8,0.7) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; filter: blur(30px);"></div>
-        <div style="position: absolute; bottom: -100px; left: -100px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(180,10,10,0.5) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; filter: blur(40px);"></div>
-
-        <h1 style="color: #ef4444; font-size: 3.5rem; font-weight: 900; margin-bottom: 5px; z-index: 2;">أرواح فلسطين</h1>
-        <p style="color: #d1d5db; font-size: 1.4rem; margin-bottom: 50px; z-index: 2;">سجل الخلود وتوثيق الأرواح</p>
-
-        <div id="capture-img-container" style="width: 250px; height: 250px; border-radius: 20px; border: 3px solid #ef4444; overflow: hidden; margin-bottom: 40px; z-index: 2; background: #1a1a1a; display:flex; align-items:center; justify-content:center; box-shadow: 0 10px 30px rgba(220,38,38,0.4);">
-            <span style="color:#666; font-size: 1.2rem;">صورة الشهيد</span>
-        </div>
-
-        <h2 id="capture-name" style="font-size: 3.2rem; font-weight: 900; margin-bottom: 10px; z-index: 2; text-shadow: 0 4px 10px rgba(0,0,0,0.8); line-height: 1.2;"></h2>
-        <h3 id="capture-name-en" style="font-size: 1.8rem; color: #9ca3af; margin-bottom: 40px; font-family: monospace; z-index: 2;"></h3>
-
-        <div style="background: rgba(20,20,20,0.85); border: 1px solid rgba(255,255,255,0.15); padding: 25px 50px; border-radius: 15px; width: 100%; max-width: 450px; z-index: 2; display: flex; flex-direction: column; gap: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
-            <div style="display: flex; justify-content: space-between; font-size: 1.6rem;">
-                <span style="color: #9ca3af;">العمر:</span>
-                <strong id="capture-age" style="color: white;"></strong>
-            </div>
-            <div style="display: flex; justify-content: space-between; font-size: 1.6rem;">
-                <span style="color: #9ca3af;">رقم الهوية:</span>
-                <strong id="capture-id" style="color: #ef4444; font-family: monospace;"></strong>
-            </div>
-        </div>
-
-        <div style="position: absolute; bottom: 30px; width: 100%; text-align: center; color: #666; font-size: 1.2rem; z-index: 2;">
-
-        </div>
-    </div>
-</div>
-
 <script src="js/i18n.js"></script>
 <script src="js/mobile-drawer.js"></script>
 <script src="js/data-loader.js"></script>
 <script src="js/utils.js"></script>
 <script src="js/voice-search.js"></script>
+<script src="js/martyr-profile.js"></script>
 <script src="js/cards.js"></script>
 <script src="js/tributes.js"></script>
 <script src="js/submissions.js"></script>
