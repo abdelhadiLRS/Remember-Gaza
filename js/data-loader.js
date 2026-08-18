@@ -77,12 +77,12 @@ class DataLoaderEngine {
     container.innerHTML = `
       <div class="flex flex-col items-center justify-center p-8 text-center bg-gray-900/80 border border-red-500/30 rounded-2xl max-w-md mx-auto my-8 shadow-2xl backdrop-blur-md">
         <div class="w-16 h-16 bg-red-600/20 text-red-500 rounded-full flex items-center justify-center text-3xl mb-4 border border-red-500/40">
-          ⚠️
+          <i class="fas fa-exclamation-triangle"></i>
         </div>
         <h4 class="text-lg font-bold text-red-400 mb-2">${errorText}</h4>
         <p class="text-xs text-gray-400 mb-6">${errorMsg || ''}</p>
         <button id="${containerId}-retry-btn" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-semibold transition-all duration-200 shadow-lg shadow-red-600/30 flex items-center gap-2">
-          <span>🔄</span> <span>${retryText}</span>
+          <span><i class="fas fa-sync-alt"></i></span> <span>${retryText}</span>
         </button>
       </div>
     `;

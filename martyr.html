@@ -158,10 +158,10 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
         <div class="flex flex-wrap items-center justify-between gap-3 mt-5 pt-4 border-t border-white/10 bg-black/30 p-3 rounded-xl">
           <div class="flex items-center gap-3">
             <button id="btn-light-candle" onclick="lightMartyrCandlePage()" class="dp-btn dp-btn-red py-2 px-4 text-xs">
-              🕯️ إضاءة شمعة
+              <i class="fas fa-flame text-amber-500 ml-1"></i> إضاءة شمعة
             </button>
             <span class="text-sm text-amber-400 font-bold">
-              عدد الشموع: <span id="candles-count-page">0</span> 🕯️
+              عدد الشموع: <span id="candles-count-page">0</span> <i class="fas fa-flame text-amber-500 mr-1"></i>
             </span>
           </div>
 
@@ -320,30 +320,41 @@ async function loadMartyrDetails(id) {
   };
 
   // Search across datasets
-  if (window.DataLoader) {
+  if (window.dataLoader) {
     try {
-      const victims = await DataLoader.loadDataset('data/victims.json');
-      if (Array.isArray(victims)) {
-        found = victims.find(matchId);
+      const journalists = await window.dataLoader.loadJournalists();
+      if (Array.isArray(journalists)) {
+        found = journalists.find(matchId);
+        if (found) categoryLabel = 'شهيد من الصحافة';
       }
     } catch(e){}
 
     if (!found) {
       try {
-        const journalists = await DataLoader.loadDataset('data/journalists.json');
-        if (Array.isArray(journalists)) {
-          found = journalists.find(matchId);
-          if (found) categoryLabel = 'شهيد من الصحافة';
+        const press = await window.dataLoader.loadPressGaza();
+        if (Array.isArray(press)) {
+          found = press.find(matchId);
+          if (found) categoryLabel = 'شهيد من الصحافة والإعلام';
         }
       } catch(e){}
     }
 
     if (!found) {
       try {
-        const press = await DataLoader.loadDataset('data/press_killed_in_gaza.json');
-        if (Array.isArray(press)) {
-          found = press.find(matchId);
-          if (found) categoryLabel = 'شهيد من الصحافة والإعلام';
+        const killedGaza = await window.dataLoader.loadJSON('killed_in_gaza', 'data/killed-in-gaza.json');
+        if (Array.isArray(killedGaza)) {
+          found = killedGaza.find(matchId);
+          if (found) categoryLabel = 'شهيد من غزة';
+        }
+      } catch(e){}
+    }
+
+    if (!found) {
+      try {
+        const victims = await window.dataLoader.loadVictims();
+        if (Array.isArray(victims)) {
+          found = victims.find(matchId);
+          if (found) categoryLabel = 'شهيد من غزة';
         }
       } catch(e){}
     }
@@ -377,6 +388,18 @@ async function loadMartyrDetails(id) {
       const data = await response.json();
       if (Array.isArray(data)) {
         found = data.find(matchId);
+        if (found) categoryLabel = 'شهيد من غزة';
+      }
+    } catch(e){}
+  }
+
+  if (!found) {
+    try {
+      const response = await fetch('data/victims.json');
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        found = data.find(matchId);
+        if (found) categoryLabel = 'شهيد من غزة';
       }
     } catch(e){}
   }

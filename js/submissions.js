@@ -43,8 +43,6 @@ async function submitCrowdsourceForm(event) {
     const res = await window.BackendAPI.submitContribution(payload);
     if (res.success) {
       alert('شكرًا لمساهمتك العظيمة! تم إرسال معلومات الشهيد وسيرته بنجاح وهي قيد المراجعة والاعتماد من قبل فريق التوثيق.');
-      const modal = document.getElementById('crowdsource-modal-overlay');
-      if (modal) modal.style.display = 'none';
       event.target.reset();
     } else {
       alert(res.message || 'تعذر إرسال المساهمة حالياً.');
@@ -53,20 +51,5 @@ async function submitCrowdsourceForm(event) {
 }
 
 function openCrowdsourceModal() {
-  const modal = document.getElementById('crowdsource-modal-overlay');
-  if (modal) {
-    // Inject dynamic honeypot field if missing
-    const form = modal.querySelector('form');
-    if (form && !document.getElementById('cs-honeypot')) {
-      const hp = document.createElement('input');
-      hp.type = 'text';
-      hp.id = 'cs-honeypot';
-      hp.name = 'website_url_hp';
-      hp.style.display = 'none';
-      hp.tabIndex = -1;
-      hp.autocomplete = 'off';
-      form.appendChild(hp);
-    }
-    modal.style.display = 'flex';
-  }
+  window.location.href = 'edit-martyr.html';
 }

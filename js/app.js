@@ -49,7 +49,7 @@ const translations = {
         titleMain: "أرواح", logoText: "فلسطين", searchPlaceholder: "ابحث عن اسم الشهيد...",
         tabSouls: "شهداء غزة", tabJournalists: "شهداء الصحافة", tabWestBank: "شهداء الضفة", tab48: "شهداء 48",
         tabMilestones: "أبرز المحطات", tabStats: "الإحصائيات", tabVideos: "التوثيق والأرشيف", tabMap: "الخريطة",
-        donate: "❤️ إدعمنا لنستمر", musicOn: "🎵 الصوت", musicOff: "🔇 إيقاف", visitorLabel: "عدد الزوار:",
+        donate: "️ إدعمنا لنستمر", musicOn: " الصوت", musicOff: " إيقاف", visitorLabel: "عدد الزوار:",
         verse: "\"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ\"",
         devText: "تطوير: عبد الهادي", shareBtn: "مشاركة المنصة", martyrsLabel: "شهيداً وثّقت أسماؤهم:",
         milestonesTitle: "تفاصيل المحطة التاريخية", readMore: "اقرأ المزيد", source: "المصدر:",
@@ -67,13 +67,13 @@ const translations = {
         corridorsOn: "المجرات العائلية (نشط)",
         corridorsOff: "المجرات العائلية (معطل)",
         familyTitle: "أفراد العائلة الموثقون:",
-        spotBtn: "🎯 رصد النجم"
+        spotBtn: " رصد النجم"
     },
     en: {
         titleMain: "Palestinian", logoText: "Souls", searchPlaceholder: "Search martyr...",
         tabSouls: "Gaza Souls", tabJournalists: "Gaza Journalists", tabWestBank: "West Bank", tab48: "48 Martyrs",
         tabMilestones: "Milestones", tabStats: "Statistics", tabVideos: "Footage", tabMap: "Map",
-        donate: "❤️ Support Us", musicOn: "🎵 Audio", musicOff: "Mute", visitorLabel: "Visitors:",
+        donate: "️ Support Us", musicOn: " Audio", musicOff: "Mute", visitorLabel: "Visitors:",
         verse: "\"Think not of those who are slain in Allah's way as dead, but living with their Lord...\"",
         devText: "Dev: Abdelhadi", shareBtn: "Share Platform", martyrsLabel: "Martyrs Documented:",
         milestonesTitle: "Historical Milestone Details", readMore: "Read More", source: "Source:",
@@ -91,13 +91,13 @@ const translations = {
         corridorsOn: "Family Galaxies (On)",
         corridorsOff: "Family Galaxies (Off)",
         familyTitle: "Documented Family Members:",
-        spotBtn: "🎯 Spot Star"
+        spotBtn: " Spot Star"
     },
     fr: {
         titleMain: "Âmes", logoText: "Palestiniennes", searchPlaceholder: "Rechercher un martyr...",
         tabSouls: "Âmes de Gaza", tabJournalists: "Journalistes", tabWestBank: "Cisjordanie", tab48: "Martyrs de 48",
         tabMilestones: "Étapes clés", tabStats: "Statistiques", tabVideos: "Archives", tabMap: "Carte",
-        donate: "❤️ Soutenez-nous", musicOn: "🎵 Audio", musicOff: "Muet", visitorLabel: "Visiteurs :",
+        donate: "️ Soutenez-nous", musicOn: " Audio", musicOff: "Muet", visitorLabel: "Visiteurs :",
         verse: "\"Ne pensez pas que ceux qui ont été tués dans le sentier d'Allah soient morts...\"",
         devText: "Développement : Abdelhadi", shareBtn: "Partager", martyrsLabel: "Martyrs documentés :",
         milestonesTitle: "Détails de l'étape historique", readMore: "Lire la suite", source: "Source :",
@@ -115,13 +115,13 @@ const translations = {
         corridorsOn: "Galaxies Familiales (Activé)",
         corridorsOff: "Galaxies Familiales (Désactivé)",
         familyTitle: "Membres de Famille Documentés :",
-        spotBtn: "🎯 Repérer l'étoile"
+        spotBtn: " Repérer l'étoile"
     },
     es: {
         titleMain: "Almas", logoText: "Palestinas", searchPlaceholder: "Buscar mártir...",
         tabSouls: "Almas de Gaza", tabJournalists: "Periodistas", tabWestBank: "Cisjordania", tab48: "Mártires del 48",
         tabMilestones: "Hitos", tabStats: "Estadísticas", tabVideos: "Archivos", tabMap: "Mapa",
-        donate: "❤️ Apóyanos", musicOn: "🎵 Audio", musicOff: "Silenciar", visitorLabel: "Visitas:",
+        donate: "️ Apóyanos", musicOn: " Audio", musicOff: "Silenciar", visitorLabel: "Visitas:",
         verse: "\"No creáis que los que han muerto por la causa de Dios están muertos...\"",
         devText: "Desarrollo: Abdelhadi", shareBtn: "Compartir", martyrsLabel: "Mártires documentados:",
         milestonesTitle: "Detalles del hito histórico", readMore: "Leer más", source: "Fuente:",
@@ -139,7 +139,7 @@ const translations = {
         corridorsOn: "Galaxias Familiares (Activo)",
         corridorsOff: "Galaxias Familiares (Inactivo)",
         familyTitle: "Miembros de Familia Documentados:",
-        spotBtn: "🎯 Ubicar Estrella"
+        spotBtn: " Ubicar Estrella"
     }
 };
 
@@ -740,7 +740,7 @@ function renderCinematicTimeline() {
                         </div>
                         <div class="flex gap-1.5 items-center">
                             <button type="button" class="tlc-more"><span>اقرأ المزيد</span><span aria-hidden="true">→</span></button>
-                            <button type="button" onclick="timelineShowOnMap('${item.title.replace(/'/g, "\\'")}')" class="btn-main text-[10px] px-2.5 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded-full flex items-center gap-1">🗺️ الخريطة</button>
+                            <button type="button" onclick="timelineShowOnMap('${item.title.replace(/'/g, "\\'")}')" class="btn-main text-[10px] px-2.5 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded-full flex items-center gap-1">️ الخريطة</button>
                         </div>
                     </div>
                 </article>
@@ -851,7 +851,7 @@ function startVoiceSearch(inputId, callback) {
 
     if (micBtn) {
         micBtn.classList.add('bg-red-600', 'animate-pulse');
-        micBtn.innerText = '🔴';
+        micBtn.innerText = '';
     }
 
     recognition.onstart = () => {
@@ -875,7 +875,7 @@ function startVoiceSearch(inputId, callback) {
     recognition.onend = () => {
         if (micBtn) {
             micBtn.classList.remove('bg-red-600', 'animate-pulse');
-            micBtn.innerText = '🎤';
+            micBtn.innerText = '';
         }
     };
 
@@ -2082,7 +2082,7 @@ function openCrowdsourceModal() {
     const urlIn = document.getElementById('cs-photo');
     if (urlIn) urlIn.value = '';
 
-    document.getElementById('crowdsource-modal-overlay').style.display = 'flex';
+    window.location.href = 'edit-martyr.html';
 }
 
 function triggerMartyrEdit() {
@@ -2148,7 +2148,7 @@ function submitCrowdsourceForm(e) {
         localStorage.setItem('crowdsourced_submissions', JSON.stringify(list));
 
         alert(currentLang === 'ar' ? 'تم إرسال مساهمتك بنجاح وهي قيد المراجعة والاعتماد الآن.' : 'Your submission has been sent successfully and is under review.');
-        document.getElementById('crowdsource-modal-overlay').style.display = 'none';
+
 
         // Reset state
         currentEditingMartyrId = null;
@@ -2679,7 +2679,7 @@ function translateMartyrModal(lang) {
 
         const l = langLabels[lang] || langLabels.ar;
 
-        bioTextDiv.innerHTML = `🌟 <strong>${l.title}</strong><p class="mt-1 font-normal">${translatedNotes}</p>`;
+        bioTextDiv.innerHTML = ` <strong>${l.title}</strong><p class="mt-1 font-normal">${translatedNotes}</p>`;
         bioTextDiv.classList.remove('hidden');
 
         document.getElementById('modal-age-label').innerText = l.labelAge;
