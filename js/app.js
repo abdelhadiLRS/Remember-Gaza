@@ -2501,31 +2501,43 @@ if (canvas) {
 }
 
 // ربط أحداث الإغلاق للنوافذ المنبثقة
-document.getElementById('milestone-modal-close').addEventListener('click', () => {
-    window.speechSynthesis.cancel();
-    isMilestoneSpeaking = false;
-    document.getElementById('milestone-modal-overlay').style.display = 'none';
-});
-document.getElementById('milestone-modal-overlay').addEventListener('click', (e) => {
-    if (e.target === document.getElementById('milestone-modal-overlay')) {
+const milestoneClose = document.getElementById('milestone-modal-close');
+const milestoneOverlay = document.getElementById('milestone-modal-overlay');
+if (milestoneClose) {
+    milestoneClose.addEventListener('click', () => {
         window.speechSynthesis.cancel();
         isMilestoneSpeaking = false;
-        document.getElementById('milestone-modal-overlay').style.display = 'none';
-    }
-});
+        if (milestoneOverlay) milestoneOverlay.style.display = 'none';
+    });
+}
+if (milestoneOverlay) {
+    milestoneOverlay.addEventListener('click', (e) => {
+        if (e.target === milestoneOverlay) {
+            window.speechSynthesis.cancel();
+            isMilestoneSpeaking = false;
+            milestoneOverlay.style.display = 'none';
+        }
+    });
+}
 
-document.getElementById('martyr-modal-close').addEventListener('click', () => {
-    window.speechSynthesis.cancel();
-    isMartyrSpeaking = false;
-    document.getElementById('martyr-modal-overlay').style.display = 'none';
-});
-document.getElementById('martyr-modal-overlay').addEventListener('click', (e) => {
-    if (e.target === document.getElementById('martyr-modal-overlay')) {
+const martyrClose = document.getElementById('martyr-modal-close');
+const martyrOverlay = document.getElementById('martyr-modal-overlay');
+if (martyrClose) {
+    martyrClose.addEventListener('click', () => {
         window.speechSynthesis.cancel();
         isMartyrSpeaking = false;
-        document.getElementById('martyr-modal-overlay').style.display = 'none';
-    }
-});
+        if (martyrOverlay) martyrOverlay.style.display = 'none';
+    });
+}
+if (martyrOverlay) {
+    martyrOverlay.addEventListener('click', (e) => {
+        if (e.target === martyrOverlay) {
+            window.speechSynthesis.cancel();
+            isMartyrSpeaking = false;
+            martyrOverlay.style.display = 'none';
+        }
+    });
+}
 
 // ----------------------------------------------------
 // Category 6 JS: Instant Translations & Adaptive Dark Mode

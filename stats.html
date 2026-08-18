@@ -616,6 +616,8 @@ function renderCharts() {
 
     const ctxAge = document.getElementById('chart-age-distribution');
     if (ctxAge) {
+        const existingAgeChart = Chart.getChart(ctxAge);
+        if (existingAgeChart) existingAgeChart.destroy();
         if (ageChartInstance) ageChartInstance.destroy();
         ageChartInstance = new Chart(ctxAge, {
             type: 'doughnut',
@@ -661,6 +663,8 @@ function renderCharts() {
 
     const ctxRegion = document.getElementById('chart-regional-targeting');
     if (ctxRegion) {
+        const existingRegionChart = Chart.getChart(ctxRegion);
+        if (existingRegionChart) existingRegionChart.destroy();
         if (regionChartInstance) regionChartInstance.destroy();
         regionChartInstance = new Chart(ctxRegion, {
             type: 'bar',
@@ -702,149 +706,6 @@ function renderCharts() {
 document.addEventListener("DOMContentLoaded", () => {
     setTimeout(renderCharts, 300);
     if (window.i18n) window.i18n.onLanguageChange(() => renderCharts());
-
-    // 1. Demographic Age Distribution Chart (Doughnut)
-    const ctxAge = document.getElementById('chart-age-distribution');
-    if (ctxAge) {
-        new Chart(ctxAge, {
-            type: 'doughnut',
-            data: {
-                labels: ['أطفال (0-14)', 'شباب (15-29)', 'بالغون (30-59)', 'كبار السن (60+)'],
-                datasets: [{
-                    data: [42.5, 30.1, 19.8, 7.6],
-                    backgroundColor: [
-                        'rgba(239, 68, 68, 0.85)',   // Bright Blood Red
-                        'rgba(248, 113, 113, 0.85)', // Coral Red
-                        'rgba(153, 27, 27, 0.85)',   // Dark Red
-                        'rgba(252, 165, 165, 0.85)'  // Light Pinkish Red
-                    ],
-                    borderColor: 'rgba(10, 10, 10, 0.8)',
-                    borderWidth: 2,
-                    hoverOffset: 15
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '65%',
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            color: '#e5e7eb',
-                            font: {
-                                family: 'Cairo',
-                                size: 11,
-                                weight: 'bold'
-                            },
-                            padding: 12,
-                            usePointStyle: true,
-                            pointStyle: 'circle'
-                        }
-                    },
-                    tooltip: {
-                        enabled: true,
-                        backgroundColor: 'rgba(15, 15, 15, 0.95)',
-                        titleColor: '#ef4444',
-                        titleFont: { family: 'Cairo', weight: 'bold', size: 12 },
-                        bodyColor: '#ffffff',
-                        bodyFont: { family: 'Cairo', size: 11 },
-                        borderColor: 'rgba(239, 68, 68, 0.4)',
-                        borderWidth: 1,
-                        padding: 10,
-                        displayColors: true,
-                        callbacks: {
-                            label: function(context) {
-                                return ` النسبة: ${context.raw}%`;
-                            }
-                        }
-                    }
-                },
-                animation: {
-                    animateScale: true,
-                    animateRotate: true,
-                    duration: 1800,
-                    easing: 'easeOutQuart'
-                }
-            }
-        });
-    }
-
-    // 2. Regional Targeting Chart (Horizontal Bar)
-    const ctxRegion = document.getElementById('chart-regional-targeting');
-    if (ctxRegion) {
-        new Chart(ctxRegion, {
-            type: 'bar',
-            data: {
-                labels: ['محافظة غزة', 'شمال غزة', 'خان يونس', 'المحافظة الوسطى', 'رفح', 'الضفة الغربية والقدس'],
-                datasets: [{
-                    label: 'نسبة الاستهداف الموثق %',
-                    data: [34.2, 22.8, 18.5, 13.1, 10.4, 1.0],
-                    backgroundColor: 'rgba(220, 38, 38, 0.75)',
-                    hoverBackgroundColor: 'rgba(239, 68, 68, 0.95)',
-                    borderColor: '#ef4444',
-                    borderWidth: 1.5,
-                    borderRadius: 8,
-                    borderSkipped: false,
-                    barPercentage: 0.6,
-                    categoryPercentage: 0.8
-                }]
-            },
-            options: {
-                indexAxis: 'y', // Horizontal bars
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        enabled: true,
-                        backgroundColor: 'rgba(15, 15, 15, 0.95)',
-                        titleColor: '#ef4444',
-                        titleFont: { family: 'Cairo', weight: 'bold', size: 12 },
-                        bodyColor: '#ffffff',
-                        bodyFont: { family: 'Cairo', size: 11 },
-                        borderColor: 'rgba(239, 68, 68, 0.4)',
-                        borderWidth: 1,
-                        padding: 10,
-                        callbacks: {
-                            label: function(context) {
-                                return ` نسبة الاستهداف: ${context.raw}%`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.05)',
-                            borderColor: 'rgba(255, 255, 255, 0.1)'
-                        },
-                        ticks: {
-                            color: '#9ca3af',
-                            font: { family: 'Cairo', size: 10 },
-                            callback: function(value) { return value + '%'; }
-                        },
-                        max: 40
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            color: '#e5e7eb',
-                            font: { family: 'Cairo', size: 11, weight: 'bold' }
-                        }
-                    }
-                },
-                animation: {
-                    duration: 2000,
-                    easing: 'easeOutElastic'
-                }
-            }
-        });
-    }
 });
 </script>
 
