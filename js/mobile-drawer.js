@@ -161,12 +161,7 @@
   window.handleDrawerAction = function (action) {
     window.closeMobileDrawer();
     if (action === 'crowdsource') {
-      const modal = document.getElementById('crowdsource-modal-overlay');
-      if (modal) {
-        modal.style.display = 'flex';
-      } else {
-        window.location.href = 'index.html#crowdsource';
-      }
+      window.location.href = 'edit-martyr.html';
     } else if (action === 'donate') {
       const modal = document.getElementById('donation-modal-overlay');
       if (modal) {
@@ -217,7 +212,6 @@
 
       if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
         const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
-        // Swiping right in RTL closes menu, swiping left in LTR closes menu
         if ((isRTL && diffX > 50) || (!isRTL && diffX < -50)) {
           window.closeMobileDrawer();
         }

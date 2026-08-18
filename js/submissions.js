@@ -1,51 +1,31 @@
 /**
- * Palestinian Souls (Remember Gaza) - Community Submissions Engine
- * Secure Submission Handler, Anti-Spam Honeypots, Input Sanitization & Staging
+ * Palestinian Souls (Remember Gaza) - Submissions Handler
+ * Manages community contributions and redirects to unified edit page
  */
 
-async function submitCrowdsourceForm(event) {
-  event.preventDefault();
-
-  const submitter = document.getElementById('cs-submitter').value.trim();
-  const martyrName = document.getElementById('cs-martyr-name').value.trim();
-  const city = document.getElementById('cs-martyr-city').value.trim();
-  const notes = document.getElementById('cs-notes').value.trim();
-  const photo = document.getElementById('cs-photo').value.trim();
-  const answer = document.getElementById('cs-captcha-answer').value.trim();
-  const honeypot = document.getElementById('cs-honeypot') ? document.getElementById('cs-honeypot').value : '';
-
-  if (honeypot) {
-    console.warn('[AntiSpam] Bot submission blocked via Honeypot.');
-    alert('تم رفض الطلب كإجراء حماية تلقائي.');
-    return;
-  }
-
-  if (answer !== '8') {
-    alert('إجابة سؤال الأمان غير صحيحة، يرجى المحاولة مرة أخرى.');
-    return;
-  }
-
-  if (!submitter || !martyrName || !city || !notes) {
-    alert('يرجى ملء كافة الحقول المطلوبة.');
-    return;
-  }
+async function handleSubmissionFormSubmit(event) {
+  if (event) event.preventDefault();
 
   const payload = {
-    submitterName: submitter,
-    martyrName: martyrName,
-    city: city,
-    notes: notes,
-    photoUrl: photo,
-    honeypot: honeypot
+    submitterName: document.getElementById('cs-submitter-name')?.value || 'زائر متضامن',
+    submitterContact: document.getElementById('cs-submitter-contact')?.value || '',
+    martyrName: document.getElementById('cs-martyr-name')?.value || '',
+    city: document.getElementById('cs-city')?.value || '',
+    notes: document.getElementById('cs-notes')?.value || '',
+    sources: document.getElementById('cs-sources')?.value || '',
+    photoUrl: document.getElementById('cs-photo-url')?.value || ''
   };
+
+  if (!payload.martyrName) {
+    alert('يرجى إدخال اسم الشهيد.');
+    return;
+  }
 
   if (window.BackendAPI) {
     const res = await window.BackendAPI.submitContribution(payload);
     if (res.success) {
-      alert('شكرًا لمساهمتك العظيمة! تم إرسال معلومات الشهيد وسيرته بنجاح وهي قيد المراجعة والاعتماد من قبل فريق التوثيق.');
-      const modal = document.getElementById('crowdsource-modal-overlay');
-      if (modal) modal.style.display = 'none';
-      event.target.reset();
+      alert('تم إرسال المساهمة بنجاح وهي قيد المراجعة والاعتماد الآن.');
+      window.location.href = 'index.html';
     } else {
       alert(res.message || 'تعذر إرسال المساهمة حالياً.');
     }
@@ -53,20 +33,9 @@ async function submitCrowdsourceForm(event) {
 }
 
 function openCrowdsourceModal() {
-  const modal = document.getElementById('crowdsource-modal-overlay');
-  if (modal) {
-    // Inject dynamic honeypot field if missing
-    const form = modal.querySelector('form');
-    if (form && !document.getElementById('cs-honeypot')) {
-      const hp = document.createElement('input');
-      hp.type = 'text';
-      hp.id = 'cs-honeypot';
-      hp.name = 'website_url_hp';
-      hp.style.display = 'none';
-      hp.tabIndex = -1;
-      hp.autocomplete = 'off';
-      form.appendChild(hp);
-    }
-    modal.style.display = 'flex';
-  }
+  window.location.href = 'edit-martyr.html';
+}
+
+function closeCrowdsourceModal() {
+  // Safe stub for legacy event bindings
 }
