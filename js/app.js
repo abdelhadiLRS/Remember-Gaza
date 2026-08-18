@@ -2514,8 +2514,13 @@ function openMartyrModal(person) {
             editBtn.id = 'tribute-edit-btn-dynamic';
             editBtn.className = 'btn-main text-[10px] px-2.5 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded-full flex items-center gap-1';
             editBtn.innerHTML = '✍️ <span id="tribute-edit-text">تعديل البيانات</span>';
-            editBtn.onclick = function() { triggerMartyrEdit(); };
-            parent.appendChild(editBtn);
+// فحص آمن: إذا كان العنصر موجوداً فقط قم بإضافة الحدث
+const targetElement = document.getElementById('some-element-id');
+if (targetElement) {
+    targetElement.addEventListener('click', function() {
+        // ...
+    });
+}            parent.appendChild(editBtn);
         }
     }
 
