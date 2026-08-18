@@ -608,8 +608,9 @@ window.shareMartyrCard = function(){
     document.getElementById('capture-id').innerText = person.id || '-';
 
     const imgContainer = document.getElementById('capture-img-container');
-    if (person.image) {
-        imgContainer.innerHTML = `<img src="${person.image}" style="width:100%; height:100%; object-fit:cover;" crossorigin="anonymous">`;
+    const photoSrc = person.image || person.photo || person.photo_url || person.image_url;
+    if (photoSrc) {
+        imgContainer.innerHTML = `<img src="${photoSrc}" style="width:100%; height:100%; object-fit:cover;" crossorigin="anonymous">`;
     } else {
         imgContainer.innerHTML = `<span style="color:#666; font-size: 1.2rem;">صورة الشهيد</span>`;
     }
@@ -2048,64 +2049,16 @@ let currentEditingMartyrId = null;
 
 // Dynamic and beautiful dual input injector (File Upload / Link)
 function openCrowdsourceModal() {
-    captchaNum1 = Math.floor(Math.random() * 9) + 1;
-    captchaNum2 = Math.floor(Math.random() * 9) + 1;
-    const qEl = document.getElementById('cs-captcha-question');
-    if (qEl) {
-        qEl.innerText = `${captchaNum1} + ${captchaNum2} =`;
+    if (typeof currentMartyrObj !== 'undefined' && currentMartyrObj && (currentMartyrObj.id || currentMartyrObj.profile || currentMartyrObj.id_number)) {
+        const id = currentMartyrObj.id || currentMartyrObj.profile || currentMartyrObj.id_number;
+        window.location.href = `edit-martyr.html?id=${encodeURIComponent(id)}&action=edit`;
+    } else {
+        window.location.href = 'edit-martyr.html';
     }
-    const ansEl = document.getElementById('cs-captcha-answer');
-    if (ansEl) ansEl.value = '';
-
-    document.getElementById('cs-submitter').value = '';
-    document.getElementById('cs-martyr-name').value = '';
-    document.getElementById('cs-martyr-city').value = '';
-    document.getElementById('cs-notes').value = '';
-
-    // Dynamically inject the file upload input next to URL input if it doesn't exist
-    const oldPhotoInput = document.getElementById('cs-photo');
-    if (oldPhotoInput && oldPhotoInput.parentElement) {
-        const parent = oldPhotoInput.parentElement;
-        let fileInput = document.getElementById('cs-photo-file');
-        if (!fileInput) {
-            parent.innerHTML = `
-                <label class="text-gray-300 block">صورة الشهيد أو مستند الإثبات (ملف أو رابط):</label>
-                <div class="flex flex-col gap-1.5">
-                    <input type="file" id="cs-photo-file" accept="image/*" class="w-full bg-black/60 border border-white/20 text-white px-3 py-1.5 rounded-xl text-xs outline-none focus:border-red-500">
-                    <span class="text-gray-500 text-[10px] text-center">أو أدخل رابط الصورة مباشرة:</span>
-                    <input type="url" id="cs-photo" placeholder="https://example.com/photo.jpg" class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
-                </div>
-            `;
-        }
-    }
-
-    const fileIn = document.getElementById('cs-photo-file');
-    if (fileIn) fileIn.value = '';
-    const urlIn = document.getElementById('cs-photo');
-    if (urlIn) urlIn.value = '';
-
-    window.location.href = 'edit-martyr.html';
 }
 
 function triggerMartyrEdit() {
-    if (!currentMartyrObj) return;
-
-    // Close martyr modal
-    document.getElementById('martyr-modal-overlay').style.display = 'none';
-
-    // Open crowdsourcing modal
     openCrowdsourceModal();
-
-    // Autofill fields
-    currentEditingMartyrId = currentMartyrObj.id;
-    document.getElementById('cs-martyr-name').value = currentMartyrObj.name || '';
-    document.getElementById('cs-martyr-city').value = currentMartyrObj.city || '';
-    document.getElementById('cs-notes').value = `طلب تعديل لبيانات الشهيد: ${currentMartyrObj.name} (رقم الهوية: ${currentMartyrObj.id || 'غير معروف'}). التفاصيل المراد تعديلها: `;
-
-    const urlIn = document.getElementById('cs-photo');
-    if (urlIn && currentMartyrObj.image) {
-        urlIn.value = currentMartyrObj.image;
-    }
 }
 window.triggerMartyrEdit = triggerMartyrEdit;
 
