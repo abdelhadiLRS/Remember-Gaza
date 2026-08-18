@@ -2466,80 +2466,13 @@ function submitVirtualTribute() {
 
 function openMartyrModal(person) {
     currentMartyrObj = person;
-    updateTributeUI();
-    if (typeof translateMartyrModal === 'function') {
-        translateMartyrModal(currentLang);
-    }
-
-    document.getElementById('martyr-modal-name').innerText = person.name || 'شهيد مجهول';
-    const nameEnEl = document.getElementById('martyr-modal-name-en');
-    if (person.name_en) {
-        nameEnEl.innerText = person.name_en;
-        nameEnEl.style.display = 'block';
-    } else {
-        nameEnEl.style.display = 'none';
-    }
-    document.getElementById('martyr-modal-age').innerText = person.age || 'غير معروف';
-    document.getElementById('martyr-modal-id').innerText = person.id || '-';
-
-    const photoEl = document.getElementById('martyr-modal-photo');
-    if (person.image) {
-        photoEl.innerHTML = `<img src="${person.image}" style="width:100%; height:100%; object-fit:cover;" crossorigin="anonymous">`;
-    } else {
-        photoEl.innerHTML = `<span id="modal-photo-text">${translations[currentLang].modalPhotoText}</span>`;
-    }
-
-    // Populate Family Corridors section
-    const famContainer = document.getElementById('martyr-modal-family-container');
-    const famList = document.getElementById('martyr-modal-family-list');
-    const famTitle = document.getElementById('family-container-title');
-
-    if (famContainer && famList && typeof familyGroups !== 'undefined') {
-        const famName = extractFamilyName(person.name);
-        const members = familyGroups[famName] || [];
-        const filteredMembers = members.filter(m => String(m.id) !== String(person.id));
-
-        if (corridorsActive && filteredMembers.length > 0) {
-            famTitle.innerText = translations[currentLang].familyTitle || "أفراد العائلة الموثقون:";
-            famContainer.classList.remove('hidden');
-
-            famList.innerHTML = filteredMembers.map(m => {
-                let displayName = m.name;
-                if (currentLang !== 'ar') {
-                    displayName = transliterateName(m.name, currentLang);
-                }
-                const spotText = translations[currentLang].spotBtn || "🎯 رصد النجم";
-                return `
-                    <div class="flex justify-between items-center bg-black/40 border border-white/5 p-1.5 rounded-lg">
-                        <span>${displayName} (${m.age || 'غير معروف'})</span>
-                        <button onclick="spotFamilyStar('${m.id}')" class="btn-main text-[9px] px-2 py-0.5 bg-red-600/30 border border-red-500/40 text-red-300 rounded-full">${spotText}</button>
-                    </div>
-                `;
-            }).join('');
-        } else {
-            famContainer.classList.add('hidden');
-            famList.innerHTML = '';
-        }
-    }
-
-    // Dynamic injection of the premium "Edit Martyr" button in the modal
-    const candleBtn = document.getElementById('tribute-candle-btn');
-    if (candleBtn && candleBtn.parentElement) {
-        const parent = candleBtn.parentElement;
-        let editBtn = document.getElementById('tribute-edit-btn-dynamic');
-        if (!editBtn) {
-            editBtn = document.createElement('button');
-            editBtn.id = 'tribute-edit-btn-dynamic';
-            editBtn.className = 'btn-main text-[10px] px-2.5 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded-full flex items-center gap-1';
-            editBtn.innerHTML = '✍️ <span id="tribute-edit-text">تعديل البيانات</span>';
-// فحص آمن: إذا كان العنصر موجوداً فقط قم بإضافة الحدث
-const targetElement = document.getElementById('some-element-id');
-if (targetElement) {
-    targetElement.addEventListener('click', function() {
-        // ...
-    });
-}            parent.appendChild(editBtn);
-        }
+    if (window.martyrProfileEngine) {
+        window.martyrProfileEngine.openMartyrProfile(person);
+    } else if (typeof openMartyrProfile === 'function') {
+        openMartyrProfile(person);
+    } else if (document.getElementById('martyr-modal-overlay')) {
+        document.getElementById('martyr-modal-name').innerText = person.name || 'شهيد مجهول';
+        document.getElementById('martyr-modal-overlay').style.display = 'flex';
     }
 }
 
@@ -2568,43 +2501,31 @@ if (canvas) {
 }
 
 // ربط أحداث الإغلاق للنوافذ المنبثقة
-const milestoneClose = document.getElementById('milestone-modal-close');
-const milestoneOverlay = document.getElementById('milestone-modal-overlay');
-if (milestoneClose) {
-    milestoneClose.addEventListener('click', () => {
+const mc = document.getElementById('milestone-modal-close'); if (mc) mc.addEventListener('click', () => {
+    window.speechSynthesis.cancel();
+    isMilestoneSpeaking = false;
+    document.getElementById('milestone-modal-overlay').style.display = 'none';
+});
+const mo = document.getElementById('milestone-modal-overlay'); if (mo) mo.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('milestone-modal-overlay')) {
         window.speechSynthesis.cancel();
         isMilestoneSpeaking = false;
-        if (milestoneOverlay) milestoneOverlay.style.display = 'none';
-    });
-}
-if (milestoneOverlay) {
-    milestoneOverlay.addEventListener('click', (e) => {
-        if (e.target === milestoneOverlay) {
-            window.speechSynthesis.cancel();
-            isMilestoneSpeaking = false;
-            milestoneOverlay.style.display = 'none';
-        }
-    });
-}
+        document.getElementById('milestone-modal-overlay').style.display = 'none';
+    }
+});
 
-const martyrClose = document.getElementById('martyr-modal-close');
-const martyrOverlay = document.getElementById('martyr-modal-overlay');
-if (martyrClose) {
-    martyrClose.addEventListener('click', () => {
+const rc = document.getElementById('martyr-modal-close'); if (rc) rc.addEventListener('click', () => {
+    window.speechSynthesis.cancel();
+    isMartyrSpeaking = false;
+    document.getElementById('martyr-modal-overlay').style.display = 'none';
+});
+const ro = document.getElementById('martyr-modal-overlay'); if (ro) ro.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('martyr-modal-overlay')) {
         window.speechSynthesis.cancel();
         isMartyrSpeaking = false;
-        if (martyrOverlay) martyrOverlay.style.display = 'none';
-    });
-}
-if (martyrOverlay) {
-    martyrOverlay.addEventListener('click', (e) => {
-        if (e.target === martyrOverlay) {
-            window.speechSynthesis.cancel();
-            isMartyrSpeaking = false;
-            martyrOverlay.style.display = 'none';
-        }
-    });
-}
+        document.getElementById('martyr-modal-overlay').style.display = 'none';
+    }
+});
 
 // ----------------------------------------------------
 // Category 6 JS: Instant Translations & Adaptive Dark Mode
