@@ -2,7 +2,7 @@
   "use strict";
 
   const DATA_URL="https://data.techforpalestine.org/api/v2/killed-in-gaza/child-name-counts-en.json";
-  const CHILD_IMAGE_URL = "./images/names-behind-numbers-mf.JPG"; // رابط الصورة الإضافية
+  const CHILD_IMAGE_URL = "/images/names-behind-numbers-mf.JPG"; // رابط الصورة الإضافية
 
   const css=`
     :host{
