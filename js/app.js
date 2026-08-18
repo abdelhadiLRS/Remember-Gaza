@@ -1249,10 +1249,12 @@ window.switchMainMode = function(mode) {
 
     const verseContainer = document.getElementById('verse-container');
     const counterBox = document.getElementById('counter-box');
+    const searchWrapper = document.querySelector('.search-input-wrapper') || document.getElementById('search-input')?.parentElement;
     const showVerseAndCounter = ['souls', 'journalists', 'westbank', 'martyrs48'].includes(mode);
 
     if (verseContainer) verseContainer.style.display = showVerseAndCounter ? '' : 'none';
     if (counterBox) counterBox.style.display = showVerseAndCounter ? 'flex' : 'none';
+    if (searchWrapper) searchWrapper.style.display = showVerseAndCounter ? '' : 'none';
 
     if(mode === 'souls'){
         fetchAndRenderData('./data/victims.json');

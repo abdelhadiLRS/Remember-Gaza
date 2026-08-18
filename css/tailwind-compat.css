@@ -792,10 +792,10 @@ body.light-mode .mobile-social-icon {
     }
 
     .tabs-wrapper .btn-main {
-        padding: 8px 18px;
-        font-size: 0.85rem;
+        padding: 5px 11px;
+        font-size: 0.72rem;
         font-weight: 700;
-        border-radius: 10px;
+        border-radius: 8px;
         transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
