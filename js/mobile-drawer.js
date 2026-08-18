@@ -161,12 +161,7 @@
   window.handleDrawerAction = function (action) {
     window.closeMobileDrawer();
     if (action === 'crowdsource') {
-      const modal = document.getElementById('crowdsource-modal-overlay');
-      if (modal) {
-        modal.style.display = 'flex';
-      } else {
-        window.location.href = 'index.html#crowdsource';
-      }
+      window.location.href = 'edit-martyr.html';
     } else if (action === 'donate') {
       const modal = document.getElementById('donation-modal-overlay');
       if (modal) {

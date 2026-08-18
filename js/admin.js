@@ -24,7 +24,7 @@ function promptAdminLoginModal() {
     <div class="bg-[#121212] border border-red-500/40 rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl space-y-4">
       <div class="flex justify-between items-center border-b border-white/10 pb-3">
         <h3 class="font-bold text-red-400 text-sm">تسجيل دخول الإدارة والمشرفين</h3>
-        <button onclick="document.getElementById('admin-login-modal').style.display='none'" class="text-gray-400 hover:text-white">✕</button>
+        <button onclick="document.getElementById('admin-login-modal').style.display='none'" class="text-gray-400 hover:text-white"></button>
       </div>
       <div class="space-y-3 text-right text-xs">
         <div>
@@ -85,7 +85,7 @@ async function renderAdminOverlay() {
   container.innerHTML = `
     <div class="flex justify-between items-center mb-3 bg-black/40 p-2 rounded-xl border border-white/10 text-xs">
       <span class="text-red-400 font-bold">الصلاحية الحالية: ${window.Utils ? window.Utils.escapeHTML(role) : role}</span>
-      <button onclick="window.BackendAPI.logout(); document.getElementById('admin-review-overlay').style.display='none';" class="text-gray-400 hover:text-white underline text-[11px]">تسجيل الخروج 🚪</button>
+      <button onclick="window.BackendAPI.logout(); document.getElementById('admin-review-overlay').style.display='none';" class="text-gray-400 hover:text-white underline text-[11px]">تسجيل الخروج </button>
     </div>
     <div class="space-y-3">
       ${list.map(item => `
@@ -103,8 +103,8 @@ async function renderAdminOverlay() {
           <p class="text-gray-400 text-[11px] bg-black/40 p-2 rounded-lg border border-white/5">${window.Utils ? window.Utils.escapeHTML(item.notes || '') : item.notes}</p>
           ${item.photoUrl ? `<p class="text-[10px] text-blue-400 underline truncate"><a href="${window.Utils ? window.Utils.sanitizeUrl(item.photoUrl) : item.photoUrl}" target="_blank">رابط المرفق / الصورة</a></p>` : ''}
           <div class="flex gap-2 pt-2 border-t border-white/5">
-            <button onclick="handleSubmissionStatusChange('${item.id}', 'APPROVED')" class="flex-1 bg-green-600/20 border border-green-500/40 text-green-400 py-1 rounded-lg text-[10px] hover:bg-green-600 hover:text-white font-bold transition-all">اعتماد ✅</button>
-            <button onclick="handleSubmissionStatusChange('${item.id}', 'REJECTED')" class="flex-1 bg-red-600/20 border border-red-500/40 text-red-400 py-1 rounded-lg text-[10px] hover:bg-red-600 hover:text-white font-bold transition-all">رفض ❌</button>
+            <button onclick="handleSubmissionStatusChange('${item.id}', 'APPROVED')" class="flex-1 bg-green-600/20 border border-green-500/40 text-green-400 py-1 rounded-lg text-[10px] hover:bg-green-600 hover:text-white font-bold transition-all">اعتماد </button>
+            <button onclick="handleSubmissionStatusChange('${item.id}', 'REJECTED')" class="flex-1 bg-red-600/20 border border-red-500/40 text-red-400 py-1 rounded-lg text-[10px] hover:bg-red-600 hover:text-white font-bold transition-all">رفض </button>
           </div>
         </div>
       `).join('')}

@@ -44,10 +44,10 @@ class MartyrProfileEngine {
         martyrdom_data: 'بيانات الاستشهاد',
         biography: 'نبذة عن الشهيد',
         sources: 'المصادر الموثقة',
-        suggest_edit: '✏️ اقتراح تعديل على البيانات',
-        share_doc: '🔗 مشاركة التوثيق',
-        light_candle: '🕯️ إضاءة شمعة',
-        listen_bio: '🔊 استماع للسيرة',
+        suggest_edit: 'اقتراح تعديل على البيانات',
+        share_doc: 'مشاركة التوثيق',
+        light_candle: 'إضاءة شمعة',
+        listen_bio: 'استماع للسيرة',
         age: 'العمر',
         dob: 'تاريخ الميلاد',
         gender: 'الجنس',
@@ -70,10 +70,10 @@ class MartyrProfileEngine {
         martyrdom_data: 'Martyrdom Details',
         biography: 'Biography & Story',
         sources: 'Verified Sources',
-        suggest_edit: '✏️ Suggest Data Edit',
-        share_doc: '🔗 Share Record',
-        light_candle: '🕯️ Light Candle',
-        listen_bio: '🔊 Listen',
+        suggest_edit: 'Suggest Data Edit',
+        share_doc: 'Share Record',
+        light_candle: 'Light Candle',
+        listen_bio: 'Listen',
         age: 'Age',
         dob: 'Date of Birth',
         gender: 'Gender',
@@ -96,10 +96,10 @@ class MartyrProfileEngine {
         martyrdom_data: 'Détails du martyre',
         biography: 'Biographie et histoire',
         sources: 'Sources vérifiées',
-        suggest_edit: '✏️ Proposer une modification',
-        share_doc: '🔗 Partager la fiche',
-        light_candle: '🕯️ Allumer une bougie',
-        listen_bio: '🔊 Écouter',
+        suggest_edit: 'Proposer une modification',
+        share_doc: 'Partager la fiche',
+        light_candle: 'Allumer une bougie',
+        listen_bio: 'Écouter',
         age: 'Âge',
         dob: 'Date de naissance',
         gender: 'Genre',
@@ -122,10 +122,10 @@ class MartyrProfileEngine {
         martyrdom_data: 'Detalles del martirio',
         biography: 'Biografía e historia',
         sources: 'Fuentes verificadas',
-        suggest_edit: '✏️ Sugerir edición',
-        share_doc: '🔗 Compartir registro',
-        light_candle: '🕯️ Encender vela',
-        listen_bio: '🔊 Escuchar',
+        suggest_edit: 'Sugerir edición',
+        share_doc: 'Compartir registro',
+        light_candle: 'Encender vela',
+        listen_bio: 'Escuchar',
         age: 'Edad',
         dob: 'Fecha de nacimiento',
         gender: 'Género',
@@ -245,7 +245,7 @@ class MartyrProfileEngine {
     const key = `rg_candles_${id}`;
     let count = parseInt(localStorage.getItem(key) || '0', 10) + 1;
     localStorage.setItem(key, count);
-    alert(`شكراً لإضاءتك شمعة تضامن! إجمالي الشموع للشهيد: ${count} 🕯️`);
+    alert(`شكراً لإضاءتك شمعة تضامن! إجمالي الشموع للشهيد: ${count} `);
   }
 }
 
