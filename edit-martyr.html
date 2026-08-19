@@ -66,7 +66,7 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
     <!-- Desktop Navigation Links -->
     <div class="tabs-wrapper no-scrollbar interactive hidden md:flex">
       <div class="flex gap-1.5 bg-black/50 p-1.5 rounded-full border border-white/10">
-        <a href="index.html" class="btn-main"><span data-i18n="nav_gaza">شهداء غزة</span></a>
+        <a href="gaza.html" class="btn-main"><span data-i18n="nav_gaza">شهداء غزة</span></a>
         <a href="journalists.html" class="btn-main"><span data-i18n="nav_journalists">شهداء الصحافة</span></a>
         <a href="westbank.html" class="btn-main"><span data-i18n="nav_westbank">شهداء الضفة</span></a>
         <a href="martyrs48.html" class="btn-main"><span data-i18n="nav_martyrs48">شهداء 48</span></a>
@@ -99,7 +99,7 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
   <div class="mb-4">
     <h1 class="text-2xl font-black text-white m-0 mb-1">تعديل أو إضافة بيانات شهيد (نموذج موحد)</h1>
     <nav class="dp-breadcrumb">
-      <a href="index.html"><i class="fas fa-home ml-1"></i> الرئيسية</a>
+      <a href="gaza.html"><i class="fas fa-home ml-1"></i> الرئيسية</a>
       <span class="sep">/</span>
       <span>المساهمة في التوثيق</span>
       <span class="sep">/</span>
@@ -714,7 +714,7 @@ async function handleFormSubmission(event) {
 
     if (res.success) {
       alert('تم حفظ البيانات وإرسالها للمراجعة والاعتماد بنجاح! شكراً لمساهمتك الوطنية العظيمة.');
-      window.location.href = payload.martyrId ? `martyr.html?id=${payload.martyrId}` : 'index.html';
+      window.location.href = payload.martyrId ? `martyr.html?id=${payload.martyrId}` : 'gaza.html';
     } else {
       alert(res.message || 'تعذر حفظ المساهمة حالياً.');
     }
