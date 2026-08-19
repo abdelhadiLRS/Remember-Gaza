@@ -153,14 +153,15 @@
     line-height: 1.7;
 }
 .wysiwyg ul.checklist > li::before {
-    content: '✓';
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
     position: absolute;
     inset-inline-start: 0;
     top: 0;
     width: 20px;
     text-align: center;
     color: var(--ws-ok);
-    font-weight: 700;
 }
 
 /* Numbered circles — for ordered lists where the number deserves emphasis. */

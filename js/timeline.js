@@ -54,7 +54,7 @@ class TimelineEngine {
 
               <div class="flex flex-wrap gap-2 pt-2 border-t border-gray-800">
                 <button type="button" onclick="timelineShowOnMap('${(item.title || '').replace(/'/g, "\\'")}')" class="px-3 py-1.5 bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/30 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors">
-                  <span>️</span> <span>${t('view_on_map')}</span>
+                  <i class="fas fa-map-location-dot"></i> <span>${t('view_on_map')}</span>
                 </button>
                 ${item.sourceUrl ? `
                   <a href="${item.sourceUrl}" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors">

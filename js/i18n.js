@@ -193,7 +193,7 @@ class I18nEngine {
           ${SUPPORTED_LANGUAGES.map(lang => `
             <button data-lang="${lang.code}" class="i18n-lang-btn w-full text-left px-4 py-2.5 rounded-xl flex items-center justify-between text-sm transition-all duration-150 ${this.currentLang === lang.code ? 'bg-red-600/20 text-red-400 border border-red-500/30 font-semibold' : 'hover:bg-gray-800/80 text-gray-200'}">
               <span>${lang.name} <span class="text-xs text-gray-400 uppercase ml-1">(${lang.code})</span></span>
-              ${this.currentLang === lang.code ? '<span class="text-red-400 font-bold">✓</span>' : ''}
+              ${this.currentLang === lang.code ? '<span class="text-red-400 font-bold"><i class="fas fa-check text-xs"></i></span>' : ''}
             </button>
           `).join('')}
         </div>
