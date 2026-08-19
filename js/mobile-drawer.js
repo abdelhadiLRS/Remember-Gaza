@@ -25,7 +25,7 @@
             <span class="font-black text-red-500 text-base">أرواح</span>
             <span class="font-black text-white text-base" id="drawer-logo-text">فلسطين</span>
           </div>
-          <button class="mobile-drawer-close flex items-center justify-center p-1.5 text-gray-400 hover:text-white transition-colors" onclick="closeMobileDrawer()" title="إغلاق" aria-label="إغلاق"><i class="fas fa-times text-lg"></i></button>
+          <button class="mobile-drawer-close flex items-center justify-center p-1.5 text-gray-400 hover:text-white transition-colors" onclick="closeMobileDrawer()" title="إغلاق" aria-label="إغلاق"><i class="fas fa-xmark text-lg"></i></button>
         </div>
 
         <div class="mobile-drawer-body">

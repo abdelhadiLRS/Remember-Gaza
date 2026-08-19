@@ -240,7 +240,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="modal-box" style="max-width: 600px; background: #121212; border: 1px solid rgba(239,68,68,0.4); border-radius: 16px; overflow: hidden; width: 100%; max-height: 90vh; display: flex; flex-direction: column;">
         <div class="modal-header border-b border-white/10 p-4 flex justify-between items-center bg-black/40">
             <h2 id="modal-milestone-title-text" class="font-bold text-base text-red-400">تفاصيل المحطة التاريخية</h2>
-            <button class="modal-close text-gray-400 hover:text-white transition-colors p-1" id="milestone-modal-close" aria-label="Close" style="background:none; border:none; color:inherit; cursor:pointer;"><i class="fas fa-times text-lg"></i></button>
+            <button class="modal-close text-gray-400 hover:text-white transition-colors p-1" id="milestone-modal-close" aria-label="Close" style="background:none; border:none; color:inherit; cursor:pointer;"><i class="fas fa-xmark text-lg"></i></button>
         </div>
         <div class="modal-body p-6 space-y-4 overflow-y-auto" id="milestone-modal-body-container"></div>
         <div class="modal-footer border-t border-white/10 p-3 bg-black/40 flex justify-between items-center text-xs">
@@ -264,7 +264,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <h3 id="map-log-title" class="font-bold text-lg mb-4 text-red-400 font-['Cairo']">سجل الخريطة التفاعلية</h3>
         <div class="flex items-center gap-1 mb-3">
             <input type="text" id="map-search-input" onkeyup="filterMapList()" placeholder="ابحث في الخريطة..." class="w-full bg-black/60 border border-white/20 text-white px-3 py-2 rounded-xl text-xs outline-none focus:border-red-500">
-            <button id="map-voice-btn" onclick="startVoiceSearch('map-search-input', (val) => filterMapList())" class="btn-main px-2 py-2 text-xs rounded-xl" title="البحث الصوتي">🎤</button>
+            <button id="map-voice-btn" onclick="startVoiceSearch('map-search-input', (val) => filterMapList())" class="btn-main px-2 py-2 text-xs rounded-xl flex items-center justify-center" title="البحث الصوتي" aria-label="البحث الصوتي"><i class="fas fa-microphone"></i></button>
         </div>
         <div id="map-data-list" class="flex-1 overflow-y-auto space-y-2 no-scrollbar">
             <div id="map-empty-text" class="text-center text-gray-500 py-20 text-xs">لا توجد سجلات مسجلة حالياً في الخريطة</div>
@@ -326,7 +326,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <div class="flex items-center gap-1.5 shrink-0">
       <button id="corridors-toggle-btn" class="action-circle-btn flex items-center justify-center p-1 shadow-lg hover:scale-105 transition-transform" onclick="toggleCorridors()" title="تجميع النجوم في مجرات عائلية" aria-label="تجميع النجوم في مجرات عائلية" style="display: none;">
-        <i class="fas fa-atom text-amber-400 text-xs"></i>
+        <i class="fas fa-circle-nodes text-amber-400 text-xs"></i>
       </button>
 
       <button id="theme-toggle-btn" class="action-circle-btn flex items-center justify-center" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري" aria-label="تبديل الوضع الليلي/النهاري">

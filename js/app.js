@@ -49,7 +49,7 @@ const translations = {
         titleMain: "أرواح", logoText: "فلسطين", searchPlaceholder: "ابحث عن اسم الشهيد...",
         tabSouls: "شهداء غزة", tabJournalists: "شهداء الصحافة", tabWestBank: "شهداء الضفة", tab48: "شهداء 48",
         tabMilestones: "أبرز المحطات", tabStats: "الإحصائيات", tabVideos: "التوثيق والأرشيف", tabMap: "الخريطة",
-        donate: "️ إدعمنا لنستمر", musicOn: " الصوت", musicOff: " إيقاف", visitorLabel: "عدد الزوار:",
+        donate: "إدعمنا لنستمر", musicOn: " الصوت", musicOff: " إيقاف", visitorLabel: "عدد الزوار:",
         verse: "\"وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ\"",
         devText: "تطوير: عبد الهادي", shareBtn: "مشاركة المنصة", martyrsLabel: "شهيداً وثّقت أسماؤهم:",
         milestonesTitle: "تفاصيل المحطة التاريخية", readMore: "اقرأ المزيد", source: "المصدر:",
@@ -73,7 +73,7 @@ const translations = {
         titleMain: "Palestinian", logoText: "Souls", searchPlaceholder: "Search martyr...",
         tabSouls: "Gaza Souls", tabJournalists: "Gaza Journalists", tabWestBank: "West Bank", tab48: "48 Martyrs",
         tabMilestones: "Milestones", tabStats: "Statistics", tabVideos: "Footage", tabMap: "Map",
-        donate: "️ Support Us", musicOn: " Audio", musicOff: "Mute", visitorLabel: "Visitors:",
+        donate: "Support Us", musicOn: " Audio", musicOff: "Mute", visitorLabel: "Visitors:",
         verse: "\"Think not of those who are slain in Allah's way as dead, but living with their Lord...\"",
         devText: "Dev: Abdelhadi", shareBtn: "Share Platform", martyrsLabel: "Martyrs Documented:",
         milestonesTitle: "Historical Milestone Details", readMore: "Read More", source: "Source:",
@@ -97,7 +97,7 @@ const translations = {
         titleMain: "Âmes", logoText: "Palestiniennes", searchPlaceholder: "Rechercher un martyr...",
         tabSouls: "Âmes de Gaza", tabJournalists: "Journalistes", tabWestBank: "Cisjordanie", tab48: "Martyrs de 48",
         tabMilestones: "Étapes clés", tabStats: "Statistiques", tabVideos: "Archives", tabMap: "Carte",
-        donate: "️ Soutenez-nous", musicOn: " Audio", musicOff: "Muet", visitorLabel: "Visiteurs :",
+        donate: "Soutenez-nous", musicOn: " Audio", musicOff: "Muet", visitorLabel: "Visiteurs :",
         verse: "\"Ne pensez pas que ceux qui ont été tués dans le sentier d'Allah soient morts...\"",
         devText: "Développement : Abdelhadi", shareBtn: "Partager", martyrsLabel: "Martyrs documentés :",
         milestonesTitle: "Détails de l'étape historique", readMore: "Lire la suite", source: "Source :",
@@ -121,7 +121,7 @@ const translations = {
         titleMain: "Almas", logoText: "Palestinas", searchPlaceholder: "Buscar mártir...",
         tabSouls: "Almas de Gaza", tabJournalists: "Periodistas", tabWestBank: "Cisjordania", tab48: "Mártires del 48",
         tabMilestones: "Hitos", tabStats: "Estadísticas", tabVideos: "Archivos", tabMap: "Mapa",
-        donate: "️ Apóyanos", musicOn: " Audio", musicOff: "Silenciar", visitorLabel: "Visitas:",
+        donate: "Apóyanos", musicOn: " Audio", musicOff: "Silenciar", visitorLabel: "Visitas:",
         verse: "\"No creáis que los que han muerto por la causa de Dios están muertos...\"",
         devText: "Desarrollo: Abdelhadi", shareBtn: "Compartir", martyrsLabel: "Mártires documentados:",
         milestonesTitle: "Detalles del hito histórico", readMore: "Leer más", source: "Fuente:",
@@ -302,7 +302,7 @@ function updateMusicButton() {
     if (btn) {
         const icon = document.getElementById('music-icon-img');
         if (icon) {
-            icon.className = isPlayingAudio ? 'fas fa-volume-up text-red-500 text-base' : 'fas fa-volume-mute text-gray-400 text-base';
+            icon.className = isPlayingAudio ? 'fas fa-volume-up text-red-500 text-base' : 'fas fa-volume-xmark text-gray-400 text-base';
         }
         if (isPlayingAudio) btn.classList.add('active');
         else btn.classList.remove('active');
@@ -740,8 +740,8 @@ function renderCinematicTimeline() {
                             <span class="tlc-stat-label">عدد الشهداء والضحايا:</span>
                         </div>
                         <div class="flex gap-1.5 items-center">
-                            <button type="button" class="tlc-more"><span>اقرأ المزيد</span><span aria-hidden="true">→</span></button>
-                            <button type="button" onclick="timelineShowOnMap('${item.title.replace(/'/g, "\\'")}')" class="btn-main text-[10px] px-2.5 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded-full flex items-center gap-1">️ الخريطة</button>
+                            <button type="button" class="tlc-more"><span>اقرأ المزيد</span><span aria-hidden="true"><i class="fas fa-arrow-left text-xs ml-1"></i></span></button>
+                            <button type="button" onclick="timelineShowOnMap('${item.title.replace(/'/g, "\\'")}')" class="btn-main text-[10px] px-2.5 py-1 bg-red-600/20 border border-red-500/40 text-red-400 rounded-full flex items-center gap-1"><i class="fas fa-map-location-dot"></i> الخريطة</button>
                         </div>
                     </div>
                 </article>
