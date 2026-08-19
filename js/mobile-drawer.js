@@ -25,7 +25,7 @@
             <span class="font-black text-red-500 text-base">أرواح</span>
             <span class="font-black text-white text-base" id="drawer-logo-text">فلسطين</span>
           </div>
-          <button class="mobile-drawer-close" onclick="closeMobileDrawer()" title="إغلاق">✕</button>
+          <button class="mobile-drawer-close flex items-center justify-center p-1.5 text-gray-400 hover:text-white transition-colors" onclick="closeMobileDrawer()" title="إغلاق" aria-label="إغلاق"><i class="fas fa-times text-lg"></i></button>
         </div>
 
         <div class="mobile-drawer-body">
@@ -62,17 +62,17 @@
             <div class="mobile-drawer-title" data-i18n="drawer_sections_quick">الخدمات السريعة</div>
             <div class="mobile-drawer-actions">
               <button onclick="handleDrawerAction('crowdsource')" class="mobile-drawer-action-btn crowdsource">
-                <img src="images/edit.png" class="w-4 h-4 object-contain" alt="edit">
+                <i class="fas fa-edit text-sm"></i>
                 <span data-i18n="add_comment">إضافة شهادة أو توثيق</span>
               </button>
 
               <button onclick="handleDrawerAction('donate')" class="mobile-drawer-action-btn donate">
-                <img src="images/donation.png" class="w-4 h-4 object-contain" alt="donate">
+                <i class="fas fa-hand-holding-heart text-sm"></i>
                 <span data-i18n="donate">تبرع للأرشيف</span>
               </button>
 
               <button onclick="handleDrawerAction('share')" class="mobile-drawer-action-btn share">
-                <img src="images/share.png" class="w-4 h-4 object-contain" alt="share">
+                <i class="fas fa-share-nodes text-sm"></i>
                 <span data-i18n="share_platform">مشاركة المنصة</span>
               </button>
             </div>
@@ -81,15 +81,15 @@
           <!-- Section 3: Social Links -->
           <div class="mobile-drawer-section">
             <div class="mobile-drawer-title" data-i18n="drawer_sections_social">حسابات المنصة</div>
-            <div class="flex items-center justify-between px-2 pt-1">
-              <a href="https://x.com" target="_blank" rel="noopener" class="mobile-social-icon" title="X (Twitter)">
-                <img src="images/x.png" class="w-4 h-4 object-contain" alt="X">
+            <div class="flex items-center justify-between px-2 pt-1 gap-2">
+              <a href="https://www.facebook.com/abdelhadilrs" target="_blank" rel="noopener" class="social-btn-premium social-btn-facebook flex-1" title="Facebook" aria-label="Facebook">
+                <i class="fab fa-facebook-f text-base"></i>
               </a>
-              <a href="https://facebook.com" target="_blank" rel="noopener" class="mobile-social-icon" title="Facebook">
-                <img src="images/facebook.png" class="w-4 h-4 object-contain" alt="Facebook">
+              <a href="https://www.instagram.com/abdelhadilrs" target="_blank" rel="noopener" class="social-btn-premium social-btn-instagram flex-1" title="Instagram" aria-label="Instagram">
+                <i class="fab fa-instagram text-base"></i>
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener" class="mobile-social-icon" title="Instagram">
-                <img src="images/instagram.png" class="w-4 h-4 object-contain" alt="Instagram">
+              <a href="https://x.com/larrasabdelhadi" target="_blank" rel="noopener" class="social-btn-premium social-btn-x flex-1" title="X" aria-label="X">
+                <i class="fab fa-x-twitter text-base"></i>
               </a>
             </div>
           </div>
@@ -121,13 +121,7 @@
     hamburgerBtn.title = 'القائمة الجانبية';
     hamburgerBtn.setAttribute('aria-label', 'فتح القائمة الجانبية');
     hamburgerBtn.onclick = window.toggleMobileDrawer;
-    hamburgerBtn.innerHTML = `
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="3" y1="12" x2="21" y2="12"></line>
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <line x1="3" y1="18" x2="21" y2="18"></line>
-      </svg>
-    `;
+    hamburgerBtn.innerHTML = `<i class="fas fa-bars text-base"></i>`;
 
     headerRightContainer.insertBefore(hamburgerBtn, headerRightContainer.firstChild);
   }
@@ -163,12 +157,7 @@
     if (action === 'crowdsource') {
       window.location.href = 'edit-martyr.html';
     } else if (action === 'donate') {
-      const modal = document.getElementById('donation-modal-overlay');
-      if (modal) {
-        modal.style.display = 'flex';
-      } else {
-        window.open('https://gofundme.com', '_blank');
-      }
+      window.open('https://paypal.me/LRSabdelhadi', '_blank');
     } else if (action === 'share') {
       if (navigator.share) {
         navigator.share({

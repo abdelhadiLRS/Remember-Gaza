@@ -89,13 +89,13 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
       </div>
 
       <!-- Theme Toggle Button -->
-      <button id="theme-toggle-btn" class="action-circle-btn w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-red-600 transition" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري">
+      <button aria-label="تبديل الوضع ليلي/نهاري" id="theme-toggle-btn" class="action-circle-btn w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-red-600 transition" onclick="toggleTheme()" title="تبديل الوضع ليلي/نهاري">
         <i class="fas font-solid fa-moon text-xs"></i>
       </button>
 
       <!-- Language Dropdown Trigger -->
       <div class="relative inline-block" id="language-dropdown-container">
-        <button onclick="toggleLanguageDropdown(event)" class="action-circle-btn w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-red-600 transition" title="Language">
+        <button aria-label="Language" onclick="toggleLanguageDropdown(event)" class="action-circle-btn w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-red-600 transition" title="Language">
           <i class="fas fa-globe text-xs"></i>
         </button>
       </div>
@@ -277,31 +277,25 @@ body.light-mode #header{background:rgba(255, 255, 255, 0.95) !important;border-b
 <div id="bottom-bar" class="w-full flex flex-col items-center gap-3 p-4 pointer-events-none fixed bottom-0 left-0 right-0 z-[1000] justify-end">
   <div class="interactive glass-panel p-2.5 px-3.5 rounded-2xl flex items-center gap-2.5 justify-center bg-black/90 text-xs border border-white/15 shadow-2xl pointer-events-auto">
       <button onclick="window.location.href='edit-martyr.html'" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-red-800 text-white shadow-md shadow-red-900/40 hover:scale-110 active:scale-95 transition-all duration-300 group" title="مساهمة وتصحيح بيانات">
-          <img src="images/edit.png" alt="Edit" class="w-4 h-4 object-contain brightness-0 invert">
+          <i class="fas fa-edit text-white text-sm"></i>
       </button>
 
       <a href="https://paypal.me/LRSabdelhadi" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-rose-600 to-red-700 text-white shadow-md shadow-rose-900/40 hover:scale-110 active:scale-95 transition-all duration-300 group" title="إدعمنا لنستمر">
-          <img src="images/donation.png" alt="Donation" class="w-4 h-4 object-contain brightness-0 invert">
+          <i class="fas fa-hand-holding-heart text-white text-sm"></i>
       </a>
 
       <span class="text-white/20 select-none px-0.5">|</span>
 
       <div class="social-links flex gap-2 items-center">
-          <a href="https://www.facebook.com/abdelhadilrs" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-md shadow-blue-900/40 hover:scale-110 active:scale-95 transition-all duration-300" title="Facebook">
-              <img src="images/facebook.png" alt="Facebook" class="w-4 h-4 object-contain brightness-0 invert">
-          </a>
-          <a href="https://www.instagram.com/abdelhadilrs" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 via-pink-600 to-purple-700 text-white shadow-md shadow-pink-900/40 hover:scale-110 active:scale-95 transition-all duration-300" title="Instagram">
-              <img src="images/instagram.png" alt="Instagram" class="w-4 h-4 object-contain brightness-0 invert">
-          </a>
-          <a href="https://x.com/larrasabdelhadi" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-gray-800 to-black text-white border border-white/20 shadow-md shadow-black/50 hover:scale-110 active:scale-95 transition-all duration-300" title="X">
-              <img src="images/x.png" alt="X" class="w-4 h-4 object-contain brightness-0 invert">
-          </a>
+          <a href="https://www.facebook.com/abdelhadilrs" target="_blank" class="social-btn-premium social-btn-facebook" title="Facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/abdelhadilrs" target="_blank" class="social-btn-premium social-btn-instagram" title="Instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://x.com/larrasabdelhadi" target="_blank" class="social-btn-premium social-btn-x" title="X" aria-label="X"><i class="fab fa-x-twitter"></i></a>
       </div>
 
       <span class="text-white/20 select-none px-0.5">|</span>
 
       <button onclick="shareSite()" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-slate-700 to-slate-900 text-white border border-white/20 shadow-md shadow-slate-900/50 hover:scale-110 active:scale-95 transition-all duration-300" title="مشاركة المنصة">
-          <img src="images/share.png" alt="Share" class="w-4 h-4 object-contain brightness-0 invert">
+          <i class="fas fa-share-nodes text-white text-sm"></i>
       </button>
   </div>
 </div>

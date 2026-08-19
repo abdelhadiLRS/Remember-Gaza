@@ -300,9 +300,9 @@ function toggleMusic() {
 function updateMusicButton() {
     const btn = document.getElementById('music-btn');
     if (btn) {
-        const img = document.getElementById('music-icon-img');
-        if (img) {
-            img.src = isPlayingAudio ? 'images/volume.png' : 'images/no-sound.png';
+        const icon = document.getElementById('music-icon-img');
+        if (icon) {
+            icon.className = isPlayingAudio ? 'fas fa-volume-up text-red-500 text-base' : 'fas fa-volume-mute text-gray-400 text-base';
         }
         if (isPlayingAudio) btn.classList.add('active');
         else btn.classList.remove('active');
