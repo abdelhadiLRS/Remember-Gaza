@@ -7,7 +7,7 @@
   function createDrawerHTML() {
     if (document.getElementById('mobile-drawer-overlay')) return;
 
-    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+    const currentPath = window.location.pathname.split('/').pop() || 'gaza.html';
 
     const overlay = document.createElement('div');
     overlay.id = 'mobile-drawer-overlay';
@@ -33,7 +33,7 @@
           <div class="mobile-drawer-section">
             <div class="mobile-drawer-title" data-i18n="drawer_sections_pages">أقسام المنصة</div>
             <nav class="mobile-drawer-nav">
-              <a href="index.html" class="mobile-drawer-link ${currentPath === 'index.html' || currentPath === '' ? 'active' : ''}" id="drawer-tab-souls">
+              <a href="gaza.html" class="mobile-drawer-link ${currentPath === 'gaza.html' || currentPath === 'index.html' || currentPath === '' ? 'active' : ''}" id="drawer-tab-souls">
                 <span data-i18n="nav_gaza">شهداء غزة</span>
               </a>
               <a href="journalists.html" class="mobile-drawer-link ${currentPath === 'journalists.html' ? 'active' : ''}" id="drawer-tab-journalists">
