@@ -100,8 +100,9 @@
     document.body.appendChild(overlay);
 
     // Apply translations if i18n module is loaded
-    if (window.i18n && typeof window.i18n.updateDOM === 'function') {
-      window.i18n.updateDOM();
+    if (window.i18n && typeof window.i18n.applyToDOM === 'function') {
+      window.i18n.applyToDOM();
+      window.i18n.propagateLanguageToLinks();
     }
   }
 

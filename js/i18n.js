@@ -1,6 +1,7 @@
 /**
  * Palestinian Souls (Remember Gaza) - Internationalization (i18n) Engine
- * Supports 17 Languages with Lazy Loading, Dynamic RTL/LTR, LocalStorage Sync & Event Listeners
+ * Supports 17 Languages with Lazy Loading, Dynamic RTL/LTR, LocalStorage Sync,
+ * Link Propagation Across Subpages, Accessibility Translation, and Language Selectors.
  */
 
 const SUPPORTED_LANGUAGES = [
@@ -51,6 +52,7 @@ class I18nEngine {
   async init() {
     await this.loadLanguage(this.currentLang);
     this.applyToDOM();
+    this.propagateLanguageToLinks();
     this.bindEvents();
     this.isLoaded = true;
   }
@@ -87,9 +89,9 @@ class I18nEngine {
   }
 
   async setLanguage(langCode) {
-    if (this.currentLang === langCode && this.translations[langCode]) return;
     await this.loadLanguage(langCode);
     this.applyToDOM();
+    this.propagateLanguageToLinks();
 
     // Update query parameter without reload
     const url = new URL(window.location.href);
@@ -139,11 +141,46 @@ class I18nEngine {
       }
     });
 
-    // Update title tag if site_title is set
+    document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+      const key = el.getAttribute('data-i18n-aria-label');
+      if (dict[key]) {
+        el.setAttribute('aria-label', dict[key]);
+      }
+    });
+
+    // Update page title tag if site_title is set
     if (dict['site_title']) {
       const pageTitleEl = document.getElementById('page-title');
       if (pageTitleEl) pageTitleEl.innerText = dict['site_title'];
     }
+  }
+
+  propagateLanguageToLinks() {
+    const currentLang = this.currentLang;
+    if (!currentLang) return;
+
+    document.querySelectorAll('a[href]').forEach(a => {
+      const href = a.getAttribute('href');
+      if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('http://') || href.startsWith('https://') || href.startsWith('mailto:')) {
+        return;
+      }
+
+      try {
+        const u = new URL(href, window.location.origin);
+        u.searchParams.set('lang', currentLang);
+        const relativeHref = u.pathname.substring(1) + u.search + u.hash;
+        a.setAttribute('href', relativeHref || u.search + u.hash);
+      } catch (e) {
+        // Fallback simple string replace
+        if (href.includes('lang=')) {
+          a.setAttribute('href', href.replace(/lang=[a-z]{2}/i, `lang=${currentLang}`));
+        } else if (href.includes('?')) {
+          a.setAttribute('href', `${href}&lang=${currentLang}`);
+        } else {
+          a.setAttribute('href', `${href}?lang=${currentLang}`);
+        }
+      }
+    });
   }
 
   onLanguageChange(fn) {
@@ -247,6 +284,14 @@ class I18nEngine {
 }
 
 window.i18n = new I18nEngine();
+
+function toggleLanguageDropdown(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  if (window.i18n) {
+    window.i18n.renderLanguageModal();
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   window.i18n.init();
 });
