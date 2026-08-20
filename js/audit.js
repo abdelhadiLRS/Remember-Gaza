@@ -1,5 +1,6 @@
 /**
  * Palestinian Souls (Remember Gaza) - Central Audit Logger & Security Audit Module
+ * Synchronizes administrative and operational logs to both remote database and local storage.
  */
 
 class AuditLoggerEngine {
@@ -11,21 +12,43 @@ class AuditLoggerEngine {
     return JSON.parse(localStorage.getItem(this.storageKey) || '[]');
   }
 
-  log(action, details = '') {
-    const logs = this.getLogs();
+  async log(action, details = '') {
+    const role = window.BackendAPI ? window.BackendAPI.getUserRole() : 'System';
+    const cleanDetails = window.Utils ? window.Utils.escapeHTML(details) : details;
+
     const entry = {
       id: 'log_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
       timestamp: new Date().toISOString(),
-      role: window.BackendAPI ? window.BackendAPI.getUserRole() : 'System',
+      role: role,
       action: action,
-      details: window.Utils ? window.Utils.escapeHTML(details) : details,
+      details: cleanDetails,
       userAgent: navigator.userAgent
     };
 
+    // Save to LocalStorage
+    const logs = this.getLogs();
     logs.unshift(entry);
-    // Keep last 200 audit events
-    if (logs.length > 200) logs.pop();
+    if (logs.length > 300) logs.pop();
     localStorage.setItem(this.storageKey, JSON.stringify(logs));
+
+    // Async sync to Supabase database if available
+    if (window.BackendAPI && window.BackendAPI.supabaseUrl && window.BackendAPI.supabaseKey) {
+      try {
+        await fetch(`${window.BackendAPI.supabaseUrl}/rest/v1/audit_logs`, {
+          method: 'POST',
+          headers: window.BackendAPI.getAuthHeader(),
+          body: JSON.stringify({
+            username: role,
+            role: role,
+            action: action,
+            details: cleanDetails,
+            user_agent: navigator.userAgent
+          })
+        });
+      } catch (e) {
+        // Silent catch for remote log sync
+      }
+    }
   }
 
   clearLogs() {

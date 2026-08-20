@@ -1,0 +1,4 @@
+database/data_migration.sql
+node_modules/
+.DS_Store
+*.log
