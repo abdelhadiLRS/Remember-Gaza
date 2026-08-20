@@ -1,7 +1,7 @@
 /**
  * Palestinian Souls (Remember Gaza) - Asynchronous Data Loader Engine
- * Handles async fetching, in-memory caching, retry state management,
- * and error handling across all subpages. Zero mock data fallbacks.
+ * Handles async fetching from central database (Supabase) with local static JSON fallback,
+ * in-memory caching, retry state management, and zero mock data fallbacks.
  */
 
 class DataLoaderEngine {
@@ -38,15 +38,50 @@ class DataLoaderEngine {
     }
   }
 
+  async fetchFromSupabase(category = 'Gazans') {
+    if (window.BackendAPI && window.BackendAPI.supabaseUrl && window.BackendAPI.supabaseKey) {
+      try {
+        const url = `${window.BackendAPI.supabaseUrl}/rest/v1/martyrs?category=eq.${encodeURIComponent(category)}&status=eq.PUBLISHED&select=*`;
+        const res = await fetch(url, { headers: window.BackendAPI.getAuthHeader() });
+        if (res.ok) {
+          const list = await res.json();
+          if (list && list.length > 0) {
+            return list.map(m => ({
+              id: m.id,
+              name: m.name_ar,
+              en_name: m.name_en,
+              age: m.age,
+              gender: m.gender,
+              district: m.city,
+              id_number: m.id_number,
+              photo_url: m.photo_url,
+              story: m.bio,
+              candles: m.candles_count
+            }));
+          }
+        }
+      } catch (e) {
+        console.warn('[DataLoader] Supabase fetch error, falling back to static JSON:', e);
+      }
+    }
+    return null;
+  }
+
   async loadVictims(options = {}) {
+    const dbData = await this.fetchFromSupabase('Gazans');
+    if (dbData) return dbData;
     return this.loadJSON('victims', 'data/victims.json', options);
   }
 
   async loadJournalists(options = {}) {
+    const dbData = await this.fetchFromSupabase('Journalists');
+    if (dbData) return dbData;
     return this.loadJSON('journalists', 'data/journalists.json', options);
   }
 
   async loadPressGaza(options = {}) {
+    const dbData = await this.fetchFromSupabase('Journalists');
+    if (dbData) return dbData;
     return this.loadJSON('press_killed_in_gaza', 'data/press_killed_in_gaza.json', options);
   }
 

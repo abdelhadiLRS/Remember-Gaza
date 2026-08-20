@@ -1,6 +1,7 @@
 /**
- * Palestinian Souls - Tributes & Candles Engine
- * Handles candle lighting, user comments/testimonies, and localStorage persistence
+ * Palestinian Souls (Remember Gaza) - Tributes & Candles Engine
+ * Integrates real database storage via BackendAPI (Supabase/Postgres RPCs) for candle lighting,
+ * user comments, rate limiting, and real-time updates.
  */
 
 class TributesEngine {
@@ -27,8 +28,22 @@ class TributesEngine {
     }
   }
 
-  lightCandle(martyrId) {
+  async lightCandle(martyrId) {
     if (!martyrId) return 0;
+
+    if (window.BackendAPI) {
+      const res = await window.BackendAPI.lightCandle(martyrId);
+      if (res && typeof res.candles !== 'undefined') {
+        if (!this.data[martyrId]) {
+          this.data[martyrId] = { candles: 0, comments: [] };
+        }
+        this.data[martyrId].candles = res.candles;
+        this.saveStorage();
+        return res.candles;
+      }
+    }
+
+    // Local increment fallback
     if (!this.data[martyrId]) {
       this.data[martyrId] = { candles: 0, comments: [] };
     }
@@ -37,15 +52,30 @@ class TributesEngine {
     return this.data[martyrId].candles;
   }
 
-  addComment(martyrId, author, text) {
-    if (!martyrId || !text.trim()) return false;
+  async addComment(martyrId, author, text, location = '') {
+    if (!martyrId || !text || !text.trim()) return false;
+
+    if (window.BackendAPI) {
+      const res = await window.BackendAPI.addComment(martyrId, author, text, location);
+      if (res.success && res.comment) {
+        if (!this.data[martyrId]) {
+          this.data[martyrId] = { candles: 0, comments: [] };
+        }
+        this.data[martyrId].comments.push(res.comment);
+        this.saveStorage();
+        return res.comment;
+      }
+    }
+
+    // Fallback local insertion
     if (!this.data[martyrId]) {
       this.data[martyrId] = { candles: 0, comments: [] };
     }
     const newComment = {
       id: Date.now(),
-      author: author.trim() || 'فاعل خير',
+      author: (author && author.trim()) || 'فاعل خير',
       text: text.trim(),
+      location: location || '',
       date: new Date().toISOString()
     };
     this.data[martyrId].comments.push(newComment);
@@ -53,11 +83,23 @@ class TributesEngine {
     return newComment;
   }
 
-  getCandlesCount(martyrId) {
+  async getCandlesCount(martyrId) {
+    if (!martyrId) return 0;
+    if (window.BackendAPI) {
+      const remoteCount = await window.BackendAPI.getCandlesCount(martyrId);
+      if (typeof remoteCount === 'number') return remoteCount;
+    }
     return this.data[martyrId] ? (this.data[martyrId].candles || 0) : 0;
   }
 
-  getComments(martyrId) {
+  async getComments(martyrId) {
+    if (!martyrId) return [];
+    if (window.BackendAPI) {
+      const remoteComments = await window.BackendAPI.getComments(martyrId);
+      if (Array.isArray(remoteComments) && remoteComments.length > 0) {
+        return remoteComments;
+      }
+    }
     return this.data[martyrId] ? (this.data[martyrId].comments || []) : [];
   }
 }

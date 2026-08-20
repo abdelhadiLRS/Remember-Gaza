@@ -57,26 +57,63 @@
 
         <!-- MAIN DASHBOARD -->
         <div id="dashboard-section" class="space-y-6 hidden">
-            <!-- TABS & FILTERS -->
-            <div class="glass-card p-3 rounded-xl flex flex-wrap justify-between items-center gap-3 text-xs">
-                <div class="flex gap-2">
-                    <button onclick="setFilterStatus('ALL')" id="filter-btn-ALL" class="px-3 py-1.5 rounded-lg font-bold bg-red-600 text-white">الكل</button>
-                    <button onclick="setFilterStatus('PENDING')" id="filter-btn-PENDING" class="px-3 py-1.5 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white">قيد الانتظار (Pending)</button>
-                    <button onclick="setFilterStatus('UNDER_REVIEW')" id="filter-btn-UNDER_REVIEW" class="px-3 py-1.5 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white">قيد المراجعة (Under Review)</button>
-                    <button onclick="setFilterStatus('NEEDS_INFORMATION')" id="filter-btn-NEEDS_INFORMATION" class="px-3 py-1.5 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white">تتطلب معلومات (Needs Info)</button>
-                    <button onclick="setFilterStatus('APPROVED')" id="filter-btn-APPROVED" class="px-3 py-1.5 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white">المعتمدة (Approved)</button>
-                    <button onclick="setFilterStatus('REJECTED')" id="filter-btn-REJECTED" class="px-3 py-1.5 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white">المرفوضة (Rejected)</button>
+            <!-- TOP VIEW SELECTION -->
+            <div class="glass-card p-2 rounded-xl flex gap-2 text-xs">
+                <button onclick="switchAdminTab('submissions')" id="tab-btn-submissions" class="px-4 py-2 rounded-lg font-bold bg-red-600 text-white">
+                    <i class="fas fa-tasks ml-1"></i> مساهمات التعديل والشهداء
+                </button>
+                <button onclick="switchAdminTab('audit')" id="tab-btn-audit" class="px-4 py-2 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white">
+                    <i class="fas fa-history ml-1"></i> سجل النشاط والتدقيق (Audit Log)
+                </button>
+            </div>
+
+            <!-- SUBMISSIONS VIEW -->
+            <div id="view-submissions-tab" class="space-y-6">
+                <!-- TABS & FILTERS -->
+                <div class="glass-card p-3 rounded-xl flex flex-wrap justify-between items-center gap-3 text-xs">
+                    <div class="flex gap-2 flex-wrap">
+                        <button onclick="setFilterStatus('ALL')" id="filter-btn-ALL" class="px-3 py-1.5 rounded-lg font-bold bg-red-600 text-white">الكل</button>
+                        <button onclick="setFilterStatus('PENDING')" id="filter-btn-PENDING" class="px-3 py-1.5 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white">قيد الانتظار (Pending)</button>
+                        <button onclick="setFilterStatus('UNDER_REVIEW')" id="filter-btn-UNDER_REVIEW" class="px-3 py-1.5 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white">قيد المراجعة (Under Review)</button>
+                        <button onclick="setFilterStatus('NEEDS_INFORMATION')" id="filter-btn-NEEDS_INFORMATION" class="px-3 py-1.5 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white">تتطلب معلومات (Needs Info)</button>
+                        <button onclick="setFilterStatus('APPROVED')" id="filter-btn-APPROVED" class="px-3 py-1.5 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white">المعتمدة (Approved)</button>
+                        <button onclick="setFilterStatus('REJECTED')" id="filter-btn-REJECTED" class="px-3 py-1.5 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white">المرفوضة (Rejected)</button>
+                    </div>
+                    <div>
+                        <button onclick="loadPanelSubmissions()" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold flex items-center gap-1">
+                            <i class="fas fa-sync-alt"></i> تحديث القائمة
+                        </button>
+                    </div>
                 </div>
-                <div>
-                    <button onclick="loadPanelSubmissions()" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold flex items-center gap-1">
-                        <i class="fas fa-sync-alt"></i> تحديث القائمة
-                    </button>
+
+                <!-- SUBMISSIONS LIST & DIFF VIEWER -->
+                <div id="panel-submissions-container" class="space-y-4">
+                    <div class="text-center text-gray-400 py-12">جاري جلب المساهمات بطلب خادمي آمن...</div>
                 </div>
             </div>
 
-            <!-- SUBMISSIONS LIST & DIFF VIEWER -->
-            <div id="panel-submissions-container" class="space-y-4">
-                <div class="text-center text-gray-400 py-12">جاري جلب المساهمات بطلب خادمي آمن...</div>
+            <!-- AUDIT LOG VIEW -->
+            <div id="view-audit-tab" class="space-y-4 hidden">
+                <div class="glass-card p-4 rounded-xl flex justify-between items-center text-xs">
+                    <h3 class="font-bold text-white text-sm"><i class="fas fa-list-alt text-red-400 ml-1"></i> سجل العمليات والتدقيق في النظام</h3>
+                    <button onclick="loadAuditLogsView()" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold"><i class="fas fa-sync-alt ml-1"></i> تحديث السجل</button>
+                </div>
+
+                <div id="panel-audit-container" class="glass-card p-4 rounded-2xl overflow-x-auto text-xs">
+                    <table class="w-full text-right">
+                        <thead>
+                            <tr class="border-b border-white/10 text-gray-400 pb-2">
+                                <th class="p-2">الوقت والتاريخ</th>
+                                <th class="p-2">الصلاحية / المستخدم</th>
+                                <th class="p-2">نوع العملية</th>
+                                <th class="p-2">التفاصيل</th>
+                            </tr>
+                        </thead>
+                        <tbody id="audit-logs-table-body" class="divide-y divide-white/5">
+                            <tr><td colspan="4" class="text-center py-6 text-gray-500">جاري تحميل سجل التدقيق...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -137,6 +174,47 @@
             document.getElementById('header-auth-status').classList.remove('hidden');
             document.getElementById('logged-user-role').innerText = window.BackendAPI.getUserRole();
             loadPanelSubmissions();
+        }
+
+        function switchAdminTab(tab) {
+            const subTab = document.getElementById('view-submissions-tab');
+            const auditTab = document.getElementById('view-audit-tab');
+            const subBtn = document.getElementById('tab-btn-submissions');
+            const auditBtn = document.getElementById('tab-btn-audit');
+
+            if (tab === 'audit') {
+                subTab.classList.add('hidden');
+                auditTab.classList.remove('hidden');
+                auditBtn.className = 'px-4 py-2 rounded-lg font-bold bg-red-600 text-white';
+                subBtn.className = 'px-4 py-2 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white';
+                loadAuditLogsView();
+            } else {
+                auditTab.classList.add('hidden');
+                subTab.classList.remove('hidden');
+                subBtn.className = 'px-4 py-2 rounded-lg font-bold bg-red-600 text-white';
+                auditBtn.className = 'px-4 py-2 rounded-lg font-bold bg-white/5 border border-white/10 text-gray-300 hover:text-white';
+                loadPanelSubmissions();
+            }
+        }
+
+        function loadAuditLogsView() {
+            const tbody = document.getElementById('audit-logs-table-body');
+            if (!tbody) return;
+
+            const logs = window.AuditLogger ? window.AuditLogger.getLogs() : [];
+            if (!logs || logs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-gray-500">لا توجد سجلات نشاط مسجلة بعد.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = logs.map(log => `
+                <tr class="hover:bg-white/5 transition">
+                    <td class="p-2 text-gray-400 font-mono text-[11px]">${log.timestamp ? new Date(log.timestamp).toLocaleString('ar-EG') : '-'}</td>
+                    <td class="p-2 font-bold text-red-400">${window.Utils.escapeHTML(log.role || 'System')}</td>
+                    <td class="p-2 font-bold text-white"><span class="px-2 py-0.5 rounded bg-white/10 text-[10px]">${window.Utils.escapeHTML(log.action || '-')}</span></td>
+                    <td class="p-2 text-gray-300 text-[11px]">${window.Utils.escapeHTML(log.details || '-')}</td>
+                </tr>
+            `).join('');
         }
 
         function setFilterStatus(status) {
