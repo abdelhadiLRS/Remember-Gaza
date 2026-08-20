@@ -1,27 +1,27 @@
 /**
  * Palestinian Souls (Remember Gaza) - Internationalization (i18n) Engine
  * Supports 17 Languages with Lazy Loading, Dynamic RTL/LTR, LocalStorage Sync,
- * Link Propagation Across Subpages, Accessibility Translation, and Language Selectors.
+ * Link Propagation Across Subpages, Number & Date Formatting, and Language Selectors.
  */
 
 const SUPPORTED_LANGUAGES = [
-  { code: 'ar', name: 'العربية', dir: 'rtl' },
-  { code: 'en', name: 'English', dir: 'ltr' },
-  { code: 'fr', name: 'Français', dir: 'ltr' },
-  { code: 'es', name: 'Español', dir: 'ltr' },
-  { code: 'tr', name: 'Türkçe', dir: 'ltr' },
-  { code: 'de', name: 'Deutsch', dir: 'ltr' },
-  { code: 'it', name: 'Italiano', dir: 'ltr' },
-  { code: 'pt', name: 'Português', dir: 'ltr' },
-  { code: 'id', name: 'Bahasa Indonesia', dir: 'ltr' },
-  { code: 'ms', name: 'Bahasa Melayu', dir: 'ltr' },
-  { code: 'ur', name: 'اردو', dir: 'rtl' },
-  { code: 'fa', name: 'فارسی', dir: 'rtl' },
-  { code: 'nl', name: 'Nederlands', dir: 'ltr' },
-  { code: 'ru', name: 'Русский', dir: 'ltr' },
-  { code: 'zh', name: '中文', dir: 'ltr' },
-  { code: 'ja', name: '日本語', dir: 'ltr' },
-  { code: 'ko', name: '한국어', dir: 'ltr' }
+  { code: 'ar', name: 'العربية', dir: 'rtl', locale: 'ar-EG' },
+  { code: 'en', name: 'English', dir: 'ltr', locale: 'en-US' },
+  { code: 'fr', name: 'Français', dir: 'ltr', locale: 'fr-FR' },
+  { code: 'es', name: 'Español', dir: 'ltr', locale: 'es-ES' },
+  { code: 'tr', name: 'Türkçe', dir: 'ltr', locale: 'tr-TR' },
+  { code: 'de', name: 'Deutsch', dir: 'ltr', locale: 'de-DE' },
+  { code: 'it', name: 'Italiano', dir: 'ltr', locale: 'it-IT' },
+  { code: 'pt', name: 'Português', dir: 'ltr', locale: 'pt-PT' },
+  { code: 'id', name: 'Bahasa Indonesia', dir: 'ltr', locale: 'id-ID' },
+  { code: 'ms', name: 'Bahasa Melayu', dir: 'ltr', locale: 'ms-MY' },
+  { code: 'ur', name: 'اردو', dir: 'rtl', locale: 'ur-PK' },
+  { code: 'fa', name: 'فارسی', dir: 'rtl', locale: 'fa-IR' },
+  { code: 'nl', name: 'Nederlands', dir: 'ltr', locale: 'nl-NL' },
+  { code: 'ru', name: 'Русский', dir: 'ltr', locale: 'ru-RU' },
+  { code: 'zh', name: '中文', dir: 'ltr', locale: 'zh-CN' },
+  { code: 'ja', name: '日本語', dir: 'ltr', locale: 'ja-JP' },
+  { code: 'ko', name: '한국어', dir: 'ltr', locale: 'ko-KR' }
 ];
 
 class I18nEngine {
@@ -55,6 +55,33 @@ class I18nEngine {
     this.propagateLanguageToLinks();
     this.bindEvents();
     this.isLoaded = true;
+  }
+
+  getLocale() {
+    const info = SUPPORTED_LANGUAGES.find(l => l.code === this.currentLang);
+    return info ? info.locale : 'ar-EG';
+  }
+
+  formatNumber(num) {
+    if (num === null || num === undefined || num === '') return '';
+    const cleanNum = typeof num === 'string' ? parseFloat(num.replace(/,/g, '')) : num;
+    if (isNaN(cleanNum)) return num;
+    try {
+      return new Intl.NumberFormat(this.getLocale()).format(cleanNum);
+    } catch (e) {
+      return num;
+    }
+  }
+
+  formatDate(dateStr, options = { year: 'numeric', month: 'long', day: 'numeric' }) {
+    if (!dateStr) return '';
+    try {
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      return new Intl.DateTimeFormat(this.getLocale(), options).format(d);
+    } catch (e) {
+      return dateStr;
+    }
   }
 
   async loadLanguage(langCode) {
@@ -93,15 +120,18 @@ class I18nEngine {
     this.applyToDOM();
     this.propagateLanguageToLinks();
 
-    // Update query parameter without reload
+    // Update query parameter while preserving all existing parameters
     const url = new URL(window.location.href);
     url.searchParams.set('lang', langCode);
-    window.history.replaceState({}, '', url);
+    window.history.replaceState({}, '', url.toString());
   }
 
   t(key, defaultVal = '') {
     const dict = this.translations[this.currentLang] || this.translations['ar'] || {};
-    return dict[key] || defaultVal || key;
+    if (dict[key] !== undefined && dict[key] !== null && dict[key] !== '') {
+      return dict[key];
+    }
+    return defaultVal || key;
   }
 
   getDir() {
@@ -118,7 +148,7 @@ class I18nEngine {
 
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
-      if (dict[key]) {
+      if (dict[key] !== undefined && dict[key] !== null && dict[key] !== '') {
         if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
           el.value = dict[key];
         } else {
@@ -129,22 +159,29 @@ class I18nEngine {
 
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
       const key = el.getAttribute('data-i18n-placeholder');
-      if (dict[key]) {
+      if (dict[key] !== undefined && dict[key] !== null && dict[key] !== '') {
         el.placeholder = dict[key];
       }
     });
 
     document.querySelectorAll('[data-i18n-title]').forEach(el => {
       const key = el.getAttribute('data-i18n-title');
-      if (dict[key]) {
+      if (dict[key] !== undefined && dict[key] !== null && dict[key] !== '') {
         el.title = dict[key];
       }
     });
 
     document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
       const key = el.getAttribute('data-i18n-aria-label');
-      if (dict[key]) {
+      if (dict[key] !== undefined && dict[key] !== null && dict[key] !== '') {
         el.setAttribute('aria-label', dict[key]);
+      }
+    });
+
+    document.querySelectorAll('[data-i18n-number]').forEach(el => {
+      const numVal = el.getAttribute('data-i18n-number');
+      if (numVal !== null) {
+        el.innerText = this.formatNumber(numVal);
       }
     });
 
@@ -171,7 +208,6 @@ class I18nEngine {
         const relativeHref = u.pathname.substring(1) + u.search + u.hash;
         a.setAttribute('href', relativeHref || u.search + u.hash);
       } catch (e) {
-        // Fallback simple string replace
         if (href.includes('lang=')) {
           a.setAttribute('href', href.replace(/lang=[a-z]{2}/i, `lang=${currentLang}`));
         } else if (href.includes('?')) {
@@ -289,6 +325,18 @@ function toggleLanguageDropdown(e) {
   if (e && e.preventDefault) e.preventDefault();
   if (window.i18n) {
     window.i18n.renderLanguageModal();
+  }
+}
+
+function changeLanguage(langCode) {
+  if (window.i18n) {
+    window.i18n.setLanguage(langCode);
+  }
+}
+
+function closeLanguageDropdown() {
+  if (window.i18n) {
+    window.i18n.closeLanguageModal();
   }
 }
 

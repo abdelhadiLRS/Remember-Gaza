@@ -1,0 +1,11 @@
+{
+  "name": "remember-gaza",
+  "version": "1.0.0",
+  "description": "Remember Gaza - Interactive Memorial & Data Platform",
+  "scripts": {
+    "i18n:audit": "node scripts/i18n-audit.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
